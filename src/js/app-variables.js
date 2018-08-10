@@ -1,6 +1,8 @@
 // Global Namespace
 // Additional functions can use `boomerang.fn()` format
-var boomerang = {};
+var screens = {};
+
+
 
 // var mouse_position; // helps locate items to delete in context menu
 

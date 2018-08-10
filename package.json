@@ -8,6 +8,7 @@
     "gulp": "github:gulpjs/gulp#4.0",
     "gulp-autoprefixer": "^5.0.0",
     "gulp-cli": "^2.0.1",
+    "gulp-compile-handlebars": "^0.6.1",
     "gulp-postcss": "^8.0.0",
     "gulp-sass": "^3.1.0",
     "gulp-sourcemaps": "^2.6.4",

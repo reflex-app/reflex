@@ -13,12 +13,12 @@ gulp.registry(forwardReference());
 requireDir('./src/gulp/tasks');
 
 // Tasks
-gulp.task('build', gulp.series('clean', 'copy', 'sass', 'javascript'));
+gulp.task('build', gulp.series('clean', 'copy', 'sass', 'javascript', 'handlebars'));
 
 // Starts a BrowerSync instance
 gulp.task('serve', gulp.series('build', function () {
   browserSync.init({
-    server: ['./src', './'],
+    server: ['./dist', './'],
     port: port,
     notify: false
   });
@@ -26,8 +26,9 @@ gulp.task('serve', gulp.series('build', function () {
 
 // Watch files for changes
 gulp.task('watch', function () {
-  gulp.watch('src/scss/**/*.scss', gulp.series('sass', reload));
+  gulp.watch('src/scss/**/*.scss', gulp.series('sass'));
   gulp.watch('src/js/**/*.js', gulp.series('javascript', reload));
+  gulp.watch(['src/pages/**/*.hbs', 'src/partials/**/*.hbs'], gulp.series('handlebars', reload));
 });
 
 // Runs all of the above tasks and then waits for files to change

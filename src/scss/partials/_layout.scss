@@ -2,7 +2,8 @@ main {
     background: $body-bg;
     height: 100%;
     width: 100%;
-	overflow: auto;
-	overscroll-behavior: auto;
+	overflow: hidden;
+    overscroll-behavior: auto;
+    padding: 1rem;
+    box-sizing: border-box;
 }
-
