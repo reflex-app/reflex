@@ -5,6 +5,7 @@ var gulp = require('gulp');
 // var Parker = require('parker/lib/Parker');
 var prettyJSON = require('prettyjson');
 var sass = require('gulp-sass');
+const browserSync = require('browser-sync');
 // var plumber = require('gulp-plumber');
 var sourcemaps = require('gulp-sourcemaps');
 // var sassLint = require('gulp-sass-lint');
@@ -28,6 +29,8 @@ gulp.task('sass:main', function () {
     // .pipe(postcss([autoprefixer()])) // uses ".browserslistrc"
     .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest('dist/assets/css'))
+    .pipe(browserSync.stream())
+    // .pipe(browserSync.stream({match: '**/*.css'}))
 });
 
 // Audits CSS filesize, selector count, specificity, etc.

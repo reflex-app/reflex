@@ -26,8 +26,8 @@ gulp.task('serve', gulp.series('build', function () {
 
 // Watch files for changes
 gulp.task('watch', function () {
-  gulp.watch('src/scss/**/*.scss', gulp.series('sass', browserSync.reload));
-  gulp.watch('src/js/**/*.js', gulp.series('javascript', browserSync.reload));
+  gulp.watch('src/scss/**/*.scss', gulp.series('sass', reload));
+  gulp.watch('src/js/**/*.js', gulp.series('javascript', reload));
 });
 
 // Runs all of the above tasks and then waits for files to change
@@ -36,7 +36,11 @@ gulp.task('default', gulp.parallel('serve', 'watch'));
 // Build the app
 gulp.task('app', gulp.series('build-app'));
 
-
+// Reloads BrowserSync
+function reload(done) {
+  browserSync.reload();
+  done();
+}
 
 
 
