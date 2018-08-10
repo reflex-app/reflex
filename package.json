@@ -1,6 +1,6 @@
 {
-  "name": "Boomerang",
-  "version": "0.0.2",
+  "name": "Screens Builder",
+  "version": "1.0.0",
   "devDependencies": {
     "absolutify": "github:sorensen/absolutify#target-improvement",
     "babel-core": "^6.26.3",

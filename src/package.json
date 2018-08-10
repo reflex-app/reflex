@@ -1,6 +1,6 @@
 {
-  "name": "Boomerang",
-  "version": "0.0.2",
+  "name": "Screens",
+  "version": "0.0.0-alpha-1",
   "node-main": "server.js",
   "main": "http://localhost:8000",
   "node-remote": "<all_urls>",
