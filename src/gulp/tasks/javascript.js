@@ -30,5 +30,5 @@ gulp.task('javascript:main', function() {
   .pipe(concat('app.min.js'))
   .pipe(sourcemaps.write('.'))
   .on('error', function (err) { gutil.log(gutil.colors.red('[Error]'), err.toString()); })
-  .pipe(gulp.dest('dist/assets/js'));
+  .pipe(gulp.dest('dist/js'));
 });

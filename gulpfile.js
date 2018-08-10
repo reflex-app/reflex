@@ -18,7 +18,7 @@ gulp.task('build', gulp.series('clean', 'copy', 'sass', 'javascript'));
 // Starts a BrowerSync instance
 gulp.task('serve', gulp.series('build', function () {
   browserSync.init({
-    server: './src',
+    server: ['./src', './'],
     port: port,
     notify: false
   });
