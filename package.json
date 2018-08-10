@@ -1,5 +1,5 @@
 {
-  "name": "Screens Builder",
+  "name": "screensbuilder",
   "version": "1.0.0",
   "devDependencies": {
     "absolutify": "github:sorensen/absolutify#target-improvement",
@@ -8,14 +8,21 @@
     "gulp": "github:gulpjs/gulp#4.0",
     "gulp-autoprefixer": "^5.0.0",
     "gulp-cli": "^2.0.1",
+    "gulp-postcss": "^8.0.0",
     "gulp-sass": "^3.1.0",
     "gulp-sourcemaps": "^2.6.4",
     "nw": "0.31.4",
-    "nw-builder": "^3.5.4"
+    "nw-builder": "^3.5.4",
+    "parker": "0.0.10",
+    "prettyjson": "^1.2.1",
+    "require-dir": "^1.0.0",
+    "undertaker-forward-reference": "^1.0.2",
+    "vinyl-named": "^1.1.0",
+    "webpack-stream": "^5.1.1"
   },
   "scripts": {
     "start": "set NODE_ENV=development && gulp",
-    "build-app": "set NODE_ENV=production && gulp build-app"
+    "build-app": "set NODE_ENV=production && gulp app"
   },
   "dependencies": {
     "body-parser": "^1.18.2",
