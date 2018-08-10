@@ -1,0 +1,23 @@
+// Main container colors
+$body-bg: #FBFBFB;
+$inner-bg: #0b0f13;
+
+// Colors
+$color-1: #3ec382;
+$color-2: #2973FF;
+
+// GUI
+$gui-title-bar-height: 22px;
+$gui-header-height: 45px;
+$gui-border-color: #d8e0e9;
+$gui-top-total-height: calc(#{$gui-header-height} + #{$gui-title-bar-height});
+
+// Links
+$link-default-color: #000;
+$link-hover-color: lighten($link-default-color, 40%);
+
+$border-color: transparent;
+
+$font-defaults: -apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+
+$image-root: '../';

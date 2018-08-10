@@ -1,0 +1,232 @@
+<html lang='en'>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Preload CSS -->
+  <link rel="preload" as="style" href="css/style.css">
+  <link rel="stylesheet" type="text/css" href="css/style.css">
+
+  <!-- Preload the JS -->
+  <link rel="preload" as="script" href="js/app.min.js">
+  <script src="js/app.min.js" type="text/javascript"></script>
+
+</head>
+<body>
+  <main>
+
+
+    <!-- Title Bar -->
+    <div class="gui-title-bar">
+      <div class="gui-menu-button"></div>
+      <div class="gui-menu-button"></div>
+      <div class="gui-menu-button"></div>
+    </div>
+
+    <!-- Header -->
+    <div class="gui-header">
+      <div class="gui-action-button-container">
+        <div class="gui-action-button">
+          <div class="gui-sync-container" onclick="runScrape()">
+            <span class="gui-icon-sync" title="Load new data">
+              <img src="img/icon-sync.svg"/>
+            </span>
+            <span>Boomerang</span>
+          </div>
+        </div>
+        <div id="progress">
+          <span class='progress-text'></span>
+          <div class="progress-wrap progress" data-progress-percent="0">
+            <div class="progress-bar progress"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- Main Content -->
+    <!-- Links -->
+    <h2>Links</h2>
+    <div>
+      <a class="close" href="#">Close</a>
+      <a href="#" class="done">Save</a>
+    </div>
+
+    <hr>
+
+    <h2>Links</h2>
+    <div>
+      <div class="button">Button</div>
+    </div>
+
+    <hr>
+
+    <!-- Forms -->
+    <form action="">
+      <div class="input-withAddon">
+        <div class="input-withAddon__field">
+          <input class="url" type="text" placeholder="Enter a URL here (example: http://google.com)" autocomplete="off" />
+        </div>
+        <div class="input-withAddon__item">
+          <div id="refresh-iframe" class="refresh">
+            Refresh
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <!-- Clear button -->
+    <div style="position: relative">
+      <textarea class="css" id="grabHTMLInput" rows="5" placeholder="Enter a Class/ID"></textarea>
+      <a class="clear" href="#">Clear</a>
+    </div>
+
+
+
+
+    <!-- inspector -->
+    <section id="inspector">
+      <div class="inspector-container">
+
+        <div class="gui-header">
+
+          <!-- inspector-editor-top -->
+          <div class="inspector-top">
+
+            <!-- inspector: url -->
+            <div class="url-container">
+              <form action="" id="submit-url-for-grab">
+                <div class="input-withAddon">
+                  <div class="input-withAddon__field">
+                    <input class="url" id="inspector-url" type="text" placeholder="Enter a URL here (example: http://google.com)" autocomplete="off" />
+                  </div>
+                  <div class="input-withAddon__item">
+                    <div id="refresh-iframe" class="refresh">
+                      <img src="img/icon-refresh.svg" alt="Refresh page" />
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <!-- / inspector: url -->
+
+            <a class="close" href="#">Close</a>
+            <a href="#" class="done">Save</a>
+          </div><!-- / inspector-editor-top -->
+
+        </div>
+
+        <div class="panels">
+          <div class="top-panel">
+            <!-- iFrame -->
+            <div id="iframe-container">
+              <iframe src="iframe.html" id="iframe"></iframe>
+            </div>
+            <!-- / iFrame -->
+          </div>
+
+
+          <!-- Sidebar -->
+          <div class="bottom-panel">
+            <div class="inspector-editor">
+
+
+              <div class="flex-container">
+
+                <!-- inspector-editor-left -->
+                <div class="inspector-editor-left">
+
+                  <div class="flex-container">
+
+                    <!-- inspector: title -->
+                    <div>
+                      <span class="label">Title</span>
+                      <input class="name" id="" type="text" placeholder="Enter a Title" />
+                    </div>
+                    <!-- inspector: title -->
+
+
+
+                    <div class="inspector-goals-container"><!-- inspector: goals-inner -->
+                      <span class="label">Looking for...</span>
+                      <div class="radio-container">
+
+                        <label title="Greater than or equal to a number">
+                          <input type="radio" name="inspector-goal-type" value="above" />
+                          <span>> #</span>
+                        </label>
+
+                        <label title="Less than or equal to a number">
+                          <input type="radio" name="inspector-goal-type" value="below" />
+                          <span>< #</span>
+                        </label>
+
+                        <label title="This is useful if you want to fetch the title of a news article or some other value.">
+                          <input type="radio" name="inspector-goal-type" value="other" />
+                          <span>Text</span>
+                        </label>
+
+                        <label title="This will return an image. Requires an image element.">
+                          <input type="radio" name="inspector-goal-type" value="image" />
+                          <span>IMG</span>
+                        </label>
+                      </div><!-- inspector: goal type -->
+
+
+                      <!-- inspector: goal -->
+                      <div class="inspector-goal-container">
+                        <span class="label">Goal</span>
+                        <input class="goal" id="" type="text" placeholder="Enter a Goal" />
+                      </div>
+                      <!-- inspector: goal -->
+
+
+                    </div><!-- inspector: goals-inner -->
+
+
+
+                    <!-- inspector: selector -->
+                    <div class="selector-container">
+                      <span class="label" title="This is the CSS element you want to return the result of. Click on an element of the page, or type one in. You'll see the result on the right.">Selector</span>
+                      <input class="css" id="grabHTMLInput" type="text" placeholder="Enter a Class/ID" />
+                      <a href="#" id="inspector-selector-general">General Selector</a>
+                      <a href="#" id="inspector-selector-specific">Specific Selector</a>
+                      <a href="#" id="inspector-toggle-DOM-outline">Toggle Outlining</a>
+                      <a class="clear" href="#">Clear</a>
+                    </div>
+                    <!-- inspector: selector -->
+
+                  </div><!-- flex container -->
+
+
+                </div><!-- / inspector-editor-left -->
+
+
+                <!-- inspector editor right -->
+                <div class="inspector-editor-right">
+                  <!-- inspector: results -->
+                  <div class="results-container">
+                    <span class="label">Results</span>
+                    <span class="result"><!-- dynamic --></span>
+                  </div>
+                </div><!-- / inspector-editor-right -->
+
+              </div><!-- / flex container -->
+
+
+            </div><!-- / inspector-editor -->
+          </div><!-- / bottom-panel -->
+        </div>
+
+
+
+
+      </div>
+    </section><!-- / inspector -->
+
+  </main>
+
+
+</body>
+</html>

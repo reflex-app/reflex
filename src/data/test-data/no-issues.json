@@ -1,0 +1,79 @@
+[
+    {
+        "name": "Sell Bitcoin",
+        "url": "https://coinmarketcap.com/currencies/bitcoin/",
+        "css": "#quote_price > .text-large2",
+        "goal": 20000,
+        "goal_type": "other"
+    },
+    {
+        "name": "Sell Litecoin",
+        "url": "https://www.coingecko.com/en/price_charts/litecoin/usd",
+        "css": "#wrapper > div.container > div.coingecko.row > div > div.coin-details.row > div.col-md-5.market-value > div.coin-value > span",
+        "goal": 400,
+        "goal_type": "above"
+    },
+    {
+        "name": "New Headphones",
+        "url": "https://www.amazon.de/Skullcandy-S6CRW-K591-Bluetooth-Kopfh%C3%B6rer-coral-schwarz/dp/B01DWH77GC/ref=sr_1_1?ie=UTF8&qid=1526367529&sr=8-1&keywords=CRUSHER+WIRELESS+HEADPHONE",
+        "css": "#priceblock_ourprice",
+        "goal": 131,
+        "goal_type": "below"
+    },
+    {
+        "name": "DOW",
+        "url": "http://quotes.wsj.com/index/DJIA/historical-prices",
+        "css": "#quote_val",
+        "goal": 30000,
+        "goal_type": "above"
+    },
+    {
+        "name": "Twitter Design",
+        "url": "https://twitter.com/search?q=%22product%20designer%22&src=typd&lang=en",
+        "css": ".tweet-text",
+        "goal": null,
+        "goal_type": "other"
+    },
+    {
+        "name": "Bloomberg Tech",
+        "url": "https://www.bloomberg.com/technology",
+        "css": ".story-list-story__info > .story-list-story__info__headline > .story-list-story__info__headline-link",
+        "goal": null,
+        "goal_type": "other"
+    },
+    {
+        "name": "Designer News",
+        "url": "https://www.designernews.co/",
+        "css": ".montana-item-title",
+        "goal": null,
+        "goal_type": "other"
+    },
+    {
+        "name": "Interface Lovers",
+        "url": "https://interfacelovers.com/",
+        "css": ".pa4-l .mb3",
+        "goal": null,
+        "goal_type": "other"
+    },
+    {
+        "name": "Dribbble Jobs",
+        "url": "https://dribbble.com/jobs",
+        "css": ".item-link.group",
+        "goal": null,
+        "goal_type": "other"
+    },
+    {
+        "name": "Product Hunt",
+        "url": "http://producthunt.com/",
+        "css": ".font_9d927.black_476ed.large_db9e7.light_4a7e0.title_9ddaf",
+        "goal": null,
+        "goal_type": "other"
+    },
+    {
+        "name": "Reddit",
+        "url": "https://www.reddit.com/r/gtd/",
+        "css": ".title.may-blank",
+        "goal": null,
+        "goal_type": "other"
+    }
+]

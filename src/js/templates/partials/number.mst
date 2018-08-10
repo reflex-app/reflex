@@ -1,0 +1,32 @@
+<li class="results-item" data-id="{{ID}}">
+
+  <!-- <script type="text/javascript">
+  $(function(){
+    setModal('preview-button-{{ID}}', '{{ID}}', 'Preview', '{{link}}');
+  });
+  </script>
+
+  <span class="preview-button" id="preview-button-{{ID}}"><img src="img/icon-preview.svg" alt=""></span> -->
+  
+  <span class="title">{{ title }}</span>
+  <span class="timestamp-ago" data-timestamp="{{ timestamp }}">minutes ago</span>
+
+  {{#isGreen}}
+    <div class="difference value-up">{{ difference }}</div>
+  {{/isGreen}}
+
+  {{#isRed}}
+    <div class="difference value-down">{{ difference }}</div>
+  {{/isRed}}
+
+  <div class="box">
+    <div class="goal">
+      <label>GOAL</label>
+      <div class="number">{{ goal }}</div>
+    </div>
+    <div class="current">
+      <label>RESULT</label>
+      <div class="number">{{ result }}</div>
+    </div>
+  </div>
+</li>

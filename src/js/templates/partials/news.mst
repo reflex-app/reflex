@@ -1,0 +1,22 @@
+<li class="results-item news-item" data-id="{{ID}}">
+  <span class="favicon" data-src="{{ link }}"></span>
+  <span class="title">{{ title }}</span>
+  <span class="timestamp-ago" data-timestamp="{{ timestamp }}">minutes ago</span>
+
+  {{#hasMultipleItems}}
+    <div class="list-expandable">
+    {{#result}}
+      <span class="value-other list-item"><a href="{{ href }}" target="_blank">{{ content }}</a></span>
+    {{/result}}
+    </div>
+  {{/hasMultipleItems}}
+
+  {{^hasMultipleItems}}
+    <span class="value-other"><a href="{{ link }}" target="_blank">{{ content }}</a></span>
+
+    {{#result}}
+      <span class="value-other list-item"><a href="{{ href }}" target="_blank">{{ content }}</a></span>
+    {{/result}}
+  {{/hasMultipleItems}}
+
+</li>

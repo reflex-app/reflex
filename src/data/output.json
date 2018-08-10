@@ -1,0 +1,1953 @@
+[
+    {
+        "ID": 1,
+        "title": "Sell Litecoin",
+        "result": "62.21",
+        "goal": "400",
+        "goalType": "above",
+        "difference": "-337.79",
+        "link": "https://www.coingecko.com/en/price_charts/litecoin/usd",
+        "timestamp": "2018-08-10T06:11:19.873Z",
+        "hasMultipleItems": false
+    },
+    {
+        "ID": 6,
+        "title": "Interface Lovers",
+        "result": [
+            {
+                "content": " Dani Balenson — Intercom",
+                "href": "https://interfacelovers.com/interviews/dani-balenson"
+            }
+        ],
+        "link": "https://interfacelovers.com/",
+        "isOther": true,
+        "timestamp": "2018-08-10T06:11:20.424Z",
+        "hasMultipleItems": false
+    },
+    {
+        "ID": 5,
+        "title": "Designer News",
+        "result": [
+            {
+                "content": " How to Create a Customer Journey Map [step by step] (aerolab.co)",
+                "href": "https://aerolab.co/blog/customer-journey-map?utm_campaign=Customer%20Journey%20Map&utm_content=75491116&utm_medium=social&utm_source=twitter"
+            },
+            {
+                "content": " 100 Days of Motion Design (medium.com)",
+                "href": "https://medium.com/@tiantianxu/100-days-of-motion-design-463526af852f"
+            },
+            {
+                "content": " Creating the “Perfect” CSS System - A High-Level Guide For Designers & Developers (medium.com)",
+                "href": "https://medium.com/gusto-design/creating-the-perfect-css-system-fa38f5bcdd9e"
+            },
+            {
+                "content": " Product strategy and the myth of the creative genius (medium.com)",
+                "href": "https://medium.com/opendoor-design/product-strategy-and-the-myth-of-the-creative-genius-e70b13342597"
+            },
+            {
+                "content": " monday.com is a powerful tool for project and team management, communications and collaboration.we keep it all in one place. ",
+                "href": "https://synd.co/2Ou6g1m"
+            },
+            {
+                "content": " Add fun to words (cliphy.io)",
+                "href": "https://cliphy.io/"
+            },
+            {
+                "content": " Case study of designing UX in an app helping disabled people with transportation (uxstudioteam.com)",
+                "href": "https://uxstudioteam.com/ux-blog/app-for-people-with-disabilities/?utm_source=submitsites&utm_campaign=submitsites"
+            },
+            {
+                "content": "How do you handle text-editable templates during client handoff?",
+                "href": "https://www.designernews.co/stories/96544-how-do-you-handle-texteditable-templates-during-client-handoff"
+            },
+            {
+                "content": " Next time your Mom says don't go out in the rain, turn on this web app. (rainbowhunt.me)",
+                "href": "http://rainbowhunt.me/?raindrops"
+            },
+            {
+                "content": " Is Design Thinking the New Liberal Arts? 4 Most Important Principles (anadea.info)",
+                "href": "https://anadea.info/blog/is-design-thinking-the-new-liberal-arts"
+            },
+            {
+                "content": " Framer X — Drawing Features (framer.com)",
+                "href": "https://framer.com/x/drawing?utm_source=dribbble&utm_medium=launch_post&utm_campaign=framer_x_beta"
+            },
+            {
+                "content": " The Art of Futurism: New Collection of Masterpieces by Julie Dillon (thedesignest.net)",
+                "href": "https://thedesignest.net/the-art-of-futurism-new-collection-of-masterpieces-by-julie-dillon/"
+            },
+            {
+                "content": " Wordsplayed.com (wordsplayed.com)",
+                "href": "http://wordsplayed.com/"
+            },
+            {
+                "content": " How to Measure Your Success in Design (medium.com)",
+                "href": "https://medium.com/ux-power-tools/10-ways-to-measure-your-success-in-design-7b3bc1762803"
+            },
+            {
+                "content": " Framer Syntax Theme for VS Code (framer.com)",
+                "href": "https://framer.com/free-syntax-theme"
+            },
+            {
+                "content": " How to Create a Flawless Responsive Post Grid with Flexbox (blog.fullstackdigital.com)",
+                "href": "https://blog.fullstackdigital.com/how-to-create-a-flawless-responsive-post-grid-with-flexbox-e5c7cc9d28e"
+            },
+            {
+                "content": " 20+ Famous Animated Logos for Your Inspiration. (behance.net)",
+                "href": "https://www.behance.net/gallery/68306231/20-Famous-Animated-Logos-for-Your-Inspiration"
+            },
+            {
+                "content": " Pts.js v0.5 released - a library for visualization and creative coding (ptsjs.org)",
+                "href": "https://ptsjs.org/"
+            },
+            {
+                "content": "What do we think of Fiverr?",
+                "href": "https://www.designernews.co/stories/96518-what-do-we-think-of-fiverr"
+            },
+            {
+                "content": " A Designer, Developer and Writer Walk into a Bar. Or into a product meeting. This is how Teamweek’s product team is set up. (medium.teamweek.com)",
+                "href": "https://medium.teamweek.com/a-designer-developer-and-writer-walk-into-a-bar-80ef993cc146"
+            },
+            {
+                "content": " Google AMP — A 70% drop in our conversion rate. (medium.com)",
+                "href": "https://medium.com/the-set-list/google-amp-a-70-drop-in-our-conversion-rate-35fe3cb69c59"
+            },
+            {
+                "content": " Massimo #18 — Featuring brand identities by AndStudio, Forth + Back, Re, Lennarts & De Bruijn & Collins (massimo.brandpad.io)",
+                "href": "http://massimo.brandpad.io/"
+            },
+            {
+                "content": " Interaction Design Inspiration – Aug 2018 (blog.productdisrupt.com)",
+                "href": "https://blog.productdisrupt.com/best-of-interaction-design-aug-2018-dce33526eb06"
+            },
+            {
+                "content": " Designing Charts — Principles Every Designer Should Know (Part 2) (uxdesign.cc)",
+                "href": "https://uxdesign.cc/designing-charts-principles-every-designer-should-know-part-2-ce1e06af56fc"
+            },
+            {
+                "content": "Are you a member to any paid Slack communities?",
+                "href": "https://www.designernews.co/stories/96526-are-you-a-member-to-any-paid-slack-communities"
+            }
+        ],
+        "link": "https://www.designernews.co/",
+        "isOther": true,
+        "timestamp": "2018-08-10T06:11:21.973Z",
+        "hasMultipleItems": true
+    },
+    {
+        "ID": 4,
+        "title": "Bloomberg Tech",
+        "result": [
+            {
+                "content": "Dropbox Falls as COO Resignation Overshadows Earnings Beat",
+                "href": "https://www.bloomberg.com/news/articles/2018-08-09/dropbox-beats-estimates-but-shares-fall-as-coo-is-stepping-down"
+            },
+            {
+                "content": "Microsoft Threatens to Pull Gab Services Over Anti-Semitic Posts",
+                "href": "https://www.bloomberg.com/news/articles/2018-08-09/microsoft-threatens-to-pull-gab-services-over-anti-semitic-posts"
+            },
+            {
+                "content": "Roku's Biggest Bull Sees Already-Soaring Stock Going Even Higher",
+                "href": "https://www.bloomberg.com/news/articles/2018-08-09/roku-s-biggest-bull-sees-already-soaring-stock-going-even-higher"
+            },
+            {
+                "content": "Spotify Strikes Deal With Samsung to Help Fight Off Apple Music",
+                "href": "https://www.bloomberg.com/news/articles/2018-08-09/spotify-strikes-deal-with-samsung-to-help-fight-off-apple-music"
+            },
+            {
+                "content": "Denmark Has a Rotten Week of Criminal Probe and Profit Warnings",
+                "href": "https://www.bloomberg.com/news/articles/2018-08-09/denmark-has-a-rotten-week-of-criminal-probe-and-profit-warnings"
+            },
+            {
+                "content": "Trading Apps Expose Investors to Cyber Criminals, Report Finds",
+                "href": "https://www.bloomberg.com/news/articles/2018-08-09/trading-apps-expose-investors-to-cyber-criminals-report-finds"
+            },
+            {
+                "content": "Crypto Technicals Flash Pain Ahead, Eye Bitcoin at $4,000",
+                "href": "https://www.bloomberg.com/news/articles/2018-08-09/crypto-technicals-flash-more-pain-ahead-eye-bitcoin-at-4-000"
+            },
+            {
+                "content": "Booking Holdings Tumbles After Weak Third-Quarter Forecast",
+                "href": "https://www.bloomberg.com/news/articles/2018-08-09/booking-holdings-plunges-after-weak-third-quarter-forecast"
+            },
+            {
+                "content": "Canada's Shopify Battles the Scammers Behind Fake Web Stores",
+                "href": "https://www.bloomberg.com/news/articles/2018-08-09/canada-s-shopify-battles-the-scammers-behind-fake-web-stores"
+            },
+            {
+                "content": "Morgan Stanley Warns on Chip Stocks, Adding to Bearish Tech Call",
+                "href": "https://www.bloomberg.com/news/articles/2018-08-09/morgan-stanley-warns-on-chip-stocks-adding-to-bearish-tech-call"
+            },
+            {
+                "content": "Scenes From a Hong Kong Crypto Party",
+                "href": "https://www.bloomberg.com/news/articles/2018-08-09/scenes-from-a-hong-kong-crypto-party"
+            }
+        ],
+        "link": "https://www.bloomberg.com/technology",
+        "isOther": true,
+        "timestamp": "2018-08-10T06:11:20.020Z",
+        "hasMultipleItems": true
+    },
+    {
+        "ID": 7,
+        "title": "Dribbble Jobs",
+        "result": [
+            {
+                "content": "\n    \n      NetEngine\n      UI/UX Designer\n    \n\n    Milton, Brisbane\n",
+                "href": "http://applynow.net.au/jobs/ni/102668"
+            },
+            {
+                "content": "\n    \n      Endpoint\n      Senior Product Designer\n    \n\n    El Segundo, CA\n",
+                "href": "https://jobs.lever.co/bcg/8f6814d0-7d10-4abb-a3df-11e0cca361fe"
+            },
+            {
+                "content": "\n    \n      iPresence\n      Product Designer\n    \n\n    Remote\n",
+                "href": "https://docs.google.com/document/d/1J_zyUXbTbZaC6VrgusfRBTzyi_EXuIPrAVBGDyqa8Kc/edit#"
+            },
+            {
+                "content": "\n    \n      42 Lines, Inc.\n      Web Designer\n    \n\n    Anywhere within two timezones of US/Central time.\n",
+                "href": "https://www.42lines.net/careers/web-designer/"
+            },
+            {
+                "content": "\n    \n      Quantcast\n      Senior Designer\n    \n\n    San Francisco\n",
+                "href": "https://jobs.lever.co/quantcast/58247075-6d98-401c-883b-1d5c4e0f73aa?lever-origin=applied&lever-source%5B%5D=Dribbble"
+            },
+            {
+                "content": "\n    \n      Quantcast\n      Senior Art Director\n    \n\n    San Francisco\n",
+                "href": "https://jobs.lever.co/quantcast/dba30999-2a4e-48ec-b5b8-18f03ae7fe5e?lever-origin=applied&lever-source%5B%5D=Dribbble"
+            },
+            {
+                "content": "\n    \n      Klarna\n      Product Designer\n    \n\n    Stockholm\n",
+                "href": "https://jobs.lever.co/klarna/86c53774-d5f7-41dc-b087-277d95aa3586"
+            },
+            {
+                "content": "\n    \n      Siege Media\n      Graphic Designer\n    \n\n    Austin, but Remote Position Possible\n",
+                "href": "https://www.siegemedia.com/graphic-designer"
+            },
+            {
+                "content": "\n    \n      GoodRx\n      UX/UI Designer\n    \n\n    SANTA MONICA\n",
+                "href": "https://hire.withgoogle.com/public/jobs/goodrxcom/view/P_AAAAAAEAAASN1UoNpKWtwk?trackingTag=dribbble"
+            },
+            {
+                "content": "\n    \n      Chewy\n      Product Designer\n    \n\n    Boston, MA\n",
+                "href": "https://www.chewy.com/jobs/position/1276460?gh_jid=1276460&gh_jid=1276460"
+            },
+            {
+                "content": "\n    \n      Exela Technologies\n      Lead Graphic Designer\n    \n\n    Santa Monica, CA\n",
+                "href": "https://www.linkedin.com/jobs/cap/view/804446167/"
+            },
+            {
+                "content": "\n    \n      Authentic\n      Digital Graphic Designer\n    \n\n    Richmond\n",
+                "href": "https://beauthentic.digital/careers/dgd"
+            },
+            {
+                "content": "\n    \n      Smartbnb\n      UI/UX Designer\n    \n\n    Remote, Europe\n",
+                "href": "http://bitly.com/2M8q2Su"
+            },
+            {
+                "content": "\n    \n      Frontier Car Group\n      Junior UI/UX product designer\n    \n\n    Göteborg\n",
+                "href": "https://fcg.bamboohr.co.uk/jobs/view.php?id=27"
+            },
+            {
+                "content": "\n    \n      Bowers & Wilkins\n      Sr Interaction Designer\n    \n\n    Redwood City, CA\n",
+                "href": "https://app.jobvite.com/j?cj=oZSa8fwT&s=Dribble"
+            },
+            {
+                "content": "\n    \n      LocusLabs\n      Product Designer\n    \n\n    Remote - Anywhere USA\n",
+                "href": "https://locuslabs.recruiterbox.com/jobs/fk064kv?source=Dribbble"
+            },
+            {
+                "content": "\n    \n      Elevada\n      Senior Visual Architect\n    \n\n    Berlin\n",
+                "href": "https://angel.co/elevada/jobs/408557-senior-visual-architect"
+            },
+            {
+                "content": "\n    \n      International Toy, Inc.\n      Product Designer\n    \n\n    IRVINE\n",
+                "href": "https://internationaltoy.com/"
+            },
+            {
+                "content": "\n    \n      Superhuman\n      Lead Designer\n    \n\n    San Francisco\n",
+                "href": "https://boards.greenhouse.io/superhuman/jobs/1105734"
+            },
+            {
+                "content": "\n    \n      Wag!\n      Lead Designer / Motion Graphics Animator\n    \n\n    West Hollywood, CA\n",
+                "href": "https://boards.greenhouse.io/wag/jobs/4044691002"
+            },
+            {
+                "content": "\n    \n      Uber\n      Sr Design Manager, Uber Eats\n    \n\n    San Francisco\n",
+                "href": "https://www.uber.com/careers/list/40061/"
+            },
+            {
+                "content": "\n    \n      You Need A Budget LLC\n      Humbly Confident Visual Designer\n    \n\n    Anywhere\n",
+                "href": "https://ynab.recruiterbox.com/jobs/fk01ovh"
+            },
+            {
+                "content": "\n    \n      Revfluence\n      Brand Designer\n    \n\n    San Francisco\n",
+                "href": "https://jobs.lever.co/revfluence/f93f1370-976d-4bdd-a04c-9ad740abc0a6"
+            },
+            {
+                "content": "\n    \n      (RED)\n      Senior Manager, Brand and Design\n    \n\n    New York\n",
+                "href": "https://recruiting.ultipro.com/ONE1007/JobBoard/5a04afb6-347c-4245-8149-426c3b4e356c/OpportunityDetail?opportunityId=d8dbc1b6-c32c-4893-a2e5-ab7a640d98fa"
+            },
+            {
+                "content": "\n    \n      Chicago Digital\n      Senior Web Designer\n    \n\n    Chicago, IL\n",
+                "href": "https://www.linkedin.com/jobs/cap/view/790574467/?pathWildcard=790574467&trk=mcm"
+            },
+            {
+                "content": "\n    \n      Mode\n      Product Designer, Growth and Discovery\n    \n\n    San Francisco\n",
+                "href": "https://boards.greenhouse.io/modeanalytics/jobs/1240230"
+            },
+            {
+                "content": "\n    \n      Ada\n      Visual Designer\n    \n\n    Toronto\n",
+                "href": "https://boards.greenhouse.io/ada/jobs/4034740002"
+            },
+            {
+                "content": "\n    \n      Ada\n      Senior Product Designer\n    \n\n    Toronto\n",
+                "href": "https://boards.greenhouse.io/ada/jobs/4034737002"
+            },
+            {
+                "content": "\n    \n      Plan B Advertising\n      Web Development Manager\n    \n\n    Chicago\n",
+                "href": "https://www.planbadvertising.com/careers/web-dev-manager/"
+            },
+            {
+                "content": "\n    \n      Nested\n      Product Designer\n    \n\n    London\n",
+                "href": "https://hire.withgoogle.com/public/jobs/nestedcom/view/P_AAAAABkAAAOEXx-1MfJBjJ"
+            },
+            {
+                "content": "\n    \n      Lotum GmbH\n      Junior UI/UX Designer (m/w)\n    \n\n    Frankfurt am Main\n",
+                "href": "http://lotum.com/de/career/#Junior-UI-UX-Designer-Mobile-Apps"
+            },
+            {
+                "content": "\n    \n      Lotum GmbH\n      Senior Mobile App Designer (m/w)\n    \n\n    Frankfurt am Main\n",
+                "href": "http://lotum.com/career/#Senior-Mobile-App-Designer"
+            },
+            {
+                "content": "\n    \n      CIAN\n      product designer\n    \n\n    Москва\n",
+                "href": "https://hh.ru/vacancy/27042372"
+            },
+            {
+                "content": "\n    \n      RapidAPI\n      Product Designer\n    \n\n    San Francisco\n",
+                "href": "https://www.comeet.co/jobs/rapidapi/03.001/product-designer-at-rapidapi/77.901"
+            },
+            {
+                "content": "\n    \n      Atlas Genetics\n      UI/UX Designer\n    \n\n    Boston, MA\n",
+                "href": "http://www.atlasgenetics.com/company/careers/ui-ux-designer.html"
+            },
+            {
+                "content": "\n    \n      TaskRabbit\n      Product Designer (Tasker Experience)\n    \n\n    San Francisco, CA\n",
+                "href": "https://grnh.se/a21759531"
+            },
+            {
+                "content": "\n    \n      EVERYTHING BUT THE HOUSE\n      Designer\n    \n\n    Los Angeles\n",
+                "href": "https://royalbraun.workable.com/j/49390A3BF3"
+            },
+            {
+                "content": "\n    \n      Honeycomb.io\n      Senior UX Designer\n    \n\n    San Francisco or Seattle\n",
+                "href": "https://jobs.lever.co/honeycomb/e11701f9-0378-40a4-bd69-132185227ec6"
+            },
+            {
+                "content": "\n    \n      IXL Learning\n      Senior UI Designer\n    \n\n    San Mateo\n",
+                "href": "https://ca.ixl.com/company/jobs?p=job%2FoKEr4fwD"
+            },
+            {
+                "content": "\n    \n      PricewaterhouseCoopers\n      Creative Design Lead Sr. Associate\n    \n\n    Columbia, SC\n",
+                "href": "https://ad.doubleclick.net/ddm/clk/424723300;226450445;s?https://jobs.pwc.com/ShowJob/Id/880273/Creative-Design-Lead-Sr.-Associate/?utm_source=dribbble.com&utm_campaign=core_media&utm_medium=job_board&utm_content=job_posting&ss=paid"
+            },
+            {
+                "content": "\n    \n      Kenzie Academy\n      User Experience Design Apprenticeship\n    \n\n    Indianapolis\n",
+                "href": "https://www.kenzie.academy/ux-for-designers/"
+            },
+            {
+                "content": "\n    \n      Qwilr\n      Mid/Senior UI Designer\n    \n\n    Sydney\n",
+                "href": "https://playground.qwilr.com/UI-Design-Role-at-Qwilr-4bIoz4OVRAKs"
+            },
+            {
+                "content": "\n    \n      Quantstamp\n      Senior UI/UX Designer\n    \n\n    San Francisco\n",
+                "href": "https://quantstamp.com/careers/job/4045356002"
+            },
+            {
+                "content": "\n    \n      Auth0\n      Visual Designer\n    \n\n    Buenos Aires\n",
+                "href": "https://jobs.lever.co/auth0/4d6c08f4-433b-4329-9732-e50670492a98?lever-origin=applied&lever-source%5B%5D=Dribbble"
+            },
+            {
+                "content": "\n    \n      MediaMonks\n      Sr. Platforms Designer at MediaMonks HQ\n    \n\n    Hilversum\n",
+                "href": "https://www.mediamonks.com/careers/sr-platforms-designer-at-mediamonks-hq"
+            },
+            {
+                "content": "\n    \n      BASIC\n      Design Director\n    \n\n    San Francisco / Bay Area / Mountain View\n",
+                "href": "https://basicagency.com/careers/design-director-mountain-view"
+            },
+            {
+                "content": "\n    \n      JK Design\n      Art Director\n    \n\n    New Jersey\n",
+                "href": "http://www.jkdesign.com/careers/art-director"
+            },
+            {
+                "content": "\n    \n      Blackfynn\n      Product Designer\n    \n\n    Philadelphia, PA\n",
+                "href": "https://blackfynn.bamboohr.com/jobs/view.php?id=8"
+            },
+            {
+                "content": "\n    \n      Reaktor\n      Lead Product Designer\n    \n\n    New York\n",
+                "href": "https://www.reaktor.com/careers/product-designer-for-reaktor-new-york/?utm_source=Dribbble&utm_campaign=2018"
+            },
+            {
+                "content": "\n    \n      thredUP\n      Product Designer\n    \n\n    San Francisco\n",
+                "href": "https://jobs.lever.co/thredup/10931881-3ed1-482d-a2b5-3cddebac62f8"
+            },
+            {
+                "content": "\n    \n      Volkswagen Credit\n      UX Designer-Shopping & Buying Experience\n    \n\n    Herndon, VA\n",
+                "href": "https://vwgoa.taleo.net/careersection/volkswagen_of_america/jobdetail.ftl?job=VCI001838&tz=GMT-04%3A00"
+            },
+            {
+                "content": "\n    \n      Siberia\n      UI Design Lead\n    \n\n    San Francisco, CA\n",
+                "href": "https://grnh.se/e50be9852"
+            },
+            {
+                "content": "\n    \n      Canva\n      Product Designer\n    \n\n    Sydney\n",
+                "href": "https://jobs.lever.co/canva/60b3fa96-5fc1-44ad-be99-d9339190cddd?lever-origin=applied&lever-source%5B%5D=Dribbble.com"
+            },
+            {
+                "content": "\n    \n      ARMBRUSTER empiric it\n      UI/UX Designer\n    \n\n    Anywhere\n",
+                "href": "https://empiricit.de/UiUx.pdf"
+            },
+            {
+                "content": "\n    \n      Quiqup\n      Product Designer\n    \n\n    London\n",
+                "href": "https://quiqupltd.workable.com/j/1E278901E3"
+            },
+            {
+                "content": "\n    \n      Artisan Media Group\n      Graphic Designer\n    \n\n    Miami\n",
+                "href": "http://www.artisanmedia.com/careers/"
+            },
+            {
+                "content": "\n    \n      ADYAX\n      Senior UI Designer\n    \n\n    PARIS\n",
+                "href": "https://www.adyax.com/fr/career/senior-interactive-designer-paris"
+            },
+            {
+                "content": "\n    \n      FiscalNote\n      Product Designer\n    \n\n    New York or DC\n",
+                "href": "https://careers.fiscalnote.com/positions/83b5be76-d15a-4ab6-b9ae-6e15489e486e/"
+            },
+            {
+                "content": "\n    \n      Winktales Creative Solutions\n      UI Designer/ UX Designer/UX Manager\n    \n\n    Bangalore\n",
+                "href": "http://www.winktales.com/careers"
+            },
+            {
+                "content": "\n    \n      Sentiance\n      Product Designer\n    \n\n    Antwerp\n",
+                "href": "http://jobs.sentiance.com/o/product-designer"
+            },
+            {
+                "content": "\n    \n      Optimity Advisors\n      Creative Lead\n    \n\n    London\n",
+                "href": "http://info.optimityadvisors.com/creative-lead"
+            },
+            {
+                "content": "\n    \n      VIA Studio\n      Creative Director\n    \n\n    Louisville, KY\n",
+                "href": "https://viastudio.com/careers/creative-director/"
+            },
+            {
+                "content": "\n    \n      Dreamwalk Technologies Limited\n      UI Designer\n    \n\n    Hong Kong\n",
+                "href": "https://hk.jobsdb.com/hk/en/job/ui-designer-100003006358989"
+            },
+            {
+                "content": "\n    \n      Digital Garden\n      UX/UI Designer - contractors / fulltime\n    \n\n    SURRY HILLS\n",
+                "href": "https://www.digitalgarden.com.au/ux-ui-designer-0"
+            },
+            {
+                "content": "\n    \n      Blue Water\n      UX Archtect\n    \n\n    Washington, DC\n",
+                "href": "http://bwm.com/careers/ux-architect"
+            },
+            {
+                "content": "\n    \n      MetaLab\n      Product Designer\n    \n\n    Vancouver or Remote\n",
+                "href": "http://grnh.se/vieg1w1"
+            },
+            {
+                "content": "\n    \n      Auth0\n      Brand Designer\n    \n\n    Buenos Aires\n",
+                "href": "https://jobs.lever.co/auth0/cc9d1628-1ed2-4937-9f53-ca4aecf9f76c?lever-origin=applied&lever-source%5B%5D=Dribbble"
+            },
+            {
+                "content": "\n    \n      DICE\n      Senior Web Designer (3 Month Contract)\n    \n\n    London\n",
+                "href": "https://dice.fm/jobs/15952F9791"
+            },
+            {
+                "content": "\n    \n      DICE\n      Senior UX Researcher\n    \n\n    London\n",
+                "href": "https://dice.fm/jobs/6162BC51A4"
+            },
+            {
+                "content": "\n    \n      Jimdo\n      UI/UX Designer\n    \n\n    Hamburg\n",
+                "href": "https://jimdo.breezy.hr/p/2556fb5fb8ee01-product-designer"
+            },
+            {
+                "content": "\n    \n      SafetyCulture\n      Lead Product Designer\n    \n\n    Surry Hills\n",
+                "href": "https://safetyculture.com/job/?id=691460"
+            },
+            {
+                "content": "\n    \n      Academia.edu\n      Senior Product Designer\n    \n\n    San Francisco\n",
+                "href": "https://jobs.lever.co/academia/13c30adb-c898-4c51-a320-8a8bdb04a370"
+            },
+            {
+                "content": "\n    \n      Column Five\n      Motion Designer\n    \n\n    Irvine, CA\n",
+                "href": "https://www.columnfivemedia.com/jobs/motion-designer-ca"
+            },
+            {
+                "content": "\n    \n      SuitableYou\n      Product Designer w/ UX Consumer Exp.\n    \n\n    Remote\n",
+                "href": "https://docs.google.com/document/d/14AYosfyi-p6Km7cl7KE923WUOduDar8cMmm3IfgIo3M/edit?usp=sharing"
+            },
+            {
+                "content": "\n    \n      Logikcull\n      Senior Product Designer\n    \n\n    San Francisco, Ca\n",
+                "href": "https://boards.greenhouse.io/logikcull/jobs/1102794#.WseUjdPwau4"
+            },
+            {
+                "content": "\n    \n      Statusapp\n      Brand Designer\n    \n\n    Anywhere\n",
+                "href": "https://hirecoin.io/jobs/3/brandgraphic-designer"
+            },
+            {
+                "content": "\n    \n      Kooltra\n      UX/Product Designer\n    \n\n    Toronto\n",
+                "href": "https://docs.google.com/document/d/1XFch-Hn6BZc1PSGn7aCMTT8_IW84swRrcn_-11OUPoc/edit?usp=sharing"
+            },
+            {
+                "content": "\n    \n      Khan Academy\n      Principal/Lead Product Designer\n    \n\n    Mountain View, CA\n",
+                "href": "https://boards.greenhouse.io/khanacademy/jobs/717036#.WsZh6-jwbD4"
+            },
+            {
+                "content": "\n    \n      Jetty\n      Visual Designer\n    \n\n    New York\n",
+                "href": "https://jobs.lever.co/jetty/1e0f3a44-1b6b-4839-84ca-71ba47345dcc"
+            },
+            {
+                "content": "\n    \n      Hopper\n      Mobile Product/UI Designer\n    \n\n    Cambridge, MA\n",
+                "href": "https://www.hopper.com/corp/job-apply.html?gh_jid=4017997002"
+            },
+            {
+                "content": "\n    \n      Trustpilot A/S\n      Senior Web Designer\n    \n\n    Copenhagen\n",
+                "href": "https://jobs.trustpilot.com/position/1246780"
+            },
+            {
+                "content": "\n    \n      Devbridge Group\n      Senior Product Designer\n    \n\n    London, England, United Kingdom\n",
+                "href": "https://workable.com/j/2BB028FCDD"
+            },
+            {
+                "content": "\n    \n      The Make-It Co.,Ltd.\n      UI / UX Designer\n    \n\n    Sattahip, Thailand\n",
+                "href": "https://th.jobsdb.com/th/en/job/ui-ux-designer-300003001663579"
+            },
+            {
+                "content": "\n    \n      Kite\n      Lead Product Designer\n    \n\n    San Francisco\n",
+                "href": "https://goo.gl/xFJpTZ"
+            },
+            {
+                "content": "\n    \n      Createch\n      Graphic Designer\n    \n\n    Irvine, CA\n",
+                "href": "https://www.indeed.com/viewjob?jk=0aed5dbef9432925&tk=1ckb5vv341d0s71o&from=company"
+            },
+            {
+                "content": "\n    \n      Remind\n      Brand Communication Designer\n    \n\n    San Francisco, CA\n",
+                "href": "https://grnh.se/1784515a1"
+            },
+            {
+                "content": "\n    \n      ClickThere\n      Web Designer / Visual Designer\n    \n\n    Anywhere\n",
+                "href": "https://careers.jobscore.com/careers/clicktherellc/jobs/web-designer-cGLQegIUmr6jxDeMg-44q7"
+            },
+            {
+                "content": "\n    \n      Skutally\n      UX, Product Designer (remote)\n    \n\n    USA\n",
+                "href": "https://hire.withgoogle.com/public/jobs/skutallycom/view/P_AAAAAAEAAJgPoPxuj2UpAH"
+            },
+            {
+                "content": "\n    \n      Datadog\n      Illustrator/Designer\n    \n\n    New York\n",
+                "href": "https://grnh.se/r7cwy4sf1"
+            },
+            {
+                "content": "\n    \n      Crowdlinker Inc.\n      Product Designer\n    \n\n    Toronto\n",
+                "href": "https://crowdlinker.recruiterbox.com/jobs/fk01zcy/"
+            },
+            {
+                "content": "\n    \n      D6 Interactive\n      Senior Web/UI Designer Creative Agency\n    \n\n    Anywhere\n",
+                "href": "https://d6interactive.com/job-opening/"
+            },
+            {
+                "content": "\n    \n      Recreation SF\n      Art Director\n    \n\n    San Francisco\n",
+                "href": "http://recsf.com/new-gigs/art-director.html"
+            },
+            {
+                "content": "\n    \n      Planned Parenthood Federation of America\n      User Experience Lead, Machine Learning\n    \n\n    Brooklyn\n",
+                "href": "https://jobs.lever.co/ppfa/eb7f415e-3d34-483d-aa68-a0051310ffe7"
+            },
+            {
+                "content": "\n    \n      Think Company\n      Senior UI/UX Designer\n    \n\n    Philadelphia, PA\n",
+                "href": "http://tbi.applytojob.com/apply/ejtB5S/Senior-UIUX-Designer"
+            },
+            {
+                "content": "\n    \n      HeBS Digital\n      Senior UX Designer\n    \n\n    New York, NY\n",
+                "href": "https://hebsdigital.applytojob.com/apply/d595rOEose/Senior-UX-Designer"
+            },
+            {
+                "content": "\n    \n      HeBS Digital\n      Digital Design Director\n    \n\n    New York, NY\n",
+                "href": "https://hebsdigital.applytojob.com/apply/h1E6PMAS12/Digital-Design-Director"
+            },
+            {
+                "content": "\n    \n      Tray.io\n      Brand & Visual Designer\n    \n\n    San Francisco\n",
+                "href": "https://tray-io.workable.com/j/EFA51269EF"
+            },
+            {
+                "content": "\n    \n      St. John & Partners\n      Digital Designer\n    \n\n    Jacksonville\n",
+                "href": "http://www.sjp.com/careers"
+            },
+            {
+                "content": "\n    \n      The Trade Desk\n      Senior Digital Designer\n    \n\n    New York\n",
+                "href": "https://www.thetradedesk.com/careers/position?gh_jid=1228552"
+            },
+            {
+                "content": "\n    \n      Ready Set Rocket\n      Digital Art Designer\n    \n\n    New York City\n",
+                "href": "https://readysetrocket.com/careers/"
+            },
+            {
+                "content": "\n    \n      Aires\n      Product Design Lead (Software)\n    \n\n    Pittsburgh\n",
+                "href": "https://aires.applytojob.com/apply/9nH3RlY5VN/Product-Design-Lead-Software"
+            },
+            {
+                "content": "\n    \n      Numbrs\n      UI Designer\n    \n\n    Zurich - Switzerland\n",
+                "href": "https://www.numbrs.com/de/careers/open-positions/details#oJh76fwX"
+            },
+            {
+                "content": "\n    \n      Once\n      Designer\n    \n\n    London\n",
+                "href": "https://jobs.lever.co/getonce/4076b326-5823-49a3-b400-4516885c6bc8"
+            },
+            {
+                "content": "\n    \n      Guru.com\n      Lead Creative Designer\n    \n\n    Noida\n",
+                "href": "https://goo.gl/PH2ikt"
+            },
+            {
+                "content": "\n    \n      WECREATE\n      Senior UX / UI designer\n    \n\n    Hong Kong\n",
+                "href": "https://wecreate.com.hk/web-designer-jobs-hong-kong"
+            },
+            {
+                "content": "\n    \n      LeeNHong\n      (New)Freelance Digital Magazine Designer\n    \n\n    Remote\n",
+                "href": "http://leenhong.net/career/"
+            },
+            {
+                "content": "\n    \n      Better Mortgage\n      Product Designer\n    \n\n    Remote\n",
+                "href": "https://boards.greenhouse.io/better/jobs/1171786"
+            },
+            {
+                "content": "\n    \n      Altus Group\n      UX Design Practice Lead\n    \n\n    London\n",
+                "href": "https://careers.peopleclick.com/careerscp/client_altus/external/gateway.do?functionName=viewFromLink&jobPostId=1115&localeCode=en-us"
+            },
+            {
+                "content": "\n    \n      Limeroad.com\n      Product Desginer\n    \n\n    Gurgaon, Haryana, India\n",
+                "href": "https://docs.google.com/document/d/18cQzeHCQID2ckyM7pJJPYxWwbM7rMrZ_7Iiep1oKkE8/edit?usp=sharing"
+            },
+            {
+                "content": "\n    \n      RED RAIDER OUTFITTER\n      Senior Art Director\n    \n\n    Lubbock\n",
+                "href": "https://www.redraideroutfitter.careers/art-department"
+            },
+            {
+                "content": "\n    \n      Sysdig\n      Senior UX Designer\n    \n\n    San Francisco, CA\n",
+                "href": "https://grnh.se/8ecacc6e1"
+            },
+            {
+                "content": "\n    \n      Panorama Education\n      Product Designer\n    \n\n    Boston, MA\n",
+                "href": "https://boards.greenhouse.io/panoramaed/jobs/1200383"
+            },
+            {
+                "content": "\n    \n      Kalo\n      Senior UX Designer\n    \n\n    London\n",
+                "href": "https://jobs.lever.co/kalo/ba49038a-41b5-4051-a126-01cd6f78c1fa"
+            },
+            {
+                "content": "\n    \n      Curve\n      Senior UX Designer\n    \n\n    London, United Kingdom\n",
+                "href": "https://curve-1.workable.com/j/79D1FE9A30"
+            },
+            {
+                "content": "\n    \n      Curve\n      Visual Designer - Product\n    \n\n    London, United Kingdom\n",
+                "href": "https://www.workable.com/j/3D0B51C510"
+            },
+            {
+                "content": "\n    \n      Intelia\n      UI/UX Designer\n    \n\n    Anywhere\n",
+                "href": "https://intelia.io/ux-designer.html"
+            },
+            {
+                "content": "\n    \n      NeuroNation\n      Lead Product Designer for Health Product\n    \n\n    Berlin\n",
+                "href": "https://www.linkedin.com/jobs/cap/view/715988417"
+            },
+            {
+                "content": "\n    \n      Instaread, Inc\n      Web/Mobile Designer ( Remote or local )\n    \n\n    Anywhere\n",
+                "href": "https://docs.google.com/document/d/185uK2S_zdVOa02X1KCG7nLndVDvgwvnGy6N39ID6eiU/edit?usp=sharing"
+            },
+            {
+                "content": "\n    \n      SigFig\n      Product Designer\n    \n\n    San Francisco\n",
+                "href": "https://grnh.se/blt0fr1"
+            },
+            {
+                "content": "\n    \n      Discord\n      Senior Animator\n    \n\n    San Francisco, CA\n",
+                "href": "https://discordapp.com/jobs/4063209002"
+            },
+            {
+                "content": "\n    \n      GoDaddy\n      Vice President - UX Design\n    \n\n    Washington; Scottsdale, Arizona; Sunnyvale, California\n",
+                "href": "https://careers.godaddy.com/job/kirkland/vice-president-ux-design/18045/7076088?source=APPLICANT_SOURCE-3-118"
+            },
+            {
+                "content": "\n    \n      GoDaddy\n      Prototype UX + Visual Designer\n    \n\n    Washington, California, Arizona\n",
+                "href": "https://careers.godaddy.com/job/hiawatha/prototype-ux-visual-designer/18045/8096130?source=APPLICANT_SOURCE-3-118"
+            },
+            {
+                "content": "\n    \n      GoDaddy\n      Senior UX Designer\n    \n\n    Scottsdale, Arizona; Tempe, Arizona\n",
+                "href": "https://careers.godaddy.com/job/scottsdale/senior-ux-designer/18045/7498772?source=APPLICANT_SOURCE-3-118"
+            },
+            {
+                "content": "\n    \n      GoDaddy\n      Brand Visual Designer\n    \n\n    Scottsdale\n",
+                "href": "https://careers.godaddy.com/job/scottsdale/brand-visual-designer/18045/7907153?source=APPLICANT_SOURCE-3-118"
+            },
+            {
+                "content": "\n    \n      Postlight\n      Product Designer\n    \n\n    New York, NY\n",
+                "href": "https://grnh.se/i57m1epb2"
+            },
+            {
+                "content": "\n    \n      Metropolitan Water District\n      Graphic Arts Designer\n    \n\n    Los Angeles\n",
+                "href": "https://metrowater.hodesiq.com/job_detail.asp?JobID=5558177&user_id="
+            },
+            {
+                "content": "\n    \n      Adwerx\n      Product Designer\n    \n\n    Durham, NC\n",
+                "href": "https://adwerx.applytojob.com/apply/S1L3QkuUyr/Product-Designer"
+            },
+            {
+                "content": "\n    \n      Cornelsen eCademy GmbH\n      Senior Product Designer (m/f)\n    \n\n    Berlin, Germany\n",
+                "href": "https://workable.com/j/FB81619B4F"
+            },
+            {
+                "content": "\n    \n      Citrusbyte\n      Product Designer\n    \n\n    Anywhere\n",
+                "href": "http://careers.citrusbyte.com/apply/OqZvyajEMg/Product-Designer"
+            },
+            {
+                "content": "\n    \n      PopChest\n      Web Designer\n    \n\n    Santa Monica, CA\n",
+                "href": "https://angel.co/popchest/jobs/328533-web-designer"
+            },
+            {
+                "content": "\n    \n      Akin Gump Strauss Hauer & Feld LLP\n      Production Coordinator\n    \n\n    Washington, DC\n",
+                "href": "https://akingumpselfapply.viglobalcloud.com/viRecruitSelfApply/ReDefault.aspx?FilterREID=3&FilterJobCategoryID=15&FilterJobID=331"
+            },
+            {
+                "content": "\n    \n      Gulfstream Aerospace\n      Graphic Designer\n    \n\n    Savannah\n",
+                "href": "https://career4.successfactors.com/sfcareer/jobreqcareer?jobId=139229&company=GulfStrProd&username"
+            },
+            {
+                "content": "\n    \n      Numbrs Personal Finance AG\n      Digital Video Producer\n    \n\n    Zurich - Switzerland\n",
+                "href": "https://www.numbrs.com/de/careers/open-positions/details#oB3X7fws"
+            },
+            {
+                "content": "\n    \n      Splash\n      Lead Product Designer, Experience\n    \n\n    New York, New York\n",
+                "href": "https://boards.greenhouse.io/splash/jobs/1175432"
+            },
+            {
+                "content": "\n    \n      INFOSTELLAR\n      UI/UX Designer\n    \n\n    Tokyo\n",
+                "href": "https://infostellar-space.workable.com/jobs/654629"
+            },
+            {
+                "content": "\n    \n      Vultr Holdings, LLC.\n      Senior Network Engineer\n    \n\n    West Palm Beach, Florida, United States\n",
+                "href": "https://workable.com/j/B8E3256891"
+            },
+            {
+                "content": "\n    \n      Apple\n      Visual Designer, Editorial Design\n    \n\n    Shanghai, China\n",
+                "href": "https://jobs.apple.com/sg/search#specs&ss=58034330&t=0&so=&lo=0*CHN&pN=0&openJobId=58034330"
+            },
+            {
+                "content": "\n    \n      Rootstrap\n      Product Designer (UX/UI)\n    \n\n    Los Angeles, CA\n",
+                "href": "https://docs.google.com/document/d/19yU2ISyDsL-TmIUe4cV7bXs-Rhkb0B-8InEfDWvW87c/edit?usp=sharing"
+            },
+            {
+                "content": "\n    \n      Logikcull\n      Principal Product Designer\n    \n\n    San Francisco, CA\n",
+                "href": "https://boards.greenhouse.io/logikcull/jobs/1102342#.WseVrdPwau4"
+            },
+            {
+                "content": "\n    \n      KeepTruckin\n      Visual Designer\n    \n\n    San Francisco\n",
+                "href": "https://jobs.lever.co/keeptruckin/bb637142-df81-44d5-9770-5c3c1d0cb2eb"
+            },
+            {
+                "content": "\n    \n      Real Time\n      UX Designer - Contract\n    \n\n    Sydney\n",
+                "href": "https://www.realtimeaustralia.com/job-search/?ja-job=3100759"
+            },
+            {
+                "content": "\n    \n      Kong Inc\n      Senior Web Developer\n    \n\n    San Francisco\n",
+                "href": "https://jobs.lever.co/kong/816ef12d-1af4-47a7-9352-ebcd7be6aadd"
+            },
+            {
+                "content": "\n    \n      BCG Digital Ventures\n      Senior Experience Designer\n    \n\n    Manhattan Beach\n",
+                "href": "https://jobs.lever.co/bcg/53a6f11d-311f-4273-ad8e-c57d715ccb8d?lever-origin=applied&lever-source%5B%5D=dribbble"
+            },
+            {
+                "content": "\n    \n      BCG Digital Ventures\n      Senior Experience Designer\n    \n\n    New York City\n",
+                "href": "https://jobs.lever.co/bcg/6809dd43-8560-4c3b-9b55-f3fce5238f45?lever-origin=applied&lever-source%5B%5D=dribbble"
+            },
+            {
+                "content": "\n    \n      BCG Digital Ventures\n      Lead Experience Designer\n    \n\n    New York City\n",
+                "href": "https://jobs.lever.co/bcg/4014f1d9-55b5-4381-b2b2-50d9f9711829?lever-origin=applied&lever-source%5B%5D=dribbble"
+            },
+            {
+                "content": "\n    \n      Vitamin T\n      Product Designer\n    \n\n    San Francisco, CA\n",
+                "href": "https://vitamintalent.com/talent/jobs/133860"
+            },
+            {
+                "content": "\n    \n      Digitas\n      Assoc. Creative Dir., Experience Design\n    \n\n    Boston\n",
+                "href": "https://careers-digitas.icims.com/jobs/27347/associate-creative-director%2c-experience-design/job?mode=view&mobile=false&width=788&height=500&bga=true&needsRedirect=false&jan1offset=-360&jun1offset=-300"
+            },
+            {
+                "content": "\n    \n      Tally\n      Product Designer\n    \n\n    San Francisco\n",
+                "href": "https://jobs.lever.co/tally/3c248ad7-9180-4351-8207-f8b01bc0dfca"
+            },
+            {
+                "content": "\n    \n      Bestow\n      Senior Product Designer\n    \n\n    Dallas or Austin\n",
+                "href": "https://jobs.lever.co/hellobestow/b7287fbe-2783-42c5-a0bc-3623731cf740"
+            },
+            {
+                "content": "\n    \n      XWP\n      UI Designer - Remote\n    \n\n    San Francisco, California, United States\n",
+                "href": "https://workable.com/j/39A374B108"
+            },
+            {
+                "content": "\n    \n      Archon Systems\n      User Experience Designer\n    \n\n    Toronto, Canada\n",
+                "href": "https://authenticjobs.com/jobs/30764/user-experience-designer?utm_source=dbbb&utm_medium=addon&utm_campaign=30764"
+            },
+            {
+                "content": "\n    \n      Oliv\n      UI/UX Designer\n    \n\n    Remote, HQ @ Dubai\n",
+                "href": "https://careers.oliv.com/uiux-designer/en"
+            },
+            {
+                "content": "\n    \n      Onedot\n      Web Frontend Engineer (Internship)\n    \n\n    Schlieren, Zurich, Switzerland\n",
+                "href": "https://workable.com/j/0796895F89"
+            },
+            {
+                "content": "\n    \n      Devbridge Group\n      Manager of Product Design\n    \n\n    Toronto, Ontario, Canada\n",
+                "href": "https://workable.com/j/DB40A6F333"
+            },
+            {
+                "content": "\n    \n      Input Neuron\n      Contract Designer\n    \n\n    Anywhere\n",
+                "href": "https://spinn3r.recruiterbox.com/jobs/fk01plc?source=dribbble"
+            },
+            {
+                "content": "\n    \n      Zendesk\n      Senior Motion Graphics Designer\n    \n\n    San Francisco, CA\n",
+                "href": "https://jobs.lever.co/zendesk/03287e84-1509-407d-b3cb-897c9b89129e"
+            },
+            {
+                "content": "\n    \n      Whiteboard\n      Product Designer\n    \n\n    Chattanooga, TN\n",
+                "href": "http://jobs.whiteboard.is/apply/7xiF1NK4Th/Digital-Product-Designer"
+            },
+            {
+                "content": "\n    \n      Lonely Planet\n      Product Designer\n    \n\n    Nashville\n",
+                "href": "https://lonelyplanet.recruiterbox.com/jobs/fk0fasq?cjb_hash=O_fdvg87&apply_now=true"
+            },
+            {
+                "content": "\n    \n      MeetMindful\n      Product Designer\n    \n\n    Denver/Boulder\n",
+                "href": "https://hire.withgoogle.com/public/jobs/meetmindfulcom/view/P_AAAAAAEAAADCe5UCPZM0nR"
+            },
+            {
+                "content": "\n    \n      atfinity\n      Junior Product Designer\n    \n\n    Zurich, Switzerland\n",
+                "href": "https://grnh.se/dcf88c4f2"
+            },
+            {
+                "content": "\n    \n      Gaslight\n      Designer\n    \n\n    Cincinnati, OH\n",
+                "href": "https://gaslight.recruiterbox.com/jobs/fk01qie?cjb_hash=O_qkPL59"
+            },
+            {
+                "content": "\n    \n      Freepik Company\n      Design instructor (remote)\n    \n\n    Anywhere\n",
+                "href": "https://www.tutpad.com/profile/join/instructor?utm_source=dribbble&utm_medium=jobs&utm_campaign=dribbble-hiring-instructor"
+            },
+            {
+                "content": "\n    \n      ShootDotEdit, LLC\n      Senior UX/UI Graphic Designer\n    \n\n    Lajpat Nagar, New Delhi\n",
+                "href": "https://shootdotedit.workable.com/j/75BD5DD6DB"
+            },
+            {
+                "content": "\n    \n      FANDOM\n      Product Designer\n    \n\n    San Francisco\n",
+                "href": "http://fandom.wikia.com/careers/listing/998800?gh_jid=998800"
+            },
+            {
+                "content": "\n    \n      Expensify\n      Designer\n    \n\n    San Francisco, Portland\n",
+                "href": "https://we.are.expensify.com/sf-designer"
+            },
+            {
+                "content": "\n    \n      Mode\n      Senior Product Designer\n    \n\n    San Francisco\n",
+                "href": "https://boards.greenhouse.io/modeanalytics/jobs/860810"
+            },
+            {
+                "content": "\n    \n      HP Inc.\n      Interaction Designer\n    \n\n    Ft. Collins, Colorado\n",
+                "href": "https://h30631.www3.hp.com/job/fort-collins/interaction-designer/3544/8345296"
+            },
+            {
+                "content": "\n    \n      Zenefits\n      Senior UX Designer\n    \n\n    San Francisco\n",
+                "href": "https://www.zenefits.com/zennation/1005654/"
+            },
+            {
+                "content": "\n    \n      Intercom\n      Senior Visual Designer\n    \n\n    London or Dublin\n",
+                "href": "https://boards.greenhouse.io/intercom/jobs/1184988"
+            },
+            {
+                "content": "\n    \n      Nice and Serious\n      Animator and Designer\n    \n\n    London\n",
+                "href": "https://ifyoucouldjobs.com/job/hfs4x1szk"
+            },
+            {
+                "content": "\n    \n      PulsePoint\n      Sr UX Designer\n    \n\n    New York\n",
+                "href": "https://www.pulsepoint.com/job-board?gh_jid=1228816"
+            },
+            {
+                "content": "\n    \n      OurPact\n      Mobile UX/UI Designer\n    \n\n    San Diego\n",
+                "href": "https://www.ziprecruiter.com/job/bbd21628"
+            },
+            {
+                "content": "\n    \n      ServiceTitan\n      Product Designer  – UI/UX (Enterprise)\n    \n\n    Los Angeles\n",
+                "href": "https://boards.greenhouse.io/servicetitan/jobs/1168500?gh_src=3959f8291"
+            },
+            {
+                "content": "\n    \n      Lightcurve GmbH\n      Motion Graphics Designer\n    \n\n    Berlin\n",
+                "href": "https://angel.co/l/2bgXFc"
+            },
+            {
+                "content": "\n    \n      KM2 >> GmbH\n      Creative Front-End Developer\n    \n\n    Düsseldorf, Germany\n",
+                "href": "https://km2.de/magician/"
+            },
+            {
+                "content": "\n    \n      Nurx\n      Senior Visual Designer\n    \n\n    San Francisco\n",
+                "href": "https://boards.greenhouse.io/nurx/jobs/4026734002"
+            },
+            {
+                "content": "\n    \n      DraftKings Inc.\n      Product Design Director, Sportsbook\n    \n\n    Boston, MA\n",
+                "href": "http://careers.draftkings.com/apply.html?gh_jid=1189237"
+            },
+            {
+                "content": "\n    \n      ChefSteps\n      Senior Product Designer\n    \n\n    Seattle\n",
+                "href": "https://hire.withgoogle.com/public/jobs/chefstepscom/view/P_AAAAAAEAAADBfS9cVvVklp"
+            },
+            {
+                "content": "\n    \n      Mercedes-Benz\n      Senior Visual UI Designer\n    \n\n    Sunnyvale, CA\n",
+                "href": "https://daimler.taleo.net/careersection/ex/jobdetail.ftl?job=MER0000FVR"
+            },
+            {
+                "content": "\n    \n      inne\n      Interaction Designer\n    \n\n    Berlin\n",
+                "href": "https://www.inne.io/wp-content/uploads/2018/07/inne_job_description_interaction.pdf"
+            },
+            {
+                "content": "\n    \n      (RED)\n      Design and Brand Senior Manager\n    \n\n    New York City\n",
+                "href": "https://recruiting.ultipro.com/ONE1007/JobBoard/5a04afb6-347c-4245-8149-426c3b4e356c/OpportunityDetail?opportunityId=d8dbc1b6-c32c-4893-a2e5-ab7a640d98fa"
+            },
+            {
+                "content": "\n    \n      Trouva\n      Junior Digital Designer\n    \n\n    London\n",
+                "href": "https://trouva.workable.com/jobs/750067"
+            },
+            {
+                "content": "\n    \n      Lingokids\n      Senior UX Designer\n    \n\n    Madrid\n",
+                "href": "https://angel.co/lingokids/jobs/339378-senior-ux-designer"
+            },
+            {
+                "content": "\n    \n      Ableton AG\n      UX Designer Hardware\n    \n\n    Berlin\n",
+                "href": "https://abletonag-jobs.personio.de/job/84201"
+            },
+            {
+                "content": "\n    \n      Joystick\n      Interactive Designer\n    \n\n    Los Angeles\n",
+                "href": "https://joystick.bamboohr.com/jobs/view.php?id=7"
+            },
+            {
+                "content": "\n    \n      Scoot Networks\n      Senior Brand Designer\n    \n\n    San Francisco\n",
+                "href": "https://jobs.lever.co/scoot/62e530a5-d4b5-4125-847e-6fbf8bdaf0ee"
+            },
+            {
+                "content": "\n    \n      Airsorted\n      Senior Product Designer (UX/UI)\n    \n\n    London, UK\n",
+                "href": "https://jobs.lever.co/airsorted/1b548d2c-57f0-4178-a5f5-74ee11633e3e"
+            },
+            {
+                "content": "\n    \n      SLI Systems\n      Frontend Engineer\n    \n\n    Christchurch, South Island, New Zealand\n",
+                "href": "https://workable.com/j/6E76C508AE"
+            },
+            {
+                "content": "\n    \n      Harbor\n      Product Designer/Senior Product Designer\n    \n\n    San Francisco\n",
+                "href": "https://jobs.lever.co/harbor/e37c77d9-2ab2-4058-8fea-ad76af768bcd?lever-origin=applied&lever-source%5B%5D=Dribbble"
+            },
+            {
+                "content": "\n    \n      Packlane\n      Digital UI Designer\n    \n\n    Remote\n",
+                "href": "https://packlane.breezy.hr/p/5abc2589d5c9-digital-ui-designer"
+            },
+            {
+                "content": "\n    \n      Universe\n      Product Designer\n    \n\n    Toronto, Ontario\n",
+                "href": "https://universe.applytojob.com/apply/rhh7wREbfP/Product-Designer?source=dribbble"
+            },
+            {
+                "content": "\n    \n      Citrusbyte\n      Mobile Product Designer\n    \n\n    Anywhere\n",
+                "href": "https://citrusbyte.applytojob.com/apply/IheT2lcAsm/Mobile-Product-Designer"
+            },
+            {
+                "content": "\n    \n      FloSports\n      Product Designer\n    \n\n    Austin, TX\n",
+                "href": "https://flosports.applytojob.com/apply/Xo8BVksMOF/Product-Designer"
+            },
+            {
+                "content": "\n    \n      Elevation Church\n      UI/UX Designer\n    \n\n    Charlotte, NC\n",
+                "href": "http://elevationchurch.org/job/ui-ux-designer/"
+            },
+            {
+                "content": "\n    \n      Vidmob\n      Senior Digital Designer\n    \n\n    New York\n",
+                "href": "https://www.vidmob.com/senior-digital-designer/"
+            },
+            {
+                "content": "\n    \n      Statusapp\n      Graphic/Brand Designer\n    \n\n    Anywhere\n",
+                "href": "https://status.im/open-positions.html?gh_jid=1116209"
+            },
+            {
+                "content": "\n    \n      Statusapp\n      UI/UX Designer\n    \n\n    Anywhere\n",
+                "href": "https://hirecoin.io/jobs/1005/uiux-designer"
+            },
+            {
+                "content": "\n    \n      Statusapp\n      Web Designer\n    \n\n    Anywhere\n",
+                "href": "https://status.im/open-positions.html?gh_jid=1144173"
+            },
+            {
+                "content": "\n    \n      ShippingEasy\n      Lead Marketing Designer\n    \n\n    Austin\n",
+                "href": "https://shippingeasy.com/marketing-design-lead/"
+            },
+            {
+                "content": "\n    \n      Penta\n      Senior UI / Graphic Designer\n    \n\n    Berlin\n",
+                "href": "https://angel.co/penta-1/jobs/391511-ui-graphic-designer"
+            },
+            {
+                "content": "\n    \n      heartbeat medical\n      UI/UX Designer/in in Healthcare Startup\n    \n\n    Berlin, DE\n",
+                "href": "https://heartbeat-medical.breezy.hr/p/15758bcce4b3-ui-ux-designer-in-in-healthcare-startup?source=dribbble"
+            },
+            {
+                "content": "\n    \n      Goodwall\n      Director of Design (UX / Product Design)\n    \n\n    NYC\n",
+                "href": "https://jobs.lever.co/goodwall/21ea0fb1-15e0-46eb-b233-30c19e1fb30e"
+            },
+            {
+                "content": "\n    \n      Back\n      (Lead) Product Designer\n    \n\n    Berlin\n",
+                "href": "https://jobs.lever.co/back/02008735-73b1-41b4-80fa-d3609efe1450"
+            },
+            {
+                "content": "\n    \n      Privilee\n      Senior UI/UX Designer\n    \n\n    Dubai, United Arab Emirates\n",
+                "href": "https://privilee.workable.com/j/FA96DC2A02"
+            },
+            {
+                "content": "\n    \n      Jungle Creative\n      Owner\n    \n\n    United Kingdom\n",
+                "href": "http://ronnies-first-project-634e02.webflow.io/"
+            },
+            {
+                "content": "\n    \n      Little Voice\n      Lead Visual UI Designer\n    \n\n    London & Remote\n",
+                "href": "https://little-voice.breezy.hr/"
+            },
+            {
+                "content": "\n    \n      Pixlee\n      Product Designer\n    \n\n    San Francisco or New York\n",
+                "href": "https://www.pixlee.com/careers?gh_jid=485241"
+            },
+            {
+                "content": "\n    \n      Bureau for Good\n      Freelance senior visual designer\n    \n\n    Remote\n",
+                "href": "https://www.bureauforgood.com/jobs"
+            },
+            {
+                "content": "\n    \n      ProfitWell\n      Visual Designer\n    \n\n    Boston, MA\n",
+                "href": "https://profitwell.workable.com/j/30AD5994A3"
+            },
+            {
+                "content": "\n    \n      TicketSwap\n      Senior UX Designer\n    \n\n    Amsterdam\n",
+                "href": "https://ticketswap.homerun.co/senior-ux-designer?utm_source=dribbble"
+            },
+            {
+                "content": "\n    \n      Akkroo\n      Digital Designer\n    \n\n    London\n",
+                "href": "https://akkroo.com/jobs/digital-designer"
+            },
+            {
+                "content": "\n    \n      Klarna\n      Product Designer - Design System\n    \n\n    Stockholm\n",
+                "href": "https://jobs.lever.co/klarna/55e0184a-27cc-4355-a931-96099fd91c3f"
+            },
+            {
+                "content": "\n    \n      Viz.ai\n      Graphic Designer\n    \n\n    San Francisco, CA\n",
+                "href": "https://viz.bamboohr.com/jobs/view.php?id=45"
+            },
+            {
+                "content": "\n    \n      Later\n      Communications Designer\n    \n\n    Remote\n",
+                "href": "https://later.bamboohr.com/jobs/view.php?id=28"
+            },
+            {
+                "content": "\n    \n      Heath Ceramics\n      Graphic Designer\n    \n\n    San Francisco\n",
+                "href": "http://jobs.heathceramics.com/apply/inXAZlUqcz/Graphic-Designer"
+            },
+            {
+                "content": "\n    \n      Zinc\n      Lead Product Designer\n    \n\n    San Francisco\n",
+                "href": "http://bit.ly/2LwIMHl"
+            },
+            {
+                "content": "\n    \n      CatalystUX\n      Designer with expertise in Figma\n    \n\n    United States\n",
+                "href": "https://goo.gl/T4h1M3"
+            },
+            {
+                "content": "\n    \n      Klipfolio\n      Web Designer/Developer\n    \n\n    Ottawa, ON\n",
+                "href": "https://www.klipfolio.com/careers/web-designer-developer"
+            },
+            {
+                "content": "\n    \n      Messari\n      Web UI/UX Designer\n    \n\n    New York\n",
+                "href": "https://angel.co/messari/jobs/398572-web-ui-ux-designer"
+            },
+            {
+                "content": "\n    \n      InVision AG\n      User Interface Designer\n    \n\n    Düsseldorf\n",
+                "href": "https://www.invision.jobs/user-interface-designer/"
+            },
+            {
+                "content": "\n    \n      Sears Davies\n      Front-End Developer\n    \n\n    London, UK\n",
+                "href": "https://www.searsdavies.com/contact/recruitment"
+            },
+            {
+                "content": "\n    \n      Phoenix Design\n      Senior Visual Design - Shanghai\n    \n\n    Shanghai\n",
+                "href": "http://www.phoenixdesign.com/jobs/"
+            },
+            {
+                "content": "\n    \n      Endouble\n      Visual/UI designer\n    \n\n    Amsterdam\n",
+                "href": "https://workingatendouble.com/vacancies/visual-ui-designer-amsterdam-endouble/"
+            },
+            {
+                "content": "\n    \n      Series Eight\n      UX/UI Designer\n    \n\n    UK or Remote\n",
+                "href": "https://serieseight.com/careers/ux-ui-designer"
+            },
+            {
+                "content": "\n    \n      SweetRush\n      UI/UX Designer\n    \n\n    Remote\n",
+                "href": "https://hire.withgoogle.com/public/jobs/sweetrushcom/view/P_AAAAAADAAADIjapo9O5mUl"
+            },
+            {
+                "content": "\n    \n      Fair\n      Product Designer\n    \n\n    Santa Monica\n",
+                "href": "https://www.fair.com/careers/position/4003469002"
+            },
+            {
+                "content": "\n    \n      Secret Benefits\n      UI / Visual Designer\n    \n\n    Anywhere\n",
+                "href": "https://www.secretbenefits.com/jobs/1"
+            },
+            {
+                "content": "\n    \n      Industrious Office\n      Product Designer, Digital\n    \n\n    New York, NY\n",
+                "href": "https://boards.greenhouse.io/industrious/jobs/1144163"
+            },
+            {
+                "content": "\n    \n      SetSail\n      Head of Product Design\n    \n\n    San Mateo\n",
+                "href": "https://docs.google.com/document/d/1EAmKXYVsC-WLUo1sItlgG7rF4eUr7QACwLai1n7_h2k/edit"
+            },
+            {
+                "content": "\n    \n      InVision App\n      Product Designer\n    \n\n    Anywhere\n",
+                "href": "https://grnh.se/10c8180e1"
+            },
+            {
+                "content": "\n    \n      Swell Investing\n      Sr. Visual Designer\n    \n\n    Santa Monica, CA\n",
+                "href": "https://sjobs.brassring.com/TGnewUI/Search/Home/Home?partnerid=26207&siteid=7084#jobDetails=475655_7084"
+            },
+            {
+                "content": "\n    \n      Seven Senders\n      UX/UI Designer (m/f)\n    \n\n    Berlin\n",
+                "href": "https://sevensenders-jobs.personio.de/job/82349?language=en"
+            },
+            {
+                "content": "\n    \n      Medivis\n      3D UI in Augmented Reality\n    \n\n    Brooklyn, NY\n",
+                "href": "http://www.medivis.co/"
+            },
+            {
+                "content": "\n    \n      RMG Media\n      Creative Director\n    \n\n    Anywhere (preference for central Florida)\n",
+                "href": "https://www.linkedin.com/jobs/cap/view/772207816/?pathWildcard=772207816&trk=job_capjs"
+            },
+            {
+                "content": "\n    \n      Mathspace\n      Senior UI/UX Designer\n    \n\n    Sydney\n",
+                "href": "https://mathspace.workable.com/jobs/694114"
+            },
+            {
+                "content": "\n    \n      ThoughtSpot\n      Product Designer\n    \n\n    Palo Alto, CA\n",
+                "href": "https://www.thoughtspot.com/careers/listing?gh_jid=1059084"
+            },
+            {
+                "content": "\n    \n      Tesla\n      Senior Digital Product Designer\n    \n\n    Los Angeles, CA\n",
+                "href": "https://www.tesla.com/careers/job/senior-uidesigner-61846"
+            },
+            {
+                "content": "\n    \n      Button\n      Head of Design\n    \n\n    New York\n",
+                "href": "https://jobs.lever.co/button/31a378db-179a-4e0d-9bd2-d3249a47159d"
+            },
+            {
+                "content": "\n    \n      Koupon Media\n      Senior Designer\n    \n\n    Addison, Texas\n",
+                "href": "https://www.linkedin.com/jobs/search/?currentJobId=702749772&f_C=2354871&locationId=OTHERS.worldwide"
+            },
+            {
+                "content": "\n    \n      Prolific Interactive\n      UX Designer\n    \n\n    San Francisco\n",
+                "href": "https://grnh.se/cac2c1931"
+            },
+            {
+                "content": "\n    \n      smava GmbH\n      Product (UI) Designer (m/f)\n    \n\n    Berlin\n",
+                "href": "https://short.sg/j/2260621"
+            },
+            {
+                "content": "\n    \n      smava GmbH\n      Senior UX Designer (m/f)\n    \n\n    Berlin\n",
+                "href": "https://short.sg/j/2261266"
+            },
+            {
+                "content": "\n    \n      The Plum Guide\n      Product Designer\n    \n\n    London\n",
+                "href": "https://plumguide-careers.squarespace.com/product-designer"
+            },
+            {
+                "content": "\n    \n      atfinity\n      Product Designer\n    \n\n    Zurich, Switzerland\n",
+                "href": "https://grnh.se/4ab96d342"
+            },
+            {
+                "content": "\n    \n      Opendoor\n      Snr. Product Designer (Ops Tools)\n    \n\n    Atlanta\n",
+                "href": "https://jobs.lever.co/opendoor/43c733ef-bda8-4d32-b8b6-8916bead2279"
+            },
+            {
+                "content": "\n    \n      Opendoor\n      Senior Product Designer (Consumer)\n    \n\n    San Francisco\n",
+                "href": "https://jobs.lever.co/opendoor/d971930b-42dd-4f7d-92a4-8c60f1f1dc9a"
+            },
+            {
+                "content": "\n    \n      Opendoor\n      Senior Brand Designer\n    \n\n    San Francisco\n",
+                "href": "https://jobs.lever.co/opendoor/5e0a5616-dc44-4d67-9ed7-24b6fe7a2eae"
+            },
+            {
+                "content": "\n    \n      Kraken\n      Product Designer\n    \n\n    Europe or Remote\n",
+                "href": "https://jobs.lever.co/kraken/75e27533-d932-4e95-a759-7ff25e6e8c02"
+            },
+            {
+                "content": "\n    \n      Tempo\n      Senior UI/UX Designer\n    \n\n    San Francisco\n",
+                "href": "https://jobs.lever.co/tempoautomation/3eb14df1-3aa2-42f3-b0c5-eff6f7b9fc3d"
+            },
+            {
+                "content": "\n    \n      CBS Interactive\n      Product Designer\n    \n\n    San Francisco / Vancouver, BC / New York / Burbank\n",
+                "href": "https://cbs.avature.net/cbsinteractivecareers/JobDetail/Product-Designer/11259"
+            },
+            {
+                "content": "\n    \n      AngelList\n      Creative Director\n    \n\n    New York\n",
+                "href": "https://angel.co/angellist/jobs/320882"
+            },
+            {
+                "content": "\n    \n      PayPal\n      Merchant Asset Designer\n    \n\n    San Jose\n",
+                "href": "https://jobsearch.paypal-corp.com/en-US/job/merchant-asset-designer/J3V2M66W9GHTG2XCYTP"
+            },
+            {
+                "content": "\n    \n      Datamarx\n      Visual Designer\n    \n\n    New York\n",
+                "href": "https://datamarx.com/careers/visual-designer/"
+            },
+            {
+                "content": "\n    \n      Target India Corporation\n      Lead Creative Director - 3D CGI\n    \n\n    Bangalore - India\n",
+                "href": "https://jobs.target.com/job/bengaluru/lead-acd-cgi/1118/6075920"
+            },
+            {
+                "content": "\n    \n      Verys\n      Lead UI/UX Product Designer\n    \n\n    Santa Ana, CA\n",
+                "href": "http://careers.verys.com/index.php?m=portal&a=details&jobOrderID=11180123&portalID=30594"
+            },
+            {
+                "content": "\n    \n      HackerOne\n      Senior Product Designer\n    \n\n    Groningen, Netherlands\n",
+                "href": "https://www.hackerone.com/careers?gh_jid=1250129"
+            },
+            {
+                "content": "\n    \n      ViscoSoft Inc.\n      Digital Designer\n    \n\n    Charlotte\n",
+                "href": "https://www.linkedin.com/jobs/cap/view/758830656/"
+            },
+            {
+                "content": "\n    \n      3M\n      Senior UX Graphic Designer\n    \n\n    Maplewood,  MN\n",
+                "href": "https://3m.recsolu.com/jobs/gi5HldvpnXP6joY1eGc4gw"
+            },
+            {
+                "content": "\n    \n      Bajillion Agency\n      Web Designer\n    \n\n    Topeka, KS\n",
+                "href": "http://www.abajillion.com/web-designer"
+            },
+            {
+                "content": "\n    \n      Wistia\n      Director of Design\n    \n\n    Cambridge, MA\n",
+                "href": "https://boards.greenhouse.io/wistia/jobs/1150628"
+            },
+            {
+                "content": "\n    \n      Blue State Digital\n      Designer\n    \n\n    Oakland, CA\n",
+                "href": "https://www.bluestatedigital.com/jobs/?gh_jid=1235940"
+            },
+            {
+                "content": "\n    \n      AdvicePay\n      Senior UI/UX Designer\n    \n\n    Bozeman, Montana\n",
+                "href": "http://careers.advicepay.com/o/senior-uiux-designer"
+            },
+            {
+                "content": "\n    \n      Duolingo\n      Senior Product Designer\n    \n\n    Pittsburgh, PA\n",
+                "href": "https://hire.withgoogle.com/public/jobs/duolingocom/view/P_AAAAAADAAADNcnhySF3KW4"
+            },
+            {
+                "content": "\n    \n      Duolingo\n      Design Manager\n    \n\n    Pittsburgh, PA\n",
+                "href": "https://hire.withgoogle.com/public/jobs/duolingocom/view/P_AAAAAADAAADFbrId8MmEtl"
+            },
+            {
+                "content": "\n    \n      Power Home Remodeling\n      User Experience Engineer\n    \n\n    Anywhere\n",
+                "href": "https://nitro.powerhrg.com/job_postings/bc5c9515dfd6c8ff66154c17b7e1d428591484cb33354a3f77b310ca724ec722?display=description"
+            },
+            {
+                "content": "\n    \n      AnyWear\n      Mobile UI/UX Designer\n    \n\n    Anywhere\n",
+                "href": "http://anywear.ai/"
+            },
+            {
+                "content": "\n    \n      Power Home Remodeling\n      User Experience Designer\n    \n\n    Philadelphia, PA\n",
+                "href": "https://nitro.powerhrg.com/job_postings/84683e7541689f97f423bb9bffb7be0d034d3190f67473c5046776d1137cedf4?display=description"
+            },
+            {
+                "content": "\n    \n      ABOUT YOU GmbH\n      Art Director UI/UX Design\n    \n\n    Hamburg\n",
+                "href": "https://bit.ly/2Lozdxa"
+            },
+            {
+                "content": "\n    \n      ZIP Software GmbH\n      Product Designer (m/f)\n    \n\n    Berlin, Stuttgart / Rosenfeld\n",
+                "href": "https://zip.app/jobs/marketing-product-designer"
+            },
+            {
+                "content": "\n    \n      ATTN:\n      Art Director, Animation\n    \n\n    Los Angeles, CA\n",
+                "href": "https://grnh.se/yy3nl4451"
+            },
+            {
+                "content": "\n    \n      Mode\n      Director of Design\n    \n\n    San Francisco\n",
+                "href": "https://boards.greenhouse.io/modeanalytics/jobs/1254370"
+            },
+            {
+                "content": "\n    \n      Grey Dog Media\n      Art Director\n    \n\n    West Des Moines, Iowa\n",
+                "href": "https://www.ziprecruiter.com/job/96f92ea2"
+            },
+            {
+                "content": "\n    \n      Cassini Systems Limited\n      Software Developer\n    \n\n    London, England, United Kingdom\n",
+                "href": "https://workable.com/j/39D662230D"
+            },
+            {
+                "content": "\n    \n      StyleSeat\n      Principal Product Designer\n    \n\n    San Francisco, CA\n",
+                "href": "http://static.styleseat.com/jobs/index.html?bzid=ed0675313745"
+            },
+            {
+                "content": "\n    \n      Swing by Swing Golf, Inc.\n      Marketing Designer\n    \n\n    Hartford, Connecticut or Remote (Can work from home)\n",
+                "href": "https://www.linkedin.com/jobs/view/767985772/"
+            },
+            {
+                "content": "\n    \n      Peloton\n      Product UI Designer\n    \n\n    New York\n",
+                "href": "https://grnh.se/710cfc211"
+            },
+            {
+                "content": "\n    \n      Greenpeace USA\n      Web Designer\n    \n\n    Washington, DC OR San Franciso, CA\n",
+                "href": "https://careers-greenpeace.icims.com/jobs/1212/web-designer/job"
+            },
+            {
+                "content": "\n    \n      SumUp\n      Senior Brand Designer (m/f)\n    \n\n    Berlin\n",
+                "href": "https://sumup.workable.com/jobs/601155"
+            },
+            {
+                "content": "\n    \n      90 Degrees West\n      MOTION DESIGNER - Full Time\n    \n\n    Anywhere\n",
+                "href": "https://www.90degreeswest.com/motiondesigner/"
+            },
+            {
+                "content": "\n    \n      Logojoy\n      Senior Product Designer\n    \n\n    Toronto\n",
+                "href": "https://logojoy.com/careers/?jobcode=D41DF012CD"
+            },
+            {
+                "content": "\n    \n      Factual\n      UI/UX Designer\n    \n\n    Los Angeles\n",
+                "href": "https://grnh.se/by380w1"
+            },
+            {
+                "content": "\n    \n      Shillington School\n      Part-time Graphic Design Mentor\n    \n\n    New York\n",
+                "href": "https://shillington-school.breezy.hr/p/b308709b52bb-part-time-graphic-design-mentor-nyc"
+            },
+            {
+                "content": "\n    \n      Koch Auto Group\n      Graphic Designer (Remote Work)\n    \n\n    US or Canada\n",
+                "href": "https://www.kochfordlincoln.com/pages/graphic-designer"
+            },
+            {
+                "content": "\n    \n      SS&C Technologies\n      Senior Product/UI Designer\n    \n\n    New York, NY\n",
+                "href": "https://www.linkedin.com/jobs/view/742943478/"
+            },
+            {
+                "content": "\n    \n      Dwight School\n      Design Director\n    \n\n    New York\n",
+                "href": "https://www.dwight.edu/uploaded/Downloads/ABOUT/Job_Postings/Design_Director_Posting_7-17-18.pdf"
+            },
+            {
+                "content": "\n    \n      Bukwild, Inc.\n      Senior Interactive Designer\n    \n\n    Sacramento, CA\n",
+                "href": "https://www.bukwild.com/careers/senior-interactive-designer"
+            },
+            {
+                "content": "\n    \n      My Social Practice\n      Graphic Designer\n    \n\n    Lehi, UT\n",
+                "href": "https://docs.google.com/document/d/1XTcXeAOylFpCzwqtHIPHg9tNUbyH0inut06DOoyXfJQ/edit?usp=sharing"
+            },
+            {
+                "content": "\n    \n      ThoughtSpot\n      Brand Designer\n    \n\n    Menlo Park\n",
+                "href": "https://www.linkedin.com/jobs/view/561697523/"
+            },
+            {
+                "content": "\n    \n      Dashlane\n      Senior Product Designer\n    \n\n    Paris, France\n",
+                "href": "https://boards.greenhouse.io/dashlane/jobs/1187495"
+            },
+            {
+                "content": "\n    \n      DRW\n      Marketing & Content Strategist\n    \n\n    Chicago\n",
+                "href": "https://grnh.se/273de5a61"
+            },
+            {
+                "content": "\n    \n      JASK\n      Creative Director\n    \n\n    Austin, Texas\n",
+                "href": "https://boards.greenhouse.io/jask/jobs/4054153002"
+            },
+            {
+                "content": "\n    \n      Open Garden\n      Sr. UX/UI Designer - Mobile App\n    \n\n    Oakland\n",
+                "href": "https://boards.greenhouse.io/opengarden/jobs/4048022002"
+            },
+            {
+                "content": "\n    \n      Brit + Co\n      Product Designer\n    \n\n    San Francisco, CA\n",
+                "href": "https://grnh.se/5c52665e1"
+            },
+            {
+                "content": "\n    \n      Duarte Inc\n      Sr Designer\n    \n\n    Brooklyn, NY\n",
+                "href": "https://grnh.se/12rjuoph1"
+            },
+            {
+                "content": "\n    \n      Duarte Inc\n      Sr Designer\n    \n\n    Santa Clara, CA\n",
+                "href": "https://grnh.se/12rjuoph1"
+            },
+            {
+                "content": "\n    \n      Duarte Inc\n      Designer\n    \n\n    Santa Clara, CA\n",
+                "href": "https://grnh.se/0oeqx1tw1"
+            },
+            {
+                "content": "\n    \n      Duarte Inc\n      Sr Art Director\n    \n\n    Santa Clara, CA\n",
+                "href": "https://grnh.se/jn5hqib01"
+            },
+            {
+                "content": "\n    \n      Serious Eats\n      Junior Product Designer\n    \n\n    Brooklyn, NY\n",
+                "href": "https://www.seriouseats.com/jobs"
+            },
+            {
+                "content": "\n    \n      Operam\n      Lead Product Designer\n    \n\n    Prague\n",
+                "href": "https://www.operam.com/jobs/prague-lead-product-designer"
+            },
+            {
+                "content": "\n    \n      CoinCircle\n      Visual Designer\n    \n\n    Los Angeles\n",
+                "href": "https://jobs.coincircle.com/jobs/visual-designer/"
+            },
+            {
+                "content": "\n    \n      WillowTree Inc.\n      Senior Product Designer\n    \n\n    Durham, NC\n",
+                "href": "https://app.jobvite.com/j?cj=otwg1fw0&s=Dribbble"
+            },
+            {
+                "content": "\n    \n      Eva Mattress\n      eCommerce Focused Digital Designer\n    \n\n    Kensington, Melbourne, Australia.\n",
+                "href": "https://eva-mattress.workable.com/jobs/768151"
+            },
+            {
+                "content": "\n    \n      Zoosk\n      Senior Product Designer\n    \n\n    San Francisco\n",
+                "href": "https://jobs.lever.co/zoosk/c8d27f27-8aeb-4fd9-ad31-5d78ba86a033"
+            },
+            {
+                "content": "\n    \n      Traction\n      Brand Designer\n    \n\n    Lansing, MI\n",
+                "href": "http://tractionbrands.com/branddesigner"
+            },
+            {
+                "content": "\n    \n      BASIC\n      Interactive Designer (All Levels)\n    \n\n    San Diego or SF Bay Area\n",
+                "href": "https://basicagency.com/careers"
+            },
+            {
+                "content": "\n    \n      Lilt\n      Visual Design Lead\n    \n\n    San Francisco\n",
+                "href": "https://jobs.lever.co/lilt/16923b6c-51f5-479e-958f-88e92e0fd55b?lever-origin=agency&lever-source%5B%5D=dribbble"
+            },
+            {
+                "content": "\n    \n      Solstice\n      Senior UX Designer\n    \n\n    Chicago, IL\n",
+                "href": "http://apply.solstice.com/apply/F8oRLRH9Bq/Senior-UX-Designer"
+            },
+            {
+                "content": "\n    \n      Blink UX\n      UI/UX Designer\n    \n\n    Boston, MA\n",
+                "href": "https://blinkux.com/about/working-at-blink/#op-268257-uiux-designer"
+            },
+            {
+                "content": "\n    \n      Aula\n      Senior Product designer\n    \n\n    London\n",
+                "href": "https://www.notion.so/aulaeducation/Senior-Product-Designer-f53bd8fd6c8c4575a8047b5a3665aaaa"
+            },
+            {
+                "content": "\n    \n      Dart Container\n      Environmental Designer\n    \n\n    Mason, Michigan\n",
+                "href": "https://jobs.dart.biz/job/Mason-Corporate-Design-Coordinator-MI-48854/489150100/"
+            },
+            {
+                "content": "\n    \n      Casumo\n      Product Designer\n    \n\n    Malta\n",
+                "href": "https://www.casumocareers.com/product-designer-obsessed-with-ui-ux/"
+            },
+            {
+                "content": "\n    \n      RONIN Amsterdam\n      Motion Designer\n    \n\n    Amsterdam, Netherlands\n",
+                "href": "https://www.roninamsterdam.com/"
+            },
+            {
+                "content": "\n    \n      Taxfix\n      Product Designer\n    \n\n    Berlin\n",
+                "href": "https://taxfix.recruitee.com/o/product-designer"
+            },
+            {
+                "content": "\n    \n      Videofruit\n      Front-End Developer\n    \n\n    Anywhere\n",
+                "href": "https://videofruit.workable.com/jobs/752415"
+            },
+            {
+                "content": "\n    \n      Sorted Group\n      Mobile UX Designer\n    \n\n    Manchester, UK\n",
+                "href": "https://www.workable.com/j/D4AC7A02F9"
+            },
+            {
+                "content": "\n    \n      Made People\n      Digital E-commerce Designer\n    \n\n    Stockholm\n",
+                "href": "https://www.linkedin.com/jobs/view/662592470/"
+            },
+            {
+                "content": "\n    \n      Intelligaia\n      UI Designer\n    \n\n    Raleigh-Durham, NC or San Jose, CA\n",
+                "href": "http://intelligaia.com/jobs/ux-ui-designer-NC/"
+            },
+            {
+                "content": "\n    \n      BASIC\n      Creative Director\n    \n\n    San Francisco / Bay Area / Mountain View\n",
+                "href": "https://basicagency.com/careers/creative-director"
+            },
+            {
+                "content": "\n    \n      Prototype Interactive\n      UX/UI Designer\n    \n\n    Dubai, United Arab Emirates\n",
+                "href": "https://workable.com/j/799C2D290D"
+            },
+            {
+                "content": "\n    \n      Mokriya‚ Inc.\n      UX/UI Designer\n    \n\n    Anywhere\n",
+                "href": "https://mokriya.workable.com/jobs/745494"
+            },
+            {
+                "content": "\n    \n      Wonderschool\n      Senior Product Designer\n    \n\n    San Francisco, California, United States\n",
+                "href": "https://workable.com/j/2C1EB1D51C"
+            },
+            {
+                "content": "\n    \n      TrustToken\n      Designer\n    \n\n    San Francisco\n",
+                "href": "https://jobs.lever.co/trusttoken/536739f0-077e-47df-9229-60f68ca8fb6d"
+            },
+            {
+                "content": "\n    \n      Markforged\n      Designer\n    \n\n    Cambridge, MA\n",
+                "href": "https://jobs.lever.co/markforged/afa4e711-9262-4d2b-bae6-2ba0f65e8be4"
+            },
+            {
+                "content": "\n    \n      Mokriya‚ Inc.\n      Communication Designer\n    \n\n    Anywhere\n",
+                "href": "https://mokriya.workable.com/jobs/621719"
+            },
+            {
+                "content": "\n    \n      Mossio\n      Designer\n    \n\n    Anywhere\n",
+                "href": "https://mossio.workable.com/jobs/21422"
+            },
+            {
+                "content": "\n    \n      Babbel - Lesson Nine GmbH\n      Senior Product Designer UX\n    \n\n    Berlin Mitte\n",
+                "href": "https://grnh.se/hd2ij01"
+            },
+            {
+                "content": "\n    \n      Riot Games\n      Senior Visual Designer\n    \n\n    Santa Monica, CA\n",
+                "href": "https://grnh.se/gqf30nln1"
+            },
+            {
+                "content": "\n    \n      Creative Market\n      Product Designer\n    \n\n    San Francisco, CA\n",
+                "href": "https://jobs.lever.co/creativemarket/9537280e-5f19-4c96-b9e5-810b8defabf0?lever-origin=applied&lever-source%5B%5D=Dribbble%20%28Q2%202018%29"
+            },
+            {
+                "content": "\n    \n      TM\n      Senior UI Designer\n    \n\n    San Francisco, CA\n",
+                "href": "http://weare.tm/jobs"
+            },
+            {
+                "content": "\n    \n      Guideline\n      Lead Product Designer\n    \n\n    San Mateo, California\n",
+                "href": "https://hire.withgoogle.com/public/jobs/guidelinecom/view/P_AAAAAACAAADEkrdKwBO3YM"
+            },
+            {
+                "content": "\n    \n      GoNoodle, Inc.\n      Motion Designer / Graphic Designer\n    \n\n    Nashville\n",
+                "href": "https://recruiting.paylocity.com/recruiting/jobs/List/1309/GoNoodle-Inc"
+            },
+            {
+                "content": "\n    \n      Viacom\n      Product Designer\n    \n\n    New York\n",
+                "href": "https://viacomcareers-viacom.icims.com/jobs/9066/24108/job?mode=view&mobile=false&width=970&height=500&bga=true&needsRedirect=false&jan1offset=-300&jun1offset=-240"
+            },
+            {
+                "content": "\n    \n      Pepper Media Holding GmbH\n      Product Designer\n    \n\n    Berlin\n",
+                "href": "https://pepper.bamboohr.co.uk/jobs/view.php?id=88"
+            },
+            {
+                "content": "\n    \n      LiveSafe\n      Senior Product Designer\n    \n\n    Washington DC area\n",
+                "href": "https://www.workable.com/j/BBD33ABDC0"
+            },
+            {
+                "content": "\n    \n      Tane Digital Video\n      Designer / Visual Strategist\n    \n\n    New York\n",
+                "href": "https://www.indeed.com/job/graphic-designer-visual-strategist-part-time-e16f523d615cfb86"
+            },
+            {
+                "content": "\n    \n      Zohie\n      UI/UX Designer\n    \n\n    Remote\n",
+                "href": "https://zohie.workable.com/j/07DC51EF5A"
+            },
+            {
+                "content": "\n    \n      Wooga\n      UI Artist\n    \n\n    Berlin\n",
+                "href": "https://www.wooga.com/jobs/?gh_jid=1196555"
+            },
+            {
+                "content": "\n    \n      Anaplan\n      Lead Visual Designer\n    \n\n    San Francisco\n",
+                "href": "https://careers.anaplan.com/jobs/lead-visual-designer-san-francisco-california-united-states"
+            },
+            {
+                "content": "\n    \n      Elation Health\n      Product Designer\n    \n\n    San Francisco\n",
+                "href": "https://www.elationhealth.com/careers/?gh_jid=1121560"
+            },
+            {
+                "content": "\n    \n      Quidd\n      Senior Product Designer\n    \n\n    NYC\n",
+                "href": "https://boards.greenhouse.io/quidd/jobs/4019178002#.Wvi-U9PwYWo"
+            },
+            {
+                "content": "\n    \n      InMoment\n      Senior UX / UI Designer\n    \n\n    Atlanta\n",
+                "href": "https://inmoment.bamboohr.co.uk/jobs/view.php?id=150"
+            },
+            {
+                "content": "\n    \n      Goldstar\n      (Design Focused) Product Manager\n    \n\n    Portland, OR and Pasadena, CA\n",
+                "href": "https://goldstar.workable.com/jobs/766042"
+            },
+            {
+                "content": "\n    \n      The Atlantic\n      Director of Product Design\n    \n\n    Washington, DC\n",
+                "href": "https://atlanticmedia.applytojob.com/apply/aHD18IQVzm/Director-Of-Product-Design?source=Dribbble"
+            },
+            {
+                "content": "\n    \n      Thread\n      Product Designer\n    \n\n    London, United Kingdom\n",
+                "href": "https://www.thread.com/jobs/product_designer"
+            },
+            {
+                "content": "\n    \n      Empatico\n      Product Designer\n    \n\n    New York, United States\n",
+                "href": "https://workable.com/j/090F10D08A"
+            },
+            {
+                "content": "\n    \n      Leafly\n      Visual Designer\n    \n\n    Toronto, Ontario\n",
+                "href": "https://www.leafly.com/company/jobdetails?gnk=job&gni=8a78859f6395106a0163b836047e1f67&gns=Dribble"
+            },
+            {
+                "content": "\n    \n      IDR\n      Digital Product Experience Manager\n    \n\n    Glendale, CA\n",
+                "href": "https://www.idr-inc.com/jobdetail/?id=11839"
+            },
+            {
+                "content": "\n    \n      Platform.sh\n      Communications Designer\n    \n\n    Anywhere\n",
+                "href": "https://grnh.se/4e6d25312"
+            },
+            {
+                "content": "\n    \n      Platform.sh\n      Product Designer\n    \n\n    Anywhere\n",
+                "href": "https://grnh.se/0f3f4f1e2"
+            },
+            {
+                "content": "\n    \n      Trim\n      Product Designer\n    \n\n    San Francisco\n",
+                "href": "https://jobs.lever.co/asktrim/e1485d4d-8bec-44b2-978f-4fc0a846c61a"
+            },
+            {
+                "content": "\n    \n      Humble Bundle\n      Product Designer\n    \n\n    San Francisco\n",
+                "href": "https://app.jobvite.com/j?cj=oeAk7fwZ&s=Dribbble"
+            },
+            {
+                "content": "\n    \n      Zumper\n      Lead Designer\n    \n\n    San Francisco\n",
+                "href": "https://jobs.lever.co/zumper/91ee7dca-bcde-41f6-a139-d572dece59ff?lever-origin=applied&lever-source%5B%5D=Dribbble"
+            },
+            {
+                "content": "\n    \n      Blackbird Air\n      Lead Designer\n    \n\n    San Francisco\n",
+                "href": "http://blackbird-marketplace.webflow.io/lead-designer-blackbird-careers"
+            },
+            {
+                "content": "\n    \n      Monomyth Studio\n      Front-End Developer\n    \n\n    Phoenix, Arizona\n",
+                "href": "https://monomythstudio.com/were-hiring"
+            },
+            {
+                "content": "\n    \n      Ironclad\n      Product Designer\n    \n\n    San Francisco\n",
+                "href": "https://jobs.lever.co/ironcladapp/b21354dc-f609-49f0-9d2a-d28eb421ec51"
+            },
+            {
+                "content": "\n    \n      Friendly Design Co\n      Senior Designer\n    \n\n    Washington DC\n",
+                "href": "https://friendly.workable.com/j/3F701AC8E5"
+            },
+            {
+                "content": "\n    \n      Speed Society\n      Creative Director / Rockstar!\n    \n\n    San Diego\n",
+                "href": "http://speedsociety.com/jobs/"
+            },
+            {
+                "content": "\n    \n      AutoLoans.ca\n      Software Engineer\n    \n\n    Toronto\n",
+                "href": "http://humberviewgroup.scouterecruit.net/jobs/HG537"
+            },
+            {
+                "content": "\n    \n      Jones Knowles Ritchie\n      Design Director\n    \n\n    New York, NY\n",
+                "href": "https://jones-knowles-ritchie.workable.com/j/24F0CE921D"
+            },
+            {
+                "content": "\n    \n      Basket\n      Senior Product Designer\n    \n\n    Arlington, VA\n",
+                "href": "https://jobs.lever.co/basket/4304a2f8-3da9-4608-b09d-01885cc9c879"
+            },
+            {
+                "content": "\n    \n      CatalystUX\n      Designer with expertise in Figma\n    \n\n    United States\n",
+                "href": "https://goo.gl/T4h1M3"
+            },
+            {
+                "content": "\n    \n      Wistia\n      Director of Design\n    \n\n    Cambridge, MA\n",
+                "href": "https://boards.greenhouse.io/wistia/jobs/1150628"
+            },
+            {
+                "content": "\n    \n      Guideline\n      Lead Product Designer\n    \n\n    San Mateo, California\n",
+                "href": "https://hire.withgoogle.com/public/jobs/guidelinecom/view/P_AAAAAACAAADEkrdKwBO3YM"
+            }
+        ],
+        "link": "https://dribbble.com/jobs",
+        "isOther": true,
+        "timestamp": "2018-08-10T06:11:23.368Z",
+        "hasMultipleItems": true
+    },
+    {
+        "ID": 2,
+        "title": "DOW",
+        "result": "25509.23",
+        "goal": "30000",
+        "goalType": "above",
+        "difference": "-4490.77",
+        "link": "http://quotes.wsj.com/index/DJIA/historical-prices",
+        "timestamp": "2018-08-10T06:11:24.518Z",
+        "hasMultipleItems": false
+    },
+    {
+        "ID": 8,
+        "title": "Product Hunt",
+        "result": [
+            {
+                "content": "Flowlingo",
+                "href": "https://www.producthunt.com/posts/flowlingo"
+            },
+            {
+                "content": "Neede",
+                "href": "https://www.producthunt.com/posts/neede"
+            },
+            {
+                "content": "Cameos on Google",
+                "href": "https://www.producthunt.com/posts/cameos-on-google"
+            },
+            {
+                "content": "iwantmyname",
+                "href": "https://www.producthunt.com/r/p/274?ref=home&promo_id=394"
+            },
+            {
+                "content": "Discord Store",
+                "href": "https://www.producthunt.com/posts/discord-store"
+            },
+            {
+                "content": "Pioneer",
+                "href": "https://www.producthunt.com/posts/pioneer"
+            },
+            {
+                "content": "Vector by Anki",
+                "href": "https://www.producthunt.com/posts/vector-by-anki"
+            },
+            {
+                "content": "Typeboost",
+                "href": "https://www.producthunt.com/posts/typeboost"
+            },
+            {
+                "content": "Audius",
+                "href": "https://www.producthunt.com/posts/audius"
+            },
+            {
+                "content": "Geek Flare Nexus",
+                "href": "https://www.producthunt.com/posts/geek-flare-nexus"
+            },
+            {
+                "content": "Listener Support by Anchor",
+                "href": "https://www.producthunt.com/posts/listener-support-by-anchor"
+            },
+            {
+                "content": "LunchBlocker",
+                "href": "https://www.producthunt.com/posts/lunchblocker"
+            },
+            {
+                "content": "Snapper",
+                "href": "https://www.producthunt.com/posts/snapper"
+            },
+            {
+                "content": "Smiley",
+                "href": "https://www.producthunt.com/posts/smiley-2"
+            },
+            {
+                "content": "MockRabit",
+                "href": "https://www.producthunt.com/posts/mockrabit"
+            },
+            {
+                "content": "F19n Obtrusive Livetest",
+                "href": "https://www.producthunt.com/posts/f19n-obtrusive-livetest"
+            }
+        ],
+        "link": "http://producthunt.com/",
+        "isOther": true,
+        "timestamp": "2018-08-10T06:11:23.502Z",
+        "hasMultipleItems": true
+    },
+    {
+        "ID": 10,
+        "title": "Co.Design",
+        "result": [
+            {
+                "content": "Someday this tiny spider bot could perform surgery inside your body",
+                "href": "https://www.fastcompany.com/90214753/someday-this-tiny-spider-bot-could-perform-surgery-inside-your-body"
+            },
+            {
+                "content": "Computing’s Hippocratic oath is here",
+                "href": "https://www.fastcompany.com/90215922/why-we-spent-two-years-rewriting-the-code-of-ethics-for-computing"
+            },
+            {
+                "content": "The New York Times’s redesign proves journalism matters more than ever",
+                "href": "https://www.fastcompany.com/90216400/the-new-york-timess-redesign-proves-journalism-matters-more-than-ever"
+            },
+            {
+                "content": "A haunting speculative proposal for the Grenfell Tower memorial",
+                "href": "https://www.fastcompany.com/90215769/a-haunting-speculative-proposal-for-londons-grenfell-tower-memorial"
+            },
+            {
+                "content": "The quest to redesign NYC’s garbage cans",
+                "href": "https://www.fastcompany.com/90214927/the-quest-to-redesign-nycs-garbage-cans"
+            },
+            {
+                "content": "Crypto has a killer app",
+                "href": "https://www.fastcompany.com/90215931/crypto-has-a-killer-app"
+            },
+            {
+                "content": "This wild new skyscraper is topped with a functioning waterfall",
+                "href": "https://www.fastcompany.com/90215672/this-crazy-new-skyscraper-is-topped-with-a-functioning-waterfall"
+            },
+            {
+                "content": "This clever bottle visualizes the terroir of the wine within",
+                "href": "https://www.fastcompany.com/90214913/this-clever-bottle-visualizes-the-terroir-of-the-wine-within"
+            },
+            {
+                "content": "The first design portfolio that’s ever made me laugh",
+                "href": "https://www.fastcompany.com/90214297/the-first-design-portfolio-thats-ever-made-me-laugh"
+            },
+            {
+                "content": "Amazon, Airbnb, and Asos are all investing in this one simple design idea",
+                "href": "https://www.fastcompany.com/90214914/amazon-airbnb-and-asos-are-all-investing-in-this-one-simple-design-idea"
+            },
+            {
+                "content": "The future of luxury fashion? Getting to know your shoemaker",
+                "href": "https://www.fastcompany.com/90214456/the-future-of-luxury-fashion-getting-to-know-your-shoemaker"
+            },
+            {
+                "content": "The Rubik’s cube, the most popular toy ever, gets redesigned",
+                "href": "https://www.fastcompany.com/90214848/the-rubiks-cube-the-most-popular-toy-ever-gets-redesigned"
+            },
+            {
+                "content": "Amphibio is a 3D-printed shirt that lets you breathe underwater",
+                "href": "https://www.fastcompany.com/90214120/amphibio-is-a-3d-printed-shirt-that-lets-you-breathe-underwater"
+            },
+            {
+                "content": "This clever gift wrap is printed with origami instructions",
+                "href": "https://www.fastcompany.com/90213575/this-clever-gift-wrap-has-a-second-life-as-origami"
+            },
+            {
+                "content": "How much will the border wall cost? Not even its creators want to know",
+                "href": "https://www.fastcompany.com/90214124/how-much-will-the-border-wall-cost-not-even-its-creators-want-to-know"
+            },
+            {
+                "content": "This artist quietly fixed a pothole with a mosaic of Trump’s face",
+                "href": "https://www.fastcompany.com/90214214/this-artist-quietly-fixed-a-pothole-with-a-mosaic-of-trumps-face"
+            },
+            {
+                "content": "Asimov’s 3 laws of robotics, updated for the drone age",
+                "href": "https://www.fastcompany.com/90201552/asimovs-3-laws-of-robotics-updated-for-the-drone-age"
+            },
+            {
+                "content": "Is good design elitist?",
+                "href": "https://www.fastcompany.com/90203556/good-design-is-elitist-we-need-it-anyway"
+            },
+            {
+                "content": "Google wants to make JOMO happen",
+                "href": "https://www.fastcompany.com/90213150/google-wants-to-make-jomo-happen"
+            },
+            {
+                "content": "Ancient art is inspiring new kinds of electronics",
+                "href": "https://www.fastcompany.com/90213503/ancient-art-is-inspiring-new-kinds-of-electronics"
+            }
+        ],
+        "link": "https://www.fastcompany.com/co-design",
+        "isOther": true,
+        "timestamp": "2018-08-10T06:11:24.297Z",
+        "hasMultipleItems": true
+    },
+    {
+        "ID": 9,
+        "title": "CoinDesk",
+        "result": [
+            {
+                "content": "\n ",
+                "href": "https://www.coindesk.com/world-bank-taps-australias-cba-to-issue-blockchain-bond-in-its-first/"
+            },
+            {
+                "content": "World Bank Taps Australia's CBA to Issue Blockchain Bond in Its First",
+                "href": "https://www.coindesk.com/world-bank-taps-australias-cba-to-issue-blockchain-bond-in-its-first/"
+            },
+            {
+                "content": "\n ",
+                "href": "https://www.coindesk.com/google-search-can-predict-bitcoin-price-increases-study-finds/"
+            },
+            {
+                "content": "Google Search Can Predict Bitcoin Price Increases, Study Finds",
+                "href": "https://www.coindesk.com/google-search-can-predict-bitcoin-price-increases-study-finds/"
+            },
+            {
+                "content": "\n ",
+                "href": "https://www.coindesk.com/overstock-blockchain-subsidiary-raises-134-million-in-token-sale/"
+            },
+            {
+                "content": "Overstock Blockchain Spin-Off Raises $134 Million – With Millions More Committed",
+                "href": "https://www.coindesk.com/overstock-blockchain-subsidiary-raises-134-million-in-token-sale/"
+            },
+            {
+                "content": "\n ",
+                "href": "https://www.coindesk.com/binance-offers-first-look-at-planned-decentralized-crypto-exchange/"
+            },
+            {
+                "content": "Binance Offers First Look At Planned Decentralized Crypto Exchange",
+                "href": "https://www.coindesk.com/binance-offers-first-look-at-planned-decentralized-crypto-exchange/"
+            },
+            {
+                "content": "\n ",
+                "href": "https://www.coindesk.com/attacker-installs-crypto-mining-malware-on-more-than-170000-devices/"
+            },
+            {
+                "content": "Attacker Installs Crypto Mining Malware on Over 170,000 Devices",
+                "href": "https://www.coindesk.com/attacker-installs-crypto-mining-malware-on-more-than-170000-devices/"
+            },
+            {
+                "content": "\n ",
+                "href": "https://www.coindesk.com/wikipedia-competitor-everipedias-blockchain-is-now-live/"
+            },
+            {
+                "content": "Wikipedia Competitor Everipedia's Blockchain Is Now Live",
+                "href": "https://www.coindesk.com/wikipedia-competitor-everipedias-blockchain-is-now-live/"
+            },
+            {
+                "content": "\n ",
+                "href": "https://www.coindesk.com/blockchain-research-institute-report-calls-for-crypto-regulation-clarity/"
+            },
+            {
+                "content": "Blockchain Research Institute Report Calls for Crypto Regulation Clarity",
+                "href": "https://www.coindesk.com/blockchain-research-institute-report-calls-for-crypto-regulation-clarity/"
+            },
+            {
+                "content": "\n ",
+                "href": "https://www.coindesk.com/court-sides-with-crypto-exchange-despite-allegation-it-violated-china-ban/"
+            },
+            {
+                "content": "Court Sides With Crypto Exchange Despite Allegation It Violated China Ban",
+                "href": "https://www.coindesk.com/court-sides-with-crypto-exchange-despite-allegation-it-violated-china-ban/"
+            },
+            {
+                "content": "\n ",
+                "href": "https://www.coindesk.com/microsoft-rolls-out-proof-of-authority-ethereum-consensus-on-azure/"
+            },
+            {
+                "content": "Microsoft Rolls Out 'Proof-of-Authority' Ethereum Consensus on Azure",
+                "href": "https://www.coindesk.com/microsoft-rolls-out-proof-of-authority-ethereum-consensus-on-azure/"
+            },
+            {
+                "content": "\n ",
+                "href": "https://www.coindesk.com/gmos-cryptocurrency-business-made-2-3-million-profit-in-q2/"
+            },
+            {
+                "content": "GMO's Cryptocurrency Business Made $2.3 Million Profit in Q2",
+                "href": "https://www.coindesk.com/gmos-cryptocurrency-business-made-2-3-million-profit-in-q2/"
+            },
+            {
+                "content": "\nConsenSys: Solutions Engineer - Backend\n",
+                "href": "https://jobs.coindesk.com/job-details/3927/solutions-engineer-backend/"
+            },
+            {
+                "content": "\nConsenSys: Technical Analyst - APAC\n",
+                "href": "https://jobs.coindesk.com/job-details/3926/technical-analyst-apac/"
+            },
+            {
+                "content": "\nConsenSys: Technical Community Support - Ujo Music\n",
+                "href": "https://jobs.coindesk.com/job-details/3925/technical-community-support-ujo-music/"
+            },
+            {
+                "content": "Ethereum Classic Is Down 30% Since Its Listing on Coinbase",
+                "href": "https://www.coindesk.com/ethereum-classic-is-down-30-since-its-listing-on-coinbase/"
+            },
+            {
+                "content": "Bitcoin Price Looks to Defend $6K as Sell-Off Slows",
+                "href": "https://www.coindesk.com/bitcoin-price-looks-to-defend-6k-as-sell-off-slows/"
+            },
+            {
+                "content": "The SEC Will Decide on 9 Bitcoin ETFs in the Next 2 Months",
+                "href": "https://www.coindesk.com/the-sec-will-decide-on-9-bitcoin-etfs-in-the-next-2-months/"
+            }
+        ],
+        "link": "https://www.coindesk.com/category/news/",
+        "isOther": true,
+        "timestamp": "2018-08-10T06:11:25.704Z",
+        "hasMultipleItems": true
+    },
+    {
+        "ID": 0,
+        "title": "Sell Bitcoin",
+        "result": "6466.99",
+        "goal": "20000",
+        "goalType": "above",
+        "difference": "-13533.01",
+        "link": "https://coinmarketcap.com/currencies/bitcoin/",
+        "timestamp": "2018-08-10T06:11:27.154Z",
+        "hasMultipleItems": false
+    }
+]

@@ -1,0 +1,343 @@
+.data-item {
+  label {
+    display: inline-block;
+    font-family: $font-defaults;
+    font-weight: 600;
+    font-size: 12px;
+    color: lighten($body-bg, 20%);
+    // margin-left: 20px;
+    z-index: 2;
+    position: relative;
+  }
+
+  input[type="number"] {
+    font-size: 18px;
+  }
+
+  input[type="text"],
+  textarea {
+    font-size: 15px;
+    opacity: 0.7;
+  }
+
+  input[type="text"],
+  input[type="number"],
+  textarea {
+    font-family: $font-defaults;
+    font-weight: 300;
+    display: inline-block;
+    padding: 8px 10px 8px;
+    margin: 0 auto;
+    transition: all 100ms cubic-bezier(.17,.67,.83,.67);
+    width: 100%;
+    line-height: 1.5;
+    // border-radius: 3px;
+    z-index: 0;
+    position: relative;
+
+    color: white;
+    border: 1px solid transparent;
+    background: none;
+
+    &:placeholder-shown {
+      text-overflow: ellipsis;
+      // color: black;
+    }
+
+    &::placeholder {
+      color: rgba(#fff, 0.3);
+    }
+
+    &:hover, &:focus {
+      color: $color-1;
+      // border-color: rgba($color-2, 0.1);
+      opacity: 1;
+      outline: none;
+      // background: lighten($body-bg, 50%);
+    }
+
+    &:focus {
+      background: rgba($body-bg, 0.2);
+    }
+
+  }
+}
+
+
+//
+//
+// Form Containers
+//
+//
+.form-flex-container {
+  display: flex;
+  border-bottom: 1px solid rgba(#000, 0.1);
+  margin-bottom: 30px;
+
+  & > div {
+    margin-bottom: 10px;
+  }
+}
+
+.form-two-up {
+  width: 50%;
+}
+
+
+
+//
+//
+// Radio buttons
+//
+//
+.radio-container {
+  position: relative;
+
+  // The default color is blue text on white bg
+  label {
+    color: #2973FF;
+    letter-spacing: 0;
+    display: block;
+    border-radius: 3px;
+    z-index: 10;
+    position: relative;
+    text-align: center;
+    width: 100%;
+    box-sizing: border-box;
+
+    &:not(:first-child) {
+      margin-left: 5px;
+    }
+
+    .inner-content {
+      user-select: none;
+      position: absolute;
+      z-index: 3;
+      height: 100%;
+      width: 100%;
+      top: 0;
+      text-align: center;
+    }
+
+    figure {
+      background-size: 100%;
+      background-repeat: no-repeat;
+      background-position: center;
+      height: 32px;
+      width: 32px;
+      margin: 0 auto;
+
+      &.icon-text {
+        background-image: url($image-root + "../img/inspector/icon__text-light.svg");
+      }
+
+      &.icon-image {
+        background-image: url($image-root + "../img/inspector/icon__image-light.svg");
+      }
+
+      &.icon-number-up {
+        background-image: url($image-root + "../img/inspector/icon__number-up_light.svg");
+      }
+
+      &.icon-number-down {
+        background-image: url($image-root + "../img/inspector/icon__number-down_light.svg");
+      }
+
+    }
+
+  // The text label
+    figcaption {
+      line-height: 0.5;
+      font-size: 0.9rem;
+    }
+
+
+  }
+
+  input[type="radio"] {
+    appearance: none; /* remove default */
+    display: inline-block;
+    width: 100%;
+    height: 3rem;
+    vertical-align: middle;
+    transition: background-position .15s cubic-bezier(.8, 0, 1, 1),
+    transform .1s cubic-bezier(.8, 0, 1, 1);
+    outline: none;
+    z-index: 0;
+
+    background: #FFFFFF;
+    border: 1px solid #2973FF;
+    border-radius: 3px;
+
+    top: 0;
+    left: 0;
+    position: relative;
+  }
+
+  input[type="radio"]:active {
+    transform: scale(1.1);
+    transition: transform .1s cubic-bezier(0, 0, .2, 1);
+  }
+
+  label + input[type="radio"] {
+    display: inline-block;
+  }
+
+  // When checked...
+  input[type="radio"]:checked {
+    // Change the text color to white
+    & ~ .inner-content {
+      color: white;
+
+      // Change the icons
+      & > .icon-text {
+        background-image: url($image-root + "../img/inspector/icon__text-dark.svg");
+      }
+
+      & > .icon-image {
+        background-image: url($image-root + "../img/inspector/icon__image-dark.svg");
+      }
+
+      & > .icon-number-up {
+        background-image: url($image-root + "../img/inspector/icon__number-up_dark.svg");
+      }
+
+      & > .icon-number-down {
+        background-image: url($image-root + "../img/inspector/icon__number-down_dark.svg");
+      }
+
+    }
+  }
+
+  // This is the currently selected element
+  input[type="radio"]:checked {
+    transition: background-position .2s .15s cubic-bezier(0, 0, .2, 1),
+    transform .25s cubic-bezier(0, 0, .2, 1);
+    background: #000;
+    color: white;
+    background: #2973FF;
+  }
+
+
+}
+
+
+
+
+
+
+
+
+
+//
+//
+// Inputs that have a field and button
+//
+//
+
+.input-withAddon {
+  display: flex;
+
+  &__field {
+    flex: 1;
+  }
+
+  &__item {
+    text-align: center;
+    display: flex;
+    align-items: center;
+  }
+
+}
+
+
+
+
+
+
+
+
+
+//
+//
+// Switches
+//
+//
+
+// HTML:
+// <label class="switch">
+//   <i class="icon-ok"></i>
+//   <i class="icon-remove"></i>
+//   <input type="checkbox"/>
+// </label>
+
+.switch {
+  background-color: #bebebe;
+  border-radius: 14px;
+  box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+  color: #fff;
+  cursor: pointer;
+  display: block;
+  font-size: 14px;
+  height: 26px;
+  width: 54px;
+  margin-bottom: 12px;
+  position: relative;
+  transition: background-color 0.2s ease-in-out;
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+.switch.checked {
+  background-color: #76d21d;
+}
+.switch input[type="checkbox"] {
+  cursor: pointer;
+  height: 10px;
+  left: 12px;
+  position: absolute;
+  top: 8px;
+  transition: left 0.05s ease-in-out;
+  width: 10px;
+}
+.switch.checked input[type="checkbox"] {
+  left: 38px;
+}
+.switch input:before {
+  background: #fff;
+  background: linear-gradient(to bottom, #fff 0%,#f0f0f0 100%);
+  border: 1px solid #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 4px rgba(0,0,0,0.3);
+  content: '';
+  height: 18px;
+  width: 18px;
+  position: absolute;
+  top: -5px;
+  left: -9px;
+}
+.switch input:after {
+  background: #f0f0f0;
+  background: -moz-linear-gradient(top, #f0f0f0 0%, #fff 100%);
+  background: gradient(linear, left top, left bottom, color-stop(0%,#f0f0f0), color-stop(100%,#fff));
+  background: linear-gradient(to bottom, #f0f0f0 0%,#fff 100%);
+  border-radius: 50%;
+  content: '';
+  height: 12px;
+  width: 12px;
+  margin: -1px 0 0 -5px;
+  position: absolute;
+}
+.switch .icon-ok,
+.switch .icon-remove {
+  line-height: 28px;
+  text-shadow: 0 -2px 0 rgba(0,0,0,0.2);
+  margin: 0 9px;
+}
+.switch .icon-ok {
+  float: left;
+}
+.switch .icon-remove {
+  float: right;
+}

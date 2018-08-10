@@ -1,0 +1,96 @@
+<div class="row data-container tile__S
+
+{{#layout_size_XS}}tile__XS{{/layout_size_XS}}
+{{#layout_size_S}}tile__S{{/layout_size_S}}
+{{#layout_size_M}}tile__M{{/layout_size_M}}
+{{#layout_size_L}}tile__L{{/layout_size_L}}
+{{#layout_size_XL}}tile__XL{{/layout_size_XL}}
+">
+	<div class="data-item-container">
+
+		<div class="data-item-header">
+			<span class="favicon" data-src="{{ url }}"></span>
+			<input type="text" placeholder="Enter a Title" class="name" value="{{name}}"/>
+			<div class="data-item-controls">
+				<div class="trash">
+					<img src="./img/icon-trash.svg" title="Delete {{name}}"/>
+					<span></span>
+				</div>
+				<img src="./img/icon-drag.svg" title="Drag to re-order" class="handle" />
+			</div>
+		</div>
+
+		<div class="flex data-item">
+			<div>
+
+				<div class="form-flex-container">
+
+					<div class="data-item-section form-two-up">
+						<label for="goal_type">Goal Type</label>
+
+						<input type="text" class="goal_type" name="goal_type" value="{{goal_type}}"/>
+
+						<div class="radio-container">
+							<label>
+								<input type="radio" name="{{name}}" value="above" {{#isAbove}} checked{{/isAbove}} />
+								Greater than <span class="goal-number"></span>
+								<script>$(function() {getGoalValue();});</script>
+
+							</label>
+
+							<label>
+								<input type="radio" name="{{name}}" value="below" {{#isBelow}} checked{{/isBelow}} />
+								Less than <span class="goal-number"></span>
+								<script>$(function() {getGoalValue();});</script>
+							</label>
+
+							<label title="This is useful if you want to fetch the title of a news article or some other value.">
+								<input type="radio" name="{{name}}" value="other" {{#isOther}} checked{{/isOther}} />
+								Text
+							</label>
+
+							<label title="This will return an image. Requires an image element.">
+								<input type="radio" name="{{name}}" value="image" {{#isImage}} checked{{/isImage}} />
+								IMG
+							</label>
+						</div>
+					</div>
+
+					<div class="data-item-section form-two-up">
+						<label for="goal">Goal Value</label>
+						<input type="number" placeholder="Enter your goal value" class="goal" value="{{goal}}" name="goal" />
+					</div>
+
+				</div>
+
+
+
+			</div>
+
+			<div>
+
+				<div class="data-item-section">
+					<label for="url">URL</label>
+					<input type="text" placeholder="Enter a URL" class="url" value="{{url}}" name="url" />
+				</div>
+
+				<div class="data-item-section">
+					<div>
+						<label for="css">CSS</label>
+					<input type="text" placeholder="Enter a CSS selector" class="css" value="{{css}}"></input>
+					</div>
+				</div>
+
+				<img src="./img/icon-inspector.svg" title="Open CSS Inspector" class="open-inspector-button" />
+
+				<!-- <div class="data-item-section">
+					<label for="layout-size">Layout Size</label>
+					<input type="text" placeholder="Enter a layout size (XS/S/M/L/XL)" class="layout-size" value="{{layout_size}}"></input>
+				</div> -->
+
+			</div>
+
+		</div>
+
+	</div>
+</div>

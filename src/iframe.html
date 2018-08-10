@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+  <meta charset ="utf-8">
+  <link rel="preload" as="script" href="dist/js/app.min.js">
+  <script src="dist/js/app.min.js" type="text/javascript"></script>
+
+  <style media="screen" type="text/css">
+  html, body {
+    user-select: none;
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    position: relative;
+  }
+
+  #iframe-content:hover, #iframe-content a {
+    cursor: pointer;
+  }
+
+  [shotgun-target="enabled"] {
+    background: rgba(134,112,253,0.15);
+    border: 3px solid #2973FF;
+    color: black;
+    border-radius: 2px;
+    animation: shadow_hover 3s linear infinite;
+    animation-fill-mode: both;
+    overflow: auto;
+  }
+
+  #iframe-content {
+    height: 100%;
+    width: 100%;
+    position: relative;
+  }
+
+  .placeholder-text-boomerang-inspector {
+    color: #696969;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    text-align: center;
+    transform: translate(-50%, -50%);
+    font-family: -apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  }
+
+  .placeholder-text-boomerang-inspector div:nth-child(1) {
+    font-size: 1.25rem;
+    margin-bottom: 6px;
+  }
+
+
+  [show-DOM-shapes="enabled"]:not(path):not(g) {
+    color: hsla(210, 100%, 100%, 0.9) !important;
+    background: hsla(210, 100%, 50%, 0.59) !important;
+    outline: solid 0.1rem hsla(0, 0%, 100%, 0.25) !important;
+    box-shadow: none !important;
+    box-sizing: border-box!important;
+    padding: 10px!important;
+  }
+
+  @keyframes shadow_hover {
+    0% {
+      box-shadow: 0 3px 0 rgba(#000, 0);
+      border-color: #2973FF;
+    }
+    50% {
+      box-shadow: 0 4px 12px 0 rgba(0,0,0,0.27);
+      border-color: #FA97CA;
+    }
+    100% {
+      box-shadow: 0 3px 0 rgba(#000, 0);
+      border-color: #2973FF;
+    }
+  }
+
+  .inspector-loading {
+    width: 100%;
+    position: absolute;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    display: none;
+    z-index: 10000;
+    background: #ffffffd4;
+  }
+  .inspector-loading.is-active {
+    display: flex;
+  }
+
+  </style>
+
+</head>
+<body>
+  <div class="inspector-loading">
+    <img src="../img/loading.gif" alt="Loading..."/>
+  </div>
+
+  <main id="iframe-content">
+    <div class="placeholder-text-boomerang-inspector">
+      <div>👋 URL not set</div>
+      <div>Please add a URL below to get started.</div>
+    </div>
+    <!-- dynamic -->
+  </main>
+
+  <script>
+  // Variables available from the front-end
+  var constructedClassArray = [];
+  var highlighted_class = "shotgun-target";
+
+  // Get the selector type from the parent window function
+  // This will inform whether we use a specific or general selector search
+  try {
+    var selector_type = window.parent.boomerang.inspector.selector_type;
+  } catch(e) {
+    var selector_type = "general";
+  }
+
+
+  // Create instance of selector generator
+  var inspector_selector_generator = new CssSelectorGenerator;
+
+
+  // Once the iframe is ready, run the function
+  $(function() {
+    $("iframe").ready(function() {
+      var selectedElements = "";
+
+      $(document).on('click', function(event) {
+        event.preventDefault();
+        searchFrameForSelector(event);
+        return false;
+      })
+
+      $(document).on('click', 'a, input, button', function(event) {
+        event.preventDefault();
+        searchFrameForSelector(event);
+        return false;
+      });
+
+    });
+  });
+
+
+  function searchFrameForSelector(event) {
+    // Is it a general or specific selector?
+    // Check from the global variable
+    if ( selector_type == "general" ) {
+
+      // Find all the existing selected elements and remove their highlight
+      var selected_elements = $("[" + highlighted_class + "='enabled']");
+      $.each(selected_elements, function() {
+        $(this).attr(highlighted_class, "disabled");
+      });
+
+      // Get the className
+      var selectedElements = event.target.className;
+
+      // Turn the static class names into ".class.class"
+      var cl = event.target.className;
+      var classes = cl.split(' ');
+      var constructedClassName = "";
+      for (var i = 0; i < classes.length; i++) {
+        if (classes[i].length > 0) {
+          constructedClassName += "."+classes[i];
+        }
+      }
+      selectedElements = constructedClassName;
+
+      // Toggle the highlight on
+      $("#iframe-content " + selectedElements + "").attr(highlighted_class, 'enabled');
+
+      // Update the input field
+      window.parent.$("#grabHTMLInput").val(selectedElements);
+      window.parent.$("#grabHTMLInput").trigger("change");
+
+      // Log the class name
+      console.log(selectedElements);
+
+    } else if ( selector_type == "specific" ) {
+      // use plugin to search for unique element
+      // css-selector-generator.min.js
+      // get reference to the element user clicked on
+      var element = event.target;
+      // get unique CSS selector for that element
+      var selector = inspector_selector_generator.getSelector(element);
+
+
+      // Find all the existing selected elements and remove their highlight
+      var selected_elements = $("[" + highlighted_class + "='enabled']");
+      $.each(selected_elements, function() {
+        $(this).attr(highlighted_class, "disabled");
+      });
+
+      // Toggle the highlight on
+      $("#iframe-content " + selector + "").attr(highlighted_class, 'enabled');
+
+      // do whatever you need to do with that selector
+      console.log('selector', selector);
+      window.parent.$("#grabHTMLInput").val(selector);
+      window.parent.$("#grabHTMLInput").trigger("change");
+    }
+
+  }
+
+
+
+
+  // This function is exposed to inspector.js
+  // It allows values to be passed in from the parent window
+  var runFrameFunctions = function(input) {
+    $(function() {
+      var type = "";
+
+      //
+      // Turn the static class names into ".class.class"
+      //
+      var cl = input;
+      var classes = cl.split(' ');
+      var constructedClassName = "";
+      for (var i = 0; i < classes.length; i++) {
+        if (classes[i].length > 0) {
+          constructedClassName += ""+classes[i];
+        }
+      }
+
+      selectedElements = constructedClassName;
+
+    });
+  }
+
+
+  // This function is exposed to inspector.js
+  // It allows elements to be unhighlighted via the parent window
+  function removeTargets() {
+    console.log('removeTargets()');
+
+    // Find each
+    var all_targets = $("#iframe-content [" + highlighted_class + "='enabled']");
+    $.each(all_targets, function() {
+      // Make it disabled
+      $(this).attr(highlighted_class, 'disabled');
+
+      // Clear selected elements
+      selectedElements = "";
+
+      window.parent.$("#inspector .result").html("");
+
+      console.log('Removed targeted element highlights');
+    });
+  }
+
+
+
+
+</script>
+
+</body>
+</html>

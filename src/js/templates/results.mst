@@ -1,0 +1,101 @@
+<div class="tile__S">
+  {{#isGreen}}
+    {{>number}}
+  {{/isGreen}}
+  {{#isRed}}
+    {{>number}}
+  {{/isRed}}
+  {{#isOther}}
+    {{>news}}
+  {{/isOther}}
+  {{#isImage}}
+    {{>image}}
+  {{/isImage}}
+</div>
+
+
+<!-- {{#layout_size_XS}}
+<div class="tile__XS">
+  {{#isAboveGoal}}
+    {{>number}}
+  {{/isAboveGoal}}
+  {{#isBelowGoal}}
+    {{>number}}
+  {{/isBelowGoal}}
+  {{#isOther}}
+    {{>news}}
+  {{/isOther}}
+  {{#isImage}}
+    {{>image}}
+  {{/isImage}}
+</div>
+{{/layout_size_XS}}
+
+{{#layout_size_S}}
+<div class="tile__S">
+  {{#isAboveGoal}}
+    {{>number}}
+  {{/isAboveGoal}}
+  {{#isBelowGoal}}
+    {{>number}}
+  {{/isBelowGoal}}
+  {{#isOther}}
+    {{>news}}
+  {{/isOther}}
+  {{#isImage}}
+    {{>image}}
+  {{/isImage}}
+</div>
+{{/layout_size_S}}
+
+
+{{#layout_size_M}}
+<div class="tile__M">
+  {{#isAboveGoal}}
+    {{>number}}
+  {{/isAboveGoal}}
+  {{#isBelowGoal}}
+    {{>number}}
+  {{/isBelowGoal}}
+  {{#isOther}}
+    {{>news}}
+  {{/isOther}}
+  {{#isImage}}
+    {{>image}}
+  {{/isImage}}
+</div>
+{{/layout_size_M}}
+
+{{#layout_size_L}}
+<div class="tile__L">
+  {{#isAboveGoal}}
+    {{>number}}
+  {{/isAboveGoal}}
+  {{#isBelowGoal}}
+    {{>number}}
+  {{/isBelowGoal}}
+  {{#isOther}}
+    {{>news}}
+  {{/isOther}}
+  {{#isImage}}
+    {{>image}}
+  {{/isImage}}
+</div>
+{{/layout_size_L}}
+
+{{#layout_size_XL}}
+<div class="tile__XL">
+  {{#isAboveGoal}}
+    {{>number}}
+  {{/isAboveGoal}}
+  {{#isBelowGoal}}
+    {{>number}}
+  {{/isBelowGoal}}
+  {{#isOther}}
+    {{>news}}
+  {{/isOther}}
+  {{#isImage}}
+    {{>image}}
+  {{/isImage}}
+</div>
+{{/layout_size_XL}} -->

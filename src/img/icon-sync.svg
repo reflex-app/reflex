@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="12px" height="16px" viewBox="0 0 12 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 50 (54983) - http://www.bohemiancoding.com/sketch -->
+    <title>icon-sync</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="App-Frame" transform="translate(-23.000000, -45.000000)" fill="#2973FF" fill-rule="nonzero">
+            <g id="Group-4" transform="translate(0.000000, 31.000000)">
+                <g id="Sync-Button" transform="translate(13.000000, 8.000000)">
+                    <g id="icon-sync" transform="translate(10.000000, 6.000000)">
+                        <path d="M6,2.18181818 L6,0 L3.00733496,2.90909091 L6,5.81818182 L6,3.63636364 C8.46894866,3.63636364 10.4889976,5.6 10.4889976,8 C10.4889976,8.72727273 10.2645477,9.45454545 9.96528117,10.0363636 L11.0875306,11.1272727 C11.6112469,10.1818182 11.9853301,9.16363636 11.9853301,8 C11.9853301,4.8 9.29193154,2.18181818 6,2.18181818 Z M6,12.3636364 C3.53105134,12.3636364 1.51100244,10.4 1.51100244,8 C1.51100244,7.27272727 1.73545232,6.54545455 2.03471883,5.96363636 L0.912469438,4.87272727 C0.388753056,5.81818182 0.0146699267,6.83636364 0.0146699267,8 C0.0146699267,11.2 2.70806846,13.8181818 6,13.8181818 L6,16 L8.99266504,13.0909091 L6,10.1818182 L6,12.3636364 Z" id="Shape"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

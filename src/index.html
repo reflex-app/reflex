@@ -1,0 +1,311 @@
+<html lang='en'>
+<head>
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115540766-1"></script>
+  <script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'UA-115540766-1');
+</script>
+<!-- /Google Analytics -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Preload CSS -->
+<link rel="preload" as="style" href="dist/css/style.css">
+<link rel="stylesheet" type="text/css" href="dist/css/style.css">
+
+<!-- Preload the JS -->
+<link rel="preload" as="script" href="dist/js/app.min.js">
+<script src="dist/js/app.min.js" type="text/javascript"></script>
+
+</head>
+<body>
+  <main>
+    <div class="gui-title-bar">
+      <div class="gui-menu-button"></div>
+      <div class="gui-menu-button"></div>
+      <div class="gui-menu-button"></div>
+    </div>
+
+    <div class="gui-header">
+      <div class="gui-action-button-container">
+        <div class="gui-action-button">
+          <div class="gui-sync-container" onclick="runScrape()">
+            <span class="gui-icon-sync" title="Load new data">
+              <img src="img/icon-sync.svg"/>
+            </span>
+            <span>Boomerang</span>
+          </div>
+          <div class="auto-reload-timer">
+            <!-- <span>30s</span> -->
+            <!-- <script type="text/javascript">
+            setInterval(function () {
+            // runScrape(); // Run a scrape
+          }, 5000);
+        </script> -->
+      </div>
+    </div>
+  </div>
+  <div id="progress">
+    <span class='progress-text'></span>
+    <div class="progress-wrap progress" data-progress-percent="0">
+      <div class="progress-bar progress"></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div id="tab-1" class="flex-page-container tab-content current">
+  <div id="main-sidebar">
+    <form method="post" action="/save" id="save-items" accept-charset="utf-8">
+      <div class="new-item-container">
+        <div id="new">+</div>
+        <span id="item-save-status" class="toast"></span>
+      </div>
+      <div id="data" class="tiles-container">
+        <!-- This is where Items are loaded -->
+      </div>
+    </form>
+  </div>
+  <div id="results">
+    <!-- Area where the Results appear -->
+    <div class="all-results tile-container"></div>
+    <!-- <div class="new-results tile-container"></div> -->
+  </div>
+</div>
+
+
+<!-- inspector -->
+<section id="inspector">
+  <div class="inspector-container">
+
+    <div class="gui-header">
+
+      <!-- inspector-editor-top -->
+      <div class="inspector-top">
+
+        <!-- inspector: url -->
+        <div class="url-container">
+          <form action="" id="submit-url-for-grab">
+            <div class="input-withAddon">
+              <div class="input-withAddon__field">
+                <input class="url" id="inspector-url" type="text" placeholder="Enter a URL here (example: http://google.com)" autocomplete="off" />
+              </div>
+              <div class="button input-withAddon__item">
+                <div id="refresh-iframe" class="refresh">
+                  <img src="img/icon-refresh.svg" alt="Refresh page" />
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <!-- / inspector: url -->
+
+        <a class="close button button-rounded" href="#">Close</a>
+        <a href="#" class="done button button-rounded">Save</a>
+      </div><!-- / inspector-editor-top -->
+
+    </div>
+
+    <div class="panels">
+      <div class="top-panel">
+        <!-- iFrame -->
+        <div id="iframe-container">
+          <iframe src="iframe.html" id="iframe"></iframe>
+        </div>
+        <!-- / iFrame -->
+      </div>
+
+
+      <!-- Sidebar -->
+      <div class="bottom-panel">
+        <div class="inspector-editor">
+
+
+          <div class="flex-container">
+
+            <!-- inspector-editor-left -->
+            <div class="inspector-editor-left">
+
+              <div class="flex-container">
+
+                <!-- inspector: title -->
+                <div>
+                  <span class="label">Title</span>
+                  <input class="name" id="" type="text" placeholder="Enter a Title" />
+                </div>
+                <!-- inspector: title -->
+
+
+
+                <div class="inspector-goals-container"><!-- inspector: goals-inner -->
+                  <span class="label">Looking for...</span>
+                  <div class="radio-container">
+
+                    <label title="This is useful if you want to fetch the title of a news article or some other value.">
+                      <input type="radio" name="inspector-goal-type" value="other" />
+                      <div class="inner-content">
+                        <figure class="icon-text" alt="Text">
+                        </figure>
+                        <figcaption>Text</figcaption>
+                      </div>
+                    </label>
+
+                    <label title="Greater than or equal to a number">
+                      <input type="radio" name="inspector-goal-type" value="above" />
+                      <div class="inner-content">
+                        <figure class="icon-number-up" alt="Text">
+                        </figure>
+                        <figcaption>Value</figcaption>
+                      </div>
+                    </label>
+
+                    <label title="Less than or equal to a number">
+                      <input type="radio" name="inspector-goal-type" value="below" />
+                      <div class="inner-content">
+                        <figure class="icon-number-down" alt="Text">
+                        </figure>
+                        <figcaption>Value</figcaption>
+                      </div>
+                    </label>
+
+                    <label title="This will return an image. Requires an image element.">
+                      <input type="radio" name="inspector-goal-type" value="image" />
+                      <div class="inner-content">
+                        <figure class="icon-image" alt="Text">
+                        </figure>
+                        <figcaption>Image</figcaption>
+                      </div>
+                    </label>
+                  </div><!-- inspector: goal type -->
+
+
+                  <!-- inspector: goal -->
+                  <div class="inspector-goal-container">
+                    <span class="label">Target Value</span>
+                    <input class="goal" id="" type="text" placeholder="Enter a number" />
+                  </div>
+                  <!-- inspector: goal -->
+
+
+                </div><!-- inspector: goals-inner -->
+
+                <!-- inspector: selector -->
+                <div class="selector-container">
+                  <span class="label" title="This is the CSS element you want to return the result of. Click on an element of the page, or type one in. You'll see the result on the right.">Selector</span>
+                  <a href="#" id="inspector-selector-general">General Selector</a>
+                  <a href="#" id="inspector-selector-specific">Specific Selector</a>
+                  <a href="#" id="inspector-toggle-DOM-outline">Toggle Blueprint</a>
+                  <div style="position: relative">
+                    <textarea class="css" id="grabHTMLInput" rows="5" placeholder="Enter a Class/ID"></textarea>
+                    <a class="clear" href="#">Clear</a>
+                  </div>
+                </div>
+                <!-- inspector: selector -->
+
+              </div><!-- flex container -->
+
+            </div><!-- / inspector-editor-left -->
+
+
+            <!-- inspector editor right -->
+            <div class="inspector-editor-right">
+              <!-- inspector: results -->
+              <div class="results-container">
+                <span class="label">Results</span>
+                <span class="result"><!-- dynamic --></span>
+              </div>
+            </div><!-- / inspector-editor-right -->
+
+          </div><!-- / flex container -->
+
+
+        </div><!-- / inspector-editor -->
+      </div><!-- / bottom-panel -->
+    </div>
+
+
+
+
+  </div>
+</section><!-- / inspector -->
+
+</main>
+
+<!-- <script src="js/app.min.js" type="text/javascript"></script> -->
+
+<!-- NWJS Functions -->
+<script type="text/javascript">
+
+// Log the current NWJS version
+console.log( "Webkit Version: ", process.versions['node-webkit'] );
+
+// Get the current window
+var win = nw.Window.get();
+
+// On load, show the app
+window.addEventListener("load", function() {
+  win.show();
+  win.focus();
+});
+
+// Add the standard Mac shadow
+win.setShadow(true);
+if ( win.setShadow === false ) {
+  win.setShadow(true);
+}
+
+// Open links in the native browser
+nw.Window.get().on('new-win-policy', function(frame, url, policy) {
+  // do not open the window
+  policy.ignore();
+  // and open it in external browser
+  nw.Shell.openExternal(url);
+});
+
+
+$(document).ready(function() {
+
+  // Close the window button
+  $('.gui-menu-button:nth-child(1)').click(function(){
+    win.close();
+  });
+
+  // Minimize window button
+  $('.gui-menu-button:nth-child(2)').click(function(){
+    win.minimize();
+  });
+
+  // Toggle fullscreen button
+  $('.gui-menu-button:nth-child(3)').click(function(){
+    win.toggleFullscreen();
+  });
+
+
+});
+</script>
+<!-- /NWJS Functions -->
+
+<script>
+
+// Globalize the window
+// This allows the entire NWJS to access it
+global.window = window;
+global.window.parent = window.parent;
+
+function runScrape() {
+  // Trigger a function on the server.js
+  // This is the secret sauce that will then
+  // call the scrape.js file's function
+  process.mainModule.exports.nodeScrape();
+
+  // Push the nodeScrape progress into the progress bar
+  progress_bar(); // progress-viz.js
+}
+
+</script>
+
+</body>
+</html>

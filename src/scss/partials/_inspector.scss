@@ -1,0 +1,341 @@
+$inspector-border-color: #E0E0E0;
+$inspector-inner-padding: 20px;
+
+#inspector {
+  background: #FFFFFF;
+  width: 100%;
+  height: calc(100% - #{$gui-title-bar-height});
+  position: absolute;
+  top: $gui-title-bar-height;
+  left: 0;
+  display: none; // hidden by default
+  color: white; // default text color
+
+  &.is-active {
+    display: block;
+    z-index: 100;
+
+    @extend .animate;
+    @extend .animate.slideInUp;
+  }
+
+  .inspector-container {
+    display: flex;
+    flex-direction: column;
+    height: 500px;
+    overflow: hidden;
+    height: 100%;
+  }
+
+}
+
+
+// Styles for resizable panels
+#inspector .inspector-container {
+  .panels {
+    height: calc(100% - #{$gui-header-height})
+  }
+
+  .top-panel {
+    flex: 0 0 auto;
+    // height: 50%;
+    height: 100%;
+    width: 100%;
+    white-space: nowrap;
+
+    iframe {
+      box-sizing: border-box;
+    }
+  }
+
+  .panel-bottom {
+    flex: 1 1 auto;
+    /* resizable */
+    padding: 10px;
+    background: #eee;
+  }
+
+  .gutter.gutter-vertical {
+    flex: 0 0 auto;
+    background: url(https://raw.githubusercontent.com/RickStrahl/jquery-resizable/master/assets/hsizegrip.png) center center no-repeat #e0e0e0;
+    cursor: row-resize;
+  }
+}
+
+
+
+#inspector .inspector-top {
+  position: relative;
+  width: 100%;
+  vertical-align: middle;
+
+  .url-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-flow: row;
+    width: 100%;
+    box-sizing: border-box;
+
+    .label, input {
+      display: inline-block;
+      width: auto;
+      margin: 0;
+    }
+
+    form {
+      width: 70%;
+      max-width: 600px;
+
+      .input-withAddon__item {
+        border: 1px solid #C8C8C8;
+        padding: 0 15px;
+        border-top-right-radius: 3px;
+        border-bottom-right-radius: 3px;
+      }
+
+      input {
+        width: 100%;
+        height: 30px;
+        box-sizing: border-box;
+        padding: 0 10px;
+        border-radius: 3px;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        border: 1px solid #C8C8C8;
+        border-right: none;
+      }
+    }
+
+  // Icon for refreshing the Inspector's HTML page
+    .refresh img {
+      height: 16px;
+    }
+
+  }
+}
+
+#refresh-iframe {
+  color: $color-2;
+}
+
+#iframe-container {
+  background: #F5F5F5;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+#inspector .inspector-editor {
+  box-sizing: border-box;
+  line-height: 1.5;
+  position: relative;
+  width: 100%;
+  height: 100%;
+
+  // Contain the left/right parts of the editor
+  .flex-container {
+    display: flex;
+    flex-flow: row wrap;
+    // justify-content: space-between;
+    position: relative;
+    // height: calc(100% - ( #{$inspector-inner-padding} * 2 ));
+    // height: 100%;
+    // overflow: auto;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .inspector-editor-left {
+    padding: $inspector-inner-padding;
+    box-sizing: border-box;
+    width: 60%;
+    overflow: auto;
+
+
+    .flex-container > * {
+      flex-grow: 1;
+      flex-basis: 0;
+    }
+
+    // Spacing horizontally between inputs
+    .flex-container > *:not(:first-child) {
+      margin-left: 40px;
+    }
+
+    // Contains goal & goal type
+    .inspector-goals-container {
+      position: relative;
+      min-width: 250px;
+    }
+
+    .inspector-goal-container {
+      display: none; // hide by default
+      position: absolute;
+      background: #FFFFFF;
+      padding: 15px 20px;
+      margin-top: 10px;
+      box-shadow: 0 2px 7px 0 #D2DAEA;
+      border-radius: 3px;
+      border-style: border-box
+    }
+
+    .radio-container {
+      display: flex;
+    }
+
+
+  } // inspector editor-left
+
+  .inspector-editor-right {
+    background: #F7F7F7;
+    min-width: 300px;
+    width: 40%;
+    height: 100%;
+    position: relative;
+    float: right;
+    padding: $inspector-inner-padding;
+    box-sizing: border-box;
+
+    .results-container {
+
+      .result {
+        height: 280px;
+        width: 100%;
+        overflow: hidden;
+        overflow-y: auto;
+        display: block;
+        word-break: break-word;
+        color: black;
+      }
+    }
+  } // inspector-editor-right
+
+
+  // The labels for each input
+  .label {
+    font-weight: 500;
+    display: block;
+    font-size: 1rem;
+    color: black;
+  }
+
+  input[type='text'] {
+    margin-top: 5px;
+    padding: 6px 0;
+    outline: none;
+    border: none;
+    color: $color-2;
+    background: white;
+    width: 100%;
+    border-bottom: 1px solid #E0E0E0;
+
+    &:focus {
+      // box-shadow: 0 0 0 2px rgba(lighten($color-2, 20%) ,1);
+      border-bottom: 1px solid $color-2;
+    }
+  }
+
+
+}
+
+
+#inspector .selector-container {
+  position: relative;
+
+  textarea {
+    width: 100%;
+    overflow: auto;
+    max-width: 100%;
+  }
+
+  // Hide & show the clear button on hover
+  textarea:hover ~ a.clear {
+    display: block;
+  }
+
+  a.clear {
+    display: none;
+    color: white;
+    position: absolute;
+    bottom: 5px;
+    right: 6px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    padding: 0 5px;
+    background: #424242;
+    border-radius: 3px;
+
+    &:hover {
+      display: block;
+    }
+  }
+
+}
+
+
+#inspector a.done {
+  color: white;
+  display: block;
+  background: $color-2;
+  border-color: $color-2;
+  top: 0;
+  right: 0;
+}
+
+#inspector a.close {
+  background: white;
+  top: 0;
+  right: 60px;
+}
+
+#inspector a.close,
+#inspector a.done {
+  text-align: center;
+  text-decoration: none;
+  height: 35px;
+  line-height: 35px;
+  padding: 0 10px;
+  position: absolute;
+  vertical-align: middle;
+  z-index: 10;
+}
+
+
+
+
+
+
+
+// Responsive rules
+
+@media screen and (max-width: 760px) {
+
+  #inspector .inspector-editor {
+    overflow: auto;
+  }
+
+  // Make the panels full-width
+  #inspector .inspector-editor .inspector-editor-left,
+  #inspector .inspector-editor .inspector-editor-right {
+    width: 100%;
+
+    .flex-container {
+      flex-flow: column wrap;
+
+      // Add vertical space between items
+      & > * {
+        margin-top: 20px;
+      }
+
+      // Remove the left margin
+      & > *:not(:first-child) {
+        margin-left: 0;
+      }
+    }
+
+    .inspector-goals-container {
+      margin-bottom: 100px;
+    }
+
+  }
+}

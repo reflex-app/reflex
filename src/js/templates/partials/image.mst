@@ -1,0 +1,5 @@
+<li class="results-item image-item" data-id="{{ID}}">
+  <!-- <span class="favicon" data-src="{{ link }}"></span> -->
+  <span class="title">{{ title }}</span><span class="value-other"></span>
+  <img src="{{ result }}" alt=""/>
+</li>

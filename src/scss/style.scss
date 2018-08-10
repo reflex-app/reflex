@@ -1,0 +1,318 @@
+// Reset & Variables
+@import "partials/normalize";
+@import "partials/variables";
+@import "partials/animation";
+
+@import "partials/buttons";
+@import "partials/inputs";
+@import "partials/tiles";
+@import "partials/items";
+@import "partials/lists";
+@import "partials/drag-and-drop";
+@import "partials/toast";
+
+@import "partials/app";
+
+@import "partials/inspector";
+
+@import "partials/misc";
+
+// App GUI
+@import "partials/gui";
+// @import "partials/loader";
+
+html {
+	// background: $body-bg;
+	background: none;
+	background-size: cover;
+	background-repeat: no-repeat;
+	position: relative;
+	height: 100%;
+	width: 100%;
+	border-radius: 80px; // make sure the frame for sure has no hard edges
+	overflow: hidden;
+}
+
+body {
+	background: none;
+	border-radius: 5px;
+	overflow: hidden;
+	font-family: $font-defaults;
+	font-size: 15px;
+	height: 100%;
+	width: 100%;
+}
+
+main {
+	background: $body-bg;
+	overflow: auto;
+	overscroll-behavior: auto;
+}
+
+.container {
+	// margin: 10px auto;
+	padding: 20px 3% 40px;
+	width: calc(100%);
+	height: calc(100% - #{$gui-top-total-height} );
+	position: relative;
+	background: $inner-bg;
+	// border: 1px solid #d8dbe0;
+	border-radius: 6px;
+	box-sizing: border-box;
+	// display: flex;
+	overflow: auto;
+
+	&:after {
+		clear: both;
+	}
+
+	pre {
+		overflow: hidden;
+	}
+}
+
+#items.container {
+	height: 100vh;
+	width: 100vw;
+}
+
+
+.flex-page-container {
+	display: flex;
+	overflow: auto;
+	position: relative;
+	height: calc(100% - #{$gui-top-total-height});
+
+	& > * {
+		flex: 0 1 auto;
+		box-sizing: border-box;
+	}
+}
+
+.action-buttons {
+	display: flex;
+	font-family: $font-defaults;
+	z-index: 10;
+
+	margin-bottom: 40px;
+
+	.new-scrape {
+		font-size: 13px;
+	}
+
+	img {
+		height: 16px;
+		margin-right: 5px;
+	}
+
+	span {
+		top: -2px;
+		position: relative;
+	}
+
+	& div:not(:last-child) {
+		margin-right: 10px;
+	}
+}
+
+// When dragging
+.ui-sortable-helper .data-item {
+	box-shadow: 0 15px 50px rgba(black, 0.1);
+	background-color: white;
+}
+
+// Form
+
+form {
+	display: block;
+}
+
+input[type="submit"] {
+	border: none;
+	outline: none;
+	box-shadow: none;
+	font-family: $font-defaults;
+	color: white;
+	background: $color-1;
+	padding: 20px 100px;
+	text-transform: uppercase;
+	margin-top: 20px;
+	display: inline-block;
+	width: 100%;
+	border-radius: 4px;
+	letter-spacing: 3px;
+
+	&:hover {
+		background: lighten($color-1, 5%);
+		cursor: pointer;
+	}
+
+	&:active {
+		background: darken($color-1, 5%);
+		cursor: pointer;
+	}
+}
+
+
+
+// Tabs
+// This allows the layout to consist of two separate tabs
+ul.tabs {
+	margin: 0 auto;
+	padding: 0px;
+	list-style: none;
+	// border-bottom: 1px solid #4D4D4D;
+	width: 100%;
+	overflow: hidden;
+	user-select: none;
+	// border: 1px solid #4D4D4D;
+	display: block;
+}
+ul.tabs li {
+	background: none;
+	color: #4D4D4D;
+	display: block;
+	padding: 15px 30px;
+	cursor: pointer;
+	font-family: $font-defaults;
+	font-weight: 400;
+	font-size: 13px;
+	border-left: 4px solid transparent;
+
+	&:hover {
+		background: rgba(#0C99FE, 0.05);
+	}
+}
+
+ul.tabs li.current{
+	background: rgba(#0C99FE, 0.2);
+	border-left: 4px solid #0C99FE;
+	color: #0C99FE;
+}
+
+.tab-content{
+	// display: none;
+}
+
+#tab-1 {
+	overflow: hidden;
+	height: 100%;
+
+	#main-sidebar {
+		height: calc(100% - #{$gui-top-total-height});
+		// width: 18%;
+		display: inline-block;
+		position: relative;
+		// position: fixed;
+		overflow: hidden;
+		border-right: 1px solid #d7e0e8;
+
+		// When the sidebar is too small
+		// show just the icons
+		@media screen and (max-width: 800px) {
+			#data {
+				display: block;
+
+				.data-item-header {
+					width: 100%;
+				}
+				.data-container {
+					flex: 0;
+					display: block;
+					width: 100%;
+				}
+				.data-item-header input {
+					display: none;
+				}
+				.favicon {
+					position: relative;
+					margin: 0 auto;
+				}
+			}
+		}
+
+		#data {
+			overflow: hidden;
+			// height: calc(100% - 40px);
+			height: 100%;
+
+			&:hover {
+				overflow-x: hidden;
+				overflow-y: auto;
+			}
+		}
+
+	}
+
+
+	#results {
+		position: relative;
+		// margin-left: calc(20% + 30px);
+		margin-bottom: #{$gui-top-total-height};
+		padding-right: 15px;
+		margin-right: 3px;
+		padding-top: 10px;
+		// height: calc(100% - 40px);
+		overflow: auto;
+	}
+
+
+	.gutter {
+		flex: 0 0 auto;
+    background: $body-bg;
+    cursor: col-resize;
+	}
+
+}
+
+
+#tab-2 {
+	position: absolute;
+	top: 0;
+	display: none;
+	// z-index: 1;
+	will-change: transform;
+	width: 100%;
+
+	animation-name: slideOutDown;
+	animation-duration: 0.5s;
+	animation-fill-mode: both;
+
+	& .container {
+		background: $color-2;
+		margin: 0 auto;
+		margin-top: 36px;
+		width: calc(100% - 40px);
+		box-shadow: 0 60px 120px rgba(#000, 0.5);
+		padding: 20px;
+	}
+
+	&.is-active {
+		display: block;
+		top: 0;
+		opacity: 1;
+		z-index: 5;
+
+		animation-name: slideInUp;
+		animation-duration: 0.7s;
+	}
+}
+
+
+
+
+
+
+
+
+
+//
+// Favicons
+//
+.favicon {
+	vertical-align: middle;
+
+	img {
+		vertical-align: middle;
+	}
+}
