@@ -1,5 +1,5 @@
 const gulp = require('gulp');
-const browserSync = require('browser-sync').create()
+const browserSync = require('browser-sync');
 const requireDir = require('require-dir');
 const forwardReference = require('undertaker-forward-reference');
 
@@ -19,18 +19,19 @@ gulp.task('build', gulp.series('clean', 'copy', 'sass', 'javascript'));
 gulp.task('serve', gulp.series('build', function () {
   browserSync.init({
     server: './src',
-    port: port
+    port: port,
+    notify: false
   });
 }));
 
 // Watch files for changes
 gulp.task('watch', function () {
-  gulp.watch('src/scss/**/*', gulp.series('sass', browser.reload));
-  gulp.watch('src/js/**/*', gulp.series('javascript:foundation', browser.reload));
+  gulp.watch('src/scss/**/*.scss', gulp.series('sass', browserSync.reload));
+  gulp.watch('src/js/**/*.js', gulp.series('javascript', browserSync.reload));
 });
 
 // Runs all of the above tasks and then waits for files to change
-gulp.task('default', gulp.series('serve', 'watch'));
+gulp.task('default', gulp.parallel('serve', 'watch'));
 
 // Build the app
 gulp.task('app', gulp.series('build-app'));
