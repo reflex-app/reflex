@@ -7,12 +7,18 @@
         reset: $("#canvas-controls__reset"),
     }
 
+     // Set initial scale
+     var minScaleX =  $(window).width() / $("#artboards").innerWidth();
+     var minScaleY =  $(window).height() / $("#artboards").innerHeight();
+
     // Configuration
     var $panzoom = $('#artboards').panzoom({
         $reset: panzoomControls.reset,
         increment: 0.1,
-        maxScale: 5
+        maxScale: 5,
+        startTransform: 'scale('+Math.min(minScaleX, minScaleY)+')'
     }).panzoom('zoom', true);
+
 
     // ===============================
     // Mousewheel/Trackpad Zooming
@@ -84,27 +90,6 @@
                 input_val = bindings.scale.replace(/\D/g, '') + "%";
             }
         }
-
-        // if (input_val != undefined && panzoom_val != undefined && input_val == panzoom_val) {
-        //     // They match, just use Panzoom's value   
-        //     $(panzoomControls.scale).val(panzoom_val);
-        // } else {
-        //     // Need to zoom in Panzoom...
-        //     var new_decimal = parseFloat(input_val) / 100;
-        //     var new_decimal_asPercent = (new_decimal * 100) + "%";
-
-        //     // Only update panzoom if different from the current decimal
-        //     if ( new_decimal_asPercent != panzoom_val) {
-        //         $panzoom.panzoom("zoom", new_decimal, {
-        //             silent: true
-        //         });
-
-        //         panzoom_val = Math.round($panzoom.panzoom("getMatrix")[0] * 4) / 4 * 100 + "%";
-        //     }
-
-        //     console.log(input_val, panzoom_val, new_decimal, new_decimal_asPercent);
-        // }
-
     }
 
 })();
