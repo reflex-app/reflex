@@ -4,6 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Screens</title>
 
   <!-- Preload CSS -->
   <link rel="preload" as="style" href="{{root}}../dist/css/style.css">
@@ -21,12 +22,16 @@
     <!-- Toolbar w/ data binding to URL and global controls-->
     <div class="toolbar">
       <input type="text" id="toolbar__url" value="http://nickwittwer.com" />
+      <div id="toolbar__canvas-controls">
+        <input type="range" class="zoom-range" step="0.05" min="0.3" max="0.9">
+      <button class="reset">Reset</button>
+      </div>
     </div>
 
     <!-- Define the resizable canvas area-->
-    <div class="canvas">
+    <div id="canvas" class="canvas">
       <!-- Define the horizontal artbaord container-->
-      <div class="artboards">
+      <div id="artboards" class="artboards">
         <!-- Each artboard-->
         {{>artboard}} {{>artboard}} {{>artboard}}
       </div>
