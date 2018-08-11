@@ -12,6 +12,10 @@
         mouseleave: artboardEvents
     });
 
+    $("iframe a").on('mousedown touchstart', function(e) {
+        e.stopImmediatePropagation();
+    });
+
     function artboardEvents(e) {
         if (isOnArtboard === false) {
             // Get the parent object
@@ -19,35 +23,27 @@
 
             // Allow click events by disabling panzoom
             artboards.panzoom("disable");
-            console.log( artboards.panzoom("isDisabled") );
+            console.log(artboards.panzoom("isDisabled"));
 
             // Turn on isOnArtboard
             isOnArtboard = true;
 
-            e.stopImmediatePropagation();
-            e.preventDefault();
-
-            // thisArtboard.stopImmediatePropagation();
-            artboards.panzoom("disable");
             resizable();
 
         } else {
             // Disable click events, return to panzoom
             isOnArtboard = false;
             artboards.panzoom("enable");
-            console.log( artboards.panzoom("isDisabled") );
+            console.log(artboards.panzoom("isDisabled"));
         }
     }
 
     function resizable() {
-        $(".artboard").resizable({ 
+        $(".artboard").resizable({
             handleSelector: "> .handle__bottom",
-            // the side that the width resizing is relative to
             resizeWidthFrom: 'right',
-    
             onDragStart: function (e, $el, opt) {
                 artboards.panzoom("disable");
-                console.log( artboards.panzoom("isDisabled") );
             },
             onDragEnd: function (e, $el, opt) {
                 artboards.panzoom("enable");
