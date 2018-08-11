@@ -2,7 +2,6 @@
   "name": "screensbuilder",
   "version": "1.0.0",
   "devDependencies": {
-    "absolutify": "github:sorensen/absolutify#target-improvement",
     "babel-core": "^6.26.3",
     "browser-sync": "^2.24.4",
     "gulp": "github:gulpjs/gulp#4.0",
@@ -39,7 +38,6 @@
     "http": "0.0.0",
     "jsdom": "^11.10.0",
     "node-cmd": "^3.0.0",
-    "node-php-server": "^0.1.2",
     "npm": "^6.1.0",
     "path": "^0.12.7"
   }
