@@ -7,6 +7,7 @@ $color-1: #3ec382;
 $color-2: #2973FF;
 
 // GUI
+$gui-bg: #151515;
 $gui-title-bar-height: 22px;
 $gui-header-height: 45px;
 $gui-top-total-height: calc(#{$gui-header-height} + #{$gui-title-bar-height});

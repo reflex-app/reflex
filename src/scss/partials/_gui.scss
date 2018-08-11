@@ -28,7 +28,8 @@
 	-webkit-app-region: drag;
 	width: 100%;
 	height: $gui-title-bar-height;
-	background-color:#262626;
+	background-color:$gui-bg;
+	border-bottom: 1px solid #353535;
 
 	display: flex;
 	flex-flow: row nowrap;

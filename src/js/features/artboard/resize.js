@@ -14,28 +14,46 @@
 
     function artboardEvents(e) {
         if (isOnArtboard === false) {
+            // Get the parent object
+            var thisArtboard = $(e.target).closest(".artboard");
 
-            // Allow click events
-            console.log('active');
-
-            isOnArtboard = true;
+            // Allow click events by disabling panzoom
             artboards.panzoom("disable");
             console.log( artboards.panzoom("isDisabled") );
 
-            e.stopImmediatePropagation();
+            // Turn on isOnArtboard
+            isOnArtboard = true;
 
-            $(e.target).on('hover', function() {
-                e.stopImmediatePropagation();
-            });
+            e.stopImmediatePropagation();
+            e.preventDefault();
+
+            // thisArtboard.stopImmediatePropagation();
+            artboards.panzoom("disable");
+            resizable();
 
         } else {
             // Disable click events, return to panzoom
             isOnArtboard = false;
             artboards.panzoom("enable");
-
             console.log( artboards.panzoom("isDisabled") );
-            console.log('inactive');
         }
     }
+
+    function resizable() {
+        $(".artboard").resizable({ 
+            handleSelector: "> .handle__bottom",
+            // the side that the width resizing is relative to
+            resizeWidthFrom: 'right',
+    
+            onDragStart: function (e, $el, opt) {
+                artboards.panzoom("disable");
+                console.log( artboards.panzoom("isDisabled") );
+            },
+            onDragEnd: function (e, $el, opt) {
+                artboards.panzoom("enable");
+            }
+        });
+    }
+
 
 })();

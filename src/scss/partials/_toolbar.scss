@@ -1,13 +1,27 @@
 .toolbar {
     // height: 44px;
-    background: #1D1D1D;
+    background: $gui-bg;
     z-index: 1;
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid #353535;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 
     input[type="text"] {
         border: none;
         background: none;
         color: white;
         border-bottom: 1px solid #434343;
-        padding: 1rem;
+        padding: 0.5rem;
+
+        &:focus {
+            outline: none;
+            background: lighten($body-bg, 3%);
+            border-bottom-color: transparent;
+            border-radius: 4px;
+        }
     }
+
 }

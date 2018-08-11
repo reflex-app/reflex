@@ -21,10 +21,17 @@
   <main>
     <!-- Toolbar w/ data binding to URL and global controls-->
     <div class="toolbar">
-      <input type="text" id="toolbar__url" value="http://nickwittwer.com" />
-      <div id="toolbar__canvas-controls">
-        <input type="range" class="zoom-range" step="0.05" min="0.3" max="0.9">
-      <button class="reset">Reset</button>
+      <div>
+        <input type="text" id="toolbar__url" placeholder="http://nickwittwer.com" />
+        <div class="url-highlighted"></div>
+      </div>
+      <div id="toolbar__canvas-controls" >
+        <div class="canvas-controls__scale">
+          <span>Scale: </span>
+          <input type="text" id="canvas-controls__scale" value="100%" data-bind="scale" disabled/>
+          {{!-- <span data-bind="scale"></span> --}}
+          <a href="#" id="canvas-controls__reset">Reset</a>
+        </div>
       </div>
     </div>
 
