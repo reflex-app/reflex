@@ -1,5 +1,3 @@
-console.log('Server script reached');
-
 const request = require('request');
 const path = require('path');
 

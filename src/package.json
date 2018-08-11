@@ -1,5 +1,5 @@
 {
-  "name": "Screens",
+  "name": "screens",
   "version": "0.0.0-alpha-1",
   "node-main": "server.js",
   "main": "http://localhost:8000",

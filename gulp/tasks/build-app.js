@@ -8,7 +8,7 @@ gulp.task('build-app', gulp.series(nwjs, copy_chromium_to_puppeteer));
 // Build NWJS Apps
 function nwjs() {
     var nw = new NwBuilder({
-        version: '0.31.4', // the NWJS version to use
+        version: '0.32.2', // the NWJS version to use
         flavor: 'sdk', // ship a smaller flavor without Devtools (sdk or normal)
         files: [
             'src/**/*.*',

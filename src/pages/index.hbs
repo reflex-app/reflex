@@ -1,27 +1,18 @@
 <!doctype html>
 <html>
+
 <head>
-  <!-- Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115540766-1"></script>
-  <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'UA-115540766-1');
-</script>
-<!-- /Google Analytics -->
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<!-- Preload CSS -->
-<link rel="preload" as="style" href="{{root}}../dist/css/style.css">
-<link rel="stylesheet" type="text/css" href="{{root}}../dist/css/style.css">
+  <!-- Preload CSS -->
+  <link rel="preload" as="style" href="{{root}}../dist/css/style.css">
+  <link rel="stylesheet" type="text/css" href="{{root}}../dist/css/style.css">
 
-<!-- Preload the JS -->
-<link rel="preload" as="script" href="{{root}}../dist/js/app.min.js">
-<script src="{{root}}../dist/js/app.min.js" type="text/javascript"></script>
-
+  <!-- Preload the JS -->
+  <link rel="preload" as="script" href="{{root}}../dist/js/app.min.js">
 </head>
+
 <body>
 
   <div class="gui-title-bar"></div>
@@ -31,90 +22,52 @@
     <div class="toolbar">
       <input type="text" id="toolbar__url" value="http://nickwittwer.com" />
     </div>
-    
+
     <!-- Define the resizable canvas area-->
     <div class="canvas">
       <!-- Define the horizontal artbaord container-->
       <div class="artboards">
         <!-- Each artboard-->
-        {{>artboard}}
-        {{>artboard}}
-        {{>artboard}}
+        {{>artboard}} {{>artboard}} {{>artboard}}
       </div>
     </div>
 
   </main>
 
-<!-- NWJS Functions -->
-<script type="text/javascript">
+  <script type="text/javascript">
+    if (nw) {
+      // Log the current NWJS version
+      console.log("Webkit Version: ", process.versions['node-webkit']);
 
-// Log the current NWJS version
-console.log( "Webkit Version: ", process.versions['node-webkit'] );
+      var win = nw.Window.get();
 
-// Get the current window
-var win = nw.Window.get();
+      // On load, show the app
+      win.on("loaded", function () {
+        win.show();
+        win.focus();
 
-// On load, show the app
-window.addEventListener("load", function() {
-  win.show();
-  win.focus();
-});
+        // // Add the standard Mac shadow
+        setTimeout(function () {
+          win.setShadow(true);
+          if (win.setShadow === false) {
+            win.setShadow(true);
+          }
+          console.log('shadow?');
+        }, 100);
+      });
 
-// Add the standard Mac shadow
-win.setShadow(true);
-if ( win.setShadow === false ) {
-  win.setShadow(true);
-}
+      // Open links in the native browser
+      win.on('new-win-policy', function (frame, url, policy) {
+        // do not open the window
+        policy.ignore();
+        // and open it in external browser
+        nw.Shell.openExternal(url);
+      });
+    }
+  </script>
 
-// Open links in the native browser
-nw.Window.get().on('new-win-policy', function(frame, url, policy) {
-  // do not open the window
-  policy.ignore();
-  // and open it in external browser
-  nw.Shell.openExternal(url);
-});
-
-
-$(document).ready(function() {
-
-  // Close the window button
-  $('.gui-menu-button:nth-child(1)').click(function(){
-    win.close();
-  });
-
-  // Minimize window button
-  $('.gui-menu-button:nth-child(2)').click(function(){
-    win.minimize();
-  });
-
-  // Toggle fullscreen button
-  $('.gui-menu-button:nth-child(3)').click(function(){
-    win.toggleFullscreen();
-  });
-
-
-});
-</script>
-<!-- /NWJS Functions -->
-
-{{!-- <script>
-
-// Globalize the window
-// This allows the entire NWJS to access it
-global.window = window;
-global.window.parent = window.parent;
-
-function runScrape() {
-  // Trigger a function on the server.js
-  // This is the secret sauce that will then
-  // call the scrape.js file's function
-  process.mainModule.exports.nodeScrape();
-
-  // Push the nodeScrape progress into the progress bar
-  progress_bar(); // progress-viz.js
-}
-
-</script> --}}
+  <script src="{{root}}../dist/js/app.min.js" type="text/javascript"></script>
 
 </body>
+
 </html>

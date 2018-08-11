@@ -10,7 +10,7 @@ var port = process.env.SERVER_PORT || 3000;
 gulp.registry(forwardReference());
 
 // Load tasks
-requireDir('./src/gulp/tasks');
+requireDir('./gulp/tasks');
 
 // Tasks
 gulp.task('build', gulp.series('clean', 'copy', 'sass', 'javascript', 'handlebars'));
