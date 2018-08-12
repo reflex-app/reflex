@@ -11,6 +11,18 @@
      var minScaleX =  $(window).width() / $("#artboards").innerWidth();
      var minScaleY =  $(window).height() / $("#artboards").innerHeight();
 
+     $(window).on('resize', function() {
+        minScaleX = $(window).width() / $("#artboards").innerWidth();
+        minScaleY = $(window).height() / $("#artboards").innerHeight();
+        $panzoom.panzoom("resetDimensions");
+        $panzoom.panzoom("setTransform", 'scale('+Math.min(minScaleX, minScaleY)+')');
+     });
+
+
+     $("#canvas-controls__fit-to-screen").on('click', function() {
+        $panzoom.panzoom("setTransform", 'scale('+Math.min(minScaleX, minScaleY)+')');
+     });
+
     // Configuration
     var $panzoom = $('#artboards').panzoom({
         $reset: panzoomControls.reset,
@@ -89,6 +101,8 @@
                 });
                 input_val = bindings.scale.replace(/\D/g, '') + "%";
             }
+        } else {
+
         }
     }
 
