@@ -1,23 +1,16 @@
 (function () {
 
-    var artboard = $(".artboard");
-    var artboards = $("#artboards");
-    var resize_handle__right = $(".handle__right");
-    var resize_handle__bottom = $(".handle__bottom");
-
-    var isOnArtboard = false;
-
     artboard.on({
         mouseenter: artboardEvents,
         mouseleave: artboardEvents
     });
 
-    $("iframe a").on('mousedown touchstart', function(e) {
+    $("iframe a").on('mousedown touchstart', function (e) {
         e.stopImmediatePropagation();
     });
 
     function artboardEvents(e) {
-        if (isOnArtboard === false) {
+        if (app.events.isOnArtboard === false) {
             // Get the parent object
             var thisArtboard = $(e.target).closest(".artboard");
 
@@ -26,27 +19,33 @@
             console.log(artboards.panzoom("isDisabled"));
 
             // Turn on isOnArtboard
-            isOnArtboard = true;
+            app.events.isOnArtboard = true;
 
             resizable();
 
         } else {
             // Disable click events, return to panzoom
-            isOnArtboard = false;
+            app.events.isOnArtboard = false;
             artboards.panzoom("enable");
             console.log(artboards.panzoom("isDisabled"));
         }
     }
 
     function resizable() {
+        $el = $(".handle__bottom")
         $(".artboard").resizable({
             handleSelector: "> .handle__bottom",
             resizeWidthFrom: 'right',
-            onDragStart: function (e, $el, opt) {
+            onDragStart: function (e) {
                 artboards.panzoom("disable");
+                console.log(artboards.panzoom("isDisabled"));
+                app.events.isResizingArtboard = true;
             },
-            onDragEnd: function (e, $el, opt) {
+            onDragEnd: function (e) {
                 artboards.panzoom("enable");
+            },
+            resize: function (event, ui) {
+                ui.size.width += ui.size.width - ui.originalSize.width;
             }
         });
     }

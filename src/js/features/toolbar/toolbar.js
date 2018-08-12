@@ -1,4 +1,4 @@
-screens.toolbar = {
+app.toolbar = {
 
     init: function () {
         this.firstLoad();
@@ -9,7 +9,7 @@ screens.toolbar = {
         $("#toolbar__url").on('keypress', function (e) {
             if (e.which == 13) {
                 e.preventDefault();
-                screens.toolbar.updateURL();
+                app.toolbar.updateURL();
             }
         });
     },
@@ -22,11 +22,11 @@ screens.toolbar = {
         iframe.attr("src", url_val);
 
         // Add loader
-        screens.toolbar.isLoading(true, url_val);
+        app.toolbar.isLoading(true, url_val);
 
         // Once they're loaded
         iframe.on("load", function () {
-            screens.toolbar.isLoading(false, url_val);
+            app.toolbar.isLoading(false, url_val);
             // Unregister the load event of any previous iFrames
             $(this).off("load");
         });

@@ -1,48 +1,43 @@
-(function () {
+// Updates the canvasMinSize
+function update_canvasMinSize() {
+    app.minScaleX = $(window).width() / artboards.innerWidth();
+    app.minScaleY = $(window).height() / artboards.innerHeight();
+}
 
-    // Controls
-    var panzoomControls = {
-        container: $('#toolbar__canvas-controls'),
-        scale: $("#canvas-controls__scale"),
-        reset: $("#canvas-controls__reset"),
+// Returns the current canvasMinSize
+var get_canvasMinSize = function () {
+    return {
+        x: app.minScaleX,
+        y: app.minScaleY
     }
+}();
 
-     // Set initial scale
-     var minScaleX =  $(window).width() / $("#artboards").innerWidth();
-     var minScaleY =  $(window).height() / $("#artboards").innerHeight();
+// Window Resize Event
+$(window).on('resize', function () {
+    update_canvasMinSize();
+    console.log(app.minScaleX, app.minScaleY, get_canvasMinSize);
+});
 
-     $(window).on('resize', function() {
-        minScaleX = $(window).width() / $("#artboards").innerWidth();
-        minScaleY = $(window).height() / $("#artboards").innerHeight();
-        $panzoom.panzoom("resetDimensions");
-        $panzoom.panzoom("setTransform", 'scale('+Math.min(minScaleX, minScaleY)+')');
-     });
+// Fit contents to screen width/height
+$("#canvas-controls__fit-to-screen").on('click', function () {
+    canvas.panzoom("setTransform", 'scale(' + Math.min(get_canvasMinSize.x, get_canvasMinSize.y) + ')');
+    updateScale("fromCanvas")
+    console.log(app.minScaleX, app.minScaleY, "scale:", get_canvasMinSize, ";");
+});
 
-
-     $("#canvas-controls__fit-to-screen").on('click', function() {
-        $panzoom.panzoom("setTransform", 'scale('+Math.min(minScaleX, minScaleY)+')');
-     });
-
-    // Configuration
-    var $panzoom = $('#artboards').panzoom({
-        $reset: panzoomControls.reset,
-        increment: 0.1,
-        maxScale: 5,
-        startTransform: 'scale('+Math.min(minScaleX, minScaleY)+')'
-    }).panzoom('zoom', true);
-
+// (function () {
 
     // ===============================
     // Mousewheel/Trackpad Zooming
     // ===============================
 
-    if (!$panzoom.panzoom("isDisabled")) {
+    if (!canvas.panzoom("isDisabled")) {
         // Allow mousewheel/trackpad zooming & dragging
-        $panzoom.parent().on('mousewheel.focal', function (e) {
+        canvas.parent().on('mousewheel.focal', function (e) {
             e.preventDefault();
             var delta = e.delta || e.originalEvent.wheelDelta;
             var zoomOut = delta ? delta < 0 : e.originalEvent.deltaY > 0;
-            $panzoom.panzoom('zoom', zoomOut, {
+            canvas.panzoom('zoom', zoomOut, {
                 animate: false,
                 focal: e
             });
@@ -66,37 +61,32 @@
     updateScale('fromCanvas');
 
     // Watch the input for changes
-    $(panzoomControls.scale).on('keypress', function (e) {
+    $(canvasControls.scale).on('keypress', function (e) {
         if (e.which == 13) {
             updateScale('fromInput');
         }
     });
 
     // Update the zoom percentage on zoom
-    $panzoom.on('panzoomzoom', function (e, panzoom, scale, opts) {
+    canvas.on('panzoomzoom', function (e, panzoom, scale, opts) {
         updateScale('fromCanvas');
-    });
-
-    // Update the zoom percentage on reset
-    $(panzoomControls.reset).click(function() {
-        updateScale('fromCanvas')
     });
 
     function updateScale(arg) {
         var input_val = bindings.scale.replace(/\D/g, '') + "%";
-        var panzoom_val = Math.round($panzoom.panzoom("getMatrix")[0] * 4) / 4 * 100 + "%";
+        var panzoom_val = Math.round(canvas.panzoom("getMatrix")[0] * 4) / 4 * 100 + "%";
         console.log(arg, input_val, panzoom_val);
 
-        if (arg != undefined ) {
+        if (arg != undefined) {
             if (arg === "fromCanvas") {
                 // Default: just update the scale's value
-                $(panzoomControls.scale).val(panzoom_val);
+                $(canvasControls.scale).val(panzoom_val);
             } else if (arg === "fromInput") {
                 // Update the canvas based on the input
                 // Also update the canvas' value
                 var new_decimal = parseFloat(input_val) / 100;
                 var new_decimal_asPercent = (new_decimal * 100) + "%";
-                $panzoom.panzoom("zoom", new_decimal, {
+                canvas.panzoom("zoom", new_decimal, {
                     // silent: true
                 });
                 input_val = bindings.scale.replace(/\D/g, '') + "%";
@@ -106,4 +96,4 @@
         }
     }
 
-})();
+// })();
