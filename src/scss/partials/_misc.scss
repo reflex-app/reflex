@@ -1,8 +1,8 @@
 a, a:visited {
-  color: $color-2;
+  color: $accent-color;
 
   &:hover {
-    color: lighten($color-2, 15%);
+    color: lighten($accent-color, 15%);
   }
 
 }

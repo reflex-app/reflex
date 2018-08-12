@@ -54,7 +54,7 @@
     updateScale('fromCanvas');
 
     // Watch the input for changes
-    $(document).on('keypress', $(panzoomControls.scale), function (e) {
+    $(panzoomControls.scale).on('keypress', function (e) {
         if (e.which == 13) {
             updateScale('fromInput');
         }
