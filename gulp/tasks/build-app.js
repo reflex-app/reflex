@@ -11,12 +11,8 @@ function nwjs() {
         version: '0.32.2', // the NWJS version to use
         flavor: 'sdk', // ship a smaller flavor without Devtools (sdk or normal)
         files: [
-            'src/**/*.*',
-            '!src/*.app', // ignore the Beta build
-            '!src/*.app/**/*', // ignore the Beta build
-            '!src/scss/**/*', // ignore the uncompiled SCSS
-            '!src/js/**/*', // ignore the uncompiled JS
-            'src/js/templates/**/*' // add Mustache templates
+            'src/img/**/*',
+            'dist/**/*',
         ],
         buildDir: './app',
         cacheDir: './app/NWJS',
