@@ -5,7 +5,7 @@ app.toolbar = {
     },
 
     firstLoad: function () {
-        // Bind the "Enter" key => load URL in iFrame
+        // Bind the "Enter" key => load URL in webview
         $("#toolbar__url").on('keypress', function (e) {
             if (e.which == 13) {
                 e.preventDefault();
@@ -16,19 +16,31 @@ app.toolbar = {
 
     updateURL: function () {
         var url_val = $("#toolbar__url").val();
-        var iframe = $("iframe");
+        var webview = $("webview");
 
-        // Update iframe src
-        iframe.attr("src", url_val);
+        // Update webview src
+        webview.attr("src", url_val);
 
         // Add loader
-        app.toolbar.isLoading(true, url_val);
+        // app.toolbar.isLoading(true, url_val);
 
         // Once they're loaded
-        iframe.on("load", function () {
+        // webview.on("load", function () {
+        //     app.toolbar.isLoading(false, url_val);
+        //     // Unregister the load event of any previous webviews
+        //     $(this).off("load");
+        // });
+
+        webview.on("loadstart", function () {
+            app.toolbar.isLoading(true, url_val)
+        });
+        webview.on("loadstop", function () {
             app.toolbar.isLoading(false, url_val);
-            // Unregister the load event of any previous iFrames
-            $(this).off("load");
+            // Unregister the load event of any previous webviews
+            $(this).off("loadstart loadstop");
+
+            // Setup the event listener on the child
+            app.toolbar.handleWebviewChild();
         });
     },
 
@@ -44,6 +56,20 @@ app.toolbar = {
         } else {
             // No action
         }
+    },
+
+    handleWebviewChild: function() {
+        //  // Inject click handler
+        //  var webview_js = document.querySelector('webview');
+        //  webview_js.executeScript({
+        //     //  mainWorld: true,
+        //      code: 'document.querySelector("a").onclick = function() { window.parent.document.postMessage("Hello World!"); }'
+        //  });
+
+        //  window.addEventListener('message', function(e) {
+        //     var message = e.data;
+        //     console.log(message);
+        //   });
     }
 
 }

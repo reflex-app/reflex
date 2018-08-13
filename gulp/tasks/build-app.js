@@ -3,10 +3,9 @@ const gutil = require('gulp-util');
 const NwBuilder = require('nw-builder');
 
 // The overall task
-gulp.task('build-app', gulp.series(nwjs, copy_chromium_to_puppeteer));
+gulp.task('build-app', gulp.series('build-app:main'));
 
-// Build NWJS Apps
-function nwjs() {
+gulp.task('build-app:main', function() {
     var nw = new NwBuilder({
         version: '0.32.2', // the NWJS version to use
         flavor: 'sdk', // ship a smaller flavor without Devtools (sdk or normal)
@@ -32,10 +31,5 @@ function nwjs() {
         .catch(function (err) {
             gutil.log('nw-builder', err);
         })
-}
 
-// Function for NWJS builds that copies .local-chromium to build
-function copy_chromium_to_puppeteer() {
-    return gulp.src('./src/node_modules/puppeteer/.local-chromium/**/*')
-        .pipe(gulp.dest('./app/Boomerang/osx64/Boomerang.app/Contents/Resources/app.nw/node_modules/puppeteer/.local-chromium'))
-}
+});

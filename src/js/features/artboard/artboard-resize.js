@@ -5,7 +5,7 @@
         mouseleave: artboardEvents
     });
 
-    $("iframe a").on('mousedown touchstart', function (e) {
+    $("webview a").on('mousedown touchstart', function (e) {
         e.stopImmediatePropagation();
     });
 

@@ -57,7 +57,7 @@ $artboard-handle-height: 1rem;
         height: 100%;
         position: relative;
         border: 1px solid white;
-        iframe {
+        webview {
             height: 100%;
             width: 100%;
         }
@@ -85,7 +85,7 @@ $artboard-handle-height: 1rem;
             bottom: calc(-#{$artboard-handle-height} - 16px);
             right: calc(-#{$artboard-handle-height} - 16px);
             &:hover {
-                cursor: nesw-resize;
+                cursor: nwse-resize;
             }
             &:active {
                 z-index: 1;
