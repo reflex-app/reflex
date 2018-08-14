@@ -48,10 +48,15 @@
   </main>
 
   <script type="text/javascript">
+    // NWJS specific code
     if (nw) {
-      // Log the current NWJS version
-      console.log("Webkit Version: ", process.versions['node-webkit']);
 
+      if (process.versions['nw-flavor']) {
+        // SDK-specific code
+      console.log("Webkit Version: ", process.versions['node-webkit']);
+      }
+
+      // Make the NW window object accessible
       var win = nw.Window.get();
 
       // On load, show the app
