@@ -18,13 +18,13 @@ app.artboard.dimensions = {
                 if (typeof width !== undefined) {
                     width = $el.closest(artboard).width();
                     width_container.html(width + "px");
-                    console.log(width);
+                    // console.log(width);
                 }
     
                 if (typeof height !== undefined) {
                     height = $el.closest(artboard).height();
                     height_container.html(height + "px");
-                    console.log(height);
+                    // console.log(height);
                 }
         } else {
             $.each($el, function () {
@@ -34,16 +34,16 @@ app.artboard.dimensions = {
                 if (typeof width !== undefined) {
                     width = $(this).closest(artboard).width();
                     width_container.html(width + "px");
-                    console.log(width);
+                    // console.log(width);
                 }
     
                 if (typeof height !== undefined) {
                     height = $(this).closest(artboard).height();
                     height_container.html(height + "px");
-                    console.log(height);
+                    // console.log(height);
                 }
     
-                console.log($(this));
+                // console.log($(this));
     
             });
         }
