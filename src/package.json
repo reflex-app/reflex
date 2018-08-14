@@ -29,5 +29,17 @@
     "request": "^2.83.0",
     "require": "^2.4.20"
   },
-  "chromium-args": "--enable-logging=stderr, --mixed-context, --remote-debugging-port=9999"
+  "chromium-args": "--enable-logging=stderr, --mixed-context, --remote-debugging-port=9999",
+  "webview": {
+    "partitions": [{
+      "name": "trusted",
+      "accessible_resources": [
+        "storage",
+        "tabs",
+        "activeTab",
+        "<all_urls>",
+        "*://*/*"
+      ]
+    }]
+  }
 }

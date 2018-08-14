@@ -4,7 +4,8 @@ app.init = function () {
 
 	// Load each component here:
 	app.toolbar.init();
+	app.artboard.init();
 }  
 
 // Start the app
-app.init();
+$( document ).ready( app.init );
