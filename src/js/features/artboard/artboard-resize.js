@@ -38,20 +38,37 @@ app.artboard.resize = {
 
         function resizable() {
             console.log('hit resizable');
-            
+
             $el = $(".handle__bottom")
             artboard.resizable({
                 handleSelector: "> .handle__bottom",
                 resizeWidthFrom: 'right',
-                onDrag: function(e, $el, newWidth, newHeight) {
+                onDrag: function (e, $el, newWidth, newHeight) {
                     // Update dimensions
-                    var parent_artboard = $el.closest( $(artboard) );
+                    var parent_artboard = $el.closest($(artboard));
                     console.log(parent_artboard);
-                    
+
+                    // Disable pointer events on other elements
+                    $("webview").css("pointer-events", "none");
+                    artboards.css("pointer-events", "none");
+                    // Accept all events from parent
+                    $el.css("pointer-events", "all");
+                    $el.css("cursor", "nwse-resize");
+                    // Override all other elements
+                    $('body').css("cursor", "nwse-resize");
+
+                    // Update the artboard's dimensions in the UI
                     app.artboard.dimensions.update(parent_artboard, newWidth, newHeight);
                 },
-                resize: function (event, ui) {
-                    ui.size.width += ui.size.width - ui.originalSize.width;
+                onDragEnd: function (e) {
+                    // Disable pointer events on other elements
+                    $("webview").css("pointer-events", "");
+                    artboards.css("pointer-events", "");
+                    // Accept all events from parent
+                    $el.css("pointer-events", "");
+                    $el.css("cursor", "");
+                    // Override all other elements
+                    $('body').css("cursor", "");
                 }
             });
         }

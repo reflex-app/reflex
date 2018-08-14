@@ -40,7 +40,34 @@ if (!canvas.panzoom("isDisabled")) {
             focal: e
         });
     });
+
+    // Update the zoom percentage on zoom
+    canvas.on('panzoomzoom', function (e, panzoom, scale, opts) {
+        updateScale('fromCanvas');
+    });
 }
+
+canvas.on('panzoompan', function () {
+    // Accept all events from parent
+    artboards.css("pointer-events", "all");
+    artboards.css("cursor", "move");
+    // Override all other elements
+    $('body').css("cursor", "move");
+    // Disable pointer events on other elements
+    $("webview").css("pointer-events", "none");
+    artboards.css("pointer-events", "none");
+
+    canvas.on('panzoomend', function (e, panzoom, matrix, changed) {
+        // Accept all events from parent
+        artboards.css("pointer-events", "");
+        artboards.css("cursor", "");
+        // Override all other elements
+        $('body').css("cursor", "");
+        // Disable pointer events on other elements
+        $("webview").css("pointer-events", "");
+        artboards.css("pointer-events", "");
+    });
+});
 
 // ===============================
 // Zoom Scale Percentage
@@ -64,11 +91,6 @@ $(canvasControls.scale).on('keypress', function (e) {
     if (e.which == 13) {
         updateScale('fromInput');
     }
-});
-
-// Update the zoom percentage on zoom
-canvas.on('panzoomzoom', function (e, panzoom, scale, opts) {
-    updateScale('fromCanvas');
 });
 
 function updateScale(arg) {
