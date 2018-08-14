@@ -1,9 +1,25 @@
-(function () {
+app.artboard.resize = {
 
-    artboard.on({
-        mouseenter: artboardEvents,
-        mouseleave: artboardEvents
-    });
+    init: function () {
+        this.firstLoad();
+    },
+
+    firstLoad: function () {
+        artboard.on({
+            mouseenter: function () {
+                app.events.isOnArtboard = true;
+            },
+            mouseleave: function () {
+                app.events.isOnArtboard = false;
+            }
+        });
+    },
+
+    start: function () {},
+    stop: function () {}
+
+}
+
 
     $("webview a").on('mousedown touchstart', function (e) {
         e.stopImmediatePropagation();
@@ -49,6 +65,3 @@
             }
         });
     }
-
-
-})();

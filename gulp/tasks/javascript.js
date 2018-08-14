@@ -20,7 +20,16 @@ gulp.task('javascript:main', function() {
 
     './src/js/app-variables.js', // Setup any variables, namespaces, etc.
 
-    './src/js/features/**/*.js', // Load all the logic and app functions
+    // Toolbar
+    './src/js/features/toolbar/toolbar.js',
+    './src/js/features/toolbar/**/*.js',
+
+    // Artboard
+    './src/js/features/artboard/artboard.js',
+    './src/js/features/artboard/**/*.js',
+
+    // Canvas
+    './src/js/features/canvas/canvas-pan-zoom.js',
 
     './src/js/components/**/*.js', // Anything that builds on the features
 
