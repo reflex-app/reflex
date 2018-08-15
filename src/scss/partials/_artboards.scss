@@ -149,4 +149,14 @@ $artboard-handle-height: 1rem;
           }
           
     }
+
+    .button-new-artboard {
+        content: '';
+        background: red;
+        height: 1.5rem;
+        width: 1.5rem;
+        position: absolute;
+        top: 50%;
+        right: 0;
+    }
 }

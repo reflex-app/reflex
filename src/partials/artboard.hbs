@@ -5,10 +5,18 @@
     </div>
     <div class="artboard__keypoints"></div>
     <div class="artboard__content">
-        {{>loader}}
+        <div class="artboard__loader">
+            <div class="content">
+                <div class="lds-ripple">
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
+        </div>
         <webview partition=”trusted”></webview>
         <div class="artboard__handles">
             <div class="handle__bottom"></div>
         </div>
     </div>
+    <div class="button-new-artboard"></div>
 </div>
