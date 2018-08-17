@@ -1,24 +1,23 @@
 app.artboard.resize = {
 
     init: function () {
-        this.firstLoad();
+        app.artboard.resize.firstLoad();
     },
 
-    firstLoad: function () {
-        function artboardEvents(e) {
-            if (app.events.isOnArtboard === true) {
-                // Allow click events by disabling panzoom
-                artboards.panzoom("disable");
-                console.log("Panzoom Disabled?:" + artboards.panzoom("isDisabled"));
+    firstLoad: function () {},
 
-                // Allow resizing
-                resizable();
+    trigger: function (e) {
+        if (app.events.isOnArtboard === true) {
+            // Allow click events by disabling panzoom
+            artboards.panzoom("disable");
+            console.log("Panzoom Disabled?:" + artboards.panzoom("isDisabled"));
 
-            } else {
-                // Disable click events, return to panzoom
-                artboards.panzoom("enable");
-                console.log("Panzoom Disabled?:" + artboards.panzoom("isDisabled"));
-            }
+            // Allow resizing
+            resizable();
+        } else {
+            // Disable click events, return to panzoom
+            artboards.panzoom("enable");
+            console.log("Panzoom Disabled?:" + artboards.panzoom("isDisabled"));
         }
 
         function resizable() {

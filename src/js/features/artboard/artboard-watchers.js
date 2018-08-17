@@ -7,7 +7,7 @@ app.artboard.watchers = {
             if ($target.is("div.button-artboard-before")) {
                 app.artboard.add("before", e);
             } else if ($target.is("div.button-artboard-after")) {
-            app.artboard.add("after", e);
+                app.artboard.add("after", e);
             }
 
             // Update the URL in all frames
@@ -15,16 +15,16 @@ app.artboard.watchers = {
         });
 
         // Artboard 
-        // artboard.on({
-        //     mouseenter: function (e) {
-        //         app.events.isOnArtboard = true;
-        //         artboardEvents(e);
-        //     },
-        //     mouseleave: function (e) {
-        //         app.events.isOnArtboard = false;
-        //         artboardEvents(e);
-        //     }
-        // });
+        artboard.on({
+            mouseenter: function (e) {
+                app.events.isOnArtboard = true;
+                app.artboard.resize.trigger(e);
+            },
+            mouseleave: function (e) {
+                app.events.isOnArtboard = false;
+                app.artboard.resize.trigger(e);
+            }
+        });
 
         // Let links be clickable
         canvas.find('a').on('mousedown touchstart', function (e) {

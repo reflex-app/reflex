@@ -24,6 +24,7 @@ app.minScaleY = $(window).height() / artboards.innerHeight();
 var canvas = artboards.panzoom({
     increment: 0.1,
     maxScale: 5,
+    minScale: 0.1,
     startTransform: 'scale(' + Math.min(app.minScaleX, app.minScaleY) + ')'
 }).panzoom('zoom', true);
 
