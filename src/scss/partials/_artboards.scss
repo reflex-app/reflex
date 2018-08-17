@@ -1,5 +1,3 @@
-* { border: 1px solid red!important; }
-
 .artboards {
     position: relative;
     padding: 1rem;
@@ -23,7 +21,7 @@ $artboard-handle-height: 1rem;
     display: block;
     height: 1200px;
     width: 300px;
-    margin-right: 6rem;
+    margin: auto 6rem;
     &:hover {
         background: #2A2A2A;
         border: 1px solid #606060;
@@ -49,7 +47,8 @@ $artboard-handle-height: 1rem;
         height: 100%;
         position: relative;
         border: 1px solid white;
-        webview {
+        webview,
+        iframe {
             height: 100%;
             width: 100%;
         }
@@ -141,7 +140,8 @@ $artboard-handle-height: 1rem;
     }
 }
 
-.button-new-artboard {
+.button-artboard-before,
+.button-artboard-after {
     position: absolute;
     top: 50%;
     right: -4.5rem;
@@ -155,10 +155,14 @@ $artboard-handle-height: 1rem;
     vertical-align: middle;
     text-align: center;
     border: 2px solid rgba(#ffffff, 0.2);
-
     &:hover {
         cursor: pointer;
         color: #0070CD;
         border-color: #0070CD;
     }
+}
+
+.button-artboard-before {
+    left: -4.5rem;
+    right: 0;
 }

@@ -14,6 +14,7 @@ $(window).on('resize', function () {
     clearTimeout(window.resizedFinished);
     window.resizedFinished = setTimeout(function () {
         canvasMinSize.update();
+        canvas.panzoom('resetDimensions');
         // console.log(app.minScaleX, app.minScaleY, canvasMinSize.x, canvasMinSize.y);
     }, 250);
 });
