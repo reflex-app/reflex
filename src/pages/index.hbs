@@ -49,6 +49,7 @@
 
   <script type="text/javascript">
     // NWJS specific code
+    var nw;
     if (nw) {
 
       if (process.versions['nw-flavor']) {
@@ -67,9 +68,6 @@
         // // Add the standard Mac shadow
         setTimeout(function () {
           win.setShadow(true);
-          if (win.setShadow === false) {
-            win.setShadow(true);
-          }
           console.log('shadow?');
         }, 100);
       });
