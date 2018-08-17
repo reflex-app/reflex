@@ -5,17 +5,6 @@ app.artboard.resize = {
     },
 
     firstLoad: function () {
-        artboard.on({
-            mouseenter: function (e) {
-                app.events.isOnArtboard = true;
-                artboardEvents(e);
-            },
-            mouseleave: function (e) {
-                app.events.isOnArtboard = false;
-                artboardEvents(e);
-            }
-        });
-
         function artboardEvents(e) {
             if (app.events.isOnArtboard === true) {
                 // Allow click events by disabling panzoom
