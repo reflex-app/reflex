@@ -25,6 +25,7 @@ app.artboard.resize = {
             console.log('hit resizable');
 
             $el = $(".handle__bottom");
+
             artboard.resizable({
                 handleSelector: "> .handle__bottom",
                 resizeWidthFrom: 'right',
@@ -34,7 +35,7 @@ app.artboard.resize = {
                     console.log(parent_artboard);
 
                     // Disable pointer events on other elements
-                    $("webview").css("pointer-events", "none");
+                    artboardInnerFrame.css("pointer-events", "none");
                     artboards.css("pointer-events", "none");
                     // Accept all events from parent
                     $el.css("pointer-events", "all");
@@ -47,7 +48,7 @@ app.artboard.resize = {
                 },
                 onDragEnd: function (e) {
                     // Disable pointer events on other elements
-                    $("webview").css("pointer-events", "");
+                    artboardInnerFrame.css("pointer-events", "");
                     artboards.css("pointer-events", "auto");
                     // Accept all events from parent
                     $el.css("pointer-events", "");
