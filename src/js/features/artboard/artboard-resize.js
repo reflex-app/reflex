@@ -16,10 +16,6 @@ app.artboard.resize = {
             }
         });
 
-        $("webview a").on('mousedown touchstart', function (e) {
-            e.stopImmediatePropagation();
-        });
-
         function artboardEvents(e) {
             if (app.events.isOnArtboard === true) {
                 // Allow click events by disabling panzoom
@@ -39,7 +35,7 @@ app.artboard.resize = {
         function resizable() {
             console.log('hit resizable');
 
-            $el = $(".handle__bottom")
+            $el = $(".handle__bottom");
             artboard.resizable({
                 handleSelector: "> .handle__bottom",
                 resizeWidthFrom: 'right',
@@ -63,7 +59,7 @@ app.artboard.resize = {
                 onDragEnd: function (e) {
                     // Disable pointer events on other elements
                     $("webview").css("pointer-events", "");
-                    artboards.css("pointer-events", "");
+                    artboards.css("pointer-events", "auto");
                     // Accept all events from parent
                     $el.css("pointer-events", "");
                     $el.css("cursor", "");
