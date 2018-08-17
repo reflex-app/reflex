@@ -14,6 +14,7 @@ app.events = {
 // Artboards
 var artboards = $("#artboards");
 var artboard = $(".artboard");
+var artboardInnerFrame = $("iframe");
 
 // Set initial scale
 app.minScaleX = $(window).width() / artboards.innerWidth();
