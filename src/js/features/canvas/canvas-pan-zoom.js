@@ -11,8 +11,11 @@ canvasMinSize.update = function () {
 
 // Window Resize Event
 $(window).on('resize', function () {
-    canvasMinSize.update();
-    console.log(app.minScaleX, app.minScaleY, canvasMinSize.x, canvasMinSize.y);
+    clearTimeout(window.resizedFinished);
+    window.resizedFinished = setTimeout(function () {
+        canvasMinSize.update();
+        // console.log(app.minScaleX, app.minScaleY, canvasMinSize.x, canvasMinSize.y);
+    }, 250);
 });
 
 // Fit contents to screen width/height
@@ -50,7 +53,7 @@ canvas.on('panzoompan', function () {
     artboards.css("pointer-events", "all");
     artboards.css("cursor", "move");
     // Override all other elements
-    $("webview").css("pointer-events", "none");
+    artboardInnerFrame.css("pointer-events", "none");
     $('body').css("cursor", "move");
     artboards.css("pointer-events", "none");
 });
@@ -61,7 +64,7 @@ canvas.on('panzoomend', function (e, panzoom, matrix, changed) {
     artboards.css("cursor", "");
     // Override all other elements
     $('body').css("cursor", "");
-    $("webview").css("pointer-events", "auto");
+    artboardInnerFrame.css("pointer-events", "auto");
     artboards.css("pointer-events", "auto");
 });
 
@@ -92,7 +95,7 @@ $(canvasControls.scale).on('keypress', function (e) {
 function updateScale(arg) {
     var input_val = bindings.scale.replace(/\D/g, '') + "%";
     var panzoom_val = Math.round(canvas.panzoom("getMatrix")[0] * 4) / 4 * 100 + "%";
-    console.log(arg, input_val, panzoom_val);
+    // console.log(arg, input_val, panzoom_val);
 
     if (arg != undefined) {
         if (arg === "fromCanvas") {
