@@ -5,42 +5,44 @@ app.toolbar = {
     },
 
     firstLoad: function () {
-        // Bind the "Enter" key => load URL in webview
+        // Bind the "Enter" key => load URL in artboardInnerFrame
         $("#toolbar__url").on('keypress', function (e) {
             if (e.which == 13) {
                 e.preventDefault();
                 app.toolbar.updateURL();
+                
             }
         });
     },
 
     updateURL: function () {
         var url_val = $("#toolbar__url").val();
-        var webview = $("webview");
 
-        if (nw) {
-            webview.each(function () {
-                // Update webview src
-                $(this).attr("src", url_val);
+        // Update the variable to latest DOM
+        artboardInnerFrame = $("iframe");
 
-                // Show loading spinner
-                $(this).on("loadstart", function () {
-                    app.toolbar.isLoading(true, url_val)
-                });
+        artboardInnerFrame.each(function () {
 
-                // Site is loaded
-                $(this).on("loadstop", function () {
-                    // Hide loading spinner
-                    app.toolbar.isLoading(false, url_val);
-                    // Unregister the load event of any previous webviews
-                    $(this).off("loadstart loadstop");
-                    // Setup the event listener on the child
-                    app.toolbar.handleWebviewChild($(this)[0]);
-                });
+            console.log($(this));
+
+            // Update artboardInnerFrame src
+            $(this).attr("src", url_val);
+
+            // Show loading spinner
+            $(this).on("loadstart", function () {
+                app.toolbar.isLoading(true, url_val)
             });
-        } else {
 
-        }
+            // Site is loaded
+            $(this).on("loadstop", function () {
+                // Hide loading spinner
+                app.toolbar.isLoading(false, url_val);
+                // Unregister the load event of any previous artboardInnerFrames
+                $(this).off("loadstart loadstop");
+                // Setup the event listener on the child
+                app.toolbar.handleartboardInnerFrameChild($(this)[0]);
+            });
+        });
     },
 
     isLoading: function (condition, url) {
@@ -57,10 +59,9 @@ app.toolbar = {
         }
     },
 
-    handleWebviewChild: function ($el) {
-
+    handleartboardInnerFrameChild: function ($el) {
         // Run on trigger
-        app.toolbar.injectWebviewChildScript($el);
+        app.toolbar.injectartboardInnerFrameChildScript($el);
 
         // Listen for events
         window.addEventListener('message', function (e) {
@@ -72,16 +73,16 @@ app.toolbar = {
         // Send a message to establish connection
         try {
             $el.contentWindow.postMessage('hi', '*');
-            console.log("message sent to webview");
+            console.log("message sent to artboardInnerFrame");
         } catch (e) {
-            console.log('message to webview failed');
+            console.log('message to artboardInnerFrame failed');
         }
     },
 
-    injectWebviewChildScript: function ($el) {
+    injectartboardInnerFrameChildScript: function ($el) {
         console.log('Link click script injected');
 
-        // Inject a script into the webview to track click events and propagate it to the parent
+        // Inject a script into the artboardInnerFrame to track click events and propagate it to the parent
         // Make sure to run this function again after click (re-inject)
         var injection_code = `
         window.addEventListener('message', function (e) {
