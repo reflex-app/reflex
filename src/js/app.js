@@ -8,4 +8,4 @@ app.init = function () {
 }  
 
 // Start the app
-$( document ).ready( app.init );
+$(document).ready(app.init);

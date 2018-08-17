@@ -8,12 +8,16 @@
     "gulp-autoprefixer": "^5.0.0",
     "gulp-cli": "^2.0.1",
     "gulp-compile-handlebars": "^0.6.1",
+    "gulp-declare": "^0.3.0",
+    "gulp-handlebars": "^5.0.2",
     "gulp-postcss": "^8.0.0",
     "gulp-sass": "^3.1.0",
     "gulp-sourcemaps": "^2.6.4",
+    "gulp-wrap": "^0.14.0",
     "nw": "0.31.4",
     "nw-builder": "^3.5.4",
     "parker": "0.0.10",
+    "path": "^0.12.7",
     "prettyjson": "^1.2.1",
     "require-dir": "^1.0.0",
     "undertaker-forward-reference": "^1.0.2",
@@ -38,7 +42,6 @@
     "http": "0.0.0",
     "jsdom": "^11.10.0",
     "node-cmd": "^3.0.0",
-    "npm": "^6.1.0",
-    "path": "^0.12.7"
+    "npm": "^6.1.0"
   }
 }

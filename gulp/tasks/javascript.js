@@ -20,6 +20,8 @@ gulp.task('javascript:main', function() {
 
     './src/js/app-variables.js', // Setup any variables, namespaces, etc.
 
+    './src/js/app-variables.js', // Setup any variables, namespaces, etc.
+
     // Toolbar
     './src/js/features/toolbar/toolbar.js',
     './src/js/features/toolbar/**/*.js',

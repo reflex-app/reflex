@@ -23,8 +23,6 @@ $("#canvas-controls__fit-to-screen").on('click', function () {
     console.log(app.minScaleX, app.minScaleY, "scale:", canvasMinSize.x, canvasMinSize.y);
 });
 
-// (function () {
-
 // ===============================
 // Mousewheel/Trackpad Zooming
 // ===============================
@@ -52,21 +50,19 @@ canvas.on('panzoompan', function () {
     artboards.css("pointer-events", "all");
     artboards.css("cursor", "move");
     // Override all other elements
-    $('body').css("cursor", "move");
-    // Disable pointer events on other elements
     $("webview").css("pointer-events", "none");
+    $('body').css("cursor", "move");
     artboards.css("pointer-events", "none");
+});
 
-    canvas.on('panzoomend', function (e, panzoom, matrix, changed) {
-        // Accept all events from parent
-        artboards.css("pointer-events", "");
-        artboards.css("cursor", "");
-        // Override all other elements
-        $('body').css("cursor", "");
-        // Disable pointer events on other elements
-        $("webview").css("pointer-events", "");
-        artboards.css("pointer-events", "");
-    });
+canvas.on('panzoomend', function (e, panzoom, matrix, changed) {
+    // Accept all events from parent
+    artboards.css("pointer-events", "");
+    artboards.css("cursor", "");
+    // Override all other elements
+    $('body').css("cursor", "");
+    $("webview").css("pointer-events", "auto");
+    artboards.css("pointer-events", "auto");
 });
 
 // ===============================
@@ -116,5 +112,3 @@ function updateScale(arg) {
 
     }
 }
-
-// })();

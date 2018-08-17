@@ -12,8 +12,8 @@ app.artboard.dimensions = {
     update: function ($el, width, height) {
 
         if ( width || height ) {
-            var height_container = $el.closest(artboard).find('.artboard__width');
-                var width_container = $el.closest(artboard).find('.artboard__height');
+            var height_container = $el.closest(artboard).find('.artboard__height');
+                var width_container = $el.closest(artboard).find('.artboard__width');
     
                 if (typeof width !== undefined) {
                     width = $el.closest(artboard).width();
@@ -28,8 +28,8 @@ app.artboard.dimensions = {
                 }
         } else {
             $.each($el, function () {
-                var height_container = $(this).closest(artboard).find('.artboard__width');
-                var width_container = $(this).closest(artboard).find('.artboard__height');
+                var height_container = $(this).closest(artboard).find('.artboard__height');
+                var width_container = $(this).closest(artboard).find('.artboard__width');
     
                 if (typeof width !== undefined) {
                     width = $(this).closest(artboard).width();

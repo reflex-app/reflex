@@ -5,6 +5,8 @@ app.artboard = {
         app.artboard.dimensions.init();
         // Resizable artboard
         app.artboard.resize.init();
+        // Add artboards
+        app.artboard.watchers.init();
     }
 
 }
