@@ -1,5 +1,5 @@
 // Main container colors
-$body-bg: #1D1D1D;
+$body-bg: #f5f5f5;
 $inner-bg: #0b0f13;
 
 // Colors
@@ -7,7 +7,7 @@ $accent-color:#2d77fb;
 
 // GUI
 $gui-bg: rgba(#323232, 0.95);
-$gui-border: 1px solid #464646;
+$gui-border: 1px solid #c5c5c5;
 $gui-title-bar-height: 22px;
 $gui-header-height: 45px;
 $gui-top-total-height: calc(#{$gui-header-height} + #{$gui-title-bar-height});

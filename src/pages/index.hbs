@@ -7,8 +7,8 @@
   <title>Screens</title>
 
   <!-- Preload CSS -->
-  <link rel="preload" as="style" href="{{root}}../css/style.css">
-  <link rel="stylesheet" type="text/css" href="{{root}}../css/style.css">
+  <link rel="preload" as="style" href="{{root}}css/style.css">
+  <link rel="stylesheet" type="text/css" href="{{root}}css/style.css">
 
   <!-- Preload the JS -->
   {{!--
@@ -19,7 +19,11 @@
 <body>
 
   <main>
-    <div class="gui-title-bar"></div>
+    {{!-- <div class="gui-title-bar">
+      <div class="gui-menu-button"></div>
+      <div class="gui-menu-button"></div>
+      <div class="gui-menu-button"></div>
+    </div> --}}
     <!-- Toolbar w/ data binding to URL and global controls-->
     <div class="toolbar" id="toolbar">
       <div>
@@ -29,6 +33,7 @@
       <div id="toolbar__canvas-controls">
         <div class="canvas-controls__scale">
           <span id="canvas-controls__scale" value="100%" data-bind="scale"></span> 
+          {{!-- <span data-bind="scale"></span>
           --}} {{!-- <a href="#" id="canvas-controls__reset">Reset</a> --}}
           <a href="#" id="canvas-controls__fit-to-screen">Fit</a>
         </div>
@@ -83,8 +88,8 @@
     }
   </script>
 
-  <script src="{{root}}../js/app.min.js" type="text/javascript"></script>
-  <script src="{{root}}../js/templates.js" type="text/javascript"></script>
+  <script src="{{root}}js/app.min.js" type="text/javascript"></script>
+  <script src="{{root}}js/templates.js" type="text/javascript"></script>
 
 </body>
 

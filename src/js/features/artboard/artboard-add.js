@@ -17,6 +17,10 @@ app.artboard.add = function (placement, event) {
             console.log('Added artboard after');
         }
 
+        // Update the dimensions all artboards
+        artboard = $(".artboard");
+        app.artboard.dimensions.update(artboard);
+
         // Add the + button before all items
         app.artboard.createFirstNewButton();
 
