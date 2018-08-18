@@ -10,8 +10,7 @@
     "width": 1200,
     "min_width": 400,
     "min_height": 400,
-    "frame": false,
-    "transparent": true,
+    "frame": true,
     "show": false
   },
   "dependencies": {
