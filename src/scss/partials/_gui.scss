@@ -38,3 +38,22 @@
 		cursor: move;
 	}
 }
+
+.gui-menu-button {
+	width: 11px;
+	height: 11px;
+	border-radius: 50%;
+	display: inline-block;
+	margin: 0 2px;
+	z-index: 100;
+	border: 1px solid #cacaca;
+	position: relative;
+
+	&:first-child {
+		margin-left: 10px;
+	}
+
+	&:hover {
+		background: darken(#e2e2e2, 6%);
+	}
+}
