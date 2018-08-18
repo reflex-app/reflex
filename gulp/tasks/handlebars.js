@@ -8,18 +8,22 @@ const concat = require('gulp-concat');
 const declare = require('gulp-declare');
 var merge = require('merge-stream');
 
+const src = "src/";
+const dist = "dist/";
+const shipDir = "ship/";
+
 gulp.task('handlebars', gulp.series('handlebars:precompile', 'handlebars:main'))
 
 gulp.task('handlebars:precompile', () => {
-  return gulp.src('./src/pages/*.hbs')
+  return gulp.src(src + 'pages/*.hbs')
     .pipe(compileHandlebars({}, {
       ignorePartials: true,
-      batch: ['./src/partials']
+      batch: [src + '/partials']
     }))
     .pipe(rename({
       extname: '.html'
     }))
-    .pipe(gulp.dest('./dist'));
+    .pipe(gulp.dest(shipDir));
 });
 
 gulp.task('handlebars:main', function () {
@@ -35,5 +39,5 @@ gulp.task('handlebars:main', function () {
 
     // Output both the partials and the templates as build/js/templates.js
     .pipe(concat('templates.js'))
-    .pipe(gulp.dest('dist/js/'));
+    .pipe(gulp.dest(shipDir + 'js/'));
 });

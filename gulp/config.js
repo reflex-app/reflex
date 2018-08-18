@@ -1,16 +1,11 @@
 module.exports = {
 
   JS_FILES: [
-    'js/foundation.core.js',
-    'js/foundation.core.utils.js',
-    'js/foundation.util.*.js',
     'js/*.js'
   ],
 
   JS_DEPS: [
     'node_modules/jquery/dist/jquery.js',
-    'node_modules/motion-ui/dist/motion-ui.js',
-    'node_modules/what-input/dist/what-input.js'
   ],
 
   // Sass

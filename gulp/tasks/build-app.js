@@ -2,6 +2,10 @@ const gulp = require('gulp');
 const gutil = require('gulp-util');
 const NwBuilder = require('nw-builder');
 
+const src = "src/";
+const dist = "dist/";
+const shipDir = "ship/";
+
 // The overall task
 gulp.task('build-app', gulp.series('build-app:main', 'build-app:node_modules'));
 
@@ -10,15 +14,10 @@ gulp.task('build-app:main', function () {
         version: '0.32.2', // the NWJS version to use
         flavor: 'sdk', // ship a smaller flavor without Devtools (sdk or normal)
         files: [
-            'src/index.html',
-            'src/img/**/*',
-            'src/partials/**/*',
-            'src/server.js',
-            'src/package.json',
-            'dist/**/*',
+            dist + '**/*',
         ],
-        buildDir: './app',
-        cacheDir: './app/NWJS',
+        buildDir: shipDir,
+        cacheDir: shipDir,
         macCredits: 'src/credits.html',
         macIcns: 'src/icon.icns',
         // macPlist: {mac_bundle_id: 'BoomerangPKG'},
