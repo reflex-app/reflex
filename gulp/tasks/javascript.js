@@ -35,6 +35,7 @@ gulp.task('javascript:main', function() {
 
     // Canvas
     './src/js/features/canvas/canvas-pan-zoom.js',
+    './src/js/features/canvas/canvas-view-mode.js',
 
     './src/js/components/**/*.js', // Anything that builds on the features
 

@@ -14,6 +14,10 @@
     padding: 8rem;
     // Activate GPU rendering
     will-change: auto;
+
+    &.is-vertical {
+        flex-direction: column;
+    }
 }
 
 $artboard-handle-height: 1rem;

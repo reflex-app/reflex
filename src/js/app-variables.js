@@ -31,7 +31,8 @@ var canvas = artboards.panzoom({
 // Controls
 var canvasControls = {
     container: $('#toolbar__canvas-controls'),
-    scale: $("#canvas-controls__scale")
+    scale: $("#canvas-controls__scale"),
+    orientation: $("#canvas-controls__orientation"),
 }
 
 // ==================================================
