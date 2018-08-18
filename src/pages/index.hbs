@@ -11,7 +11,8 @@
   <link rel="stylesheet" type="text/css" href="{{root}}../css/style.css">
 
   <!-- Preload the JS -->
-  {{!-- <link rel="preload" as="script" href="{{root}}../js/templates.js">
+  {{!--
+  <link rel="preload" as="script" href="{{root}}../js/templates.js">
   <link rel="preload" as="script" href="{{root}}../js/app.min.js"> --}}
 </head>
 
@@ -21,7 +22,7 @@
 
   <main>
     <!-- Toolbar w/ data binding to URL and global controls-->
-    <div class="toolbar">
+    <div class="toolbar" id="toolbar">
       <div>
         <input type="text" id="toolbar__url" value="http://localhost:3002" />
         <div class="url-highlighted"></div>
@@ -38,10 +39,12 @@
 
     <!-- Define the resizable canvas area-->
     <div id="canvas" class="canvas">
-      <!-- Define the horizontal artbaord container-->
-      <div id="artboards" class="artboards">
-        <!-- Each artboard-->
-        {{>artboard}} {{>artboard}} {{>artboard}}
+      <div class="inner">
+        <!-- Define the horizontal artbaord container-->
+        <div id="artboards" class="artboards">
+          <!-- Each artboard-->
+          {{>artboard}} {{>artboard}} {{>artboard}}
+        </div>
       </div>
     </div>
 
