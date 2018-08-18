@@ -4,6 +4,7 @@
   "devDependencies": {
     "babel-core": "^6.26.3",
     "browser-sync": "^2.24.4",
+    "copy-node-modules": "^1.0.7",
     "gulp": "github:gulpjs/gulp#4.0",
     "gulp-autoprefixer": "^5.0.0",
     "gulp-cli": "^2.0.1",
