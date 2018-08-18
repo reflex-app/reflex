@@ -14,8 +14,8 @@ app.artboard.watchers = {
             app.toolbar.updateURL();
         });
 
-        // Artboard 
-        artboard.on({
+        // Artboard resize
+        canvas.on({
             mouseenter: function (e) {
                 app.events.isOnArtboard = true;
                 app.artboard.resize.trigger(e);
@@ -24,7 +24,7 @@ app.artboard.watchers = {
                 app.events.isOnArtboard = false;
                 app.artboard.resize.trigger(e);
             }
-        });
+        }, '.artboard');
 
         // Let links be clickable
         canvas.find('a').on('mousedown touchstart', function (e) {

@@ -5,9 +5,9 @@ $inner-bg: #0b0f13;
 // Colors
 $accent-color:#2d77fb;
 
-
 // GUI
-$gui-bg: #151515;
+$gui-bg: rgba(#323232, 0.95);
+$gui-border: 1px solid #464646;
 $gui-title-bar-height: 22px;
 $gui-header-height: 45px;
 $gui-top-total-height: calc(#{$gui-header-height} + #{$gui-title-bar-height});

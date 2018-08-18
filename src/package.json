@@ -26,7 +26,7 @@
     "request": "^2.83.0",
     "require": "^2.4.20"
   },
-  "chromium-args": "--enable-logging=stderr --show-fps-counter --enable-experimental-web-platform-features --remote-debugging-port=9999",
+  "chromium-args": "--enable-logging=stderr --enable-experimental-web-platform-features --remote-debugging-port=9999",
   "webview": {
     "partitions": [{
       "name": "trusted",

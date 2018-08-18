@@ -1,28 +1,44 @@
 .toolbar {
     height: 44px;
-    background: $gui-bg;
     z-index: 1;
     padding: 0.5rem 1rem;
-    border-bottom: 1px solid #565656;
+    border-bottom: $gui-border;
     color: white;
     position: relative;
     display: flex;
     justify-content: space-between;
     align-items: center; 
-    -webkit-backdrop-filter: blur(40px);
     backdrop-filter: blur(40px);
+    background: $gui-bg;
+
+    & > *:not(:first-child) {
+        margin-left: 16px;
+    }
+
+    & > *:nth-child(1) {
+        flex: 1 0 auto;
+
+        input[type="text"] {
+            width: 100%;
+        }
+
+    }
+
     input[type="text"] {
         border: none;
         background: none;
         color: white;
-        border-bottom: 1px solid #434343;
+        border: 1px solid rgba(#ffffff, 0.25);
+        border-radius: 4px;
         padding: 0.5rem;
-        width: 600px;
+        box-sizing: border-box;
+        &:hover {
+            background: lighten($body-bg, 5%);
+        }
         &:focus {
             outline: none;
             background: lighten($body-bg, 3%);
-            border-bottom-color: transparent;
-            border-radius: 4px;
+            border: 1px solid rgba($accent-color, 1);
         }
     }
 }

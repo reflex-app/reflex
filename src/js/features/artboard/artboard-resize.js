@@ -1,7 +1,7 @@
 app.artboard.resize = {
 
     init: function () {
-        app.artboard.resize.firstLoad();
+        // app.artboard.resize.firstLoad();
     },
 
     firstLoad: function () {},
@@ -24,13 +24,16 @@ app.artboard.resize = {
             console.log('hit resizable');
 
             $el = $(".handle__bottom");
+            artboard = $(".artboard");
+            console.log(artboard);
+            
 
             artboard.resizable({
                 handleSelector: "> .handle__bottom",
                 resizeWidthFrom: 'right',
                 onDrag: function (e, $el, newWidth, newHeight) {
                     // Update dimensions
-                    var parent_artboard = $el.closest($(artboard));
+                    var parent_artboard = $el.closest(artboard);
                     console.log(parent_artboard);
 
                     // Disable pointer events on other elements

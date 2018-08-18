@@ -1,14 +1,19 @@
+.inner {
+    display: block;
+}
+
 .artboards {
     position: relative;
-    padding: 1rem;
-    display: flex;
+    display: inline-flex;
     flex-direction: row;
     flex-wrap: nowrap;
     user-select: none;
     background: #232323;
     border-radius: 8px;
     box-sizing: border-box;
-    padding: 4rem;
+    padding: 8rem;
+    // Activate GPU rendering
+    will-change: auto;
 }
 
 $artboard-handle-height: 1rem;
@@ -19,9 +24,16 @@ $artboard-handle-height: 1rem;
     border: 1px solid transparent;
     position: relative;
     display: block;
+    flex: 1 0 auto;
     height: 1200px;
     width: 300px;
-    margin: auto 6rem;
+    margin: 0 3.5rem;
+    &:first-child {
+        margin-left: 3.5rem;
+    }
+    &:first-child {
+        margin-right: 3.5rem;
+    }
     &:hover {
         background: #2A2A2A;
         border: 1px solid #606060;

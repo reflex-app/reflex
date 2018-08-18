@@ -22,16 +22,19 @@
 	-webkit-app-region: drag;
 	width: 100%;
 	height: $gui-title-bar-height;
-	background-color:$gui-bg;
-	border-bottom: 1px solid #353535;
+	background-color: $gui-bg;
+	border-bottom: $gui-border;
 
 	display: flex;
 	flex-flow: row nowrap;
 	align-items: center;
-	// justify-content: space-between;
 
 	z-index: 10;
 	position: relative;
 	font-family: $font-defaults;
 	font-size: 13px;
+
+	&:hover {
+		cursor: move;
+	}
 }
