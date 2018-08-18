@@ -101,7 +101,7 @@ function updateScale(arg) {
     if (arg != undefined) {
         if (arg === "fromCanvas") {
             // Default: just update the scale's value
-            $(canvasControls.scale).val(panzoom_val);
+            $(canvasControls.scale).html(panzoom_val);
         } else if (arg === "fromInput") {
             // Update the canvas based on the input
             // Also update the canvas' value
