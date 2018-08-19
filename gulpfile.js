@@ -13,13 +13,11 @@ requireDir('./gulp/tasks');
 
 // Tasks
 // Runs all of the above tasks and then waits for files to change
-gulp.task('default', gulp.series('serve', 'watch'));
+// build --> serve --> watch
+gulp.task('default', gulp.parallel('serve', 'watch'));
 
 // Build the app
 gulp.task('app', gulp.series('build', 'build-app'));
-
-// Starts a BrowerSync instance
-gulp.task('build', gulp.series('clean', 'sass', 'javascript', 'handlebars', 'create-package-json', 'run-node-webkit'));
 
 // Server
 gulp.task('serve', gulp.series('build', function () {
@@ -29,6 +27,9 @@ gulp.task('serve', gulp.series('build', function () {
     notify: false
   });
 }));
+
+// Starts a BrowerSync instance
+gulp.task('build', gulp.series('clean', 'sass', 'javascript', 'handlebars', 'create-package-json'));
 
 // Watch files for changes
 gulp.task('watch', function () {

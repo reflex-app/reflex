@@ -10,6 +10,7 @@ const resolve = (to) => {
 
 gulp.task('create-package-json', function(done) {
     var nwjsConfig = JSON.parse(fs.readFileSync(resolve(`${CONFIG.SRC}/nwjs.json`)).toString());
+    nwjsConfig['node-remote'] = nwjsConfig.main = `http://localhost:${CONFIG.SERVER.PORT}/${nwjsConfig.main}`;
     fs.writeFile(resolve(`${resolve(CONFIG.DIST)}/package.json`), jsonFormat(nwjsConfig), (err) => err && console.log(err));
     done();
 });
