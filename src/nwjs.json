@@ -1,6 +1,6 @@
 {
   "name": "Screens",
-  "version": "0.0.0-alpha-1",
+  "version": "0.1.0",
   "main": "index.html",
   "node-remote": "<all_urls>",
   "icon": "icon.icns",
