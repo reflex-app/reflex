@@ -17,10 +17,10 @@ requireDir('./gulp/tasks');
 gulp.task('default', gulp.parallel('serve', 'watch'));
 
 // Build the app
-gulp.task('app', gulp.series('build', 'build-app'));
+gulp.task('app', gulp.series('build', 'create-package-json:main', 'build-app'));
 
-// Server
-gulp.task('serve', gulp.series('build', function () {
+// BrowserSync Server
+gulp.task('serve', gulp.series('build', 'create-package-json:dev', function () {
   browserSync.init({
     server: CONFIG.DIST,
     port: CONFIG.SERVER.PORT,
@@ -29,7 +29,7 @@ gulp.task('serve', gulp.series('build', function () {
 }));
 
 // Starts a BrowerSync instance
-gulp.task('build', gulp.series('clean', 'sass', 'javascript', 'handlebars', 'create-package-json'));
+gulp.task('build', gulp.series('clean', 'sass', 'javascript', 'handlebars'));
 
 // Watch files for changes
 gulp.task('watch', function () {
