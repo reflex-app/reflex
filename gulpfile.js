@@ -12,7 +12,7 @@ gulp.registry(forwardReference());
 requireDir('./gulp/tasks');
 
 // Tasks
-gulp.task('build', gulp.series('copy', 'sass', 'javascript', 'handlebars'));
+gulp.task('build', gulp.series('sass', 'javascript', 'handlebars'));
 
 // Starts a BrowerSync instance
 // gulp.task('serve', gulp.series('build', function () {

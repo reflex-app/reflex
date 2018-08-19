@@ -3,16 +3,16 @@
 const fs = require('fs');
 const gulp = require('gulp');
 // var Parker = require('parker/lib/Parker');
-const prettyJSON = require('prettyjson');
+// const prettyJSON = require('prettyjson');
 const sass = require('gulp-sass');
 const browserSync = require('browser-sync');
 // var plumber = require('gulp-plumber');
 const sourcemaps = require('gulp-sourcemaps');
 // var sassLint = require('gulp-sass-lint');
-const postcss = require('gulp-postcss');
+// const postcss = require('gulp-postcss');
 // SCSS
-const autoprefixer = require('gulp-autoprefixer');
-const cssmin = require('gulp-cssmin');
+// const autoprefixer = require('gulp-autoprefixer');
+// const cssmin = require('gulp-cssmin');
 
 const CONFIG = require('../config.js');
 
