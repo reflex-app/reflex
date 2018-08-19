@@ -1,14 +1,26 @@
-var gulp = require('gulp');
-var concat = require('gulp-concat');
-// var webpackStream = require('webpack-stream');
-// var webpack = require('webpack');
+const path = require('path');
+const gulp = require('gulp');
+const concat = require('gulp-concat');
 // var named = require('vinyl-named');
-var sourcemaps = require('gulp-sourcemaps');
+const sourcemaps = require('gulp-sourcemaps');
+
+const webpackStream = require('webpack-stream');
+const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+// const ExtractTextPlugin = require('extract-text-webpack-plugin');
+
+// const extractCssPlugin = new ExtractTextPlugin('css/[name].[hash].css');
+// const cssLoader = extractCssPlugin.extract(['css-loader','autoprefixer-loader']);
+// const sassLoader = extractCssPlugin.extract(['css-loader','autoprefixer-loader', 'sass-loader']);
 
 var utils = require('../utils.js');
 var CONFIG = require('../config.js');
 
-gulp.task('javascript', gulp.series('javascript:main'))
+const resolve = (to) => {
+  return path.resolve(__dirname, '../..', to);
+};
+
+gulp.task('javascript', gulp.series('javascript:webpack', 'javascript:main'))
 
 gulp.task('javascript:main', function() {
   return gulp.src([
@@ -42,4 +54,90 @@ gulp.task('javascript:main', function() {
   .pipe(sourcemaps.write('.'))
   .on('error', function (err) { gutil.log(gutil.colors.red('[Error]'), err.toString()); })
   .pipe(gulp.dest(CONFIG.DIST + 'js'));
+});
+
+
+//
+// Gulp + WebPack
+// Work-in-Progress
+//
+var webpackConfig = {
+  target:'node-webkit',
+    // entry: {
+    //   app: resolve(CONFIG.SRC)
+    // },
+    output: {
+      path: resolve(CONFIG.DIST),
+      filename: '[name].[hash].js',
+      chunkFilename: '[hash].js'
+    },
+    resolve: {
+      extensions: CONFIG.RESOLVE_CONFIG.EXTENSIONS,
+      modules: [resolve('node_modules')],
+      alias: CONFIG.RESOLVE_CONFIG.ALIAS
+    },
+    // plugins: [htmlPlugin,extractCssPlugin],
+    resolveLoader: {
+      modules: [resolve('node_modules')]
+    },
+    module: {
+      rules: [
+        {
+          test: /\.js$/,
+          enforce: "pre",
+          use: [
+            {
+              loader: 'eslint-loader',
+              options: {
+                formatter: require('eslint-friendly-formatter')
+              }
+            }
+          ],
+          exclude: /node_modules/
+        }, {
+          test: /\.js$/,
+          use: [
+            {
+              loader: 'babel-loader',
+              options: {
+                presets: ['es2015', 'stage-2']
+              }
+            }
+          ],
+          exclude: /node_modules/
+        },{
+          test: /\.html$/,
+          loader: 'html-loader',
+          exclude: new RegExp(`${CONFIG.SRC}/index.html`)
+        }, {
+        //   test: /\.css$/,
+        //   loader: cssLoader
+        // }, {
+        //   test: /\.scss$/,
+        //   loader: sassLoader
+        // }, {
+          test: /\.json$/,
+          loader: 'json-loader'
+        }, {
+          test: /\.(png|jpg|gif|svg|jpeg)$/,
+          loader: 'url-loader',
+          query: {
+            limit: 10000,
+            name: 'assets/[name].[ext]?[hash]'
+          }
+        }, {
+          test: /\.((eot|woff|ttf)[\?]?.*)$/,
+          loader: 'url-loader',
+          query: {
+            name: 'assets/[name].[ext]?[hash]'
+          }
+        }
+      ]
+    }
+}
+
+gulp.task('javascript:webpack', function() {
+  return gulp.src(resolve(CONFIG.SRC + 'index.js'))
+    .pipe(webpackStream(webpackConfig, webpack))
+    .pipe(gulp.dest('dist/'));
 });

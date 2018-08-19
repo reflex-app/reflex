@@ -14,10 +14,10 @@ requireDir('./gulp/tasks');
 // Tasks
 // Runs all of the above tasks and then waits for files to change
 gulp.task('default', gulp.series('build', 'watch'));
+gulp.task('build', gulp.series('clean', 'sass', 'javascript', 'handlebars'));
+
 // Build the app
 gulp.task('app', gulp.series('build-app'));
-// Normal tasks
-gulp.task('build', gulp.series('sass', 'javascript', 'handlebars'));
 
 // Starts a BrowerSync instance
 // gulp.task('serve', gulp.series('build', function () {
