@@ -1,7 +1,9 @@
-var gulp = require('gulp');
-var rimraf = require('rimraf');
+const gulp = require('gulp');
+const rimraf = require('rimraf');
+
+const CONFIG = require('../config.js');
 
 // Erases the dist folder
 gulp.task('clean', function(done) {
-  rimraf('dist', done);
+  rimraf(CONFIG.DIST, done);
 });

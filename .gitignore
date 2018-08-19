@@ -1,5 +1,5 @@
 dist/
-app/
+ship/
 src/*.app/
 src/app/*.app/**/*
 src/**/*.css

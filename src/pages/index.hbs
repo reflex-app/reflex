@@ -11,9 +11,8 @@
   <link rel="stylesheet" type="text/css" href="{{root}}css/style.css">
 
   <!-- Preload the JS -->
-  {{!--
   <link rel="preload" as="script" href="{{root}}../js/templates.js">
-  <link rel="preload" as="script" href="{{root}}../js/app.min.js"> --}}
+  <link rel="preload" as="script" href="{{root}}../js/app.min.js">
 </head>
 
 <body>
@@ -49,7 +48,9 @@
         <!-- Define the horizontal artbaord container-->
         <div id="artboards" class="artboards">
           <!-- Each artboard-->
-          {{>artboard}} {{>artboard}} {{>artboard}}
+          {{>artboard width="1440" height="1024"}} 
+          {{>artboard width="768" height="1024"}} 
+          {{>artboard width="320" height="1024"}}
         </div>
       </div>
     </div>
@@ -71,14 +72,14 @@
 
       // On load, show the app
       win.on("loaded", function () {
-        win.show();
-        win.focus();
+        // win.show();
+        // win.focus();
 
         // // Add the standard Mac shadow
-        setTimeout(function () {
-          win.setShadow(true);
-          console.log('shadow?');
-        }, 100);
+        // setTimeout(function () {
+        //  win.setShadow(true);
+        //  console.log('shadow?');
+        // }, 100);
       });
 
       // Open links in the native browser

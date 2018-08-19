@@ -1,16 +1,19 @@
 module.exports = {
+  // Core Directories
+  SRC: 'src/',
+  DIST: 'dist/',
+  SHIP: 'ship/',
+
+  SERVER: {
+    PORT: 8000
+  },
 
   JS_FILES: [
-    'js/foundation.core.js',
-    'js/foundation.core.utils.js',
-    'js/foundation.util.*.js',
     'js/*.js'
   ],
 
   JS_DEPS: [
     'node_modules/jquery/dist/jquery.js',
-    'node_modules/motion-ui/dist/motion-ui.js',
-    'node_modules/what-input/dist/what-input.js'
   ],
 
   // Sass
@@ -34,5 +37,10 @@ module.exports = {
     '!img/assets/{js,scss}',
     '!img/assets/{js,scss}/**/*'
   ],
+
+  RESOLVE_CONFIG: {
+    EXTENSIONS: ['.js', '.json'],    //webpck extensions
+    ALIAS:{}                          //webpack alias
+  }
 
 };

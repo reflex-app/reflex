@@ -2,23 +2,22 @@ const gulp = require('gulp');
 const gutil = require('gulp-util');
 const NwBuilder = require('nw-builder');
 
+// Import configuration settings
+const CONFIG = require('../config.js');
+
 // The overall task
 gulp.task('build-app', gulp.series('build-app:main'));
 
-gulp.task('build-app:main', function() {
+gulp.task('build-app:main', function () {
     var nw = new NwBuilder({
         version: '0.32.2', // the NWJS version to use
-        flavor: 'sdk', // ship a smaller flavor without Devtools (sdk or normal)
-        files: [
-            'src/img/**/*',
-            'dist/**/*',
-        ],
-        buildDir: './app',
-        cacheDir: './app/NWJS',
-        macCredits: 'src/credits.html',
-        macIcns: 'src/icon.icns',
-        // macPlist: {mac_bundle_id: 'BoomerangPKG'},
-        platforms: ['osx64']
+        flavor: 'sdk', // sdk or normal
+        files: CONFIG.DIST + '**/*', // copy everything inside of /dist to the final app
+        buildDir: CONFIG.SHIP, // output directory
+        cacheDir: CONFIG.SHIP, // cached NWJS versions (/dist/cache)
+        macCredits: CONFIG.SRC + 'credits.html',
+        macIcns: CONFIG.SRC + 'icon.icns',
+        platforms: ['osx64', 'win32']
     })
 
     // Log build progress
@@ -31,5 +30,4 @@ gulp.task('build-app:main', function() {
         .catch(function (err) {
             gutil.log('nw-builder', err);
         })
-
 });
