@@ -4,7 +4,7 @@
   "description": "Builds screens app",
   "main": "index.js",
   "scripts": {
-    "start": "gulp & nw dist",
+    "start": "kill -9 $(lsof -i TCP:8000 | grep LISTEN | awk '{print $2}') & gulp & nw dist",
     "build": "gulp app"
   },
   "repository": {

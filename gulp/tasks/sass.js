@@ -28,7 +28,7 @@ gulp.task('sass:main', function () {
     // .pipe(postcss([autoprefixer()])) // uses ".browserslistrc"
     .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest(CONFIG.DIST + 'css'))
-    .pipe(browserSync.stream())
+    .pipe(browserSync.stream({match: '**/*.css'}))
 });
 
 // Audits CSS filesize, selector count, specificity, etc.
