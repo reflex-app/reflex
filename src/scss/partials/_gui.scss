@@ -1,0 +1,59 @@
+::-webkit-scrollbar {
+	width: 8px;
+}
+
+::-webkit-scrollbar-track {
+	// background: $body-bg;
+	// background: transparent;
+	right: 10px;
+	position: absolute;
+}
+
+::-webkit-scrollbar-thumb {
+	border-radius: 10px;
+	background: #b8b8b8;
+
+	&:hover, &:active {
+		background: darken(#b8b8b8, 10%);
+	}
+}
+
+.gui-title-bar {
+	-webkit-app-region: drag;
+	width: 100%;
+	height: $gui-title-bar-height;
+	background-color: $gui-bg;
+	border-bottom: $gui-border;
+
+	display: flex;
+	flex-flow: row nowrap;
+	align-items: center;
+
+	z-index: 10;
+	position: relative;
+	font-family: $font-defaults;
+	font-size: 13px;
+
+	&:hover {
+		cursor: move;
+	}
+}
+
+.gui-menu-button {
+	width: 11px;
+	height: 11px;
+	border-radius: 50%;
+	display: inline-block;
+	margin: 0 2px;
+	z-index: 100;
+	border: 1px solid #cacaca;
+	position: relative;
+
+	&:first-child {
+		margin-left: 10px;
+	}
+
+	&:hover {
+		background: darken(#e2e2e2, 6%);
+	}
+}

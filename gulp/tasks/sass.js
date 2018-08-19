@@ -16,22 +16,18 @@ const cssmin = require('gulp-cssmin');
 
 const CONFIG = require('../config.js');
 
-const src = "src/";
-const dist = "dist/";
-const shipDir = "ship/";
-
 // Compiles Sass files into CSS
 gulp.task('sass', gulp.series('sass:main'));
 
 // Compiles Foundation Sass
 gulp.task('sass:main', function () {
-  return gulp.src([src + 'scss/**/*.scss'])
+  return gulp.src([CONFIG.SRC + 'scss/**/*.scss'])
     .pipe(sourcemaps.init())
     // .pipe(plumber())
     .pipe(sass().on('error', sass.logError))
     // .pipe(postcss([autoprefixer()])) // uses ".browserslistrc"
     .pipe(sourcemaps.write('.'))
-    .pipe(gulp.dest(dist + 'css'))
+    .pipe(gulp.dest(CONFIG.DIST + 'css'))
     .pipe(browserSync.stream())
     // .pipe(browserSync.stream({match: '**/*.css'}))
 });

@@ -8,17 +8,15 @@ const concat = require('gulp-concat');
 const declare = require('gulp-declare');
 var merge = require('merge-stream');
 
-const src = "src/";
-const dist = "dist/";
-const shipDir = "ship/";
+const CONFIG = require('../config.js');
 
 gulp.task('handlebars', gulp.series('handlebars:precompile', 'handlebars:main'))
 
 gulp.task('handlebars:precompile', () => {
-  return gulp.src(src + 'pages/*.hbs')
+  return gulp.src(CONFIG.SRC + 'pages/*.hbs')
     .pipe(compileHandlebars({}, {
       ignorePartials: true,
-      batch: [src + '/partials']
+      batch: [CONFIG.SRC + '/partials']
     }))
     .pipe(rename({
       extname: '.html'
@@ -29,7 +27,7 @@ gulp.task('handlebars:precompile', () => {
 gulp.task('handlebars:main', function () {
   // Assume all partials start with an underscore
   // You could also put them in a folder such as source/templates/partials/*.hbs
-  return gulp.src('src/partials/*.hbs')
+  return gulp.src(CONFIG.SRC + 'partials/*.hbs')
     .pipe(handlebars())
     .pipe(wrap('Handlebars.template(<%= contents %>)'))
     .pipe(declare({

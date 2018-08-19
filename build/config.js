@@ -7,7 +7,7 @@ const SERVER_CONFIG = {
 };
 
 const PATH_CONFIG = {
-  MAIN: 'app',              // app entry dir
+  MAIN: 'src',              // app entry dir
   OUTPUT: 'dist'            // app output dir
 };
 

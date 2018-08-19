@@ -1,0 +1,48 @@
+// Reset
+@import "partials/normalize";
+
+// Variables
+@import "partials/variables";
+
+// Core
+@import "partials/gui";
+@import "partials/app";
+
+@import "partials/layout";
+@import "partials/toolbar";
+@import "partials/canvas";
+@import "partials/artboards";
+
+// UX
+@import "partials/animation";
+
+// Components
+@import "partials/buttons";
+@import "partials/toast";
+
+// Misc.
+@import "partials/misc";
+
+// * { border: 1px solid red!important; }
+
+html {
+	// background: $body-bg;
+	background: none;
+	background-size: cover;
+	background-repeat: no-repeat;
+	position: relative;
+	height: 100%;
+	width: 100%;
+	border-radius: 80px; // make sure the frame for sure has no hard edges
+	overflow: hidden;
+}
+
+body {
+	background: none;
+	// border-radius: 5px;
+	overflow: hidden;
+	font-family: $font-defaults;
+	font-size: 15px;
+	height: 100%;
+	width: 100%;
+}

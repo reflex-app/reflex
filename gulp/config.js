@@ -1,4 +1,8 @@
 module.exports = {
+  // Core Directories
+  SRC: 'src/',
+  DIST: 'dist/',
+  SHIP: 'ship/',
 
   JS_FILES: [
     'js/*.js'

@@ -7,8 +7,8 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const extractCssPlugin = new ExtractTextPlugin('css/[name].[hash].css');
 const cssLoader = extractCssPlugin.extract(['css-loader','autoprefixer-loader']);
 const sassLoader = extractCssPlugin.extract(['css-loader','autoprefixer-loader', 'sass-loader']);
-const lessLoader = extractCssPlugin.extract(['css-loader','autoprefixer-loader', 'less-loader']);
-const stylusLoader = extractCssPlugin.extract(['css-loader','autoprefixer-loader', 'stylus-loader']);
+// const lessLoader = extractCssPlugin.extract(['css-loader','autoprefixer-loader', 'less-loader']);
+// const stylusLoader = extractCssPlugin.extract(['css-loader','autoprefixer-loader', 'stylus-loader']);
 
 var htmlPlugin = new HtmlWebpackPlugin({filename: 'index.html', template: resolve(`${PATH_CONFIG.MAIN}/index.html`), inject: true, title: DEFAULT_CONFIG.TITLE});
 
@@ -66,12 +66,12 @@ module.exports = {
       }, {
         test: /\.scss$/,
         loader: sassLoader
-      }, {
-        test: /\.less$/,
-        loader: lessLoader
-      }, {
-        test: /\.styl$/,
-        loader: stylusLoader
+      // }, {
+      //   test: /\.less$/,
+      //   loader: lessLoader
+      // }, {
+      //   test: /\.styl$/,
+      //   loader: stylusLoader
       }, {
         test: /\.json$/,
         loader: 'json-loader'
@@ -79,7 +79,7 @@ module.exports = {
         test: /\.(png|jpg|gif|svg|jpeg)$/,
         loader: 'url-loader',
         query: {
-          limit: 10000, //低于10kb的直接变成base64
+          limit: 10000,
           name: 'assets/[name].[ext]?[hash]'
         }
       }, {
