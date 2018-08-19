@@ -21,7 +21,7 @@ gulp.task('handlebars:precompile', () => {
     .pipe(rename({
       extname: '.html'
     }))
-    .pipe(gulp.dest(shipDir));
+    .pipe(gulp.dest(CONFIG.SHIP));
 });
 
 gulp.task('handlebars:main', function () {
@@ -37,5 +37,5 @@ gulp.task('handlebars:main', function () {
 
     // Output both the partials and the templates as build/js/templates.js
     .pipe(concat('templates.js'))
-    .pipe(gulp.dest(shipDir + 'js/'));
+    .pipe(gulp.dest(CONFIG.SHIP + 'js/'));
 });

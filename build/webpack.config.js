@@ -10,7 +10,7 @@ const sassLoader = extractCssPlugin.extract(['css-loader','autoprefixer-loader',
 // const lessLoader = extractCssPlugin.extract(['css-loader','autoprefixer-loader', 'less-loader']);
 // const stylusLoader = extractCssPlugin.extract(['css-loader','autoprefixer-loader', 'stylus-loader']);
 
-var htmlPlugin = new HtmlWebpackPlugin({filename: 'index.html', template: resolve(`${PATH_CONFIG.MAIN}/index.html`), inject: true, title: DEFAULT_CONFIG.TITLE});
+var htmlPlugin = new HtmlWebpackPlugin({filename: 'index.html', template: resolve(`${PATH_CONFIG.MAIN}/index.html`)});
 
 module.exports = {
   target:'node-webkit',

@@ -14,8 +14,8 @@ gulp.task('build-app:main', function () {
         files: [
             CONFIG.DIST + '**/*',
         ],
-        buildDir: shipDir,
-        cacheDir: shipDir,
+        buildDir: CONFIG.SHIP,
+        cacheDir: CONFIG.SHIP,
         macCredits: CONFIG.SRC + 'credits.html',
         macIcns: CONFIG.SRC + 'icon.icns',
         // macPlist: {mac_bundle_id: 'BoomerangPKG'},

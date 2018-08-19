@@ -78,9 +78,6 @@ function startNwjsClient() {
   });
 }
 
-// var proxy = require('proxy-middleware');
-// app.use('/api', proxy('target domain'));
-
 app.use(devMiddleware);
 app.use(hotMiddleware);
 

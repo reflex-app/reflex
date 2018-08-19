@@ -5,5 +5,5 @@ const CONFIG = require('../config.js');
 
 // Erases the dist folder
 gulp.task('clean', function(done) {
-  // rimraf(shipDir, done);
+  // rimraf(CONFIG.SHIP, done);
 });
