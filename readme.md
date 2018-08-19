@@ -32,7 +32,27 @@ Requirements:
 ### Commands
 
 - Develop with live reloading of NWJS app: `npm start`
-- Move dist folder into an NWJS app: `npm run build-app`
+- Move dist folder into an NWJS app: `npm run build`
+
+### Tasks
+
+#### Default (dev)
+1. WebPack builds all the require Node Modules, and puts the following into /dist
+    - index.html
+    - package.json
+    - app.{{hash]}.js
+2. Gulp sets up a watch task
+
+#### Build
+
+1. WebPack builds all the require Node Modules, and puts the following into /dist
+    - index.html
+    - package.json
+    - app.{{hash]}.js
+2. Gulp builds all files to production level
+3. Gulp moves any necessary files
+4. Gulp runs `NW-builder`, which produces apps from NWJS
+5. App is now built in the `/ship` directory
 
 ### Tree structure
 
