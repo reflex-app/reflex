@@ -4,6 +4,10 @@ module.exports = {
   DIST: 'dist/',
   SHIP: 'ship/',
 
+  SERVER: {
+    PORT: 8000
+  },
+
   JS_FILES: [
     'js/*.js'
   ],

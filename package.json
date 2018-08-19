@@ -4,8 +4,8 @@
   "description": "Builds screens app",
   "main": "index.js",
   "scripts": {
-    "start": "node build/server.js && gulp",
-    "build": "node build/build.js && gulp app"
+    "start": "gulp & nw dist",
+    "build": "gulp app"
   },
   "repository": {
     "type": "git"

@@ -34,6 +34,10 @@ Requirements:
 - Develop with live reloading of NWJS app: `npm start`
 - Move dist folder into an NWJS app: `npm run build`
 
+Old:
+"start": "node build/server.js && gulp",
+"build": "node build/build.js && gulp app"
+
 ### Tasks
 
 #### Default (dev)

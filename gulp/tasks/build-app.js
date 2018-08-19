@@ -17,7 +17,7 @@ gulp.task('build-app:main', function () {
         cacheDir: CONFIG.SHIP, // cached NWJS versions (/dist/cache)
         macCredits: CONFIG.SRC + 'credits.html',
         macIcns: CONFIG.SRC + 'icon.icns',
-        platforms: ['osx64']
+        platforms: ['osx64', 'win32']
     })
 
     // Log build progress

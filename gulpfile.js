@@ -2,31 +2,33 @@ const gulp = require('gulp');
 const browserSync = require('browser-sync');
 const requireDir = require('require-dir');
 const forwardReference = require('undertaker-forward-reference');
-
+// Load in the config settings
 const CONFIG = require('./gulp/config.js');
 
 // Let Gulp accept undefined tasks
 gulp.registry(forwardReference());
 
-// Load tasks
+// Load all tasks
 requireDir('./gulp/tasks');
 
 // Tasks
 // Runs all of the above tasks and then waits for files to change
-gulp.task('default', gulp.series('build', 'watch'));
-gulp.task('build', gulp.series('clean', 'sass', 'javascript', 'handlebars'));
+gulp.task('default', gulp.series('serve', 'watch'));
 
 // Build the app
-gulp.task('app', gulp.series('build-app'));
+gulp.task('app', gulp.series('build', 'build-app'));
 
 // Starts a BrowerSync instance
-// gulp.task('serve', gulp.series('build', function () {
-//   browserSync.init({
-//     server: ['./dist', './'],
-//     port: port,
-//     notify: false
-//   });
-// }));
+gulp.task('build', gulp.series('clean', 'sass', 'javascript', 'handlebars', 'create-package-json', 'run-node-webkit'));
+
+// Server
+gulp.task('serve', gulp.series('build', function () {
+  browserSync.init({
+    server: CONFIG.DIST,
+    port: CONFIG.SERVER.PORT,
+    notify: false
+  });
+}));
 
 // Watch files for changes
 gulp.task('watch', function () {
@@ -37,6 +39,6 @@ gulp.task('watch', function () {
 
 // Reloads BrowserSync
 function reload(done) {
-  // browserSync.reload();
+  browserSync.reload();
   done();
 }
