@@ -1,5 +1,10 @@
 # Screens
-Preview your website on multiple screen sizes, at the same time.
+Preview your website on many screen sizes, at the same time.
+
+## The goal: Make the process of coding responsive web designs easier to manage
+- Write code and preview the changes across many viewport sizes (+ devices connected via URL)
+- Quickly test an entire user flow, across multiple viewport, sizes in one place (+ devices connected via URL)
+- Have basic accessibility, design, and visual debugging overlays
 
 ## Using the app
 ### Normal
@@ -33,10 +38,6 @@ Requirements:
 
 - Develop with live reloading of NWJS app: `npm start`
 - Move dist folder into an NWJS app: `npm run build`
-
-Old:
-"start": "node build/server.js && gulp",
-"build": "node build/build.js && gulp app"
 
 ### Tasks
 
