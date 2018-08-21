@@ -1,10 +1,15 @@
 # Screens
-A set of tools to make responsive web design implementation easier to manage.
+A set of tools to aid the responsive web design implementation process.
 
 ## (Goal) Features:
 - Preview your changes across many viewport sizes (+ devices connected via URL)
 - Quickly test an entire user flow, across multiple viewport sizes, in one place (+ devices connected via URL)
 - Have basic accessibility, design, and visual debugging overlays
+
+## What this project is _not_:
+- Device emulation/simulation
+- Cross-browser testing
+- Visual regression testing
 
 ## Using the app
 ### Normal
