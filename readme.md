@@ -1,9 +1,9 @@
 # Screens
-Preview your website on many screen sizes, at the same time.
+A set of tools to make responsive web design implementation easier to manage.
 
-## The goal: Make the process of coding responsive web designs easier to manage
-- Write code and preview the changes across many viewport sizes (+ devices connected via URL)
-- Quickly test an entire user flow, across multiple viewport, sizes in one place (+ devices connected via URL)
+## (Goal) Features:
+- Preview your changes across many viewport sizes (+ devices connected via URL)
+- Quickly test an entire user flow, across multiple viewport sizes, in one place (+ devices connected via URL)
 - Have basic accessibility, design, and visual debugging overlays
 
 ## Using the app
