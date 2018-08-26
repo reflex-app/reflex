@@ -5,12 +5,13 @@ app.toolbar = {
     },
 
     firstLoad: function () {
+        app.toolbar.recentURLs.init();
+
         // Bind the "Enter" key => load URL in artboardInnerFrame
         $("#toolbar__url").on('keypress', function (e) {
             if (e.which == 13) {
                 e.preventDefault();
                 app.toolbar.updateURL();
-
             }
         });
     },

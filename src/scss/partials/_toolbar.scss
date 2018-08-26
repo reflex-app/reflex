@@ -54,4 +54,43 @@
     a {
         text-decoration: none;
     }
+
+    #toolbar__url-container {
+        position: relative;
+
+        #toolbar__recentURLs {
+            display: none;
+            position: absolute;
+            top: calc(100% + 4px);
+            left: 0;
+            width: 100%;
+            background: white;
+            box-shadow: 0 5px 20px rgba(#000, 0.2);
+            transition: all 1s ease-in-out;
+            border-radius: 4px;
+            z-index: 1000;
+            
+            &.is-visible {
+                display: block;
+            }
+
+            li {
+                padding: 1rem;
+                list-style: none;
+                color: black;
+
+                &:hover {
+                    cursor: pointer;
+                    background: rgba($accent-color, 0.1);
+                }
+
+                &.is-keyboard-selected {
+                    color: white;
+                    background: $accent-color;
+                }
+            }
+            
+        }
+    }
+
 }

@@ -18,6 +18,7 @@
 <body>
 
   <main>
+
     {{!-- <div class="gui-title-bar">
       <div class="gui-menu-button"></div>
       <div class="gui-menu-button"></div>
@@ -25,9 +26,9 @@
     </div> --}}
     <!-- Toolbar w/ data binding to URL and global controls-->
     <div class="toolbar" id="toolbar">
-      <div>
-        <input type="text" id="toolbar__url" value="http://localhost:3002" />
-        <div class="url-highlighted"></div>
+      <div id="toolbar__url-container">
+          <input type="text" id="toolbar__url" name="toolbar__url" value="http://localhost:3002" />
+          <div id="toolbar__recentURLs"></div>
       </div>
       <div id="toolbar__canvas-controls">
         <div class="canvas-controls__scale">
