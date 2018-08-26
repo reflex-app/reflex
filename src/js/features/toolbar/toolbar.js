@@ -12,7 +12,6 @@ app.toolbar = {
             if (e.which == 13) {
                 e.preventDefault();
                 app.toolbar.updateURL();
-
             }
         });
     },
