@@ -49,8 +49,10 @@ app.toolbar.recentURLs = {
     },
 
     show: function (e) {
-        var urls_to_object = JSON.parse(localStorage.getItem('recentURLs'));
-        $recent_url_container.html(Hbs.templates.recentURLs(urls_to_object.reverse()));
+        if (localStorage["recentURLs"] !== undefined) {
+            var urls_to_object = JSON.parse(localStorage.getItem('recentURLs'));
+            $recent_url_container.html(Hbs.templates.recentURLs(urls_to_object.reverse()));
+        }
     },
 
     add: function (e) {
