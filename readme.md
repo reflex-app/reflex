@@ -13,7 +13,7 @@ Preview responsive websites as you build them.
 
 ## Using the app
 ### Normal
-- Download the latest release: https://github.com/nwittwer/screens/releases
+- Download the latest release (.ZIP): https://github.com/nwittwer/tunnelframe/releases/latest
 - Move the Application to your Applications folder
     - If you get a warning like "Cannot be opened because the developer is not verified.", open System Preferences > Security & Privacy > "Open anyway"
 - Open the application by double-clicking it
