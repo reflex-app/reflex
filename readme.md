@@ -35,8 +35,9 @@ Requirements:
 - Gulp 4+
 
 1. Clone this repo
-2. `cd` into the `src` directory and run `npm install` to install the dev tools
-3. If you want to run the app in development, use `npm start`. SCSS, JS, and images will be watched and updated upon saving.
+2. `cd` into the created directory and run `npm install`
+3. You'll need to install the NW.js CLI: `npm i nw -g`
+4. If you want to run the app in development, use `npm start`. SCSS, JS, and images will be watched and updated upon saving.
 
 ### Commands
 
