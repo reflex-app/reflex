@@ -25,6 +25,7 @@
       <div class="gui-menu-button"></div>
       <div class="gui-menu-button"></div>
     </div> --}}
+
     <!-- Toolbar w/ data binding to URL and global controls-->
     <div class="toolbar" id="toolbar">
       <div id="toolbar__url-container">
@@ -41,6 +42,20 @@
       </div>
       <div>
         <a href="#" id="canvas-controls__orientation">Orientation</a>
+      </div>
+    </div>
+
+    <!-- Settings Overlay -->
+    <div id="settings" class="app__settings">
+      <div class="settings__inner">
+        <h1>Settings</h1>
+        <span>Experimental</span>
+        <form action="#">
+          <div>
+            <input type="checkbox">Get around X-Frame-Origin (WebView)
+          </div>
+          <input type="submit">
+        </form>
       </div>
     </div>
 
@@ -81,36 +96,6 @@
         //  console.log('shadow?');
         // }, 100);
       });
-
-
-
-
-      //
-      // Custom menubar
-      //
-      // Create menu container
-      var Menu = new nw.Menu({
-        type: 'menubar'
-      });
-      //initialize default mac menu
-      Menu.createMacBuiltin(nw.App.manifest.name);
-      // Get the root menu from the default mac menu
-      var rootMenu = Menu.items[0].submenu;
-      // Append new item to root menu
-      rootMenu.insert(
-        new nw.MenuItem({
-          label: 'Preferences',
-          click: function () {
-            // do something
-          }
-        }), 1 // <-- 0-index where you want to insert
-      );
-      // Append Menu to Window
-      nw.Window.get().menu = Menu;
-
-
-
-
 
       // Open links in the native browser
       win.on('new-win-policy', function (frame, url, policy) {

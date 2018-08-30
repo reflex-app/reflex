@@ -1,0 +1,26 @@
+.app__settings {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 100;
+    background: rgba(#000, 0.8);
+    backdrop-filter: blur(10px);
+
+    display: none;
+    justify-content: center;
+    align-items: center;
+
+    &.is-visible {
+        display: flex;
+    }
+
+    .settings__inner {
+        background: white;
+        padding: 4rem;
+        box-sizing: border-box;
+        border-radius: 4px;
+        box-shadow: 0 4px 20px rgba(#000, 0.4);
+    }
+}
