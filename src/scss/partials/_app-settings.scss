@@ -7,20 +7,58 @@
     z-index: 100;
     background: rgba(#000, 0.8);
     backdrop-filter: blur(10px);
-
+    opacity: 0;
     display: none;
     justify-content: center;
     align-items: center;
 
     &.is-visible {
         display: flex;
+        opacity: 1;
     }
 
     .settings__inner {
+        min-width: 450px;
         background: white;
         padding: 4rem;
         box-sizing: border-box;
         border-radius: 4px;
         box-shadow: 0 4px 20px rgba(#000, 0.4);
+    }
+}
+
+.form__group {
+    margin: 1rem auto;
+    display: flex;
+    align-items: center;
+
+    input[type="checkbox"] {
+        -webkit-appearance: none;
+        appearance: none;
+        border: 0;
+        outline: none;
+        position: relative;
+        z-index: 1;
+        height: 1rem;
+            width: 1rem;
+
+        &:before {
+            content: "";
+            position: absolute;
+            border: 1px solid #c5c5c5;
+            height: 100%;
+            width: 100%;
+        }
+
+        &:checked:before {
+            border: 1px solid $accent-color;
+            background: $accent-color;
+        }
+
+        & + label {
+            margin-left: 10px;
+            vertical-align: middle;
+            font-size: 1rem;
+        }
     }
 }
