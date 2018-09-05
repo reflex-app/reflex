@@ -40,7 +40,7 @@
         position: relative;
         z-index: 1;
         height: 1rem;
-            width: 1rem;
+        width: 1rem;
 
         &:before {
             content: "";
@@ -50,12 +50,29 @@
             width: 100%;
         }
 
+        &:hover:before {
+            border: 1px solid darken(#c5c5c5, 20%);
+        }
+
         &:checked:before {
             border: 1px solid $accent-color;
             background: $accent-color;
         }
 
-        & + label {
+        &:checked:after {
+            content: '';
+            display: block;
+            position: absolute;
+            top: 2px;
+            left: 6px;
+            width: 4px;
+            height: 8px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+
+        &+label {
             margin-left: 10px;
             vertical-align: middle;
             font-size: 1rem;
