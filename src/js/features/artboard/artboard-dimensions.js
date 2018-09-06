@@ -8,9 +8,13 @@ app.artboard.dimensions = {
         app.artboard.dimensions.update(artboard)
     },
 
-    // On resize =>
+    /**
+     * Function: Resize
+     * @param  {} $el
+     * @param  {} width
+     * @param  {} height
+     */
     update: function ($el, width, height) {
-
         if ( width || height ) {
             var height_container = $el.closest(artboard).find('.artboard__height');
                 var width_container = $el.closest(artboard).find('.artboard__width');
@@ -47,7 +51,23 @@ app.artboard.dimensions = {
     
             });
         }
+    },
 
+    return: function() {
+        var obj = [];
+
+        $.each(artboard, function () {
+            var width;
+            var height;
+
+            width = $(this).closest(artboard).width();
+            height = $(this).closest(artboard).height();
+
+            obj.push({width, height});
+        });
+
+        console.log(obj);
+        return obj;
     }
 
 }
