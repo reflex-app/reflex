@@ -1,20 +1,25 @@
 // Usage:
-// app.artboard.add(before||after, $el, width, height)
-app.artboard.add = function (placement, event, width, height) {
+// app.artboard.add(before||after, $el, width, height, fn)
+app.artboard.add = function (placement, event, width, height, fn) {
 
     // "new" or "additional"
     // Helps switch between .prepend/.append, and .before/.after
-    var newOrAdditional;
+    var needsNewDOMElement = false;
 
-    if (event) {
+    // Which artboard?
+    var this_artboard;
+
+    if (fn === "fromEmpty") {
+        needsNewDOMElement = true;
+        this_artboard = $(artboards);
+        console.log('from empty');
+    }
+
+    if (event && event !== null) {
         // Find element's parent artbaord container
-        var this_artboard = $(event.target).parent(artboard);
-        newOrAdditional = "additional";
+        this_artboard = $(event.target).parent(artboard);
         // console.log(event, $(event.target));
         // console.log(this_artboard);
-    } else {
-        var this_artboard = $(artboards);
-        newOrAdditional = "new"
     }
 
     // If a width or height is set, pass it
@@ -47,9 +52,9 @@ app.artboard.add = function (placement, event, width, height) {
     if (placement) {
         if (placement == "before") {
 
-            if (newOrAdditional == "new") {
-                this_artboard.prepend(Hbs.templates.artboard(returnWidthHeight()));
-            } else if (newOrAdditional == "additional") {
+            if (needsNewDOMElement == true) {
+                this_artboard.append(Hbs.templates.artboard(returnWidthHeight()));
+            } else {
                 this_artboard.before(Hbs.templates.artboard(returnWidthHeight()));
             }
 
@@ -57,9 +62,9 @@ app.artboard.add = function (placement, event, width, height) {
             console.log('Added artboard before', this_artboard);
         } else if (placement == "after") {
 
-            if (newOrAdditional == "new") {
+            if (needsNewDOMElement == true) {
                 this_artboard.append(Hbs.templates.artboard(returnWidthHeight()));
-            } else if (newOrAdditional == "additional") {
+            } else {
                 this_artboard.after(Hbs.templates.artboard(returnWidthHeight()));
             }
 
@@ -73,6 +78,9 @@ app.artboard.add = function (placement, event, width, height) {
 
         // Add the + button before all items
         app.artboard.createFirstNewButton();
+
+        // Save the latest artboard sizes to localStorage
+        app.settings.artboardSizes.updateLocalStorage();
 
     } else {
         console.log("Please pass in the `placement` (before or after) and the event.");

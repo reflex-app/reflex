@@ -56,17 +56,16 @@ app.artboard.dimensions = {
     return: function() {
         var obj = [];
 
-        $.each(artboard, function () {
+        $.each( $(".artboard"), function () {
             var width;
             var height;
 
-            width = $(this).closest(artboard).width();
-            height = $(this).closest(artboard).height();
+            width = $(this).width();
+            height = $(this).height();
 
             obj.push({width, height});
         });
 
-        console.log(obj);
         return obj;
     }
 
