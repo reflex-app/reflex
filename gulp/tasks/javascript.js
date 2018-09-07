@@ -110,7 +110,6 @@ gulp.task('javascript:main', function() {
     CONFIG.SRC + 'js/required/**/!(jquery-3.2.1)*.js', // all the other required scripts
     CONFIG.SRC + 'js/plugins/**/*.js', // Any 3rd-party plugins
     CONFIG.SRC + 'js/app-variables.js', // Setup any variables, namespaces, etc.
-    CONFIG.SRC + 'js/app-variables.js', // Setup any variables, namespaces, etc.
 
     // GUI
     CONFIG.SRC + 'js/features/gui/gui.js',
@@ -120,6 +119,7 @@ gulp.task('javascript:main', function() {
     CONFIG.SRC + 'js/features/toolbar/**/*.js',
 
     // App Settings
+    CONFIG.SRC + 'js/features/settings/settings.js',
     CONFIG.SRC + 'js/features/settings/**/*.js',
 
     // Artboard

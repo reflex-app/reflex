@@ -1,19 +1,74 @@
-app.artboard.add = function (placement, event) {
-    // Usage:
-    // app.artboard.add(before||after, $el)
+// Usage:
+// app.artboard.add(before||after, $el, width, height, fn)
+app.artboard.add = function (placement, event, width, height, fn) {
 
-    // Find element's parent artbaord container
-    var this_artboard = $(event.target).parent(artboard);
-    // console.log(event, $(event.target));
-    // console.log(this_artboard);
+    // "new" or "additional"
+    // Helps switch between .prepend/.append, and .before/.after
+    var needsNewDOMElement = false;
 
-    if (placement && event) {
-        // if before
+    // Which artboard?
+    var this_artboard;
+
+    if (fn === "fromEmpty") {
+        needsNewDOMElement = true;
+        this_artboard = $(artboards);
+        console.log('from empty');
+    }
+
+    if (event && event !== null) {
+        // Find element's parent artbaord container
+        this_artboard = $(event.target).parent(artboard);
+        // console.log(event, $(event.target));
+        // console.log(this_artboard);
+    }
+
+    // If a width or height is set, pass it
+    // into the artboard size
+    function returnWidthHeight() {
+        console.log(width, height);
+
+        if (height == undefined && width == undefined) {
+            // Do nothing...
+        } else {
+            if (height && width == undefined) {
+                height = height + "px";
+                return height;
+            } else if (width && height == undefined) {
+                width = width + "px";
+                return width;
+            } else if (height && width) {
+                width = width;
+                height = height;
+
+                console.log("Created artboard with width: " + width + "px and height: " + height + "px");
+
+                var obj = {width: width, height: height};
+                return obj;
+            }
+        }
+
+    }
+
+    if (placement) {
         if (placement == "before") {
-            this_artboard.before(Hbs.templates.artboard());
+
+            if (needsNewDOMElement == true) {
+                this_artboard.append(Hbs.templates.artboard(returnWidthHeight()));
+            } else {
+                this_artboard.before(Hbs.templates.artboard(returnWidthHeight()));
+            }
+
+            console.log(returnWidthHeight());
             console.log('Added artboard before', this_artboard);
         } else if (placement == "after") {
-            this_artboard.after(Hbs.templates.artboard());
+
+            if (needsNewDOMElement == true) {
+                this_artboard.append(Hbs.templates.artboard(returnWidthHeight()));
+            } else {
+                this_artboard.after(Hbs.templates.artboard(returnWidthHeight()));
+            }
+
+            console.log(returnWidthHeight());
             console.log('Added artboard after');
         }
 
@@ -24,8 +79,10 @@ app.artboard.add = function (placement, event) {
         // Add the + button before all items
         app.artboard.createFirstNewButton();
 
+        // Save the latest artboard sizes to localStorage
+        app.settings.artboardSizes.updateLocalStorage();
+
     } else {
         console.log("Please pass in the `placement` (before or after) and the event.");
     }
-
 }
