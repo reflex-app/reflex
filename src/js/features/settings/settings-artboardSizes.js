@@ -4,14 +4,16 @@
 // when you change a size
 app.settings.artboardSizes = {
     localStorageKey: "artboardSizes",
-    localStorageObject: JSON.parse(localStorage.getItem(this.localStorageKey)) || [],
+    localStorageObject: [],
 
     init: function () {
         app.settings.artboardSizes.firstLoad();
     },
 
     firstLoad: function () {
-        // Read localStorage
+        // Initial check if there's existing data
+        // If so, show it
+        // If not, create some
         app.settings.artboardSizes.readLocalStorage();
     },
 
@@ -24,17 +26,25 @@ app.settings.artboardSizes = {
         if (localStorage[this.localStorageKey] == null || !localStorage[this.localStorageKey]) {
             // Nothing is defined!
             console.log('Undefined');
-            // @TODO: Deal with the empty state. Should create a localStorage key and add the current artboard sizes to it.
             app.settings.artboardSizes.createLocalStorage();
         } else {
             // It's defined!
+            // Use the saved sizes
             console.log('It exists');
-            // Remove the initial frames, and load the old ones
-
+            app.settings.artboardSizes.restorePreviousFromLocalStorage();
         }
     },
 
-    
+    // Update our local variable
+    updateLocalStorageObject: function () {
+        if (localStorage.getItem(this.localStorageKey)) {
+            this.localStorageObject = JSON.parse(localStorage.getItem(this.localStorageKey));
+            return this.localStorageObject;
+        } else {
+            console.log('No local storage exists')
+        }
+    },
+
     /**
      * Initializes the localStorage definition
      */
@@ -47,57 +57,76 @@ app.settings.artboardSizes = {
         localStorage.setItem(this.localStorageKey, JSON.stringify(this.localStorageObject));
 
         // Update our local variable
-        app.settings.artboardSizes.localStorageObject = JSON.parse(localStorage[this.localStorageKey]);
+        app.settings.artboardSizes.updateLocalStorageObject();
 
         // Add to LocalStorage
-        console.log('Added to localstorage: ' + JSON.parse(localStorage[this.localStorageKey]));
+        console.log('Added to localstorage: ', app.settings.artboardSizes.updateLocalStorageObject());
+    },
+
+    /**
+     * Restores the artboard sizes from the existing localStorage data
+     */
+    restorePreviousFromLocalStorage: function () {
+        // Update our local variable
+        app.settings.artboardSizes.updateLocalStorageObject();
+
+        // Remove the initial frames, and load the old ones
+        $(artboards).empty();
+
+        // Now create the artboards from the last save state
+        var object = app.settings.artboardSizes.localStorageObject[0];
+
+        for (var key in object) {
+            if (object.hasOwnProperty(key)) {
+                var instance = object[key];
+                app.artboard.add("after", null, instance.width, instance.height, "fromEmpty");
+                console.log(key, instance);
+            }
+        }
+
+        // var array = app.settings.artboardSizes.localStorageObject[0].length;
+        // for (var i = 0; i < array; i++) {
+        //     var instance = array[i];
+        //     // Add new artboards
+        //     app.artboard.add("after", null, instance.width, instance.height, "fromEmpty");
+        //     console.log(i, instance);
+        // }
+
+        // Get the current artboard sizes
+        // this.localStorageObject = app.artboard.dimensions.return();
+
+        // Now update the localStorage, with only one save state
+        // localStorage.setItem(this.localStorageKey, JSON.stringify(this.localStorageObject));
+
     },
 
     /**
      * Updates the existing localStorage definition with the sizes of the current artboards
      */
-    updateLocalStorage: function (e) {
+    updateLocalStorage: function () {
         console.log(this.localStorageObject.length);
 
         // Add to existing
         if (this.localStorageObject.length >= 1 && this.localStorageObject.length !== null) {
             // localStorage key exists!
+            // Clear the existing object
+            this.localStorageObject = [];
 
-            if (e) {
-                // Make sure there's only 1 saved state
-                // Remove the existing item
-                if (this.localStorageObject.length > 1) {
-                    this.localStorageObject.shift();
-                }
-
-                // Add the latest artboards
-                this.localStorageObject.push(e);
-            }
+            // Lets setup an object with the current artboard sizes
+            this.localStorageObject.push(app.artboard.dimensions.return());
+            // console.log(this.localStorageObject, app.artboard.dimensions.return());
 
             // Now update the localStorage, with only one save state
             localStorage.setItem(this.localStorageKey, JSON.stringify(this.localStorageObject));
 
             // Update our local variable
-            app.settings.artboardSizes.localStorageObject = JSON.parse(localStorage[this.localStorageKey]);
-
-            // Remove the existing elements
-            $(artboards).empty();
-
-            // Now create the artboards from the last save state
-            for (var i = 0, len = this.localStorageObject[0].length; i < len; ++i) {
-                var instance = this.localStorageObject[0][i];
-                console.log(i, instance);
-
-                // Add new artboards
-                app.artboard.add("after", null, instance.width, instance.height);
-            }
-
+            app.settings.artboardSizes.updateLocalStorageObject();
         } else {
             console.log('issue');
         }
 
         // Add to LocalStorage
-        console.log('Added to localstorage: ' + JSON.parse(localStorage[this.localStorageKey]));
+        console.log('Added to localstorage: ', app.settings.artboardSizes.updateLocalStorageObject());
     }
 
 }
