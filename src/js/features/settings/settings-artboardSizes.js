@@ -83,21 +83,6 @@ app.settings.artboardSizes = {
                 console.log(key, instance);
             }
         }
-
-        // var array = app.settings.artboardSizes.localStorageObject[0].length;
-        // for (var i = 0; i < array; i++) {
-        //     var instance = array[i];
-        //     // Add new artboards
-        //     app.artboard.add("after", null, instance.width, instance.height, "fromEmpty");
-        //     console.log(i, instance);
-        // }
-
-        // Get the current artboard sizes
-        // this.localStorageObject = app.artboard.dimensions.return();
-
-        // Now update the localStorage, with only one save state
-        // localStorage.setItem(this.localStorageKey, JSON.stringify(this.localStorageObject));
-
     },
 
     /**
@@ -114,7 +99,6 @@ app.settings.artboardSizes = {
 
             // Lets setup an object with the current artboard sizes
             this.localStorageObject.push(app.artboard.dimensions.return());
-            // console.log(this.localStorageObject, app.artboard.dimensions.return());
 
             // Now update the localStorage, with only one save state
             localStorage.setItem(this.localStorageKey, JSON.stringify(this.localStorageObject));
