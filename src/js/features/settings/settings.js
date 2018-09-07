@@ -1,3 +1,13 @@
+app.settings = {
+    init: function() {
+        // Start the artboard sizes
+        app.settings.artboardSizes.init();
+    },
+
+    firstLoad: function() {
+    }
+}
+
 //
 // Custom menubar
 //

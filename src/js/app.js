@@ -3,6 +3,7 @@ app.init = function () {
 	console.log('screens.init()');
 
 	// Load each component here:
+	app.settings.init();
 	app.toolbar.init();
 	app.artboard.init();
 }  

@@ -27,7 +27,6 @@ app.artboard.resize = {
             artboard = $(".artboard");
             console.log(artboard);
             
-
             artboard.resizable({
                 handleSelector: "> .handle__bottom",
                 resizeWidthFrom: 'right',
@@ -57,6 +56,9 @@ app.artboard.resize = {
                     $el.css("cursor", "");
                     // Override all other elements
                     $('body').css("cursor", "");
+
+                    // Save the latest artboard sizes to localStorage
+                    app.settings.artboardSizes.updateLocalStorage();
                 }
             });
         }

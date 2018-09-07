@@ -120,6 +120,7 @@ gulp.task('javascript:main', function() {
     CONFIG.SRC + 'js/features/toolbar/**/*.js',
 
     // App Settings
+    CONFIG.SRC + 'js/features/settings/settings.js',
     CONFIG.SRC + 'js/features/settings/**/*.js',
 
     // Artboard

@@ -1,3 +1,4 @@
+// @TODO:Refactor these global variables
 var $recent_url_container = $("#toolbar__recentURLs");
 var recentURLs = JSON.parse(localStorage.getItem('recentURLs')) || [];
 
