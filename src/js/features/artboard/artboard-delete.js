@@ -6,6 +6,9 @@ app.artboard.delete = function (event) {
 
             // Save the latest artboard sizes to localStorage
             app.settings.artboardSizes.updateLocalStorage();
+
+            // Re-enable Panzoom
+            artboards.panzoom("enable");
         } else {
             alert('Sorry, you must have at least one artboard.')
         }
