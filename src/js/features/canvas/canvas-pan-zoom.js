@@ -32,50 +32,15 @@ $("#canvas-controls__fit-to-screen").on('click', function () {
 // ===============================
 
 if (!canvas.panzoom("isDisabled")) {
-    // Allow mousewheel/trackpad zooming & dragging
-    // canvas.parent().on('mousewheel.focal', function (e) {
-    //     e.preventDefault();
-    //     var delta = e.delta || e.originalEvent.wheelDelta;
-    //     var zoomOut = delta ? delta < 0 : e.originalEvent.deltaY > 0;
-    //     canvas.panzoom('zoom', zoomOut, {
-    //         animate: false,
-    //         focal: e
-    //     });
-    // });
-
     // Update the zoom percentage on zoom
     canvas.on('panzoomzoom', function (e, panzoom, scale, opts) {
         updateScale('fromCanvas');
     });
 }
 
-// canvas.on('panzoompan', function () {
-//     // Accept all events from parent
-//     artboards.css("pointer-events", "all");
-//     artboards.css("cursor", "move");
-//     // Override all other elements
-//     artboardInnerFrame.css("pointer-events", "none");
-//     $('body').css("cursor", "move");
-//     artboards.css("pointer-events", "none");
-// });
-
-// canvas.on('panzoomend', function (e, panzoom, matrix, changed) {
-//     // Accept all events from parent
-//     artboards.css("pointer-events", "");
-//     artboards.css("cursor", "");
-//     // Override all other elements
-//     $('body').css("cursor", "");
-//     artboardInnerFrame.css("pointer-events", "auto");
-//     artboards.css("pointer-events", "auto");
-// });
-
 // ===============================
 // Zoom Scale Percentage
 // ===============================
-
-// Update zoom percentage on load
-// TODO: attach to init
-
 
 // Create data-binding objects
 var data = {
@@ -83,6 +48,7 @@ var data = {
 }
 var bindings = $.bindings(data);
 
+// Update zoom percentage on load
 // @TODO: Add to init
 updateScale('fromCanvas');
 
