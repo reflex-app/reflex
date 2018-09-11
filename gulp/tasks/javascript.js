@@ -127,8 +127,7 @@ gulp.task('javascript:main', function() {
     CONFIG.SRC + 'js/features/artboard/**/*.js',
 
     // Canvas
-    CONFIG.SRC + 'js/features/canvas/canvas-pan-zoom.js',
-    CONFIG.SRC + 'js/features/canvas/canvas-view-mode.js',
+    CONFIG.SRC + 'js/features/canvas/**/*.js',
 
     CONFIG.SRC + 'js/components/**/*.js', // Anything that builds on the features
 
