@@ -9,6 +9,11 @@
 @import "partials/app";
 @import "partials/app-settings";
 
+// Components
+@import "partials/buttons";
+@import "partials/toast";
+
+// Features
 @import "partials/layout";
 @import "partials/toolbar";
 @import "partials/canvas";
@@ -16,10 +21,6 @@
 
 // UX
 @import "partials/animation";
-
-// Components
-@import "partials/buttons";
-@import "partials/toast";
 
 // Misc.
 @import "partials/misc";
