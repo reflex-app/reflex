@@ -1,6 +1,8 @@
 # Tunnelframe
 Preview responsive websites as you build them.
 
+![Tunnelframe Screenshot](screenshot.png)
+
 ## Features:
 - Preview your changes across many viewport sizes (+ devices connected via URL)
 - (Works with Browsersync urls) Quickly test an entire user flow, across multiple viewport sizes, in one place (+ devices connected via URL)
