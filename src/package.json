@@ -14,5 +14,8 @@
   "chromium-args": "--enable-logging=stderr --enable-experimental-web-platform-features --remote-debugging-port=9999",
   "webkit": {
     "plugin": true
+  },
+  "dependencies": {
+    "browser-sync": "^2.24.7"
   }
 }
