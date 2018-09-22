@@ -29,7 +29,7 @@ gulp.task('serve', gulp.series('build', 'create-package-json:dev', function () {
 }));
 
 // Starts a BrowerSync instance
-gulp.task('build', gulp.series('clean', 'sass', 'javascript', 'handlebars'));
+gulp.task('build', gulp.series('clean', 'copy', 'sass', 'javascript', 'handlebars'));
 
 // Watch files for changes
 gulp.task('watch', function () {
