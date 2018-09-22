@@ -74,5 +74,8 @@
     "webpack-hot-middleware": "^2.18.0",
     "webpack-merge": "^4.1.0",
     "webpack-stream": "^5.1.1"
+  },
+  "dependencies": {
+    "browser-sync": "^2.24.7"
   }
 }
