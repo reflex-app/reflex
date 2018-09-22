@@ -6,7 +6,8 @@ A tool for previewing responsive sites.
 ## Features:
 - Preview your changes across many viewport sizes (+ devices connected via URL)
 - (Works with Browsersync urls) Quickly test an entire user flow, across multiple viewport sizes, in one place (+ devices connected via URL)
-- (TBA) Have basic accessibility, design, and visual debugging overlays
+
+[View upcoming features](https://github.com/nwittwer/shift/projects)
 
 ## What this project is _not_:
 - Device emulation/simulation
