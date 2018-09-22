@@ -1,6 +1,6 @@
 {
-  "name": "Tunnelframe",
-  "version": "0.2.0",
+  "name": "Shift",
+  "version": "0.2.1",
   "main": "index.html",
   "node-remote": "<all_urls>",
   "icon": "icon.icns",
