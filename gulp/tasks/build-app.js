@@ -1,12 +1,47 @@
 const gulp = require('gulp');
 const gutil = require('gulp-util');
 const NwBuilder = require('nw-builder');
+const replace = require('gulp-replace');
+const inquirer = require('inquirer');
+const merge = require('merge-stream');
+
 
 // Import configuration settings
 const CONFIG = require('../config.js');
 
+// Get current app version
+const CURRENT_APP_VERSION = require('../../dist/package.json').version;
+let NEXT_APP_VERSION;
+
 // The overall task
-gulp.task('build-app', gulp.series('build-app:main'));
+gulp.task('build-app', gulp.series('build-app:prompt', 'build-app:version', 'build-app:main'));
+
+// Confirm version number
+gulp.task('build-app:prompt', function (cb) {
+    inquirer.prompt([{
+            type: 'input',
+            name: 'version',
+            message: 'What version are we moving to? (Current version is ' + CURRENT_APP_VERSION + ')'
+        }])
+        .then(function (res) {
+            NEXT_APP_VERSION = res.version;
+            cb();
+        });
+});
+
+// Bumps the version number
+// `src/package.json` and `dist/package.json`
+gulp.task('build-app:version', function () {
+    const src = gulp.src(CONFIG.SRC + 'package.json')
+        .pipe(replace(CURRENT_APP_VERSION, NEXT_APP_VERSION))
+        .pipe(gulp.dest(CONFIG.SRC));
+
+    const dist = gulp.src(CONFIG.DIST + 'package.json')
+        .pipe(replace(CURRENT_APP_VERSION, NEXT_APP_VERSION))
+        .pipe(gulp.dest(CONFIG.DIST));
+
+    return merge(src, dist);
+});
 
 gulp.task('build-app:main', function () {
     var nw = new NwBuilder({
