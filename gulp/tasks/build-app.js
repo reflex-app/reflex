@@ -7,6 +7,8 @@ const merge = require('merge-stream');
 const exec = require('child_process').exec;
 const chalk = require('chalk');
 const release = require('gulp-github-release');
+const zip = require('gulp-zip');
+const notify = require("gulp-notify");
 
 // Update process.env based on .env file (in root directory)
 require('dotenv').config();
@@ -27,6 +29,7 @@ gulp.task('build-app', gulp.series(
     'build-app:version',
     'build-app:changelog',
     'build-app:main',
+    'build-app:zip-app',
     'build-app:draft-release'
 ));
 
@@ -103,6 +106,18 @@ gulp.task('build-app:main', function () {
         })
 });
 
+// Create a ZIP of executable file
+// Function: zip
+// -r: recursive
+// Desired name of ZIP
+// Target file/directory
+// Example: zip -r Shift-v3.0.0.zip Shift.app
+gulp.task('build-app:zip-app', function (cb) {
+    return gulp.src('ship/Shift/osx64/Shift.app/**/*', {base: './ship/Shift/osx64/'})
+        .pipe(zip('Shift-v' + NEXT_APP_VERSION + '.zip'))
+        .pipe(gulp.dest('ship/Shift/osx64/'))
+});
+
 // Creates a draft release on Github
 // 1. Open the file: `.env` (root directory of this project)
 // 2. You can create a Github token here: https://github.com/settings/tokens
@@ -111,7 +126,7 @@ gulp.task('build-app:main', function () {
 gulp.task('build-app:draft-release', function () {
     const GITHUB_TOKEN = process.env.GITHUB_TOKEN || "";
 
-    return gulp.src('./ship/Shift/osx64/Shift.app')
+    return gulp.src('./ship/Shift/osx64/Shift-v' + NEXT_APP_VERSION + '.zip')
         .pipe(release({
             owner: 'nwittwer',
             token: GITHUB_TOKEN, // Did you set already add your Github token?
@@ -121,4 +136,5 @@ gulp.task('build-app:draft-release', function () {
             manifest: require('../../package.json'), // package.json from which default values will be extracted if they're missing
             notes: CHANGELOG
         }))
+        .pipe(notify("🎉 The release is done!"));
 });
