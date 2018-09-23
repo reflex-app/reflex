@@ -40,18 +40,6 @@ gulp.task('javascript:webpack', function() {
           rules: [
             {
               test: /\.js$/,
-              enforce: "pre",
-              use: [
-                {
-                  loader: 'eslint-loader',
-                  options: {
-                    formatter: require('eslint-friendly-formatter')
-                  }
-                }
-              ],
-              exclude: /node_modules/
-            }, {
-              test: /\.js$/,
               use: [
                 {
                   loader: 'babel-loader',
