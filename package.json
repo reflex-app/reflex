@@ -1,14 +1,20 @@
 {
   "name": "tunnelframe-builder",
+  "author": "Nick Wittwer",
   "version": "1.0.0",
-  "description": "Builds screens app",
+  "description": "A tool for previewing responsive sites.",
   "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:nwittwer/shift.git"
+  },
+  "homepage": "https://shift.nickwittwer.com",
   "scripts": {
     "start": "kill -9 $(lsof -i TCP:8000 | grep LISTEN | awk '{print $2}') & gulp & nw dist",
     "build": "gulp app"
   },
-  "repository": {
-    "type": "git"
+  "bugs": {
+    "url": "https://github.com/nwittwer/shift/issues"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.1",
