@@ -5,6 +5,11 @@ const replace = require('gulp-replace');
 const inquirer = require('inquirer');
 const merge = require('merge-stream');
 const exec = require('child_process').exec;
+const chalk = require('chalk');
+const release = require('gulp-github-release');
+
+// Update process.env based on .env file (in root directory)
+require('dotenv').config();
 
 // Import configuration settings
 const CONFIG = require('../config.js');
@@ -21,7 +26,9 @@ gulp.task('build-app', gulp.series(
     'build-app:prompt',
     'build-app:version',
     'build-app:changelog',
-    'build-app:main'));
+    'build-app:main',
+    'build-app:draft-release'
+));
 
 // Confirm version number
 gulp.task('build-app:prompt', function (cb) {
@@ -61,10 +68,11 @@ gulp.task('build-app:version', function () {
 // git log origin/branch-a..origin/branch-b --abbrev-commit --pretty=oneline
 gulp.task('build-app:changelog', function (cb) {
     exec('git log origin/v' + NEXT_APP_VERSION + '..origin/master --abbrev-commit --pretty=oneline', function (err, stdout, stderr) {
-        log('hi');
-        log(stdout);
-        log(stderr);
-        // changelog = stdout;
+        // console.log( chalk.yellow(stdout) );
+        // console.log( chalk.yellow(stderr) );
+
+        changelog = stdout;
+        console.log(chalk.yellow(changelog));
         cb(err);
     });
 });
@@ -96,16 +104,21 @@ gulp.task('build-app:main', function () {
 });
 
 // Creates a draft release on Github
+// 1. Open the file: `.env` (root directory of this project)
+// 2. Add: `GITHUB_TOKEN=replace_with_your_token`
+// 3. Save
+// 4. You can create a Github token here: https://github.com/settings/tokens
 gulp.task('build-app:draft-release', function () {
-    return gulp.src('./ship/some-file.exe')
+    const GITHUB_TOKEN = process.env.GITHUB_TOKEN || "";
+
+    return gulp.src('./ship/Shift/osx64/Shift.app')
         .pipe(release({
-            owner: 'nwittwer', // if missing, it will be extracted from manifest (the repository.url field)
-            token: 'token', // or you can set an env var called GITHUB_TOKEN instead
-            repo: 'release-test', // if missing, it will be extracted from manifest (the repository.url field)
+            owner: 'nwittwer',
+            token: GITHUB_TOKEN, // Did you set already add your Github token?
             tag: 'v' + NEXT_APP_VERSION, // i.e. v0.3.0 (format: v + 0.0.0) from `src/package.json`
             draft: true,
             prerelease: false, // if missing it's false
-            manifest: require('./package.json'), // package.json from which default values will be extracted if they're missing
-            notes: 'very good!', // @TODO: Add changelog here
+            manifest: require('../../package.json'), // package.json from which default values will be extracted if they're missing
+            notes: changelog
         }))
 });

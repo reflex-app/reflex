@@ -1,3 +1,4 @@
+.env
 dist/
 ship/
 src/*.app/
@@ -8,4 +9,3 @@ src/build/
 src/cache/
 node_modules/
 package-lock.json
-.env
