@@ -19,7 +19,7 @@ const CURRENT_APP_VERSION = require('../../src/package.json').version;
 let NEXT_APP_VERSION;
 
 // Changelog variable
-var changelog;
+var CHANGELOG;
 
 // The overall task
 gulp.task('build-app', gulp.series(
@@ -71,8 +71,8 @@ gulp.task('build-app:changelog', function (cb) {
         // console.log( chalk.yellow(stdout) );
         // console.log( chalk.yellow(stderr) );
 
-        changelog = stdout;
-        console.log(chalk.yellow(changelog));
+        CHANGELOG = stdout;
+        console.log(chalk.yellow(CHANGELOG));
         cb(err);
     });
 });
@@ -105,9 +105,9 @@ gulp.task('build-app:main', function () {
 
 // Creates a draft release on Github
 // 1. Open the file: `.env` (root directory of this project)
-// 2. Add: `GITHUB_TOKEN=replace_with_your_token`
-// 3. Save
-// 4. You can create a Github token here: https://github.com/settings/tokens
+// 2. You can create a Github token here: https://github.com/settings/tokens
+// 3. Add: `GITHUB_TOKEN=replace_with_your_token`
+// 4. Save the file
 gulp.task('build-app:draft-release', function () {
     const GITHUB_TOKEN = process.env.GITHUB_TOKEN || "";
 
@@ -116,9 +116,9 @@ gulp.task('build-app:draft-release', function () {
             owner: 'nwittwer',
             token: GITHUB_TOKEN, // Did you set already add your Github token?
             tag: 'v' + NEXT_APP_VERSION, // i.e. v0.3.0 (format: v + 0.0.0) from `src/package.json`
-            draft: true,
-            prerelease: false, // if missing it's false
+            draft: true, // draft or public
+            prerelease: false,
             manifest: require('../../package.json'), // package.json from which default values will be extracted if they're missing
-            notes: changelog
+            notes: CHANGELOG
         }))
 });
