@@ -91,7 +91,7 @@ gulp.task('build-app:main', function () {
         cacheDir: CONFIG.SHIP, // cached NWJS versions (/dist/cache)
         macCredits: CONFIG.SRC + 'credits.html',
         macIcns: CONFIG.SRC + 'icon.icns',
-        platforms: ['osx64', 'win32']
+        platforms: ['osx64'] // win32
     })
 
     // Log build progress
@@ -113,7 +113,9 @@ gulp.task('build-app:main', function () {
 // Target file/directory
 // Example: zip -r Shift-v3.0.0.zip Shift.app
 gulp.task('build-app:zip-app', function (cb) {
-    return gulp.src('ship/Shift/osx64/Shift.app/**/*', {base: './ship/Shift/osx64/'})
+    return gulp.src('ship/Shift/osx64/Shift.app/**', {
+            base: './ship/Shift/osx64/'
+        })
         .pipe(zip('Shift-v' + NEXT_APP_VERSION + '.zip'))
         .pipe(gulp.dest('ship/Shift/osx64/'))
 });
@@ -125,16 +127,15 @@ gulp.task('build-app:zip-app', function (cb) {
 // 4. Save the file
 gulp.task('build-app:draft-release', function () {
     const GITHUB_TOKEN = process.env.GITHUB_TOKEN || "";
-
     return gulp.src('./ship/Shift/osx64/Shift-v' + NEXT_APP_VERSION + '.zip')
-        .pipe(release({
-            owner: 'nwittwer',
-            token: GITHUB_TOKEN, // Did you set already add your Github token?
-            tag: 'v' + NEXT_APP_VERSION, // i.e. v0.3.0 (format: v + 0.0.0) from `src/package.json`
-            draft: true, // draft or public
-            prerelease: false,
-            manifest: require('../../package.json'), // package.json from which default values will be extracted if they're missing
-            notes: CHANGELOG
-        }))
+        // .pipe(release({
+        //     owner: 'nwittwer',
+        //     token: GITHUB_TOKEN, // Did you set already add your Github token?
+        //     tag: 'v' + NEXT_APP_VERSION, // i.e. v0.3.0 (format: v + 0.0.0) from `src/package.json`
+        //     draft: true, // draft or public
+        //     prerelease: false,
+        //     manifest: require('../../package.json'), // package.json from which default values will be extracted if they're missing
+        //     notes: CHANGELOG
+        // }))
         .pipe(notify("🎉 The release is done!"));
 });
