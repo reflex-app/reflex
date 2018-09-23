@@ -5,12 +5,11 @@ const replace = require('gulp-replace');
 const inquirer = require('inquirer');
 const merge = require('merge-stream');
 
-
 // Import configuration settings
 const CONFIG = require('../config.js');
 
 // Get current app version
-const CURRENT_APP_VERSION = require('../../dist/package.json').version;
+const CURRENT_APP_VERSION = require('../../src/package.json').version;
 let NEXT_APP_VERSION;
 
 // The overall task
@@ -24,7 +23,12 @@ gulp.task('build-app:prompt', function (cb) {
             message: 'What version are we moving to? (Current version is ' + CURRENT_APP_VERSION + ')'
         }])
         .then(function (res) {
-            NEXT_APP_VERSION = res.version;
+            if (res.version) {
+                NEXT_APP_VERSION = res.version;
+            } else {
+                NEXT_APP_VERSION = CURRENT_APP_VERSION;
+            }
+
             cb();
         });
 });
