@@ -20,7 +20,7 @@ gulp.task('build-app:prompt', function (cb) {
     inquirer.prompt([{
             type: 'input',
             name: 'version',
-            message: 'What version are we moving to? (Current version is ' + CURRENT_APP_VERSION + ')'
+            message: 'What version is this? (Currently ' + CURRENT_APP_VERSION + ' ):'
         }])
         .then(function (res) {
             if (res.version) {
