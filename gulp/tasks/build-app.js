@@ -33,7 +33,8 @@ gulp.task('build-app', gulp.series(
     'build-app:changelog',
     'build-app:main',
     'build-app:zip-app',
-    'build-app:draft-release'
+    'build-app:draft-release',
+    'build-app:open-release-in-browser'
 ));
 
 // Confirm version number
@@ -159,15 +160,20 @@ gulp.task('build-app:zip-app', function (done) {
 // 4. Save the file
 gulp.task('build-app:draft-release', function () {
     const GITHUB_TOKEN = process.env.GITHUB_TOKEN || "";
-    return gulp.src('./ship/Shift/osx64/Shift-v' + NEXT_APP_VERSION + '.zip')
-        // .pipe(release({
-        //     owner: 'nwittwer',
-        //     token: GITHUB_TOKEN, // Did you set already add your Github token?
-        //     tag: 'v' + NEXT_APP_VERSION, // i.e. v0.3.0 (format: v + 0.0.0) from `src/package.json`
-        //     draft: true, // draft or public
-        //     prerelease: false,
-        //     manifest: require('../../package.json'), // package.json from which default values will be extracted if they're missing
-        //     notes: CHANGELOG
-        // }))
-        .pipe(notify("🎉 The release is done!"));
+    return gulp.src(PATH_TO_ZIP)
+        .pipe(release({
+            owner: 'nwittwer',
+            token: GITHUB_TOKEN, // Did you set already add your Github token?
+            tag: 'v' + NEXT_APP_VERSION, // i.e. v0.3.0 (format: v + 0.0.0)
+            draft: true, // draft or public
+            prerelease: false,
+            manifest: require('../../package.json'), // package.json from which default values will be extracted if they're missing
+            notes: CHANGELOG
+        }))
+        .pipe(notify({
+            title: "🎉 Shift v" + NEXT_APP_VERSION + " release draft created!",
+            message: "Opening in browser..."
+        }))
+});
+
 });
