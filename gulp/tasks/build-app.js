@@ -24,7 +24,8 @@ const CURRENT_APP_VERSION = require('../../src/package.json').version;
 let NEXT_APP_VERSION;
 
 // Changelog variable
-var CHANGELOG;
+let CHANGELOG;
+let PATH_TO_ZIP;
 
 // The overall task
 gulp.task('build-app', gulp.series(
@@ -50,6 +51,10 @@ gulp.task('build-app:prompt', function (done) {
             } else {
                 NEXT_APP_VERSION = CURRENT_APP_VERSION;
             }
+
+            // Update the final ZIP path with the version
+            PATH_TO_ZIP = 'ship/Shift-v' + NEXT_APP_VERSION + '.zip';
+
             done();
         });
 });
@@ -106,8 +111,6 @@ gulp.task('build-app:main', function () {
         })
 });
 
-const PATH_TO_ZIP = 'ship/Shift-v' + NEXT_APP_VERSION + '.zip';
-
 // Create a ZIP of executable file
 gulp.task('build-app:zip-app', function (done) {
     // create a file to stream archive data to.
@@ -121,7 +124,7 @@ gulp.task('build-app:zip-app', function (done) {
     // listen for all archive data to be written
     // 'close' event is fired only when a file descriptor is involved
     output.on('close', function () {
-        console.log(chalk.yellow('ZIP size:' + archive.pointer() + ' total bytes'));
+        console.log(chalk.yellow('ZIP size: ' + archive.pointer() + ' total bytes'));
         done();
     });
 
