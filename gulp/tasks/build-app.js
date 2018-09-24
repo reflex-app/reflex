@@ -176,4 +176,7 @@ gulp.task('build-app:draft-release', function () {
         }))
 });
 
+// Opens the Github Releases page
+gulp.task('build-app:open-release-in-browser', function () {
+    opn('https://github.com/nwittwer/shift/releases')
 });
