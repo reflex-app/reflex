@@ -73,12 +73,9 @@ gulp.task('build-app:version', function () {
 // Then stores it to a variable that can later be used for a
 // git log origin/branch-a..origin/branch-b --abbrev-commit --pretty=oneline
 gulp.task('build-app:changelog', function (cb) {
-    exec('git log origin/v' + NEXT_APP_VERSION + '..origin/master --abbrev-commit --pretty=oneline', function (err, stdout, stderr) {
-        // console.log( chalk.yellow(stdout) );
-        // console.log( chalk.yellow(stderr) );
-
+    exec('git log master.. --abbrev-commit --pretty=oneline', function (err, stdout, stderr) {
         CHANGELOG = stdout;
-        console.log(chalk.yellow(CHANGELOG));
+        console.log(chalk.yellow('Changelog:\n' + CHANGELOG));
         cb(err);
     });
 });
