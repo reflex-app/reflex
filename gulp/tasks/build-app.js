@@ -111,17 +111,45 @@ gulp.task('build-app:main', function () {
 const PATH_TO_ZIP = 'ship/Shift-v' + NEXT_APP_VERSION + '.zip';
 
 // Create a ZIP of executable file
-// Function: zip
-// -r: recursive
-// Desired name of ZIP
-// Target file/directory
-// Example: zip -r Shift-v3.0.0.zip Shift.app
-gulp.task('build-app:zip-app', function (cb) {
-    return gulp.src('ship/Shift/osx64/Shift.app/**', {
-            base: './ship/Shift/osx64/'
-        })
-        .pipe(zip('Shift-v' + NEXT_APP_VERSION + '.zip'))
-        .pipe(gulp.dest('ship/Shift/osx64/'))
+gulp.task('build-app:zip-app', function (done) {
+    // create a file to stream archive data to.
+    var output = fs.createWriteStream(PATH_TO_ZIP);
+    var archive = archiver('zip', {
+        zlib: {
+            level: 9 // Sets the compression level.
+        }
+    });
+
+    // listen for all archive data to be written
+    // 'close' event is fired only when a file descriptor is involved
+    output.on('close', function () {
+        console.log(chalk.yellow('ZIP size:' + archive.pointer() + ' total bytes'));
+        done();
+    });
+
+    // Catch warnings
+    archive.on('warning', function (err) {
+        if (err.code === 'ENOENT') {
+            // log warning
+        } else {
+            // throw error
+            throw err;
+        }
+    });
+
+    // Catch error
+    archive.on('error', function (err) {
+        throw err;
+    });
+
+    // Pipe archive data to the file
+    archive.pipe(output);
+
+    // Path to the app, app name
+    archive.directory('ship/Shift/osx64/Shift.app/', 'Shift.app');
+
+    // Finish the ZIP
+    archive.finalize();
 });
 
 // Creates a draft release on Github
