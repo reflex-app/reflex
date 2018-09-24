@@ -70,6 +70,7 @@
     "merge-stream": "^1.0.1",
     "node-sass": "^4.5.3",
     "nw": "^0.33.1-sdk",
+    "opn": "^5.4.0",
     "ora": "^1.2.0",
     "proxy-middleware": "^0.15.0",
     "q": "^1.5.0",
@@ -87,5 +88,8 @@
     "webpack-hot-middleware": "^2.18.0",
     "webpack-merge": "^4.1.0",
     "webpack-stream": "^5.1.1"
+  },
+  "dependencies": {
+    "archiver": "^3.0.0"
   }
 }

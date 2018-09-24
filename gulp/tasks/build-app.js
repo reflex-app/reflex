@@ -1,3 +1,4 @@
+const fs = require('fs');
 const gulp = require('gulp');
 const gutil = require('gulp-util');
 const NwBuilder = require('nw-builder');
@@ -9,6 +10,8 @@ const chalk = require('chalk');
 const release = require('gulp-github-release');
 const zip = require('gulp-zip');
 const notify = require("gulp-notify");
+const archiver = require('archiver');
+const opn = require('opn');
 
 // Update process.env based on .env file (in root directory)
 require('dotenv').config();
