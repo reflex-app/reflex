@@ -37,7 +37,7 @@ gulp.task('build-app', gulp.series(
 ));
 
 // Confirm version number
-gulp.task('build-app:prompt', function (cb) {
+gulp.task('build-app:prompt', function (done) {
     inquirer.prompt([{
             type: 'input',
             name: 'version',
@@ -49,8 +49,7 @@ gulp.task('build-app:prompt', function (cb) {
             } else {
                 NEXT_APP_VERSION = CURRENT_APP_VERSION;
             }
-
-            cb();
+            done();
         });
 });
 
@@ -108,6 +107,8 @@ gulp.task('build-app:main', function () {
             gutil.log('nw-builder', err);
         })
 });
+
+const PATH_TO_ZIP = 'ship/Shift-v' + NEXT_APP_VERSION + '.zip';
 
 // Create a ZIP of executable file
 // Function: zip
