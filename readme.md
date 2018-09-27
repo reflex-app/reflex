@@ -1,40 +1,34 @@
 # Shift
-A tool for previewing responsive sites.
+> A tool for previewing responsive sites.
 
 ![Shift Screenshot](screenshot.png)
 
+## Installation
+
+[Download the latest version (MacOS 10.12+)](https://github.com/nwittwer/shift/releases/latest)
+
+### Installation Instructions
+1. Move the Application to your Applications folder
+    - If you get a warning like "Cannot be opened because the developer is not verified.", open System Preferences > Security & Privacy > "Open anyway"
+2. Open the application by double-clicking it
+
 ## Features:
-- Preview your changes across many viewport sizes (+ devices connected via URL)
-- (Works with Browsersync urls) Quickly test an entire user flow, across multiple viewport sizes, in one place (+ devices connected via URL)
+- [x] MacOS app (hybrid)
+- [x] Preview your changes across many viewport sizes
+- [x] Add all the sizes you want. They're saved automatically.
+- [x] Easily resize your viewports. And they're saved for when you come back.
+- [x] Natural scrolling/panning of the canvas
+- [x] Recent URLs are saved, making it easy to re-access them.
+- [ ] Quickly test an entire user flow, across multiple viewport sizes, in one place using [Browsersync](https://browsersync.io/) built-in
+- [ ] Ability to test high-pixel-density (i.e. Apple's "retina" device resolutions)
+- [ ] Ability to test different user-agents
 
 [View upcoming features](https://github.com/nwittwer/shift/projects)
 
-## What this project is _not_:
-- Device emulation/simulation
-- Cross-browser testing
-- Visual regression testing
-
-## Using the app
-### Normal
-- Download the latest release (.ZIP): https://github.com/nwittwer/shift/releases/latest
-- Move the Application to your Applications folder
-    - If you get a warning like "Cannot be opened because the developer is not verified.", open System Preferences > Security & Privacy > "Open anyway"
-- Open the application by double-clicking it
-
-## FAQ
-- `Error: listen EADDRINUSE :::8000` --> Run this in Terminal: `kill -9 $(lsof -i TCP:8000 | grep LISTEN | awk '{print $2}')`
-- If you get something like "Your profile can not be used because it is from a newer version of NW.js." run this: `rm -R ~/Library/Application\ Support/Shift`
-- This project has the ability to build for Windows, but currently only the Mac version is being supported/tested
-
-## How it works
-1. NWJS launches the Node web app inside of a native wrapper, making it appear like a native Mac app
-2. Once launched, a Node server is created, and NWJS allows us to access Node Modules
-3. iFrames. iFrames everywhere. Plus some jQuery functions to handle resizing and the canvas.
-
 ## Developing
-Requirements:
-- Node (tested with 10.0+)
-- NPM 5+
+Requirements (tested with):
+- Node 10.0+
+- NPM 6+
 - Gulp 4+
 
 1. Clone this repo
@@ -42,31 +36,37 @@ Requirements:
 3. You'll need to install the NW.js CLI: `npm i nw -g`
 4. If you want to run the app in development, use `npm start`. SCSS, JS, and images will be watched and updated upon saving.
 
-### Commands
-- Develop with live reloading of NWJS app contents: `npm start`
-- Create a distributable NWJS app: `npm run build`
-
 ### Tasks
 
-#### Default (dev)
-1. WebPack builds all the require Node Modules, and puts the following into /dist
-    - index.html
-    - package.json
-    - app.{{hash]}.js
-2. Gulp sets up a watch task
+#### Default (`npm start`)
 
-#### Build
+1. Compile & watch JS, SCSS from `src` --> `dist`
+2. On changes, clean directory and compile again
+
+#### Build (`npm run build`)
 
 1. Gulp takes everything from `/dist`:
     - index.html
     - package.json
-    - app.{{hash]}.js
     - etc.
 2. Gulp builds all files to production level
-3. Gulp moves any necessary files
-4. Gulp runs `NW-builder`, which produces apps from NWJS
-5. App is now built in the `/ship` directory
+3. Gulp runs `NW-builder`, which produces apps from NWJS
+4. App is now built in the `/ship` directory
+5. With the right credentials, a release can be created
+
+### Helpful resources
+- Hybrid app ([NWJS](http://docs.nwjs.io/en/latest/))
+- 
+
+## FAQ
+- `Error: listen EADDRINUSE :::8000`
+    - Terminal: `kill -9 $(lsof -i TCP:8000 | grep LISTEN | awk '{print $2}')`
+- "Your profile can not be used because it is from a newer version of NW.js." 
+    - Terminal: `rm -R ~/Library/Application\ Support/Shift`
+- This project has the ability to build for Windows, but currently only the Mac version is being supported/tested, as it requires a large amount of effort to add another OS to support.
 
 ## Debugging
-- Open the app, and press `CMD + Shift + I` to open Chrome DevTools
-- Remote debugging URL: `http://localhost:9999`
+- Open the app, right click, and select "Inspect" to open Chrome DevTools
+
+## License
+MIT
