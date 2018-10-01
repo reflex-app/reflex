@@ -33,12 +33,14 @@
         <div id="toolbar__recentURLs"></div>
       </div>
       <div id="toolbar__canvas-controls">
-        <div class="canvas-controls__scale">
+        <div>
+          <span id="canvas-controls__zoomOut">-</span>
           <span id="canvas-controls__scale" value="100%" data-bind="scale"></span>
-          {{!-- <span data-bind="scale"></span>
-          --}} {{!-- <a href="#" id="canvas-controls__reset">Reset</a> --}}
-          <a href="#" id="canvas-controls__fit-to-screen">Fit</a>
+          <span id="canvas-controls__zoomIn">+</span>
         </div>
+        {{!-- <span data-bind="scale"></span>
+        --}} {{!-- <a href="#" id="canvas-controls__reset">Reset</a> --}}
+        <a href="#" id="canvas-controls__fit-to-screen">Fit</a>
       </div>
       <div>
         <a href="#" id="canvas-controls__orientation">Orientation</a>
@@ -64,7 +66,8 @@
         <!-- Define the horizontal artbaord container-->
         <div id="artboards" class="artboards">
           <!-- Each artboard-->
-          {{>artboard width="1440" height="1024"}} {{>artboard width="768" height="1024"}} {{>artboard width="320" height="1024"}}
+          {{>artboard width="1440" height="1024"}} {{>artboard width="768" height="1024"}} {{>artboard width="320"
+          height="1024"}}
         </div>
       </div>
     </div>
