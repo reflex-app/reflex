@@ -23,7 +23,7 @@ $(window).on('resize', function () {
 $("#canvas-controls__fit-to-screen").on('click', function () {
     canvasMinSize.update();
     canvas.panzoom("setTransform", 'scale(' + Math.min(canvasMinSize.x, canvasMinSize.y) + ')');
-    updateScale("fromCanvas")
+    updateScale("fromCanvas");
     console.log(app.minScaleX, app.minScaleY, "scale:", canvasMinSize.x, canvasMinSize.y);
 });
 
