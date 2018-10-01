@@ -25,17 +25,22 @@ let NEXT_APP_VERSION;
 
 // Changelog variable
 let CHANGELOG;
-let PATH_TO_ZIP;
+let PATH_TO_MAC_ZIP;
 
-// The overall task
+// Build task
 gulp.task('build-app', gulp.series(
     'build-app:prompt',
     'build-app:version',
-    'build-app:changelog',
-    'build-app:main',
-    'build-app:zip-app',
-    'build-app:draft-release',
-    'build-app:open-release-in-browser'
+    'build-app:main'
+));
+
+// Deploy tasks
+// @TODO: Split this into another file? How to keep the variable values across files?
+gulp.task('deploy-app', gulp.series(
+    'deploy-app:changelog',
+    'deploy-app:zip-app',
+    'deploy-app:draft-release',
+    'deploy-app:open-release-in-browser'
 ));
 
 // Confirm version number
@@ -53,7 +58,7 @@ gulp.task('build-app:prompt', function (done) {
             }
 
             // Update the final ZIP path with the version
-            PATH_TO_ZIP = 'ship/Shift-v' + NEXT_APP_VERSION + '.zip';
+            PATH_TO_MAC_ZIP = 'ship/shift-' + NEXT_APP_VERSION + '-mac.zip';
 
             done();
         });
@@ -71,18 +76,6 @@ gulp.task('build-app:version', function () {
         .pipe(gulp.dest(CONFIG.DIST));
 
     return merge(src, dist);
-});
-
-// Creates a changelog from Git log
-// Compares the commits from branch A that are not in branch B
-// Then stores it to a variable that can later be used for a
-// git log origin/branch-a..origin/branch-b --abbrev-commit --pretty=oneline
-gulp.task('build-app:changelog', function (cb) {
-    exec('git log master.. --abbrev-commit --pretty=oneline', function (err, stdout, stderr) {
-        CHANGELOG = stdout;
-        console.log(chalk.yellow('Changelog:\n' + CHANGELOG));
-        cb(err);
-    });
 });
 
 // Build the app into a Mac/Windows executable format
@@ -111,10 +104,22 @@ gulp.task('build-app:main', function () {
         })
 });
 
+// Creates a changelog from Git log
+// Compares the commits from branch A that are not in branch B
+// Then stores it to a variable that can later be used for a
+// git log origin/branch-a..origin/branch-b --abbrev-commit --pretty=oneline
+gulp.task('deploy-app:changelog', function (cb) {
+    exec('git log master.. --abbrev-commit --pretty=oneline', function (err, stdout, stderr) {
+        CHANGELOG = stdout;
+        console.log(chalk.yellow('Changelog:\n' + CHANGELOG));
+        cb(err);
+    });
+});
+
 // Create a ZIP of executable file
-gulp.task('build-app:zip-app', function (done) {
+gulp.task('deploy-app:zip-app', function (done) {
     // create a file to stream archive data to.
-    var output = fs.createWriteStream(PATH_TO_ZIP);
+    var output = fs.createWriteStream(PATH_TO_MAC_ZIP);
     var archive = archiver('zip', {
         zlib: {
             level: 9 // Sets the compression level.
@@ -158,9 +163,9 @@ gulp.task('build-app:zip-app', function (done) {
 // 2. You can create a Github token here: https://github.com/settings/tokens
 // 3. Add: `GITHUB_TOKEN=replace_with_your_token`
 // 4. Save the file
-gulp.task('build-app:draft-release', function () {
+gulp.task('deploy-app:draft-release', function () {
     const GITHUB_TOKEN = process.env.GITHUB_TOKEN || "";
-    return gulp.src(PATH_TO_ZIP)
+    return gulp.src(PATH_TO_MAC_ZIP)
         .pipe(release({
             owner: 'nwittwer',
             token: GITHUB_TOKEN, // Did you set already add your Github token?
@@ -177,7 +182,7 @@ gulp.task('build-app:draft-release', function () {
 });
 
 // Opens the Github Releases page
-gulp.task('build-app:open-release-in-browser', function (done) {
+gulp.task('deploy-app:open-release-in-browser', function (done) {
     opn('https://github.com/nwittwer/shift/releases');
     done();
 });
