@@ -2,6 +2,7 @@ app.toolbar = {
 
     init: function () {
         this.firstLoad();
+        app.toolbar.zoomControls.init();
     },
 
     firstLoad: function () {
