@@ -21,9 +21,7 @@ $ curl -LO "$URL"
 
 [Having issues installing?](#FAQ)
 
----
-
-## Features:
+### Features:
 - [x] MacOS app (hybrid)
 - [x] Preview your changes across many viewport sizes
 - [x] Add all the sizes you want. They're saved automatically.
