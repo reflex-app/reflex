@@ -1,16 +1,17 @@
-# Shift
-> A tool for previewing responsive sites.
+<div >
+    <h3 align="center">Shift</h3>
+    <p align="center">A tool for previewing responsive sites.</p>
+</div>
 
 ![Shift Screenshot](screenshot.png)
 
-## Installation
+Shift is a free, open-source, part-time project that makes it easy to preview a site at different screen sizes. It's a hybrid web/native application that's currently built on [NW.JS](https://github.com/nwjs/nw.js/) (Node-Webkit).
 
-[Download the latest version (MacOS 10.12+)](https://github.com/nwittwer/shift/releases/latest)
+## Install
 
-### Installation Instructions
-1. Move the Application to your Applications folder
-    - If you get a warning like "Cannot be opened because the developer is not verified.", open System Preferences > Security & Privacy > "Open anyway"
-2. Open the application by double-clicking it
+**[Download the latest release (MacOS only)](https://github.com/nwittwer/shift/releases/latest)**
+
+[Need help installing?](#FAQ)
 
 ## Features:
 - [x] MacOS app (hybrid)
@@ -25,48 +26,63 @@
 
 [View upcoming features](https://github.com/nwittwer/shift/projects)
 
-## Developing
-Requirements (tested with):
-- Node 10.0+
-- NPM 6+
-- Gulp 4+
+## Contributing
 
-1. Clone this repo
-2. `cd` into the created directory and run `npm install`
-3. You'll need to install the NW.js CLI: `npm i nw -g`
-4. If you want to run the app in development, use `npm start`. SCSS, JS, and images will be watched and updated upon saving.
+Please take a look at the [upcoming features](https://github.com/nwittwer/shift/projects) and the [open Github issues](https://github.com/nwittwer/shift/issues). 
 
-### Tasks
+You can [fork](https://help.github.com/articles/fork-a-repo/) this project to your own Github account, and then [clone](https://help.github.com/articles/cloning-a-repository/) it to your computer.
 
-#### Default (`npm start`)
+### Developing
 
-1. Compile & watch JS, SCSS from `src` --> `dist`
-2. On changes, clean directory and compile again
+We recommend having the following installed: 
+- Node 10.0+, NPM 6+, Gulp 4+
 
-#### Build (`npm run build`)
+1. Clone the project to your computer:
+```sh
+$ git clone https://github.com/nwittwer/shift.git
+$ cd shift
+```
 
-1. Gulp takes everything from `/dist`:
-    - index.html
-    - package.json
-    - etc.
-2. Gulp builds all files to production level
-3. Gulp runs `NW-builder`, which produces apps from NWJS
-4. App is now built in the `/ship` directory
-5. With the right credentials, a release can be created
+2. Install dependencies:
+```sh
+$ npm install
+```
 
-### Helpful resources
-- Hybrid app ([NWJS](http://docs.nwjs.io/en/latest/))
-- 
+3. Compile and watch for changes:
+```sh
+$ npm start
+```
+
+To make sure your code works in the final app, run the following command. This will output a `Shift.app` file inside of the `ship/Shift/osx64/` folder for MacOS.<br>
+```sh
+$ npm run build
+```
+
+### Debugging
+
+Open the app, right click, and select "Inspect" to open Chrome DevTools
 
 ## FAQ
-- `Error: listen EADDRINUSE :::8000`
-    - Terminal: `kill -9 $(lsof -i TCP:8000 | grep LISTEN | awk '{print $2}')`
-- "Your profile can not be used because it is from a newer version of NW.js." 
-    - Terminal: `rm -R ~/Library/Application\ Support/Shift`
-- This project has the ability to build for Windows, but currently only the Mac version is being supported/tested, as it requires a large amount of effort to add another OS to support.
 
-## Debugging
-- Open the app, right click, and select "Inspect" to open Chrome DevTools
+1. Help installing for MacOS
+    1. Move the Application to your Applications folder
+        - If you get a warning like "Cannot be opened because the developer is not verified.", open System Preferences > Security & Privacy > "Open anyway"
+    2. Open the application by double-clicking the icon
+
+2. What should I do if I get one of the following errors?
+    - "Your profile can not be used because it is from a newer version of NW.js." 
+        ```sh
+        $ rm -R ~/Library/Application\ Support/Shift
+        ```
+    - `Error: listen EADDRINUSE :::8000`
+        ```sh
+        $ kill -9 $(lsof -i TCP:8000 | grep LISTEN | awk '{print $2}')
+        ```
+
+3. Does Shift work on Windows OS?
+
+At the moment, only the Mac version is being supported/tested, as it requires a large amount of effort to add another OS to support. With more help, most or all of this project could work on the web, MacOS, and Windows.
 
 ## License
-MIT
+
+[MIT](LICENSE)
