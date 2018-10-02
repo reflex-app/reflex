@@ -1,19 +1,10 @@
 const path = require('path');
 const gulp = require('gulp');
 const concat = require('gulp-concat');
-// var named = require('vinyl-named');
 const sourcemaps = require('gulp-sourcemaps');
-
 const webpackStream = require('webpack-stream');
 const webpack = require('webpack');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-// const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
-// const extractCssPlugin = new ExtractTextPlugin('css/[name].[hash].css');
-// const cssLoader = extractCssPlugin.extract(['css-loader','autoprefixer-loader']);
-// const sassLoader = extractCssPlugin.extract(['css-loader','autoprefixer-loader', 'sass-loader']);
-
-var utils = require('../utils.js');
 var CONFIG = require('../config.js');
 
 const resolve = (to) => {
@@ -48,18 +39,6 @@ gulp.task('javascript:webpack', function() {
         module: {
           rules: [
             {
-              test: /\.js$/,
-              enforce: "pre",
-              use: [
-                {
-                  loader: 'eslint-loader',
-                  options: {
-                    formatter: require('eslint-friendly-formatter')
-                  }
-                }
-              ],
-              exclude: /node_modules/
-            }, {
               test: /\.js$/,
               use: [
                 {

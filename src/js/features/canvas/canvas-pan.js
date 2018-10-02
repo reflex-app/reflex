@@ -41,11 +41,13 @@ if (!canvas.panzoom("isDisabled")) {
         // If pinch-to-zoom
         if (e.ctrlKey) {
             e.preventDefault();
-            var zoomOut = wheel.delta ? wheel.delta < 0 : wheel.deltaY > 0;
-            canvas.panzoom('zoom', zoomOut, {
+
+            canvas.panzoom('zoom', e.originalEvent.wheelDelta < 0, {
                 animate: false,
+                increment: 0.06,
                 focal: e
             });
+
         } else {
             // Otherwise, just pan the canvas
             // Touch/trackpad device
@@ -57,6 +59,6 @@ if (!canvas.panzoom("isDisabled")) {
         }
 
         // Event logging
-        // console.log(wheel, e.ctrlKey);
+        console.log(wheel, e.ctrlKey);
     });
 }

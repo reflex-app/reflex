@@ -12,12 +12,15 @@ gulp.registry(forwardReference());
 requireDir('./gulp/tasks');
 
 // Tasks
-// Runs all of the above tasks and then waits for files to change
-// build --> serve --> watch
+// 1. Default
+// 2. Build
+// 3. Serve
+// 4. App: Compiles the app
+// 5. Release: Drafts a release of the app to Github
 gulp.task('default', gulp.parallel('serve', 'watch'));
 
-// Build the app
-gulp.task('app', gulp.series('build', 'create-package-json:main', 'build-app'));
+// Starts a BrowerSync instance
+gulp.task('build', gulp.series('clean', 'sass', 'javascript', 'handlebars'));
 
 // BrowserSync Server
 gulp.task('serve', gulp.series('build', 'create-package-json:dev', function () {
@@ -28,8 +31,11 @@ gulp.task('serve', gulp.series('build', 'create-package-json:dev', function () {
   });
 }));
 
-// Starts a BrowerSync instance
-gulp.task('build', gulp.series('clean', 'sass', 'javascript', 'handlebars'));
+// Compile the app
+gulp.task('app', gulp.series('build', 'create-package-json:main', 'build-app'));
+
+// Draft a release to Github
+gulp.task('release', gulp.series('build', 'create-package-json:main', 'build-app', 'deploy-app'));
 
 // Watch files for changes
 gulp.task('watch', function () {
