@@ -12,7 +12,8 @@
   "scripts": {
     "start": "kill -9 $(lsof -i TCP:8000 | grep LISTEN | awk '{print $2}') & gulp & nw dist",
     "build": "gulp app",
-    "deploy": "gulp release"
+    "deploy": "gulp release",
+    "test": "mocha"
   },
   "bugs": {
     "url": "https://github.com/nwittwer/shift/issues"
@@ -29,6 +30,7 @@
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-stage-2": "^6.24.1",
     "babel-register": "^6.24.1",
+    "chai": "^4.2.0",
     "chalk": "^1.1.3",
     "css-loader": "^0.28.1",
     "dotenv": "^6.0.0",
@@ -70,6 +72,7 @@
     "less": "^2.7.2",
     "less-loader": "^4.0.3",
     "merge-stream": "^1.0.1",
+    "mocha": "^5.2.0",
     "node-sass": "^4.5.3",
     "nw": "^0.33.1-sdk",
     "opn": "^5.4.0",
