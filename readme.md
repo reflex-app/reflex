@@ -7,11 +7,21 @@
 
 Shift is a free, open-source, part-time project that makes it easy to preview a site at different screen sizes. It's a hybrid web/native application that's currently built on [NW.JS](https://github.com/nwjs/nw.js/) (Node-Webkit).
 
-## Install
+---
 
-**[Download the latest release (MacOS only)](https://github.com/nwittwer/shift/releases/latest)**
+## Download
 
-[Need help installing?](#FAQ)
+**[Download version 0.3.0 (MacOS only)](https://github.com/nwittwer/shift/releases/download/v0.3.0/shift-0.3.0-mac.zip)**
+
+<!-- Or download via CLI:
+```sh
+$ URL=$( curl -s https://api.github.com/repos/nwittwer/shift/releases/latest | grep browser_download_url | cut -d '"' -f 4 )
+$ curl -LO "$URL"
+``` -->
+
+[Having issues installing?](#FAQ)
+
+---
 
 ## Features:
 - [x] MacOS app (hybrid)
@@ -26,11 +36,11 @@ Shift is a free, open-source, part-time project that makes it easy to preview a 
 
 [View upcoming features](https://github.com/nwittwer/shift/projects)
 
+---
+
 ## Contributing
 
 Please take a look at the [upcoming features](https://github.com/nwittwer/shift/projects) and the [open Github issues](https://github.com/nwittwer/shift/issues). 
-
-You can [fork](https://help.github.com/articles/fork-a-repo/) this project to your own Github account, and then [clone](https://help.github.com/articles/cloning-a-repository/) it to your computer.
 
 ### Developing
 
@@ -62,6 +72,8 @@ $ npm run build
 
 Open the app, right click, and select "Inspect" to open Chrome DevTools
 
+---
+
 ## FAQ
 
 1. Help installing for MacOS
@@ -82,6 +94,8 @@ Open the app, right click, and select "Inspect" to open Chrome DevTools
 3. Does Shift work on Windows OS?
 
 At the moment, only the Mac version is being supported/tested, as it requires a large amount of effort to add another OS to support. With more help, most or all of this project could work on the web, MacOS, and Windows.
+
+---
 
 ## License
 
