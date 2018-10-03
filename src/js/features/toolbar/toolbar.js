@@ -3,16 +3,26 @@ app.toolbar = {
     init: function () {
         this.firstLoad();
         app.toolbar.zoomControls.init();
+        app.toolbar.recentURLs.init();
+        app.toolbar.smartURL.init();
     },
 
     firstLoad: function () {
-        app.toolbar.recentURLs.init();
-
         // Bind the "Enter" key => load URL in artboardInnerFrame
         $("#toolbar__url").on('keypress', function (e) {
             if (e.which == 13) {
                 e.preventDefault();
+
+                // As long as the SmartURL is able to be set...
+                var initialURL = $("#toolbar__url").val();
+                if ( app.toolbar.smartURL.make(initialURL) !== false ) {
+                    // Update the URL
+                    var result = app.toolbar.smartURL.make(initialURL);
+                    $("#toolbar__url").val(result);
+                }
+                
                 app.toolbar.updateURL();
+
             }
         });
     },
