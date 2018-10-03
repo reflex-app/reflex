@@ -13,15 +13,23 @@ app.toolbar = {
             if (e.which == 13) {
                 e.preventDefault();
 
-                // As long as the SmartURL is able to be set...
-                var initialURL = $("#toolbar__url").val();
-                if ( app.toolbar.smartURL.make(initialURL) !== false ) {
-                    // Update the URL
-                    var result = app.toolbar.smartURL.make(initialURL);
+                // Try to turn the URL into a "smart" URL
+                // This improves the UX when someone types in something like "localhost:8000"
+                // it will automatically prepend "http://" for them or deal with invalid URLs
+                var url = $("#toolbar__url").val();
+                if ( app.toolbar.smartURL.make(url) !== false ) {
+                    var result = app.toolbar.smartURL.make(url);
                     $("#toolbar__url").val(result);
+
+                    // Save the URL to LocalStorage RecentURLs
+                    app.toolbar.recentURLs.add(e);
+
+                    // Now update the URL
+                    app.toolbar.updateURL();
+                } else {
+                    // Error, not a valid 
+                    alert(`${url} is not a valid URL`);
                 }
-                
-                app.toolbar.updateURL();
 
             }
         });
