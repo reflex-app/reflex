@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+
+<head>
+  <title>Shift Tests</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+  <style>
+    body, html {
+      height: auto!important;
+      overflow: auto!important;
+    }
+    .test-wrapper {
+      height: auto;
+    }
+  </style>
+
+  <!-- Mocha-->
+  <link rel="stylesheet" href="libs/mocha/mocha.css" />
+  <script src="libs/mocha/mocha.js"></script>
+  <script>
+    mocha.setup("bdd")
+  </script>
+
+  <!-- Chai-->
+  <script src="libs/chai.js"></script>
+  <script>
+    expect = chai.expect
+  </script>
+
+  <!-- The .JS files to test-->
+  <script src="../dist/js/app.min.js" type="text/javascript"></script>
+  <script src="../dist/js/templates.js" type="text/javascript"></script>
+
+  <!-- CSS from the app-->
+  <link rel="stylesheet" type="text/css" href="../dist/css/style.css">
+
+</head>
+
+<body>
+  <div id="mocha"></div>
+
+  <!-- Inject the partials/home template-->
+  <div class="test-wrapper">
+    {{> home}}
+  </div>
+
+  <!-- Load the tests below -->
+  <script src="bdd/canvas.js"></script>
+  <script>
+    onload = function () {
+      mocha.run();
+    }
+  </script>
+
+</body>
+
+</html>
