@@ -11,8 +11,5 @@
     "min_height": 400,
     "toolbar": true
   },
-  "chromium-args": "--enable-logging=stderr --enable-experimental-web-platform-features --remote-debugging-port=9999",
-  "webkit": {
-    "plugin": true
-  }
+  "chromium-args": "--enable-logging=stderr --enable-experimental-web-platform-features --remote-debugging-port=9999"
 }
