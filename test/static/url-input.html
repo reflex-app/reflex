@@ -106,14 +106,11 @@
             if (hasHttpPrefix == false && hasDot == false && hasLocalhost == false) {
                 failed = true;
             }
-
-            if (failed === true) {
-                console.log(url + " is not a valid URL.");
-            }
-
+            
             // Add handler below
             // For demo purposes, it highlights the failed tests in red
             if (failed === true) {
+                console.log(url + " is not a valid URL.");
                 $("body").append(`<br> ${s} => <span class='failed'> ${url} </span>`);
             } else {
                 $("body").append(`<br> ${s} => <span class='success'> ${url} </span>`);

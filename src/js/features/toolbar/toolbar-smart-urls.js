@@ -57,12 +57,9 @@ app.toolbar.smartURL = {
             failed = true;
         }
 
-        if (failed === true) {
-            alert(url + " is not a valid URL.");
-        }
-
         // Add handler below
         if (failed === true) {
+            alert(url + " is not a valid URL.");
             return false;
         } else {
             return url;
