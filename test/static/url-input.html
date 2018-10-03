@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>URL Input Test</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body,
+        html {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+            line-height: 2;
+            margin: 0;
+            padding: 0;
+        }
+        .success {
+            color: green;
+        }
+        .failed {
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        var cases = [
+            "http://example.com", // Full URL
+            "HTTP://EXAMPLE.COM", // Full URL with uppercase
+            "https://example.com", // Full URL, https
+            "https://example.com/file/path.html", // Full URL with file path
+            "https://example.com/file/path-dash.html", // Full URL with file path
+            "https://example.com/file/path_dash.html", // Full URL with file path
+            "example.com", // Missing the prefix
+            "example.co.uk", // Missing the prefix
+            "example.io", // Missing the prefix
+            "123example.com", // Missing http, should strip the inital symbols
+            "123.example.com", // Missing http, should strip the inital symbols
+            "123-example.com", // Missing http, should strip the inital symbols
+
+            // The following should fail:
+            "https://example", // Full URL with file path
+            "://example.com", // Missing http, should strip the inital symbols
+            "://example.com/file/path-dash.html", // Missing http, should strip the inital symbols
+            "/example.com", // Missing http, should strip the inital symbols
+            "example", // Not a URL
+            "" // Empty
+        ];
+
+        function testURL(s) {
+            let url = s.toLowerCase();
+
+            var hasHttpPrefix = false;
+            var hasDot = false;
+
+            var failed = false;
+
+            // Step 1: Does it have http:// or https:// ?
+            // The "?" in the Regex accepts http or https
+            if (new RegExp(/https?/).test(url) == true) {
+                hasHttpPrefix = true;
+            }
+
+            // Step 2: Does it have .* (i.e. ".com") ?
+            if (url.includes('.') == true) {
+                hasDot = true;
+            }
+
+            // Logic
+            if (hasHttpPrefix && hasDot) {
+                // It's perfect :)
+                // Format: http[s]://example.com
+            } else if (hasHttpPrefix == false && hasDot == true) {
+                // Check if URL starts with anything besides a letter or digit
+                if (new RegExp(/^[0-9a-z]/).test(url) == false) {
+                    failed = true;
+                } else {
+                    // The URL can be prepended by http:// 
+                    url = "http://" + url;
+                }
+            } else if (hasHttpPrefix == true && hasDot == false) {
+                // no pass, there's no ".com" or similar ending
+                failed = true;
+            } else {
+                // Empty string or unknown error
+                console.log('error' + s);
+                failed = true;
+            }
+
+            // Fail cases where there's no http/http and no top-level domain
+            if (hasHttpPrefix == false && hasDot == false) {
+                failed = true;
+            }
+
+            if (failed === true) {
+                console.log(url + " is not a valid URL.");
+            }
+
+            // Add handler below
+            // For demo purposes, it highlights the failed tests in red
+            if (failed === true) {
+                $("body").append(`<br> ${s} => <span class='failed'> ${url} </span>`);
+            } else {
+                $("body").append(`<br> ${s} => <span class='success'> ${url} </span>`);
+            }
+        }
+
+        // Iterate over each test case
+        for (let i = 0, len = cases.length; i < len; i++) {
+            testURL(cases[i]);
+        }
+    </script>
+</body>
+
+</html>
