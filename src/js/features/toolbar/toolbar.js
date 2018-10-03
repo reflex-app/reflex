@@ -3,16 +3,34 @@ app.toolbar = {
     init: function () {
         this.firstLoad();
         app.toolbar.zoomControls.init();
+        app.toolbar.recentURLs.init();
+        app.toolbar.smartURL.init();
     },
 
     firstLoad: function () {
-        app.toolbar.recentURLs.init();
-
         // Bind the "Enter" key => load URL in artboardInnerFrame
         $("#toolbar__url").on('keypress', function (e) {
             if (e.which == 13) {
                 e.preventDefault();
-                app.toolbar.updateURL();
+
+                // Try to turn the URL into a "smart" URL
+                // This improves the UX when someone types in something like "localhost:8000"
+                // it will automatically prepend "http://" for them or deal with invalid URLs
+                var url = $("#toolbar__url").val();
+                if ( app.toolbar.smartURL.make(url) !== false ) {
+                    var result = app.toolbar.smartURL.make(url);
+                    $("#toolbar__url").val(result);
+
+                    // Save the URL to LocalStorage RecentURLs
+                    app.toolbar.recentURLs.add(e);
+
+                    // Now update the URL
+                    app.toolbar.updateURL();
+                } else {
+                    // Error, not a valid 
+                    alert(`${url} is not a valid URL`);
+                }
+
             }
         });
     },
