@@ -16,19 +16,9 @@ app.toolbar.recentURLs = {
         app.toolbar.recentURLs.show();
 
         // Listen for clicks on the dropdown items
-        $(".toolbar__url-li").on('click', function(e) {
-            $("#toolbar__url").val( $(e.target).text() );
+        $(".toolbar__url-li").on('click', function (e) {
+            $("#toolbar__url").val($(e.target).text());
             app.toolbar.updateURL();
-        });
-
-        // Add to LocalStorage on submit
-        $("#toolbar__url").on('submit keypress', function (e) {
-            // On enter key press
-            if (e.which == 13) {
-                app.toolbar.recentURLs.add(e);
-            } else if (e.type == "submit") {
-                app.toolbar.recentURLs.add(e);
-            }
         });
 
         // When clicking the search, show recent sites
