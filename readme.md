@@ -19,7 +19,7 @@ $ URL=$( curl -s https://api.github.com/repos/nwittwer/shift/releases/latest | g
 $ curl -LO "$URL"
 ``` -->
 
-[Having issues installing?](#FAQ)
+[Having issues installing?](#faq)
 
 ### Features:
 - [x] MacOS app (hybrid)
