@@ -11,7 +11,7 @@ Shift is a free, open-source, part-time project that makes it easy to preview a 
 
 ## Download
 
-**[Download version 0.3.0 (MacOS only)](https://github.com/nwittwer/shift/releases/download/v0.3.0/shift-0.3.0-mac.zip)**
+**[Download version 0.3.1 (MacOS only)](https://github.com/nwittwer/shift/releases/download/v0.3.1/shift-0.3.1-mac.zip)**
 
 <!-- Or download via CLI:
 ```sh
