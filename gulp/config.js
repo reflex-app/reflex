@@ -3,6 +3,7 @@ module.exports = {
   SRC: 'src/',
   DIST: 'dist/',
   SHIP: 'ship/',
+  TEST: 'test/',
 
   SERVER: {
     PORT: 8000

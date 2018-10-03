@@ -1,0 +1,56 @@
+<main>
+
+    {{!--
+    <div class="gui-title-bar">
+      <div class="gui-menu-button"></div>
+      <div class="gui-menu-button"></div>
+      <div class="gui-menu-button"></div>
+    </div> --}}
+
+    <!-- Toolbar w/ data binding to URL and global controls-->
+    <div class="toolbar" id="toolbar">
+      <div id="toolbar__url-container">
+        <input type="text" id="toolbar__url" name="toolbar__url" value="http://localhost:3002" />
+        <div id="toolbar__recentURLs"></div>
+      </div>
+      <div id="toolbar__canvas-controls">
+        <div>
+          <span id="canvas-controls__zoomOut">-</span>
+          <span id="canvas-controls__scale" value="100%" data-bind="scale"></span>
+          <span id="canvas-controls__zoomIn">+</span>
+        </div>
+        {{!-- <span data-bind="scale"></span>
+        --}} {{!-- <a href="#" id="canvas-controls__reset">Reset</a> --}}
+        <a href="#" id="canvas-controls__fit-to-screen">Fit</a>
+      </div>
+      <div>
+        <a href="#" id="canvas-controls__orientation">Orientation</a>
+      </div>
+    </div>
+
+    <!-- Settings Overlay -->
+    <div id="settings" class="app__settings">
+      <div class="settings__inner">
+        <h1>Settings</h1>
+        <span>Experimental</span>
+        <div class="form__group">
+          <input type="checkbox" name="settings__allow-x-frame-origins">
+          <label for="settings__allow-x-frame-origins">Disable X-Frame-Origin (WebView)</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Define the resizable canvas area-->
+    <div id="canvas" class="canvas">
+      <!-- Constrain the contents. Used for scroll-wheel zooming. -->
+      <div class="inner">
+        <!-- Define the horizontal artbaord container-->
+        <div id="artboards" class="artboards">
+          <!-- Each artboard-->
+          {{>artboard width="1440" height="1024"}} {{>artboard width="768" height="1024"}} {{>artboard width="320"
+          height="1024"}}
+        </div>
+      </div>
+    </div>
+
+  </main>
