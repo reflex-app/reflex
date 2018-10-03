@@ -3,12 +3,17 @@ app.toolbar.smartURL = {
 
     // Makes a smart URL
     // Returns a new URL or false if there was an issue
-    make: function (s) {
-        let url = s.toLowerCase();
+    make: function (url) {
+        if (typeof url !== 'string') {
+            throw new TypeError(`Expected \`url\` to be of type \`string\`, got \`${typeof url}\``);
+        }
+
         let hasHttpPrefix = false;
         let hasDot = false;
         let hasLocalhost = false;
         let failed = false;
+
+        url = url.toLowerCase();
 
         // Step 1: Does it have http:// or https:// ?
         // The "?" in the Regex accepts http or https
@@ -27,7 +32,7 @@ app.toolbar.smartURL = {
         }
 
         // Logic
-        if (hasHttpPrefix && hasDot) {
+        if (hasHttpPrefix && hasDot || hasLocalhost) {
             // Perfect format:
             // http[s]://example.com
         } else if (hasHttpPrefix == false && hasDot == true && hasLocalhost == false) {
@@ -37,11 +42,6 @@ app.toolbar.smartURL = {
                 failed = true;
             } else {
                 // The URL can be prepended by http:// 
-                url = "http://" + url;
-            }
-        } else if (hasLocalhost == true) {
-            if (!hasHttpPrefix) {
-                // Case: "localhost:8000"
                 url = "http://" + url;
             }
         } else if (hasHttpPrefix == true && hasDot == false && hasLocalhost == false) {
@@ -59,7 +59,8 @@ app.toolbar.smartURL = {
 
         // Add handler below
         if (failed === true) {
-            alert(url + " is not a valid URL.");
+            // Handle errors here
+            // Example: alert(url + " is not a valid URL.");
             return false;
         } else {
             return url;

@@ -10,9 +10,15 @@
         body,
         html {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-            line-height: 2;
+            line-height: 1.5;
             margin: 0;
-            padding: 0;
+            padding: 2rem 4rem;
+        }
+        .item {
+            margin-bottom: 2rem;
+        }
+        .label {
+            display: block;
         }
         .success {
             color: green;
@@ -27,37 +33,44 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script type="text/javascript">
-        var cases = [
-            "http://example.com", // Full URL
-            "HTTP://EXAMPLE.COM", // Full URL with uppercase
-            "https://example.com", // Full URL, https
-            "https://example.com/file/path.html", // Full URL with file path
-            "https://example.com/file/path-dash.html", // Full URL with file path
-            "https://example.com/file/path_dash.html", // Full URL with file path
-            "example.com", // Missing the prefix
-            "example.co.uk", // Missing the prefix
-            "example.io", // Missing the prefix
-            "123example.com", // Missing http, should strip the inital symbols
-            "123.example.com", // Missing http, should strip the inital symbols
-            "123-example.com", // Missing http, should strip the inital symbols
-            "localhost:8000", // Missing http, should strip the inital symbols
-            "http://localhost:8000", // Missing http, should strip the inital symbols
+        var cases = {
+            "Full URL": "http://example.com",
+            "Full URL with uppercase": "HTTP://EXAMPLE.COM",
+            "Full URL, https": "https://example.com",
+            "Full URL with file path": "https://example.com/file/path.html",
+            "Full URL + file path + dash": "https://example.com/file/path-dash.html",
+            "Full URL + file path + underscore": "https://example.com/file/path_dash.html",
+            "Missing http:// + .com": "example.com",
+            "Missing http:// + non-.com domain": "example.co.uk",
+            "Missing http:// + non-.com domain 2": "example.io",
+            "Number + string": "123example.com",
+            "Subdomain": "123.example.com",
+            "Number + dash + .com": "123-example.com",
+            "Missing HTTP": "localhost:8000",
+            "Http + Localhost": "http://localhost:8000",
+            "Http + local URL": "http: //nw.local:5757",
+            "Http + number + port": "http://192.168.0.3:5757/",
 
             // The following should fail:
-            "https://example", // Full URL with file path
-            "://example.com", // Missing http, should strip the inital symbols
-            "://example.com/file/path-dash.html", // Missing http, should strip the inital symbols
-            "/example.com", // Missing http, should strip the inital symbols
-            "example", // Not a URL
-            "" // Empty
-        ];
+            "Missing .com or similar": "https://example",
+            "Misc. symbols": "://example.com",
+            "Misc. symbols + file path + dash": "://example.com/file/path-dash.html",
+            "Misc. symbol before": "/example.com", // 
+            "Missing http:// and missing .com": "example",
+            "Empty string": "" // Empty
+        };
 
-        function testURL(s) {
-            let url = s.toLowerCase();
+        function testURL(url) {
+            if (typeof url !== 'string') {
+                throw new TypeError(`Expected \`url\` to be of type \`string\`, got \`${typeof url}\``);
+            }
+
             let hasHttpPrefix = false;
             let hasDot = false;
             let hasLocalhost = false;
             let failed = false;
+
+            url = url.toLowerCase();
 
             // Step 1: Does it have http:// or https:// ?
             // The "?" in the Regex accepts http or https
@@ -76,7 +89,7 @@
             }
 
             // Logic
-            if (hasHttpPrefix && hasDot) {
+            if (hasHttpPrefix && hasDot || hasLocalhost) {
                 // Perfect format:
                 // http[s]://example.com
             } else if (hasHttpPrefix == false && hasDot == true && hasLocalhost == false) {
@@ -88,17 +101,11 @@
                     // The URL can be prepended by http:// 
                     url = "http://" + url;
                 }
-            } else if (hasLocalhost == true) {
-                if ( !hasHttpPrefix ) {
-                    // Case: "localhost:8000"
-                    url = "http://" + url;
-                }
             } else if (hasHttpPrefix == true && hasDot == false && hasLocalhost == false) {
                 // no pass, there's no ".com" or similar ending
                 failed = true;
             } else {
                 // Empty string or unknown error
-                console.log('error' + s);
                 failed = true;
             }
 
@@ -108,18 +115,47 @@
             }
             
             // Add handler below
-            // For demo purposes, it highlights the failed tests in red
             if (failed === true) {
-                console.log(url + " is not a valid URL.");
-                $("body").append(`<br> ${s} => <span class='failed'> ${url} </span>`);
+                // Handle errors here
+                // Example: alert(url + " is not a valid URL.");
+                return false;
             } else {
-                $("body").append(`<br> ${s} => <span class='success'> ${url} </span>`);
+                return url;
             }
         }
 
         // Iterate over each test case
         for (let i = 0, len = cases.length; i < len; i++) {
-            testURL(cases[i]);
+            var test = testURL(cases[i]);
+
+            if (test !== false) {
+                $("body").append(`<br> ${cases[i]} => <span class='success'> ${test} </span>`);
+            } else {
+                $("body").append(`<br> ${cases[i]} => <span class='failed'>false</span>`);
+            }
+        }
+
+        for (const [key, value] of Object.entries(cases)) {
+            console.log(key, value);
+
+            var test = testURL(cases[key]);
+
+            if (test !== false) {
+                $("body").append(
+                    `<div class="item">
+                        <div class="label">${key}:</div> 
+                        ${value} => <span class='success'>${test}</span>
+                    </div>`
+                );
+            } else {
+                $("body").append(
+                    `<div class="item">
+                        <div class="label">${key}:</div> 
+                        ${value} => <span class='failed'>${test}</span>
+                    </div>`
+                );
+            }
+
         }
     </script>
 </body>
