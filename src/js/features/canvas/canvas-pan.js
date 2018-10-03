@@ -21,7 +21,7 @@ $.fn.wheel = function (callback) {
 };
 
 // Target element
-var outerCanvas = $("#canvas");
+var outerCanvas = $("main");
 
 // Detect mouse wheel vs. trackpad pinches
 // Then either scroll or zoom
