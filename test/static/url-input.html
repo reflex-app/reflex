@@ -40,6 +40,8 @@
             "123example.com", // Missing http, should strip the inital symbols
             "123.example.com", // Missing http, should strip the inital symbols
             "123-example.com", // Missing http, should strip the inital symbols
+            "localhost:8000", // Missing http, should strip the inital symbols
+            "http://localhost:8000", // Missing http, should strip the inital symbols
 
             // The following should fail:
             "https://example", // Full URL with file path
@@ -52,11 +54,10 @@
 
         function testURL(s) {
             let url = s.toLowerCase();
-
-            var hasHttpPrefix = false;
-            var hasDot = false;
-
-            var failed = false;
+            let hasHttpPrefix = false;
+            let hasDot = false;
+            let hasLocalhost = false;
+            let failed = false;
 
             // Step 1: Does it have http:// or https:// ?
             // The "?" in the Regex accepts http or https
@@ -69,11 +70,17 @@
                 hasDot = true;
             }
 
+            // Step 3: Does it include "localhost"?
+            if (url.includes('localhost') == true) {
+                hasLocalhost = true;
+            }
+
             // Logic
             if (hasHttpPrefix && hasDot) {
-                // It's perfect :)
-                // Format: http[s]://example.com
-            } else if (hasHttpPrefix == false && hasDot == true) {
+                // Perfect format:
+                // http[s]://example.com
+            } else if (hasHttpPrefix == false && hasDot == true && hasLocalhost == false) {
+                // Case: example.com
                 // Check if URL starts with anything besides a letter or digit
                 if (new RegExp(/^[0-9a-z]/).test(url) == false) {
                     failed = true;
@@ -81,7 +88,12 @@
                     // The URL can be prepended by http:// 
                     url = "http://" + url;
                 }
-            } else if (hasHttpPrefix == true && hasDot == false) {
+            } else if (hasLocalhost == true) {
+                if ( !hasHttpPrefix ) {
+                    // Case: "localhost:8000"
+                    url = "http://" + url;
+                }
+            } else if (hasHttpPrefix == true && hasDot == false && hasLocalhost == false) {
                 // no pass, there's no ".com" or similar ending
                 failed = true;
             } else {
@@ -91,7 +103,7 @@
             }
 
             // Fail cases where there's no http/http and no top-level domain
-            if (hasHttpPrefix == false && hasDot == false) {
+            if (hasHttpPrefix == false && hasDot == false && hasLocalhost == false) {
                 failed = true;
             }
 
