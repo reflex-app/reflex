@@ -1,36 +1,34 @@
 app.settings = {
-    init: function() {
+    init: function () {
         // Start the artboard sizes
         app.settings.artboardSizes.init();
     },
 
-    firstLoad: function() {
-    }
+    firstLoad: function () {}
 }
 
 //
 // Custom menubar
 //
-// Create menu container
-var Menu = new nw.Menu({
-    type: 'menubar'
-});
-//initialize default mac menu
-Menu.createMacBuiltin(nw.App.manifest.name);
-// Get the root menu from the default mac menu
-var rootMenu = Menu.items[0].submenu;
-// Append new item to root menu
-rootMenu.insert(
-    new nw.MenuItem({
-        label: 'Preferences',
-        click: function () {
-            toggleSettings();
-        }
-    }), 1 // <-- 0-index where you want to insert
-);
-// Append Menu to Window
+// Create menu container	
+var Menu = new nw.Menu({	
+    type: 'menubar'	
+});	
+//initialize default mac menu	
+Menu.createMacBuiltin(nw.App.manifest.name);	
+// Get the root menu from the default mac menu	
+var rootMenu = Menu.items[0].submenu;	
+// Append new item to root menu	
+rootMenu.insert(	
+    new nw.MenuItem({	
+        label: 'Preferences',	
+        click: function () {	
+            toggleSettings();	
+        }	
+    }), 1 // <-- 0-index where you want to insert	
+);	
+// Append Menu to Window	
 nw.Window.get().menu = Menu;
-
 
 // Click function
 function toggleSettings() {

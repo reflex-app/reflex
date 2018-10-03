@@ -10,7 +10,11 @@ var merge = require('merge-stream');
 
 const CONFIG = require('../config.js');
 
-gulp.task('handlebars', gulp.series('handlebars:precompile', 'handlebars:main'))
+gulp.task('handlebars', gulp.series(
+  'handlebars:precompile',
+  'handlebars:main',
+  'handlebars:tests'
+))
 
 gulp.task('handlebars:precompile', () => {
   return gulp.src(CONFIG.SRC + 'pages/*.hbs')
@@ -38,4 +42,18 @@ gulp.task('handlebars:main', function () {
     // Output both the partials and the templates as build/js/templates.js
     .pipe(concat('templates.js'))
     .pipe(gulp.dest(CONFIG.DIST + 'js/'));
+});
+
+// Compile the test/index.hbs file to .html and create the partials
+// This makes it easy to insert the latest content into the tests
+gulp.task('handlebars:tests', function () {
+  return gulp.src(CONFIG.TEST + '*.hbs')
+    .pipe(compileHandlebars({}, {
+      ignorePartials: true,
+      batch: [CONFIG.SRC + '/partials']
+    }))
+    .pipe(rename({
+      extname: '.html'
+    }))
+    .pipe(gulp.dest(CONFIG.TEST));
 });
