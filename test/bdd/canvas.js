@@ -1,7 +1,3 @@
-/**
- * Shift tests
- */
-
 describe('Canvas', function () {
 	var artboards = $("#artboards");
 	var artboard = $(".artboard");
