@@ -13,12 +13,20 @@ app.toolbar.smartURL = {
         let hasLocalhost = false;
         let hasLocalPath = false;
 
-        url = url.toLowerCase();
-
         // Step 1: Does it have http:// or https:// ?
         // The "?" in the Regex accepts http or https
-        if (new RegExp(/https?/).test(url) == true) {
+        if (new RegExp(/^https?/).test(url) == true) {
             hasHttpPrefix = true;
+        } else if (new RegExp(/^HTTPS?/).test(url)) {
+            // Case: HTTP://somesite.com/SOMETHING
+            //         ^ only replace this part            
+            if (new RegExp(/^HTTP/).test(url)) {
+                url = url.replace(/^HTTP/, "http")
+                hasHttpPrefix = true;
+            } else if (new RegExp(/^HTTPS/).test(url)) {
+                url = url.replace(/^HTTPS/, "https")
+                hasHttpPrefix = true;
+            }
         }
 
         // Step 2: Does it have .* (i.e. ".com") ?
