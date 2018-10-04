@@ -11,7 +11,7 @@ app.toolbar.smartURL = {
         let hasHttpPrefix = false;
         let hasDot = false;
         let hasLocalhost = false;
-        let failed = false;
+        let hasLocalPath = false;
 
         url = url.toLowerCase();
 
@@ -31,6 +31,13 @@ app.toolbar.smartURL = {
             hasLocalhost = true;
         }
 
+        // Step 4: Does it include:
+        // Mac: "file://"
+        // Windows: "file:///C:/"
+        if (url.includes('file://') == true) {
+            hasLocalPath = true;
+        }
+
         // Handle localhost URLs
         if (hasLocalhost) {
             if (hasHttpPrefix) {
@@ -41,6 +48,13 @@ app.toolbar.smartURL = {
                 return url;
             }
         }
+
+        // Handle local paths
+        if (hasLocalPath) {
+            // Example: file:///users/nick/sites/index.html
+            return url;
+        }
+
         // Handle non-localhost URLs
         if (hasHttpPrefix && hasDot) {
             // Perfect format:
