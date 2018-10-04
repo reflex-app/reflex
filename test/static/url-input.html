@@ -32,113 +32,43 @@
 <body>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="../../dist/js/app.min.js" type="text/javascript"></script>
+    <script src="../../dist/js/templates.js" type="text/javascript"></script>
+
     <script type="text/javascript">
-        var cases = {
-            "Full URL": "http://example.com",
-            "Full URL with uppercase": "HTTP://EXAMPLE.COM",
-            "Full URL, https": "https://example.com",
-            "Full URL with file path": "https://example.com/file/path.html",
-            "Full URL + file path + dash": "https://example.com/file/path-dash.html",
-            "Full URL + file path + underscore": "https://example.com/file/path_dash.html",
-            "Missing http:// + .com": "example.com",
-            "Missing http:// + non-.com domain": "example.co.uk",
-            "Missing http:// + non-.com domain 2": "example.io",
-            "Number + string": "123example.com",
-            "Subdomain": "123.example.com",
-            "Number + dash + .com": "123-example.com",
-            "Missing HTTP": "localhost:8000",
-            "Http + Localhost": "http://localhost:8000",
-            "Http + local URL": "http: //nw.local:5757",
-            "Http + number + port": "http://192.168.0.3:5757/",
+        var cases = [
+            "http://example.com",
+            "https://example.com",
+            "http://example.com/SOMETHING.HTML",
+            "https://example.com/file/path.html",
+            "https://example.com/file/path-dash.html",
+            "https://example.com/file/path_dash.html",
+            "example.com",
+            "example.co.uk",
+            "example.io",
+            "123example.com",
+            "123.example.com",
+            "123-example.com",
+            "localhost:8000",
+            "http://localhost:8000",
+            "http://my-url.com/localhost/",
+            "http://nw.local:5757",
+            "http://192.168.0.3:5757/",
+            "file:///Users/Nick/Sites/index.html",
+            "file:///C:/something",
+            "example.com",
 
             // The following should fail:
-            "Missing .com or similar": "https://example",
-            "Misc. symbols": "://example.com",
-            "Misc. symbols + file path + dash": "://example.com/file/path-dash.html",
-            "Misc. symbol before": "/example.com", // 
-            "Missing http:// and missing .com": "example",
-            "Empty string": "" // Empty
-        };
-
-        function testURL(url) {
-            if (typeof url !== 'string') {
-                throw new TypeError(`Expected \`url\` to be of type \`string\`, got \`${typeof url}\``);
-            }
-
-            let hasHttpPrefix = false;
-            let hasDot = false;
-            let hasLocalhost = false;
-            let failed = false;
-
-            url = url.toLowerCase();
-
-            // Step 1: Does it have http:// or https:// ?
-            // The "?" in the Regex accepts http or https
-            if (new RegExp(/https?/).test(url) == true) {
-                hasHttpPrefix = true;
-            }
-
-            // Step 2: Does it have .* (i.e. ".com") ?
-            if (url.includes('.') == true) {
-                hasDot = true;
-            }
-
-            // Step 3: Does it include "localhost"?
-            if (url.includes('localhost') == true) {
-                hasLocalhost = true;
-            }
-
-            // Logic
-            if (hasHttpPrefix && hasDot || hasLocalhost) {
-                // Perfect format:
-                // http[s]://example.com
-            } else if (hasHttpPrefix == false && hasDot == true && hasLocalhost == false) {
-                // Case: example.com
-                // Check if URL starts with anything besides a letter or digit
-                if (new RegExp(/^[0-9a-z]/).test(url) == false) {
-                    failed = true;
-                } else {
-                    // The URL can be prepended by http:// 
-                    url = "http://" + url;
-                }
-            } else if (hasHttpPrefix == true && hasDot == false && hasLocalhost == false) {
-                // no pass, there's no ".com" or similar ending
-                failed = true;
-            } else {
-                // Empty string or unknown error
-                failed = true;
-            }
-
-            // Fail cases where there's no http/http and no top-level domain
-            if (hasHttpPrefix == false && hasDot == false && hasLocalhost == false) {
-                failed = true;
-            }
-            
-            // Add handler below
-            if (failed === true) {
-                // Handle errors here
-                // Example: alert(url + " is not a valid URL.");
-                return false;
-            } else {
-                return url;
-            }
-        }
-
-        // Iterate over each test case
-        for (let i = 0, len = cases.length; i < len; i++) {
-            var test = testURL(cases[i]);
-
-            if (test !== false) {
-                $("body").append(`<br> ${cases[i]} => <span class='success'> ${test} </span>`);
-            } else {
-                $("body").append(`<br> ${cases[i]} => <span class='failed'>false</span>`);
-            }
-        }
+            "HTTP://EXAMPLE.COM",
+            "https://example",
+            "://example.com/file/path-dash.html",
+            "/example.com",
+            "example",
+            ""
+        ];
 
         for (const [key, value] of Object.entries(cases)) {
-            console.log(key, value);
-
-            var test = testURL(cases[key]);
+            var test = app.toolbar.smartURL.make(cases[key]);
 
             if (test !== false) {
                 $("body").append(
@@ -155,7 +85,6 @@
                     </div>`
                 );
             }
-
         }
     </script>
 </body>
