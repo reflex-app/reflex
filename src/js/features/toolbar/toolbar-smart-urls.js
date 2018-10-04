@@ -31,39 +31,35 @@ app.toolbar.smartURL = {
             hasLocalhost = true;
         }
 
-        // Logic
-        if (hasHttpPrefix && hasDot || hasLocalhost) {
+        // Handle localhost URLs
+        if (hasLocalhost) {
+            if (hasHttpPrefix) {
+                // Example: http://localhost:8000
+                return url;
+            } else {
+                url = "http://" + url;
+                return url;
+            }
+        }
+        // Handle non-localhost URLs
+        if (hasHttpPrefix && hasDot) {
             // Perfect format:
             // http[s]://example.com
-        } else if (hasHttpPrefix == false && hasDot == true && hasLocalhost == false) {
+            return url;
+        } else if (hasHttpPrefix == false && hasDot == true) {
             // Case: example.com
             // Check if URL starts with anything besides a letter or digit
             if (new RegExp(/^[0-9a-z]/).test(url) == false) {
-                failed = true;
+                return false;
             } else {
                 // The URL can be prepended by http:// 
                 url = "http://" + url;
+                return url;
             }
-        } else if (hasHttpPrefix == true && hasDot == false && hasLocalhost == false) {
-            // no pass, there's no ".com" or similar ending
-            failed = true;
         } else {
             // Empty string or unknown error
-            failed = true;
-        }
-
-        // Fail cases where there's no http/http and no top-level domain
-        if (hasHttpPrefix == false && hasDot == false && hasLocalhost == false) {
-            failed = true;
-        }
-
-        // Add handler below
-        if (failed === true) {
-            // Handle errors here
             // Example: alert(url + " is not a valid URL.");
             return false;
-        } else {
-            return url;
         }
     }
 }
