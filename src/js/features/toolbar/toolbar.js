@@ -77,30 +77,30 @@ app.toolbar = {
     },
 
     handleartboardInnerFrameChild: function ($el) {
-        // Run on trigger
-        app.toolbar.injectartboardInnerFrameChildScript($el);
+        // // Run on trigger
+        // app.toolbar.injectartboardInnerFrameChildScript($el);
 
-        // Listen for events
-        window.addEventListener('message', function (e) {
-            if (app.environment == "dev") {
-                console.log("Returned message:" + e.data);
-            }
+        // // Listen for events
+        // window.addEventListener('message', function (e) {
+        //     if (app.environment == "dev") {
+        //         console.log("Returned message:" + e.data);
+        //     }
 
-            // Inject the script again
-            app.toolbar.updateURL();
-        });
+        //     // Inject the script again
+        //     app.toolbar.updateURL();
+        // });
 
-        // Send a message to establish connection
-        try {
-            $el.contentWindow.postMessage('hi', '*');
-            if (app.environment == "dev") {
-                console.log("message sent to artboardInnerFrame");
-            }
-        } catch (e) {
-            if (app.environment == "dev") {
-                console.log('message to artboardInnerFrame failed');
-            }
-        }
+        // // Send a message to establish connection
+        // try {
+        //     $el.contentWindow.postMessage('hi', '*');
+        //     if (app.environment == "dev") {
+        //         console.log("message sent to artboardInnerFrame");
+        //     }
+        // } catch (e) {
+        //     if (app.environment == "dev") {
+        //         console.log('message to artboardInnerFrame failed');
+        //     }
+        // }
     },
 
     injectartboardInnerFrameChildScript: function ($el) {
