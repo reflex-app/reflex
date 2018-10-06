@@ -46,12 +46,10 @@ app.toolbar = {
             $(this).attr("src", url_val);
 
             // Show loading spinner
-            $(this).on("loadstart", function () {
-                app.toolbar.isLoading(true, url_val)
-            });
+            app.toolbar.isLoading(true, url_val);
 
             // Site is loaded
-            $(this).on("loadstop", function () {
+            $(this).on("load", function () {
                 // Hide loading spinner
                 app.toolbar.isLoading(false, url_val);
                 // Unregister the load event of any previous artboardInnerFrames
@@ -75,8 +73,6 @@ app.toolbar = {
                 console.log('Finished Loading: ' + url);
             }
             loading_el.removeClass('is-loading');
-        } else {
-            // No action
         }
     },
 
@@ -108,18 +104,18 @@ app.toolbar = {
     },
 
     injectartboardInnerFrameChildScript: function ($el) {
-        if (app.environment == "dev") {
-            console.log('Link click script injected');
-        }
+        // if (app.environment == "dev") {
+        //     console.log('Link click script injected');
+        // }
 
         // Inject a script into the artboardInnerFrame to track click events and propagate it to the parent
         // Make sure to run this function again after click (re-inject)
-        var injection_code = `
-        window.addEventListener('message', function (e) {
-            document.querySelector("a").onclick = function (r) {
-                e.source.postMessage("hello there", "*");
-            }
-        })`;
+        // var injection_code = `
+        // window.addEventListener('message', function (e) {
+        //     document.querySelector("a").onclick = function (r) {
+        //         e.source.postMessage("hello there", "*");
+        //     }
+        // })`;
 
         // $el.addContentScripts([{
         //     name: 'myRule',
@@ -131,9 +127,9 @@ app.toolbar = {
         // }]);
 
         // Inject click handler
-        $el.executeScript({
-            code: injection_code
-        });
+        // $el.executeScript({
+        //     code: injection_code
+        // });
     }
 
 }
