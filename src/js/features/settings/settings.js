@@ -8,18 +8,24 @@ app.settings = {
 }
 
 //
-// Custom menubar
+// Custom Mac menubar
 //	
-var nw;
-if (nw) {
+if (app.platform == "native") {
+
+    // Make the NW window object accessible
+    let win = nw.Window.get();
+
     // Create menu container
     var Menu = new nw.Menu({
         type: 'menubar'
     });
+
     //initialize default mac menu
     Menu.createMacBuiltin(nw.App.manifest.name);
+
     // Get the root menu from the default mac menu
     var rootMenu = Menu.items[0].submenu;
+
     // Append new item to root menu
     rootMenu.insert(
         new nw.MenuItem({
@@ -29,8 +35,9 @@ if (nw) {
             }
         }), 1 // <-- 0-index where you want to insert
     );
+
     // Append Menu to Window
-    nw.Window.get().menu = Menu;
+    win.menu = Menu;
 }
 
 // Click function
