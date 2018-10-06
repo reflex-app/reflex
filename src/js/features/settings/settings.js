@@ -58,8 +58,6 @@ function toggleSettings() {
 
 function clickOutside(event) {
     if (!$(event.target).closest('.settings__inner').length && !$(event.target).is('.settings__inner')) {
-        // $("body").find("#settings").removeClass("is-visible");
         toggleSettings();
-        console.log('should remove');
     }
 }

@@ -17,7 +17,7 @@ app.toolbar = {
                 // This improves the UX when someone types in something like "localhost:8000"
                 // it will automatically prepend "http://" for them or deal with invalid URLs
                 var url = $("#toolbar__url").val();
-                if ( app.toolbar.smartURL.make(url) !== false ) {
+                if (app.toolbar.smartURL.make(url) !== false) {
                     var result = app.toolbar.smartURL.make(url);
                     $("#toolbar__url").val(result);
 
@@ -42,9 +42,6 @@ app.toolbar = {
         artboardInnerFrame = $("iframe");
 
         artboardInnerFrame.each(function () {
-
-            console.log($(this));
-
             // Update artboardInnerFrame src
             $(this).attr("src", url_val);
 
@@ -69,10 +66,14 @@ app.toolbar = {
         var loading_el = $(".artboard__loader");
 
         if (condition === true) {
-            console.log('Loading: ' + url);
+            if (app.environment == "dev") {
+                console.log('Loading: ' + url);
+            }
             loading_el.addClass('is-loading');
         } else if (condition === false) {
-            console.log('Finished Loading: ' + url);
+            if (app.environment == "dev") {
+                console.log('Finished Loading: ' + url);
+            }
             loading_el.removeClass('is-loading');
         } else {
             // No action
@@ -85,7 +86,10 @@ app.toolbar = {
 
         // Listen for events
         window.addEventListener('message', function (e) {
-            console.log("Returned message:" + e.data);
+            if (app.environment == "dev") {
+                console.log("Returned message:" + e.data);
+            }
+
             // Inject the script again
             app.toolbar.updateURL();
         });
@@ -93,14 +97,20 @@ app.toolbar = {
         // Send a message to establish connection
         try {
             $el.contentWindow.postMessage('hi', '*');
-            console.log("message sent to artboardInnerFrame");
+            if (app.environment == "dev") {
+                console.log("message sent to artboardInnerFrame");
+            }
         } catch (e) {
-            console.log('message to artboardInnerFrame failed');
+            if (app.environment == "dev") {
+                console.log('message to artboardInnerFrame failed');
+            }
         }
     },
 
     injectartboardInnerFrameChildScript: function ($el) {
-        console.log('Link click script injected');
+        if (app.environment == "dev") {
+            console.log('Link click script injected');
+        }
 
         // Inject a script into the artboardInnerFrame to track click events and propagate it to the parent
         // Make sure to run this function again after click (re-inject)

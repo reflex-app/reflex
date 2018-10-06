@@ -25,12 +25,16 @@ app.settings.artboardSizes = {
         // Return the localStorage
         if (localStorage[this.localStorageKey] == null || !localStorage[this.localStorageKey]) {
             // Nothing is defined!
-            console.log('Undefined');
+            if (app.environment == "dev") {
+                console.log('localStorage: No Artboard sizes exist');
+            }
             app.settings.artboardSizes.createLocalStorage();
         } else {
             // It's defined!
             // Use the saved sizes
-            console.log('It exists');
+            if (app.environment == "dev") {
+                console.log('localStorage: Artboard sizes exists');
+            }
             app.settings.artboardSizes.restorePreviousFromLocalStorage();
         }
     },
@@ -41,7 +45,9 @@ app.settings.artboardSizes = {
             this.localStorageObject = JSON.parse(localStorage.getItem(this.localStorageKey));
             return this.localStorageObject;
         } else {
-            console.log('No local storage exists')
+            if (app.environment == "dev") {
+                console.log('No local storage exists')
+            }
         }
     },
 
@@ -60,7 +66,9 @@ app.settings.artboardSizes = {
         app.settings.artboardSizes.updateLocalStorageObject();
 
         // Add to LocalStorage
-        console.log('Added to localstorage: ', app.settings.artboardSizes.updateLocalStorageObject());
+        if (app.environment == "dev") {
+            console.log('Added to localstorage: ', app.settings.artboardSizes.updateLocalStorageObject());
+        }
     },
 
     /**
@@ -80,7 +88,8 @@ app.settings.artboardSizes = {
             if (object.hasOwnProperty(key)) {
                 var instance = object[key];
                 app.artboard.add("after", null, instance.width, instance.height, "fromEmpty");
-                console.log(key, instance);
+                // Testing
+                // if ( app.environment == "dev" ) { console.log(key, instance); }
             }
         }
     },
@@ -89,8 +98,6 @@ app.settings.artboardSizes = {
      * Updates the existing localStorage definition with the sizes of the current artboards
      */
     updateLocalStorage: function () {
-        console.log(this.localStorageObject.length);
-
         // Add to existing
         if (this.localStorageObject.length >= 1 && this.localStorageObject.length !== null) {
             // localStorage key exists!
@@ -106,11 +113,14 @@ app.settings.artboardSizes = {
             // Update our local variable
             app.settings.artboardSizes.updateLocalStorageObject();
         } else {
-            console.log('issue');
+            // @TODO Add a UI alert for this error
+            console.log('There was a problem updating localStorage.');
         }
 
-        // Add to LocalStorage
-        console.log('Added to localstorage: ', app.settings.artboardSizes.updateLocalStorageObject());
+        // Log event when localStorage has been updated
+        if ( app.environment == "dev" ) {
+            console.log('Added Artboard(s) to localstorage: ', app.settings.artboardSizes.updateLocalStorageObject()[0]);
+        }
     }
 
 }
