@@ -87,6 +87,7 @@ $artboard-handle-height: 1rem;
         position: relative;
         border: 1px solid white;
         box-sizing: border-box;
+        background: darken(#3c4046, 10%);
 
         webview,
         iframe {
