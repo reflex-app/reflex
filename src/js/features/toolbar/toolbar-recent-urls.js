@@ -16,8 +16,16 @@ app.toolbar.recentURLs = {
         app.toolbar.recentURLs.show();
 
         // Listen for clicks on the dropdown items
-        $(".toolbar__url-li").on('click', function (e) {
+        // Note, these will be cached
+        $(document).on('click', '.toolbar__url-li', function (e) {
+            if (app.environment == "dev") {
+                console.log($(e.target), $(e.target).text());
+            }
+
+            // Set the value based on the clicked target
             $("#toolbar__url").val($(e.target).text());
+
+            // Update the URL in the iframes
             app.toolbar.updateURL();
         });
 
