@@ -59,6 +59,8 @@ if (!canvas.panzoom("isDisabled")) {
         }
 
         // Event logging
-        console.log(wheel, e.ctrlKey);
+        // if ( app.environment == "dev" ) { 
+        //     console.log(`${JSON.stringify(wheel)}, ${e.ctrlKey}`);
+        //  }
     });
 }

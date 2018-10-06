@@ -15,7 +15,7 @@ $(window).on('resize', function () {
     window.resizedFinished = setTimeout(function () {
         canvasMinSize.update();
         canvas.panzoom('resetDimensions');
-        // console.log(app.minScaleX, app.minScaleY, canvasMinSize.x, canvasMinSize.y);
+        // if ( app.environment == "dev" ) { console.log(app.minScaleX, app.minScaleY, canvasMinSize.x, canvasMinSize.y); }
     }, 250);
 });
 
@@ -24,7 +24,10 @@ $("#canvas-controls__fit-to-screen").on('click', function () {
     canvasMinSize.update();
     canvas.panzoom("setTransform", 'scale(' + Math.min(canvasMinSize.x, canvasMinSize.y) + ')');
     updateScale("fromCanvas");
-    console.log(app.minScaleX, app.minScaleY, "scale:", canvasMinSize.x, canvasMinSize.y);
+    
+    // if (app.environment == "dev") {
+    //     console.log(app.minScaleX, app.minScaleY, "scale:", canvasMinSize.x, canvasMinSize.y);
+    // }
 });
 
 // ===============================
@@ -62,7 +65,7 @@ $(canvasControls.scale).on('keypress', function (e) {
 function updateScale(arg) {
     var input_val = bindings.scale.replace(/\D/g, '') + "%";
     var panzoom_val = Math.round(canvas.panzoom("getMatrix")[0] * 4) / 4 * 100 + "%";
-    // console.log(arg, input_val, panzoom_val);
+    // if ( app.environment == "dev" ) { console.log(arg, input_val, panzoom_val); }
 
     if (arg != undefined) {
         if (arg === "fromCanvas") {
@@ -73,9 +76,7 @@ function updateScale(arg) {
             // Also update the canvas' value
             var new_decimal = parseFloat(input_val) / 100;
             var new_decimal_asPercent = (new_decimal * 100) + "%";
-            canvas.panzoom("zoom", new_decimal, {
-                // silent: true
-            });
+            canvas.panzoom("zoom", new_decimal);
             input_val = bindings.scale.replace(/\D/g, '') + "%";
         }
     } else {

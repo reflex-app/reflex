@@ -56,7 +56,8 @@ app.toolbar.recentURLs = {
             inputURL = $(e.target).val();
         }
 
-        console.log(inputURL);
+        // Debug the input
+        // if (app.environment == "dev") { console.log(inputURL); }
 
         // Add to existing
         if (recentURLs.length >= 1) {
@@ -82,7 +83,9 @@ app.toolbar.recentURLs = {
         }
 
         // Add to LocalStorage
-        console.log('Added to localstorage: ' + JSON.parse(localStorage.getItem('recentURLs')));
+        if (app.environment == "dev") {
+            console.log('localStorage: Updated recent URLs: ' + JSON.parse(localStorage.getItem('recentURLs')));
+        }
     },
 
     keyboardSelect: function (e) {

@@ -12,7 +12,10 @@ app.artboard.add = function (placement, event, width, height, fn) {
     if (fn === "fromEmpty") {
         needsNewDOMElement = true;
         this_artboard = $(artboards);
-        console.log('from empty');
+
+        // if (app.environment == "dev") {
+        //     console.log('Created new artboard from empty');
+        // }
     }
 
     if (event && event !== null) {
@@ -25,7 +28,10 @@ app.artboard.add = function (placement, event, width, height, fn) {
     // If a width or height is set, pass it
     // into the artboard size
     function returnWidthHeight() {
-        console.log(width, height);
+
+        // if (app.environment == "dev") {
+        //     console.log(width, height);
+        // }
 
         if (height == undefined && width == undefined) {
             // Do nothing...
@@ -40,9 +46,14 @@ app.artboard.add = function (placement, event, width, height, fn) {
                 width = width;
                 height = height;
 
-                console.log("Created artboard with width: " + width + "px and height: " + height + "px");
+                if (app.environment == "dev") {
+                    console.log("Created artboard with width: " + width + "px and height: " + height + "px");
+                }
 
-                var obj = {width: width, height: height};
+                var obj = {
+                    width: width,
+                    height: height
+                };
                 return obj;
             }
         }
@@ -58,8 +69,11 @@ app.artboard.add = function (placement, event, width, height, fn) {
                 this_artboard.before(Hbs.templates.artboard(returnWidthHeight()));
             }
 
-            console.log(returnWidthHeight());
-            console.log('Added artboard before', this_artboard);
+            // if (app.environment == "dev") {
+            //     console.log(returnWidthHeight());
+            //     console.log('Added artboard before', this_artboard);
+            // }
+
         } else if (placement == "after") {
 
             if (needsNewDOMElement == true) {
@@ -68,8 +82,11 @@ app.artboard.add = function (placement, event, width, height, fn) {
                 this_artboard.after(Hbs.templates.artboard(returnWidthHeight()));
             }
 
-            console.log(returnWidthHeight());
-            console.log('Added artboard after');
+            // if (app.environment == "dev") {
+            //     console.log(returnWidthHeight());
+            //     console.log('Added artboard after');
+            // }
+
         }
 
         // Update the dimensions all artboards
@@ -83,6 +100,8 @@ app.artboard.add = function (placement, event, width, height, fn) {
         app.settings.artboardSizes.updateLocalStorage();
 
     } else {
-        console.log("Please pass in the `placement` (before or after) and the event.");
+        if (app.environment == "dev") {
+            console.log("Please pass in the `placement` (before or after) and the event.");
+        }
     }
 }

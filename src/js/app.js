@@ -1,6 +1,9 @@
 // When the app loads, it will run the .init() functions
 app.init = function () {
-	console.log('screens.init()');
+
+	if ( app.environment == "dev" ) {
+		console.log('App initialized');
+	}
 
 	// Load each component here:
 	app.settings.init();
@@ -33,7 +36,7 @@ if (app.platform == "native") {
 	});
 
 	// Log the current version in development
-	if (process.versions['nw-flavor']) {
+	if ( app.environment == "dev" ) {
 		console.log("Webkit Version: ", process.versions['node-webkit']);
 	}
 }

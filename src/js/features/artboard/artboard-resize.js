@@ -10,30 +10,32 @@ app.artboard.resize = {
         if (app.events.isOnArtboard === true) {
             // Allow click events by disabling panzoom
             artboards.panzoom("disable");
-            console.log("Panzoom Disabled?:" + artboards.panzoom("isDisabled"));
+            if (app.environment == "dev") {
+                console.log("Panzoom Disabled?:" + artboards.panzoom("isDisabled"));
+            }
 
             // Allow resizing
             resizable();
         } else {
             // Disable click events, return to panzoom
             artboards.panzoom("enable");
-            console.log("Panzoom Disabled?:" + artboards.panzoom("isDisabled"));
+            if (app.environment == "dev") {
+                console.log("Panzoom Disabled?:" + artboards.panzoom("isDisabled"));
+            }
         }
 
         function resizable() {
-            console.log('hit resizable');
-
             $el = $(".handle__bottom");
             artboard = $(".artboard");
-            console.log(artboard);
-            
+            // if (app.environment == "dev") { console.log(artboard); }
+
             artboard.resizable({
                 handleSelector: "> .handle__bottom",
                 resizeWidthFrom: 'right',
                 onDrag: function (e, $el, newWidth, newHeight) {
                     // Update dimensions
                     var parent_artboard = $el.closest(artboard);
-                    console.log(parent_artboard);
+                    // if ( app.environment == "dev" ) { console.log(parent_artboard); }
 
                     // Disable pointer events on other elements
                     artboardInnerFrame.css("pointer-events", "none");
