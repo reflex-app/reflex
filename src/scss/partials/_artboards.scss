@@ -134,22 +134,22 @@ $artboard-handle-height: 1rem;
         }
     }
 
-    &__loader {
+    & .artboard__loader {
         position: absolute; // left: 50%;
         top: 0;
         left: 0;
-        height: 100%;
-        width: 100%;
+        right: 0;
         display: none;
-        background: rgba($body-bg, 0.95);
+        // height: 100%;
+        // width: 100%;
+        // background: rgba($body-bg, 0.95);
 
         .content {
             left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
+            // top: 50%;
+            transform: translateX(-50%);
             color: white;
             position: absolute;
-            font-size: 2rem;
         }
 
         &.is-loading {
@@ -177,8 +177,8 @@ $artboard-handle-height: 1rem;
 
         @keyframes lds-ripple {
             0% {
-                top: 36px;
-                left: 36px;
+                top: 20px;
+                left: 20px;
                 width: 0;
                 height: 0;
                 opacity: 1;
@@ -187,8 +187,8 @@ $artboard-handle-height: 1rem;
             100% {
                 top: -1px;
                 left: -1px;
-                width: 80px;
-                height: 80px;
+                width: 42px;
+                height: 42px;
                 opacity: 0;
             }
         }
