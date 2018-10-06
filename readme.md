@@ -5,7 +5,7 @@
 
 ![Shift Screenshot](screenshot.png)
 
-Shift is a free, open-source, part-time project that makes it easy to preview a site at different screen sizes. It's a hybrid web/native application that's currently built on [NW.JS](https://github.com/nwjs/nw.js/) (Node-Webkit).
+Shift is a free, open-source Mac app that makes it easy to see how responsive websites look at different screen sizes. Made especially for designers & developers who are tired of manually resizing their browser window.
 
 ---
 
@@ -13,58 +13,62 @@ Shift is a free, open-source, part-time project that makes it easy to preview a 
 
 **[Download version 0.3.1 (MacOS only)](https://github.com/nwittwer/shift/releases/download/v0.3.1/shift-0.3.1-mac.zip)**
 
-<!-- Or download via CLI:
-```sh
-$ URL=$( curl -s https://api.github.com/repos/nwittwer/shift/releases/latest | grep browser_download_url | cut -d '"' -f 4 )
-$ curl -LO "$URL"
-``` -->
+Or download via command line (Terminal):
+
+Step 1:
+```bash
+URL=$(curl -s https://api.github.com/repos/nwittwer/shift/releases/latest | grep browser_download_url | cut -d '"' -f 4)
+```
+
+Step 2:
+```bash
+curl -LO "$URL"
+```
 
 [Having issues installing?](#faq)
 
 ### Features:
-- [x] MacOS app (hybrid)
-- [x] Preview your changes across many viewport sizes
-- [x] Add all the sizes you want. They're saved automatically.
-- [x] Easily resize your viewports. And they're saved for when you come back.
-- [x] Natural scrolling/panning of the canvas
-- [x] Recent URLs are saved, making it easy to re-access them.
-- [ ] Quickly test an entire user flow, across multiple viewport sizes, in one place using [Browsersync](https://browsersync.io/) built-in
-- [ ] Ability to test high-pixel-density (i.e. Apple's "retina" device resolutions)
-- [ ] Ability to test different user-agents
+- Preview your web development changes across as many sizes as you want
+- Natural scrolling/panning of the canvas
+- Easily resize the viewports
+- Your setup is saved for the next time you use the app
 
-[View upcoming features](https://github.com/nwittwer/shift/projects)
+Check out our [upcoming features](../../projects) and [feature requests](../../issues&q=label%3Afeature-request). If you have an idea that you didn't see it in either of those places, you can create a [new Github issue](../../issues) for it!
 
 ---
 
 ## Contributing
 
-Please take a look at the [upcoming features](https://github.com/nwittwer/shift/projects) and the [open Github issues](https://github.com/nwittwer/shift/issues). 
+Please take a look at the [upcoming features](../../projects) and the [open Github issues](../../issues). Bug reports and feature requests are welcome!
 
-### Developing
+---
 
-We recommend having the following installed: 
+## Developing
+
+Please use the following versions: 
 - Node 10.0+, NPM 6+, Gulp 4+
 
 1. Clone the project to your computer:
-```sh
-$ git clone https://github.com/nwittwer/shift.git
-$ cd shift
-```
+    ```sh
+    $ git clone https://github.com/nwittwer/shift.git
+    $ cd shift
+    ```
 
 2. Install dependencies:
-```sh
-$ npm install
-```
+    ```sh
+    $ npm install
+    ```
 
 3. Compile and watch for changes:
-```sh
-$ npm start
-```
+    ```sh
+    $ npm run start
+    ```
 
-To make sure your code works in the final app, run the following command. This will output a `Shift.app` file inside of the `ship/Shift/osx64/` folder for MacOS.<br>
-```sh
-$ npm run build
-```
+    To make sure your code works in the final app, run the following command. This will output a `Shift.app` file inside of the `ship/Shift/osx64/` folder for MacOS.
+
+    ```sh
+    $ npm run build
+    ```
 
 ### Debugging
 
@@ -76,10 +80,13 @@ Open the app, right click, and select "Inspect" to open Chrome DevTools
 
 1. Help installing for MacOS
     1. Move the Application to your Applications folder
-        - If you get a warning like "Cannot be opened because the developer is not verified.", open System Preferences > Security & Privacy > "Open anyway"
     2. Open the application by double-clicking the icon
 
-2. What should I do if I get one of the following errors?
+2. Does Shift work on Windows OS?
+
+At the moment, only the Mac version is being supported/tested, as it requires a large amount of effort to add another OS to support. With more help, most or all of this project could work on the web, MacOS, and Windows.
+
+3. What should I do if I get one of the following errors?
     - "Your profile can not be used because it is from a newer version of NW.js." 
         ```sh
         $ rm -R ~/Library/Application\ Support/Shift
@@ -88,10 +95,6 @@ Open the app, right click, and select "Inspect" to open Chrome DevTools
         ```sh
         $ kill -9 $(lsof -i TCP:8000 | grep LISTEN | awk '{print $2}')
         ```
-
-3. Does Shift work on Windows OS?
-
-At the moment, only the Mac version is being supported/tested, as it requires a large amount of effort to add another OS to support. With more help, most or all of this project could work on the web, MacOS, and Windows.
 
 ---
 
