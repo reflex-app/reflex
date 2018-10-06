@@ -32,16 +32,24 @@ gulp.task('serve', gulp.series('build', 'create-package-json:dev', function () {
 }));
 
 // Compile the app
-gulp.task('app', gulp.series('build', 'create-package-json:main', 'build-app'));
+gulp.task('app', gulp.series(
+  'build',
+  'create-package-json:main',
+  'build-app'
+));
 
 // Draft a release to Github
-gulp.task('release', gulp.series('build', 'create-package-json:main', 'build-app', 'deploy-app'));
+gulp.task('release', gulp.series(
+  'app',
+  'code-sign-mac',
+  'deploy-app'
+));
 
 // Watch files for changes
 gulp.task('watch', function () {
   gulp.watch(CONFIG.SRC + 'scss/**/*.scss', gulp.series('sass'));
   gulp.watch(CONFIG.SRC + 'js/**/*.js', gulp.series('javascript', reload));
-  gulp.watch([CONFIG.SRC + 'pages/**/*.hbs', CONFIG.SRC + 'partials/**/*.hbs'], gulp.series('handlebars', reload));
+  gulp.watch([CONFIG.SRC + 'pages/**/*.hbs', CONFIG.SRC + 'partials/**/*.hbs', CONFIG.TEST + '*.hbs'], gulp.series('handlebars', reload));
 });
 
 // Reloads BrowserSync

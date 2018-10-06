@@ -16,19 +16,17 @@ app.toolbar.recentURLs = {
         app.toolbar.recentURLs.show();
 
         // Listen for clicks on the dropdown items
-        $(".toolbar__url-li").on('click', function(e) {
-            $("#toolbar__url").val( $(e.target).text() );
-            app.toolbar.updateURL();
-        });
-
-        // Add to LocalStorage on submit
-        $("#toolbar__url").on('submit keypress', function (e) {
-            // On enter key press
-            if (e.which == 13) {
-                app.toolbar.recentURLs.add(e);
-            } else if (e.type == "submit") {
-                app.toolbar.recentURLs.add(e);
+        // Note, these will be cached
+        $(document).on('click', '.toolbar__url-li', function (e) {
+            if (app.environment == "dev") {
+                console.log($(e.target), $(e.target).text());
             }
+
+            // Set the value based on the clicked target
+            $("#toolbar__url").val($(e.target).text());
+
+            // Update the URL in the iframes
+            app.toolbar.updateURL();
         });
 
         // When clicking the search, show recent sites
@@ -66,7 +64,8 @@ app.toolbar.recentURLs = {
             inputURL = $(e.target).val();
         }
 
-        console.log(inputURL);
+        // Debug the input
+        // if (app.environment == "dev") { console.log(inputURL); }
 
         // Add to existing
         if (recentURLs.length >= 1) {
@@ -92,7 +91,9 @@ app.toolbar.recentURLs = {
         }
 
         // Add to LocalStorage
-        console.log('Added to localstorage: ' + JSON.parse(localStorage.getItem('recentURLs')));
+        if (app.environment == "dev") {
+            console.log('localStorage: Updated recent URLs: ' + JSON.parse(localStorage.getItem('recentURLs')));
+        }
     },
 
     keyboardSelect: function (e) {

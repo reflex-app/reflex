@@ -1,6 +1,6 @@
 {
   "name": "Shift",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "main": "index.html",
   "node-remote": "<all_urls>",
   "icon": "icon.icns",
@@ -11,8 +11,5 @@
     "min_height": 400,
     "toolbar": true
   },
-  "chromium-args": "--enable-logging=stderr --enable-experimental-web-platform-features --remote-debugging-port=9999",
-  "webkit": {
-    "plugin": true
-  }
+  "chromium-args": "--enable-logging=stderr --enable-experimental-web-platform-features --remote-debugging-port=9999"
 }

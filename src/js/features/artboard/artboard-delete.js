@@ -13,6 +13,8 @@ app.artboard.delete = function (event) {
             alert('Sorry, you must have at least one artboard.')
         }
     } else {
-        console.log("No event received");
+        if (app.environment == "dev") {
+            console.log("No event received");
+        }
     }
 }

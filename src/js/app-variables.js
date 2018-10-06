@@ -2,6 +2,30 @@
 // Additional functions can use `boomerang.fn()` format
 var app = {};
 
+// The app is written for the web by default
+// So you can add a !isWeb flag to add native (Mac/Windows) features
+// Checks by seeing if nw (NW.js) is defined
+var nw = nw || null;
+if (nw == null) {
+    // App is on web
+    app.platform = "web";
+} else {
+    // App is using NW.js (Mac/Windows app)
+    app.platform = "native";
+}
+
+// Check if this a dev or production environment
+let currentURL = new URL(window.location.href);
+if (currentURL.hostname.includes("localhost")) {
+    console.log("Environment: development");
+    app.environment = "dev";
+} else {
+    console.log("Environment: production");
+    app.environment = "production";
+}
+
+// if (  )
+
 app.events = {
     // If an artboard is selected
     isOnArtboard: false,
