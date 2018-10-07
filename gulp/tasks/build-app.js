@@ -29,7 +29,8 @@ let PATH_TO_MAC_ZIP;
 
 // Build task
 gulp.task('build-app', gulp.series(
-    'build-app:prompt',
+    'build-app:prompt-version',
+    'build-app:prompt-version-diff',
     'build-app:version',
     'build-app:main'
 ));
@@ -44,22 +45,47 @@ gulp.task('deploy-app', gulp.series(
 ));
 
 // Confirm version number
-gulp.task('build-app:prompt', function (done) {
+gulp.task('build-app:prompt-version', function (done) {
     inquirer.prompt([{
             type: 'input',
             name: 'version',
-            message: 'What version is this? (Currently ' + CURRENT_APP_VERSION + ' ):'
+            message: 'What release version is this? (Currently ' + CURRENT_APP_VERSION + '):'
         }])
         .then(function (res) {
             if (res.version) {
                 NEXT_APP_VERSION = res.version;
+                console.log(chalk.yellow(`Version updated to ${NEXT_APP_VERSION} 👍`));
             } else {
                 NEXT_APP_VERSION = CURRENT_APP_VERSION;
+                console.log(chalk.yellow(`Version: ${NEXT_APP_VERSION}`));
             }
 
             // Update the final ZIP path with the version
             PATH_TO_MAC_ZIP = 'ship/shift-' + NEXT_APP_VERSION + '-mac.zip';
 
+            done();
+        });
+});
+
+// Choose what version you'd like to compare to
+// This will create a link viewable in Github
+// Defaults to master branch
+gulp.task('build-app:prompt-version-diff', function (done) {
+    inquirer.prompt([{
+            type: 'input',
+            name: 'version',
+            message: `Branch/Git tag to compare to ${NEXT_APP_VERSION}: `
+        }])
+        .then(function (res) {
+            if (res.version) {
+                // Successful comparison to x version
+                COMPARE_VERSION = res.version;
+                console.log(chalk.yellow(`Got it, will compare changes in ${COMPARE_VERSION} to ${NEXT_APP_VERSION} 👍`));
+            } else {
+                // Nothing chosen, default to master
+                COMPARE_VERSION = "master";
+                console.log(chalk.yellow(`Comparing changes in ${COMPARE_VERSION} to master`));
+            }
             done();
         });
 });
@@ -109,8 +135,17 @@ gulp.task('build-app:main', function () {
 // Then stores it to a variable that can later be used for a
 // git log origin/branch-a..origin/branch-b --abbrev-commit --pretty=oneline
 gulp.task('deploy-app:changelog', function (cb) {
-    exec('git log master.. --abbrev-commit --pretty=oneline', function (err, stdout, stderr) {
+
+    // As long as the new version isn't comparing to master...
+    // Prepend with a "v" ("v1.0.0") instead of just "1.0.0"
+    if (COMPARE_VERSION.includes("master") == false) {
+        COMPARE_VERSION = "v" + COMPARE_VERSION;
+        NEXT_APP_VERSION = "v" + NEXT_APP_VERSION;
+    }
+
+    exec(`git log ${COMPARE_VERSION}.. --abbrev-commit --pretty=oneline`, function (err, stdout, stderr) {
         CHANGELOG = stdout;
+        CHANGELOG += `\n\n [View all changes since ${COMPARE_VERSION}](../../compare/${COMPARE_VERSION}..${NEXT_APP_VERSION})`
         console.log(chalk.yellow('Changelog:\n' + CHANGELOG));
         cb(err);
     });
@@ -129,7 +164,8 @@ gulp.task('deploy-app:zip-app', function (done) {
     // listen for all archive data to be written
     // 'close' event is fired only when a file descriptor is involved
     output.on('close', function () {
-        console.log(chalk.yellow('ZIP size: ' + archive.pointer() + ' total bytes'));
+        console.log(chalk.yellow('ZIP created: ' + archive.pointer() + ' total bytes'));
+        console.log(chalk.yellow(`🚀 Setting up the Github release...`));
         done();
     });
 
@@ -137,6 +173,7 @@ gulp.task('deploy-app:zip-app', function (done) {
     archive.on('warning', function (err) {
         if (err.code === 'ENOENT') {
             // log warning
+            console.log(err);
         } else {
             // throw error
             throw err;
@@ -168,15 +205,15 @@ gulp.task('deploy-app:draft-release', function () {
     return gulp.src(PATH_TO_MAC_ZIP)
         .pipe(release({
             owner: 'nwittwer',
-            token: GITHUB_TOKEN, // Did you set already add your Github token?
-            tag: 'v' + NEXT_APP_VERSION, // i.e. v0.3.0 (format: v + 0.0.0)
+            token: GITHUB_TOKEN, // Did you set already add your Github token in a .env file?
+            tag: NEXT_APP_VERSION, // format: v0.0.0
             draft: true, // draft or public
             prerelease: false,
             manifest: require('../../package.json'), // package.json from which default values will be extracted if they're missing
             notes: CHANGELOG
         }))
         .pipe(notify({
-            title: "🎉 Shift v" + NEXT_APP_VERSION + " release draft created!",
+            title: "🎉 Shift " + NEXT_APP_VERSION + " release draft created!",
             message: "Opening in browser..."
         }))
 });
