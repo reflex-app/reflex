@@ -39,9 +39,4 @@ module.exports = {
     '!img/assets/{js,scss}/**/*'
   ],
 
-  RESOLVE_CONFIG: {
-    EXTENSIONS: ['.js', '.json'],    //webpck extensions
-    ALIAS:{}                          //webpack alias
-  }
-
 };
