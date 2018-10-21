@@ -1,15 +1,19 @@
-// Libraries
-// import {
-//     $,
-//     jQuery
-// } from 'jquery';
-// import * as panzoom from '../js/plugins/jquery.panzoom';
+// Import any required scripts
+const $ = require('jquery');
+const panzoom = require('../js/plugins/jquery.panzoom');
 
-import Shift from "./shift";
+// Load Shift class
+import {
+    Shift
+} from "./shift";
 
-// Create our main Shift instance
+// Create the main instance
+// `app` can be referenced in other files
 export let app = new Shift();
 console.log(app);
+
+///////////////////////////////
+///////////////////////////////
 
 // Check if this a dev or production environment
 let currentURL = new URL(window.location.href);
@@ -51,21 +55,37 @@ if (app.platform == "native") {
     }
 }
 
-console.log(app);
+///////////////////////////////
+///////////////////////////////
 
-const artboard = require('../js/features/artboard/artboard');
+// Variables
+let $artboards = $("#artboards");
+var $artboard = $(".artboard");
+var $artboardInnerFrame = $("iframe");
 
-// Canvas
-// let canvas = artboards.panzoom({
-//     increment: 0.5,
-//     maxScale: 5,
-//     minScale: 0.05,
-//     startTransform: 'scale(' + Math.min(app.minScaleX, app.minScaleY) + ')'
-// }).panzoom('zoom', true);
+// @TODO: The following could be part of a Canvas class?
+
+// Set initial scale
+app.minScaleX = $(window).width() / $artboards.innerWidth();
+app.minScaleY = $(window).height() / $artboards.innerHeight();
+
+// Create the canvas
+let canvas = $artboards.panzoom({
+    increment: 0.5,
+    maxScale: 5,
+    minScale: 0.05,
+    startTransform: 'scale(' + Math.min(app.minScaleX, app.minScaleY) + ')'
+}).panzoom('zoom', true);
 
 // Controls
-// let canvasControls = {
-//     container: $('#toolbar__canvas-controls'),
-//     scale: $("#canvas-controls__scale"),
-//     orientation: $("#canvas-controls__orientation"),
-// }
+let canvasControls = {
+    container: $('#toolbar__canvas-controls'),
+    scale: $("#canvas-controls__scale"),
+    orientation: $("#canvas-controls__orientation"),
+}
+
+///////////////////////////////
+///////////////////////////////
+
+// Import modules
+const artboard = require('../js/features/artboard/artboard');

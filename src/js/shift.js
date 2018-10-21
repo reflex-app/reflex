@@ -9,8 +9,8 @@
 
 // Create the main Shift class object
 // This controls all details of the overall app
-export default class Shift {
-    constructor() {
+export class Shift {
+    constructor(options) {
         // Artboards
         this.artboards = {}; // keep track of all the artboards
 

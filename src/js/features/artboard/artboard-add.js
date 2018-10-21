@@ -1,8 +1,5 @@
 import { app } from "../../index"
 
-console.log(app);
-
-
 export default function addArtboard(placement, event, width, height, fn) {
     // "new" or "additional"
     // Helps switch between .prepend/.append, and .before/.after
