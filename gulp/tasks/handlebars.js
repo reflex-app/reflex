@@ -13,6 +13,7 @@ const CONFIG = require('../config.js');
 gulp.task('handlebars', gulp.series(
   'handlebars:precompile',
   'handlebars:main',
+  'handlebars:copy-js',
   'handlebars:tests'
 ))
 
@@ -41,6 +42,11 @@ gulp.task('handlebars:main', function () {
 
     // Output both the partials and the templates as build/js/templates.js
     .pipe(concat('templates.js'))
+    .pipe(gulp.dest(CONFIG.DIST + 'js/'));
+});
+
+gulp.task('handlebars:copy-js', function () {
+  return gulp.src(CONFIG.SRC + 'js/plugins/handlebars.min.js')
     .pipe(gulp.dest(CONFIG.DIST + 'js/'));
 });
 
