@@ -36,7 +36,7 @@ gulp.task('build-app', gulp.series(
 ));
 
 // Deploy tasks
-// @TODO: Split this into another file? How to keep the variable values across files?
+// TODO: Split this into another file? How to keep the variable values across files?
 gulp.task('deploy-app', gulp.series(
     'deploy-app:changelog',
     'deploy-app:zip-app',

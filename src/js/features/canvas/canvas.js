@@ -42,7 +42,7 @@ export class Canvas {
 
 }
 
-// @TODO: These should be organized better...with toolbar?
+// TODO: These should be organized better...with toolbar?
 // Controls
 let canvasControls = {
     container: $('#toolbar__canvas-controls'),

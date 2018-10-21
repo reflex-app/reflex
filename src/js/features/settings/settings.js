@@ -4,7 +4,7 @@ import { artboardSizes } from "../settings/settings-artboardSizes";
 
 export class Settings {
     constructor(app) {
-        // @TODO: Add the rest of the artboard functionality (i.e. artboard.add())
+        // TODO: Add the rest of the artboard functionality (i.e. artboard.add())
         // Retrieve localStorage
         // artboardSizes(this);
 

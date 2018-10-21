@@ -4,7 +4,7 @@ require('dotenv').config();
 const gulp = require('gulp');
 const exec = require('child_process').exec;
 
-const APP_NAME = "Shift"; // @TODO: un-hardcode this value
+const APP_NAME = "Shift"; // TODO: un-hardcode this value
 const MAC_CERTIFICATE = process.env.MAC_CERT_ID; // Mac certificate ID (xxxxxxxxxx)
 
 function sign(callback) {

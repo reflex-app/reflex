@@ -1,4 +1,4 @@
-// @TODO: This should probably live in a `data` directory
+// TODO: This should probably live in a `data` directory
 
 const $ = require('jquery');
 
@@ -112,7 +112,7 @@ export function artboardSizes(app) {
             // Update our local variable
             updateLocalStorageObject();
         } else {
-            // @TODO Add a UI alert for this error
+            // TODO Add a UI alert for this error
             console.log('There was a problem updating localStorage.');
         }
 
