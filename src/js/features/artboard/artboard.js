@@ -1,29 +1,31 @@
+const $ = require('jquery');
 import { app } from "../../index";
+
+import { updateDimensions, returnDimensions } from "../artboard/artboard-dimensions";
+import { artboardListeners } from "../artboard/artboard-listeners";
 import addArtboard from "../artboard/artboard-add";
 
 export default class Artboard {
-    constructor() {
-        this.app = app;
+    constructor(options) {
+        this.$el = $('.artboard');
+
+        // Attach eventListeners
+        artboardListeners();
+        
+        // Update all the artboard dimensions
+        // updateDimensions(this.$el);
+
+        // this.createFirstNewButton();
 
         // Dimensions
         // this.dimensions.init();
         // Resizable artboard
         // this.resize.init();
         // Add artboards
-        // this.watchers.init();
-
-        // Any functions that need to fire on first load
-        // Defined below
-        this.firstLoad();
     }
 
     add(placement, event, width, height, fn) {
         addArtboard(placement, event, width, height, fn);
-    }
-
-    // Other functions
-    firstLoad() {
-        // this.createFirstNewButton();
     }
 }
 
