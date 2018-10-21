@@ -2,19 +2,14 @@
 const $ = require('jquery');
 const panzoom = require('../js/plugins/jquery.panzoom');
 
-import { shift } from "./shift"; // Load Shift class
-export let app = shift; // Create the main instance
+// Load Shift class
+import { shift } from "./shift";
+import Artboard from './features/artboard/artboard';
+
+// Create the main instance
+export let app = shift;
 console.log(app);
 
-
-
-///////////////////////////////
-///////////////////////////////
-// @TODO: The following could be part of a Canvas class?
-
-
-///////////////////////////////
-///////////////////////////////
-
-// Import modules
+// Create artboards
 require('../js/features/artboard/artboard');
+app.artboards = new Artboard();
