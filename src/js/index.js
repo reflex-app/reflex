@@ -2,14 +2,8 @@
 const $ = require('jquery');
 const panzoom = require('../js/plugins/jquery.panzoom');
 
-// Load Shift class
-import {
-    Shift
-} from "./shift";
-
-// Create the main instance
-// `app` can be referenced in other files
-export let app = new Shift();
+import { shift } from "./shift"; // Load Shift class
+export let app = shift; // Create the main instance
 console.log(app);
 
 ///////////////////////////////
@@ -57,35 +51,11 @@ if (app.platform == "native") {
 
 ///////////////////////////////
 ///////////////////////////////
-
-// Variables
-let $artboards = $("#artboards");
-var $artboard = $(".artboard");
-var $artboardInnerFrame = $("iframe");
-
 // @TODO: The following could be part of a Canvas class?
 
-// Set initial scale
-app.minScaleX = $(window).width() / $artboards.innerWidth();
-app.minScaleY = $(window).height() / $artboards.innerHeight();
-
-// Create the canvas
-let canvas = $artboards.panzoom({
-    increment: 0.5,
-    maxScale: 5,
-    minScale: 0.05,
-    startTransform: 'scale(' + Math.min(app.minScaleX, app.minScaleY) + ')'
-}).panzoom('zoom', true);
-
-// Controls
-let canvasControls = {
-    container: $('#toolbar__canvas-controls'),
-    scale: $("#canvas-controls__scale"),
-    orientation: $("#canvas-controls__orientation"),
-}
 
 ///////////////////////////////
 ///////////////////////////////
 
 // Import modules
-const artboard = require('../js/features/artboard/artboard');
+require('../js/features/artboard/artboard');
