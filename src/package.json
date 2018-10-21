@@ -2,6 +2,7 @@
   "name": "Shift",
   "version": "0.3.1",
   "main": "index.html",
+  "node-main": "./js/index.js",
   "node-remote": "<all_urls>",
   "icon": "icon.icns",
   "window": {
