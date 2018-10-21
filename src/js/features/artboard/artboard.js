@@ -1,20 +1,50 @@
-app.artboard = {
+import addArtboard from "../artboard/artboard-add";
 
-    init: function () {
+export default class Artboard {
+    constructor() {
         // Dimensions
-        app.artboard.dimensions.init();
+        // this.dimensions.init();
         // Resizable artboard
-        app.artboard.resize.init();
+        // this.resize.init();
         // Add artboards
-        app.artboard.watchers.init();
+        // this.watchers.init();
 
         // Any functions that need to fire on first load
         // Defined below
-        app.artboard.firstLoad();
-    },
-
-    firstLoad: function() {
-        app.artboard.createFirstNewButton();
+        this.firstLoad();
     }
 
+    add(placement, event, width, height, fn) {
+        addArtboard(placement, event, width, height, fn);
+    }
+
+    // Other functions
+    firstLoad() {
+        // this.createFirstNewButton();
+    }
 }
+
+var artboard = new Artboard();
+artboard.add();
+
+// function init() {
+//     // Dimensions
+//     app.artboard.dimensions.init();
+//     // Resizable artboard
+//     app.artboard.resize.init();
+//     // Add artboards
+//     app.artboard.watchers.init();
+
+//     // Any functions that need to fire on first load
+//     // Defined below
+//     app.artboard.firstLoad();
+// }
+
+// function firstLoad() {
+//     app.artboard.createFirstNewButton();
+// }
+
+// export default {
+//     init,
+//     firstLoad
+// }

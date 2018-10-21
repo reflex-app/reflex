@@ -4,7 +4,6 @@ const concat = require('gulp-concat');
 const sourcemaps = require('gulp-sourcemaps');
 const webpackStream = require('webpack-stream');
 const webpack = require('webpack');
-
 var CONFIG = require('../config.js');
 
 const resolve = (to) => {
@@ -16,9 +15,10 @@ gulp.task('javascript', gulp.series('javascript:webpack'))
 
 // Webpack
 gulp.task('javascript:webpack', function () {
-  return gulp.src(resolve(CONFIG.SRC + 'index.js'))
+  return gulp.src(resolve(CONFIG.SRC + 'js/index.js'))
     .pipe(webpackStream({
       target: 'node-webkit',
+      mode: 'development',
       output: {
         filename: 'app.js',
         chunkFilename: '[hash].js'
