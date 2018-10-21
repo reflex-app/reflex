@@ -1,7 +1,10 @@
+import { app } from "../../index";
 import addArtboard from "../artboard/artboard-add";
 
 export default class Artboard {
     constructor() {
+        this.app = app;
+
         // Dimensions
         // this.dimensions.init();
         // Resizable artboard
@@ -24,8 +27,9 @@ export default class Artboard {
     }
 }
 
-var artboard = new Artboard();
-artboard.add();
+// Usage:
+// var artboard = new Artboard();
+// artboard.add("before", this, 500, 800);
 
 // function init() {
 //     // Dimensions

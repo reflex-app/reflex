@@ -17,7 +17,7 @@ gulp.task('javascript', gulp.series('javascript:webpack'))
 gulp.task('javascript:webpack', function () {
   return gulp.src(resolve(CONFIG.SRC + 'js/index.js'))
     .pipe(webpackStream({
-      target: 'node-webkit',
+      // target: 'node-webkit',
       mode: 'development',
       output: {
         filename: 'app.js',
@@ -27,10 +27,6 @@ gulp.task('javascript:webpack', function () {
         extensions: ['.js', '.json'],
         modules: [resolve('node_modules')],
         alias: {}
-      },
-      // plugins: [htmlPlugin,extractCssPlugin],
-      resolveLoader: {
-        modules: [resolve('node_modules')]
       },
       module: {
         rules: [{
