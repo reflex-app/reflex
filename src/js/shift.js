@@ -17,6 +17,15 @@ class Shift {
         this.environment = this.getEnvironment();
         this.platform = this.getPlatform();
 
+        this.events = {
+            // If an artboard is selected
+            isOnArtboard: false,
+            // If the canvas is zooming/panning
+            isChangingCanvas: false,
+            // If resizing an artboard (resize.js)
+            isResizingArtboard: false
+        };
+
         // Artboards
         this.artboards = {}; // keep track of all the artboards
 
