@@ -1,69 +1,85 @@
-app.artboard.resize = {
+const $ = require('jquery');
+require('../../plugins/jquery-resizable.min.js');
+import {
+    app
+} from "../../index";
 
-    init: function () {
-        // app.artboard.resize.firstLoad();
-    },
+import * as artboardDimensions from "../artboard/artboard-dimensions";
 
-    firstLoad: function () {},
+// TODO: This seems to be storing it's events and outputting them each time
+// the onDragEnd fires. Could cause memory leak.
+export function resize(e) {
+    // Restrict to one artboard at a time
+    if (!app.events.isResizingArtboard && app.events.isOnArtboard) {
 
-    trigger: function (e) {
-        if (app.events.isOnArtboard === true) {
-            // Allow click events by disabling panzoom
-            artboards.panzoom("disable");
-            if (app.environment == "dev") {
-                console.log("Panzoom Disabled?:" + artboards.panzoom("isDisabled"));
-            }
+        // TODO: Refactor the following to global
+        let $el = $(".handle__bottom");
+        let artboard = $(".artboard");
+        let artboards = $("#artboards");
+        let artboardInnerFrame = $("iframe");
 
-            // Allow resizing
-            resizable();
-        } else {
-            // Disable click events, return to panzoom
-            artboards.panzoom("enable");
-            if (app.environment == "dev") {
-                console.log("Panzoom Disabled?:" + artboards.panzoom("isDisabled"));
-            }
+        app.canvas.$canvas.panzoom("disable");
+
+        if (app.environment == "dev") {
+            console.log("Panzoom Disabled?: " + app.canvas.$canvas.panzoom("isDisabled"));
+            //     console.log(artboard); 
         }
 
-        function resizable() {
-            $el = $(".handle__bottom");
-            artboard = $(".artboard");
-            // if (app.environment == "dev") { console.log(artboard); }
+        // Allow resizing
+        artboard.resizable({
+            handleSelector: "> .handle__bottom",
+            resizeWidthFrom: 'right',
+            touchActionNone: true,
+            onDrag: function (e, $el, newWidth, newHeight) {
+                app.events.isResizingArtboard = true;
 
-            artboard.resizable({
-                handleSelector: "> .handle__bottom",
-                resizeWidthFrom: 'right',
-                onDrag: function (e, $el, newWidth, newHeight) {
-                    // Update dimensions
-                    var parent_artboard = $el.closest(artboard);
-                    // if ( app.environment == "dev" ) { console.log(parent_artboard); }
+                // Update dimensions
+                var parent_artboard = $el.closest(artboard);
 
-                    // Disable pointer events on other elements
-                    artboardInnerFrame.css("pointer-events", "none");
-                    artboards.css("pointer-events", "none");
-                    // Accept all events from parent
-                    $el.css("pointer-events", "all");
-                    $el.css("cursor", "nwse-resize");
-                    // Override all other elements
-                    $('body').css("cursor", "nwse-resize");
+                // if ( app.environment == "dev" ) { 
+                //     console.log('dragging', parent_artboard);
+                // }                
 
-                    // Update the artboard's dimensions in the UI
-                    app.artboard.dimensions.update(parent_artboard, newWidth, newHeight);
-                },
-                onDragEnd: function (e) {
-                    // Disable pointer events on other elements
-                    artboardInnerFrame.css("pointer-events", "");
-                    artboards.css("pointer-events", "auto");
-                    // Accept all events from parent
-                    $el.css("pointer-events", "");
-                    $el.css("cursor", "");
-                    // Override all other elements
-                    $('body').css("cursor", "");
+                // Disable pointer events on other elements
+                artboardInnerFrame.css("pointer-events", "none");
+                artboards.css("pointer-events", "none");
 
-                    // Save the latest artboard sizes to localStorage
-                    app.settings.artboardSizes.updateLocalStorage();
+                // Accept all events from parent
+                $el.css("pointer-events", "all");
+                $el.css("cursor", "nwse-resize");
+
+                // Override all other elements
+                $('body').css("cursor", "nwse-resize");
+
+                // Update the artboard's dimensions in the UI
+                artboardDimensions.updateDimensions(parent_artboard, newWidth, newHeight);
+            },
+            onDragEnd: function (e) {
+                app.events.isResizingArtboard = false;
+
+                // Disable pointer events on other elements
+                artboardInnerFrame.css("pointer-events", "");
+                artboards.css("pointer-events", "auto");
+
+                // Accept all events from parent
+                $el.css("pointer-events", "");
+                $el.css("cursor", "");
+
+                // Override all other elements
+                $('body').css("cursor", "");
+
+                // TODO: Re-enable localStorage function when ready
+                // Save the latest artboard sizes to localStorage
+                // app.settings.artboardSizes.updateLocalStorage();
+
+                app.canvas.$canvas.panzoom("enable");
+
+                if (app.environment == "dev") {
+                    console.log("Panzoom Disabled?: " + app.canvas.$canvas.panzoom("isDisabled"));
                 }
-            });
-        }
+            }
+        });
+    } else {
+        return false;
     }
-
 }
