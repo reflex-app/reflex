@@ -7,8 +7,6 @@ import * as canvasSize from './canvas-size';
 
 export default class Canvas {
     constructor(app) {
-        this.app = app; // Inherit from Shift
-
         // DOM elements
         this.$artboards = $("#artboards");
         this.$artboard = $(".artboard");
@@ -19,7 +17,14 @@ export default class Canvas {
         this.minScaleY = $(window).height() / this.$artboards.innerHeight();
 
         // Create a canvas
-        this.create();
+        this.$canvas = this.create();
+
+        // Update the current scale of the canvas
+        canvasSize.updateScale('fromCanvas', this.$canvas);
+
+        // Create a window resize event listener
+        // This will update the zoom scale on resize
+        canvasSize.setEventListeners(this.$canvas);
 
         // Make the canvas pan-able
         canvasPanAndZoom(this.$artboards);
@@ -27,17 +32,12 @@ export default class Canvas {
 
     create() {
         // Creates a panzoom instance (aka "Canvas")
-        let canvas = this.$artboards.panzoom({
+        return this.$artboards.panzoom({
             increment: 0.5,
             maxScale: 5,
             minScale: 0.05,
             startTransform: 'scale(' + Math.min(this.minScaleX, this.minScaleY) + ')'
         }).panzoom('zoom', true);
-    }
-
-    updateZoomScale() {
-        // Update the size
-        canvasSize.updateScale('fromCanvas');
     }
 
 }
