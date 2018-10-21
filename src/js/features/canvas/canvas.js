@@ -5,7 +5,7 @@ const panzoom = require('../../plugins/jquery.panzoom');
 import canvasPanAndZoom from './canvas-pan-and-zoom';
 import * as canvasSize from './canvas-size';
 
-export default class Canvas {
+export class Canvas {
     constructor(app) {
         // DOM elements
         this.$artboards = $("#artboards");
