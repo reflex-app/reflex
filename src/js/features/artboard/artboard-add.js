@@ -1,12 +1,23 @@
+const $ = require('jquery');
 import { app } from "../../index"
 
-export default function addArtboard(placement, event, width, height, fn) {
+import * as artboardDimensions from "../artboard/artboard-dimensions";
+
+export function add(placement, width, height, event, fn) {
+    // if ( app.environment == "dev" ) {
+    //     console.log(placement, width, height, fn);
+    // }
+
+    // TODO: Pull from global definition
+    let artboard = $(".artboard");
+    let artboards = $("#artboards");
+
     // "new" or "additional"
     // Helps switch between .prepend/.append, and .before/.after
-    var needsNewDOMElement = false;
+    let needsNewDOMElement = false;
 
     // Which artboard?
-    var this_artboard;
+    let this_artboard;
 
     if (fn === "fromEmpty") {
         needsNewDOMElement = true;
@@ -49,7 +60,7 @@ export default function addArtboard(placement, event, width, height, fn) {
                     console.log("Created artboard with width: " + width + "px and height: " + height + "px");
                 }
 
-                var obj = {
+                let obj = {
                     width: width,
                     height: height
                 };
@@ -63,7 +74,7 @@ export default function addArtboard(placement, event, width, height, fn) {
         if (placement == "before") {
 
             if (needsNewDOMElement == true) {
-                this_artboard.append(Hbs.templates.artboard(returnWidthHeight()));
+                this_artboard.append(Hbs.templates.artboard(returnWidthHeight()));                
             } else {
                 this_artboard.before(Hbs.templates.artboard(returnWidthHeight()));
             }
@@ -90,13 +101,15 @@ export default function addArtboard(placement, event, width, height, fn) {
 
         // Update the dimensions all artboards
         artboard = $(".artboard");
-        app.artboard.dimensions.update(artboard);
+        artboardDimensions.updateDimensions(artboard);
 
+        // TODO: Attach createFirstNewButton
         // Add the + button before all items
-        app.artboard.createFirstNewButton();
+        // app.artboard.createFirstNewButton();
 
+        // TODO: Attach localStorage fn
         // Save the latest artboard sizes to localStorage
-        app.settings.artboardSizes.updateLocalStorage();
+        // app.settings.artboardSizes.updateLocalStorage();
 
     } else {
         if (app.environment == "dev") {

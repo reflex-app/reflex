@@ -1,32 +1,35 @@
+// Required
 const $ = require('jquery');
 import { app } from "../../index";
 
-import { updateDimensions, returnDimensions } from "../artboard/artboard-dimensions";
-import { artboardListeners } from "../artboard/artboard-listeners";
-import addArtboard from "../artboard/artboard-add";
+// Features
+import * as artboardDimensions from "../artboard/artboard-dimensions";
+import * as artboardListeners from "../artboard/artboard-listeners";
+import * as artboardResize from "../artboard/artboard-resize";
+import * as artboardAdd from "../artboard/artboard-add";
 
 export default class Artboard {
-    constructor(options) {
-        this.$el = $('.artboard');
+    constructor(width, height) {
+        this.$el = $('.artboard'); // TODO: Make this a specific object
 
-        // Attach eventListeners
-        artboardListeners();
+        this.width = width;
+        this.height = height;
+
+        // Enable resizing on artboards
+        artboardResize.init(this.$el);
         
         // Update all the artboard dimensions
-        // updateDimensions(this.$el);
+        artboardDimensions.updateDimensions(this.$el);
 
+        // TODO: First new button
         // this.createFirstNewButton();
 
-        // Dimensions
-        // this.dimensions.init();
-        // Resizable artboard
-        // this.resize.init();
-        // Add artboards
+        // Attach eventListeners
+        artboardListeners.init();
     }
+    
+    // TODO: Feature add()
 
-    add(placement, event, width, height, fn) {
-        addArtboard(placement, event, width, height, fn);
-    }
 }
 
 // Usage:

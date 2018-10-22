@@ -2,11 +2,10 @@ const $ = require('jquery');
 import {
     app
 } from "../../index";
-import {
-    resize
-} from "../artboard/artboard-resize";
 
-export function artboardListeners() {
+import * as artboardAdd from "../artboard/artboard-add";
+
+export function init() {
     let canvas = app.canvas.$canvas; // TODO: Refactor somewhere more common
 
     // Listen for clicks on New artboard button
@@ -15,23 +14,26 @@ export function artboardListeners() {
 
         // Add a new artboard before or after
         if ($target.is("div.button-artboard-before")) {
-            app.artboard.add("before", e);
+            artboardAdd.add("before", 400, 400, e);
         } else if ($target.is("div.button-artboard-after")) {
-            app.artboard.add("after", e);
+            artboardAdd.add("after", 400, 400, e);
         }
 
+        // TODO: Attach toolbar function
         // Update the URL in all frames
-        app.toolbar.updateURL();
+        // app.toolbar.updateURL();
     });
 
     // Listen for mouse hover
+    // TODO: Tidy up this logic
     canvas.on({
         mouseenter: function (e) {
             app.events.isOnArtboard = true;
-            resize(e);
+            app.canvas.$canvas.panzoom("disable");
         },
         mouseleave: function (e) {
             app.events.isOnArtboard = false;
+            app.canvas.$canvas.panzoom("enable");
         }
     }, '.artboard');
 
