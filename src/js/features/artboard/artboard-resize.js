@@ -1,84 +1,84 @@
-const $ = require('jquery');
-require('../../plugins/jquery-resizable.min.js');
-
 import {
-    app
-} from "../../index";
+  app
+} from '../../index'
 
-import * as artboardDimensions from "../artboard/artboard-dimensions";
+import * as artboardDimensions from '../artboard/artboard-dimensions'
 
-export function init(element) {
-    // TODO: Refactor the following to global
-    let $el = $(".handle__bottom");
-    let artboard = $(".artboard");
-    let artboards = $("#artboards");
-    let artboardInnerFrame = $("iframe");
+const $ = require('jquery')
+require('../../plugins/jquery-resizable.min.js')
 
-    // TODO: After adding a new artboard, that artboard isn't able to resize
-    // this is because the $('.artboard') is a cached DOM element
+export function init (element) {
+  // TODO: Refactor the following to global
+  let $el = $('.handle__bottom')
+  let artboard = $('.artboard')
+  let artboards = $('#artboards')
+  let artboardInnerFrame = $('iframe')
 
-    element.resizable({
-        handleSelector: "> .handle__bottom",
-        resizeWidthFrom: 'right',
-        touchActionNone: true,
-        onDragStart: (e, $el, newWidth, newHeight) => {
-            // Disable Panzoom
-            app.canvas.$canvas.panzoom("disable");
-            if (app.environment == "dev") {
-                console.log("Panzoom Disabled?: " + app.canvas.$canvas.panzoom("isDisabled"));
-            }
-            
-            // Update the event
-            app.events.isResizingArtboard = true;
+  // TODO: After adding a new artboard, that artboard isn't able to resize
+  // this is because the $('.artboard') is a cached DOM element
 
-            // Update dimensions
-            var parent_artboard = $el.closest(artboard);
+  element.resizable({
+    handleSelector: '> .handle__bottom',
+    resizeWidthFrom: 'right',
+    touchActionNone: true,
+    onDragStart: (e, $el, newWidth, newHeight) => {
+      // Disable Panzoom
+      app.canvas.$canvas.panzoom('disable')
+      if (app.environment == 'dev') {
+        console.log('Panzoom Disabled?: ' + app.canvas.$canvas.panzoom('isDisabled'))
+      }
 
-            // if ( app.environment == "dev" ) { 
-            //     console.log('dragging', parent_artboard);
-            // }                
+      // Update the event
+      app.events.isResizingArtboard = true
 
-            // Disable pointer events on other elements
-            artboardInnerFrame.css("pointer-events", "none");
-            artboards.css("pointer-events", "none");
+      // Update dimensions
+      var parent_artboard = $el.closest(artboard)
 
-            // Accept all events from parent
-            $el.css("pointer-events", "all");
-            $el.css("cursor", "nwse-resize");
+      // if ( app.environment == "dev" ) {
+      //     console.log('dragging', parent_artboard);
+      // }
 
-            // Override all other elements
-            $('body').css("cursor", "nwse-resize");
+      // Disable pointer events on other elements
+      artboardInnerFrame.css('pointer-events', 'none')
+      artboards.css('pointer-events', 'none')
 
-            // Update the artboard's dimensions in the UI
-            artboardDimensions.updateDimensions(parent_artboard, newWidth, newHeight);
-        },
-        onDragEnd: (e) => {
-            // Update the event
-            app.events.isResizingArtboard = false;
+      // Accept all events from parent
+      $el.css('pointer-events', 'all')
+      $el.css('cursor', 'nwse-resize')
 
-            // Disable pointer events on other elements
-            artboardInnerFrame.css("pointer-events", "");
-            artboards.css("pointer-events", "auto");
+      // Override all other elements
+      $('body').css('cursor', 'nwse-resize')
 
-            // Accept all events from parent
-            $el.css("pointer-events", "");
-            $el.css("cursor", "");
+      // Update the artboard's dimensions in the UI
+      artboardDimensions.updateDimensions(parent_artboard, newWidth, newHeight)
+    },
+    onDragEnd: (e) => {
+      // Update the event
+      app.events.isResizingArtboard = false
 
-            // Override all other elements
-            $('body').css("cursor", "");
+      // Disable pointer events on other elements
+      artboardInnerFrame.css('pointer-events', '')
+      artboards.css('pointer-events', 'auto')
 
-            // TODO: Re-enable localStorage function when ready
-            // Save the latest artboard sizes to localStorage
-            // app.settings.artboardSizes.updateLocalStorage();
+      // Accept all events from parent
+      $el.css('pointer-events', '')
+      $el.css('cursor', '')
 
-            // Re-enable
-            app.canvas.$canvas.panzoom("enable");
+      // Override all other elements
+      $('body').css('cursor', '')
 
-            if (app.environment == "dev") {
-                console.log("Panzoom Disabled?: " + app.canvas.$canvas.panzoom("isDisabled"));
-            }
-        }    
-    });
+      // TODO: Re-enable localStorage function when ready
+      // Save the latest artboard sizes to localStorage
+      // app.settings.artboardSizes.updateLocalStorage();
+
+      // Re-enable
+      app.canvas.$canvas.panzoom('enable')
+
+      if (app.environment == 'dev') {
+        console.log('Panzoom Disabled?: ' + app.canvas.$canvas.panzoom('isDisabled'))
+      }
+    }
+  })
 }
 
 // export function init() {
@@ -89,7 +89,7 @@ export function init(element) {
 //     let artboardInnerFrame = $("iframe");
 
 //     // TODO: After adding a new artboard, that artbaord isn't able to resize
-//     // this is because of how artboard is defined 
+//     // this is because of how artboard is defined
 
 //     // Allow resizing
 //     artboard.resizable({
@@ -102,16 +102,16 @@ export function init(element) {
 //             if (app.environment == "dev") {
 //                 console.log("Panzoom Disabled?: " + app.canvas.$canvas.panzoom("isDisabled"));
 //             }
-            
+
 //             // Update the event
 //             app.events.isResizingArtboard = true;
 
 //             // Update dimensions
 //             var parent_artboard = $el.closest(artboard);
 
-//             // if ( app.environment == "dev" ) { 
+//             // if ( app.environment == "dev" ) {
 //             //     console.log('dragging', parent_artboard);
-//             // }                
+//             // }
 
 //             // Disable pointer events on other elements
 //             artboardInnerFrame.css("pointer-events", "none");
@@ -152,6 +152,6 @@ export function init(element) {
 //             if (app.environment == "dev") {
 //                 console.log("Panzoom Disabled?: " + app.canvas.$canvas.panzoom("isDisabled"));
 //             }
-//         }    
+//         }
 //     });
 // }
