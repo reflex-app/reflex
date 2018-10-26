@@ -17,7 +17,8 @@ export function init (element) {
   // TODO: After adding a new artboard, that artboard isn't able to resize
   // this is because the $('.artboard') is a cached DOM element
 
-  element.resizable({
+  // TODO: Change 'artboard' to dynamic element
+  artboard.resizable({
     handleSelector: '> .handle__bottom',
     resizeWidthFrom: 'right',
     touchActionNone: true,

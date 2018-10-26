@@ -12,7 +12,8 @@
   "scripts": {
     "start": "kill -9 $(lsof -i TCP:8000 | grep LISTEN | awk '{print $2}') & gulp & nw dist",
     "build": "gulp app",
-    "deploy": "gulp release"
+    "deploy": "gulp release",
+    "tidy": "standard 'src/js/features/**/*.js'"
   },
   "bugs": {
     "url": "https://github.com/nwittwer/shift/issues"

@@ -12,4 +12,6 @@ console.log(app);
 
 // Create artboards
 require('../js/features/artboard/artboard');
-app.artboards = new Artboard();
+app.artboards = new Artboard('.artboard');
+console.log(app.artboards.update());
+// app.artboards.add("before", this, 500, 800);
