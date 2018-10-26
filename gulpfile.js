@@ -20,7 +20,7 @@ requireDir('./gulp/tasks');
 gulp.task('default', gulp.parallel('serve', 'watch'));
 
 // Starts a BrowerSync instance
-gulp.task('build', gulp.series('clean', 'sass', 'javascript', 'handlebars'));
+gulp.task('build', gulp.series('clean', 'sass', 'javascript', 'copy'));
 
 // BrowserSync Server
 gulp.task('serve', gulp.series('build', 'create-package-json:dev', function () {
@@ -49,7 +49,7 @@ gulp.task('release', gulp.series(
 gulp.task('watch', function () {
   gulp.watch(CONFIG.SRC + 'scss/**/*.scss', gulp.series('sass'));
   gulp.watch(CONFIG.SRC + 'js/**/*.js', gulp.series('javascript', reload));
-  gulp.watch([CONFIG.SRC + 'pages/**/*.hbs', CONFIG.SRC + 'partials/**/*.hbs', CONFIG.TEST + '*.hbs'], gulp.series('handlebars', reload));
+  gulp.watch(CONFIG.SRC + '**/*.html', gulp.series('copy', reload));
 });
 
 // Reloads BrowserSync
