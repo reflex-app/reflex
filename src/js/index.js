@@ -1,60 +1,63 @@
 // Required scripts
 import Vue from './required/vue.dev';
+import panzoom from './plugins/panzoom.min';
 
-Vue.component('artboard', {
-  props: ['artboard'],
-  template: `
-    <!-- TODO: Add dynamic height/width style="height: {{artboard.height}}px; width: {{artboard.width}}px" -->
-    <div class="artboard">
-    <div class="artboard__top">
-        <div>
-            W: <span class="artboard__width">{{artboard.width}}</span>
-            H: <span class="artboard__height">{{artboard.height}}</span>
-        </div>
-        <div class="artboard__loader">
-            <div class="content">
-                <div class="lds-ripple">
-                    <div></div>
-                    <div></div>
-                </div>
-            </div>
-        </div>
-        <button class="button button--small artboard__delete-button" onclick="app.artboard.delete(event)">Delete</button>
-    </div>
-    <div class="artboard__keypoints"></div>
-    <div class="artboard__content">
-        <iframe src="" nwfaketop frameborder="0"></iframe>
-        {{!-- <webview partition=”trusted”></webview> --}}
-        <div class="artboard__handles">
-            <div class="handle__bottom"></div>
-        </div>
-    </div>
-    <div class="button-artboard-after">+</div>
-</div>
-  `
-})
+// Import Views
+import artboard from './views/artboard';
+
+// Import the logic
+// import add from './components/add';
+
+const LOCAL_STORAGE_KEY = 'shift-app';
+let artboardsLocalStorage = {
+  fetch: function () {
+    let artboards = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY) || '[]')
+    artboards.forEach(function (artboard, index) {
+      artboard.id = index
+    })
+    artboardsLocalStorage.uid = artboards.length
+    return artboards
+  },
+  save: function (artboards) {
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(artboards))
+  }
+}
 
 let app = new Vue({
   el: 'main',
+
+  // Data to be made accessible throughout the app
   data: {
-    artboards: [{
-        id: 1,
-        height: 400,
-        width: 400
+    artboards: artboardsLocalStorage.fetch()
+  },
+
+  // Watch localStorage for changes
+  watch: {
+    artboards: {
+      handler: function (artboards) {
+        artboardsLocalStorage.save(artboards)
       },
-      {
-        id: 2,
-        height: 400,
-        width: 400
-      },
-      {
-        id: 3,
-        height: 400,
-        width: 400
-      }
-    ]
+      deep: true
+    }
+  },
+
+  methods: {
+    addArtboard() {
+      this.artboards.push({
+        id: artboardsLocalStorage.uid++,
+        width: 400, // TODO: dynamic
+        height: 400 // TODO: dynamic
+      })
+    }
   }
+
 })
+
+
+// Create a movable canvas
+var canvas = document.querySelector('#canvas')
+panzoom(canvas);
+
 
 // // Create artboards
 // require('../js/features/artboard/artboard');
