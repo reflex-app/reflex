@@ -3,6 +3,7 @@
     <div id="toolbar__url-container">
       <input
         v-model.lazy="url"
+        placeholder="Enter a website URL (http://website.com)"
         type="text"
         id="toolbar__url"
         name="toolbar__url" 

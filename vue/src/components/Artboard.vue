@@ -1,5 +1,8 @@
 <template>
-  <div class="artboard" v-bind:style="{height:artboard.height+'px', width:artboard.width+'px'}">
+  <div 
+    class="artboard" 
+    v-bind:style="{height:artboard.height+'px', width:artboard.width+'px'}"
+    >
       <div class="artboard__top">
           <div>
               W: <input type="text" class="artboard__width" v-model="artboard.width" auto-complete="off"/>
@@ -21,10 +24,15 @@
             v-bind:src="url"
             v-on:updateURL="render"
             nwfaketop 
-            frameborder="0">
+            frameborder="0"
+            class="iframe"
+            >
           </iframe>
           <div class="artboard__handles">
-              <!-- <div class="handle__bottom"></div> -->
+              <div 
+                @mousedown="triggerResize"
+                class="handle__bottom"
+              />
           </div>
       </div>
       <NewArtboardButton @add="$emit('add')"/>
@@ -33,6 +41,7 @@
 
 <script>
 import NewArtboardButton from "./NewArtboardButton";
+import { panzoomInstance } from "../main.js";
 
 export default {
   name: "Artboard",
@@ -50,6 +59,7 @@ export default {
         height: this.height,
         width: this.width,
         id: this.id
+        // TODO: Add loading state
       }
     };
   },
@@ -62,10 +72,84 @@ export default {
   methods: {
     render(url) {
       this.iframe.src = url;
+    },
+    triggerResize(e) {
+      // Inspired by http://jsfiddle.net/MissoulaLorenzo/gfn6ob3j/
+
+      // eslint-disable-next-line
+      // console.log("Resize event");
+
+      let _this = this;
+      let parent = e.currentTarget.parentNode.parentNode.parentNode;
+
+      let resizable = parent,
+        startX,
+        startY,
+        startWidth,
+        startHeight;
+
+      // Trigger the start of a drag
+      initDrag(e);
+
+      function initDrag(e) {
+        startX = e.clientX;
+        startY = e.clientY;
+        startWidth = parseInt(
+          document.defaultView.getComputedStyle(resizable).width,
+          10
+        );
+        startHeight = parseInt(
+          document.defaultView.getComputedStyle(resizable).height,
+          10
+        );
+        document.documentElement.addEventListener("mousemove", doDrag, false);
+        document.documentElement.addEventListener("mouseup", stopDrag, false);
+      }
+
+      function doDrag(e) {
+        resizable.style.width = startWidth + e.clientX - startX + "px";
+        resizable.style.height = startHeight + e.clientY - startY + "px";
+
+        // Pause the panzoom
+        panzoomInstance.pause();
+
+        // Ignore pointer events on iframes
+        let iframes = document.getElementsByClassName("iframe");
+        for (let iframe of iframes) {
+          iframe.style.pointerEvents = "none";
+        }
+        
+        // Update the dimensions in the UI
+        _this.artboard.height = parseInt(resizable.style.height, 10);
+        _this.artboard.width = parseInt(resizable.style.width, 10);
+      }
+
+      function stopDrag() {
+        document.documentElement.removeEventListener(
+          "mousemove",
+          doDrag,
+          false
+        );
+        document.documentElement.removeEventListener(
+          "mouseup",
+          stopDrag,
+          false
+        );
+
+        // Re-enable the panzoom
+        panzoomInstance.resume();
+
+        // Re-enable pointer events on iframes
+        let iframes = document.getElementsByClassName("iframe");
+        for (let iframe of iframes) {
+          iframe.style.pointerEvents = "auto";
+        }
+
+        // TODO: Save the new dimensions to localStorage + artboard object
+      }
     }
+
     // TODO: Watch for changes to artboard {}, save them to localstorage
-    // TODO: + artboard function
-    // TODO: - artboard function
   }
 };
 </script>

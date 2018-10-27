@@ -41,7 +41,7 @@ export default {
     }
   },
   methods: {
-    add(artboard) {
+    add() {
       this.artboards.push({
         id: artboardsLocalStorage.uid++,
         width: 375, // TODO: dynamic
