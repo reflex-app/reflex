@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div id="toolbar"></div>
+    <Toolbar/>
     <div id="canvas">
       <ArtboardsList/>
     </div>
@@ -8,33 +8,34 @@
 </template>
 
 <script>
+import Toolbar from "./components/Toolbar.vue";
 import ArtboardsList from "./components/ArtboardsList.vue";
 
 export default {
   name: "app",
   components: {
-    ArtboardsList // TODO: This should be inside of </Canvas>
+    ArtboardsList, // TODO: This should be inside of </Canvas>
+    Toolbar
   }
 };
 </script>
 
 <style lang="scss">
-@import './scss/_global';
+@import "./scss/_global";
 </style>
 
 <style lang="scss" scoped>
-@import './scss/_variables';
+@import "./scss/_variables";
 
 #app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
-  background: $body-bg;
-  height: 100%;
-  width: 100%;
-  overflow: hidden;
-  overscroll-behavior: auto;
-  box-sizing: border-box;
   display: flex;
   flex-direction: column;
+  box-sizing: border-box;
+  height: 100%;
+  width: 100%;
+  background: $body-bg;
+  overflow: hidden;
+  overscroll-behavior: auto;
 }
 
 #canvas {
@@ -44,7 +45,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  
+
   flex-grow: 1;
   height: 100%;
 
