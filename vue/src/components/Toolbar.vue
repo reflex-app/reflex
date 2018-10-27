@@ -4,18 +4,18 @@
       <input type="text" id="toolbar__url" name="toolbar__url" value="http://localhost:3002" />
       <div id="toolbar__recentURLs"></div>
     </div>
-    <div id="toolbar__canvas-controls">
+    <!-- <div id="toolbar__canvas-controls">
       <div>
         <span id="canvas-controls__zoomOut">-</span>
         <span id="canvas-controls__scale" value="100%" data-bind="scale"></span>
         <span id="canvas-controls__zoomIn">+</span>
       </div>
-      <!-- <a href="#" id="canvas-controls__reset">Reset</a> -->
+      <a href="#" id="canvas-controls__reset">Reset</a>
       <a href="#" id="canvas-controls__fit-to-screen">Fit</a>
-    </div>
-    <div>
+    </div> -->
+    <!-- <div>
       <a href="#" id="canvas-controls__orientation">Orientation</a>
-    </div>
+    </div> -->
   </div>
 </template>
 
