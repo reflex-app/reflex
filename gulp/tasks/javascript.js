@@ -24,7 +24,7 @@ gulp.task('javascript:webpack', function () {
         chunkFilename: '[hash].js'
       },
       resolve: {
-        extensions: ['.js', '.json'],
+        extensions: ['.js', '.vue', '.json'],
         modules: [resolve('node_modules')],
         alias: {}
       },

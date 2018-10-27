@@ -55,11 +55,6 @@
       </div>
     </div>
 
-    <input
-      autofocus autocomplete="off"
-      placeholder="What's the size?"
-      @keyup.enter="addArtboard">
-
     <!-- Define the resizable canvas area-->
     <div id="canvas" class="canvas">
       <!-- Constrain the contents. Used for scroll-wheel zooming. -->
@@ -67,7 +62,7 @@
         <!-- Define the horizontal artboard container-->
         <div id="artboards" v-if="artboards.length">
           <!-- Each artboard will be inserted here-->
-          <artboard v-for="artboard in artboards" v-bind:artboard="artboard" v-bind:key="artboard.id"></artboard>
+          <artboard-view v-for="artboard in artboards" v-bind:artboard="artboard" v-bind:key="artboard.id"></artboard-view>
         </div>
       </div>
     </div>
@@ -77,4 +72,5 @@
   <script src="./js/app.js" type="text/javascript"></script>
 
 </body>
+
 </html>

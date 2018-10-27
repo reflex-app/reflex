@@ -48,7 +48,7 @@ gulp.task('release', gulp.series(
 // Watch files for changes
 gulp.task('watch', function () {
   gulp.watch(CONFIG.SRC + 'scss/**/*.scss', gulp.series('sass'));
-  gulp.watch(CONFIG.SRC + 'js/**/*.js', gulp.series('javascript', reload));
+  gulp.watch(CONFIG.SRC + 'js/**/*', gulp.series('javascript', reload));
   gulp.watch(CONFIG.SRC + '**/*.html', gulp.series('copy', reload));
 });
 
