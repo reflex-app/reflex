@@ -16,11 +16,6 @@ export const artboardsLocalStorage = {
   },
   updateSize: function (artboard) {
     let artboards = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY) || '[]');
-
-    // eslint-disable-next-line
-    console.log(artboard);
-    
-
     for (var i = 0; i < artboards.length; i++) {
       if (artboard.id === artboards[i].id) { //look for match by id
         artboards[i].height = artboard.height; // updated object
