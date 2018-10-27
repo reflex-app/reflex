@@ -19,7 +19,7 @@
       <div class="artboard__content">
           <iframe src="" nwfaketop frameborder="0"></iframe>
           <div class="artboard__handles">
-              <div class="handle__bottom"></div>
+              <!-- <div class="handle__bottom"></div> -->
           </div>
       </div>
       <NewArtboardButton @add="$emit('add')"/>
