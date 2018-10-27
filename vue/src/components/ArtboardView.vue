@@ -42,6 +42,7 @@ export default {
     };
   },
   methods: {
+    // TODO: Watch for changes to artboard {}, save them to localstorage
     // TODO: + artboard function
     // TODO: - artboard function
   }
