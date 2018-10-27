@@ -1,7 +1,13 @@
 <template>
   <div id="toolbar">
     <div id="toolbar__url-container">
-      <input type="text" id="toolbar__url" name="toolbar__url" value="http://localhost:3002" />
+      <input
+        v-model="url" 
+        @keyup.enter="$emit('updateURL', url)"
+        type="text"
+        id="toolbar__url"
+        name="toolbar__url" 
+      />
       <div id="toolbar__recentURLs"></div>
     </div>
     <!-- <div id="toolbar__canvas-controls">
@@ -22,9 +28,10 @@
 <script>
 export default {
   name: "Toolbar",
-  props: {},
   data() {
-    return {};
+    return {
+      url: ""
+    };
   },
   methods: {}
 };

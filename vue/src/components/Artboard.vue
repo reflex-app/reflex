@@ -17,7 +17,12 @@
       </div>
       <div class="artboard__keypoints"></div>
       <div class="artboard__content">
-          <iframe src="" nwfaketop frameborder="0"></iframe>
+          <iframe 
+            v-bind:src="iframe.src"
+            v-on:updateURL="render"
+            nwfaketop 
+            frameborder="0">
+          </iframe>
           <div class="artboard__handles">
               <!-- <div class="handle__bottom"></div> -->
           </div>
@@ -45,10 +50,16 @@ export default {
         height: this.height,
         width: this.width,
         id: this.id
+      },
+      iframe: {
+        src: ""
       }
     };
   },
   methods: {
+    render(url) {
+      this.iframe.src = url;
+    }
     // TODO: Watch for changes to artboard {}, save them to localstorage
     // TODO: + artboard function
     // TODO: - artboard function
