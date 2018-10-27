@@ -6,6 +6,7 @@
         :key="artboard.id"
         @add="add"
         @remove="remove"
+        @resize="resize"
       />
   </div>
   <div class="empty-state" v-else>
@@ -50,6 +51,9 @@ export default {
     },
     remove(artboard) {
       this.artboards.splice(this.artboards.indexOf(artboard), 1);
+    },
+    resize(artboard) {
+      artboardsLocalStorage.updateSize(artboard);
     }
   }
 };

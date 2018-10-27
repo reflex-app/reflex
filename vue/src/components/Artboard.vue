@@ -5,8 +5,8 @@
     >
       <div class="artboard__top">
           <div>
-              W: <input type="text" class="artboard__width" v-model="artboard.width" auto-complete="off"/>
-              H: <input type="text" class="artboard__height" v-model="artboard.height" auto-complete="off"/>
+              W: <input type="text" class="artboard__width" v-model.lazy.number="artboard.width" auto-complete="off"/>
+              H: <input type="text" class="artboard__height" v-model.lazy.number="artboard.height" auto-complete="off"/>
           </div>
           <div class="artboard__loader">
               <div class="content">
@@ -22,7 +22,7 @@
       <div class="artboard__content">
           <iframe 
             v-bind:src="url"
-            v-on:updateURL="render"
+            @updateURL="render"
             nwfaketop 
             frameborder="0"
             class="iframe"
@@ -48,6 +48,7 @@ export default {
   components: {
     NewArtboardButton
   },
+
   props: {
     height: Number,
     width: Number,
@@ -63,12 +64,25 @@ export default {
       }
     };
   },
+
+  watch: {
+    // Watch for changes to the artboard object
+    artboard: {
+      handler: function() {
+        // Trigger a localStorage update in the parent component
+        this.$emit("resize", this.artboard);
+      },
+      deep: true
+    }
+  },
+
   computed: {
     // Bind to our Vuex Store's URL value
     url() {
       return this.$store.state.url;
     }
   },
+
   methods: {
     render(url) {
       this.iframe.src = url;
@@ -118,7 +132,7 @@ export default {
         for (let iframe of iframes) {
           iframe.style.pointerEvents = "none";
         }
-        
+
         // Update the dimensions in the UI
         _this.artboard.height = parseInt(resizable.style.height, 10);
         _this.artboard.width = parseInt(resizable.style.width, 10);
@@ -144,12 +158,8 @@ export default {
         for (let iframe of iframes) {
           iframe.style.pointerEvents = "auto";
         }
-
-        // TODO: Save the new dimensions to localStorage + artboard object
       }
     }
-
-    // TODO: Watch for changes to artboard {}, save them to localstorage
   }
 };
 </script>
@@ -217,9 +227,6 @@ $artboard-handle-height: 1rem;
     }
   }
 
-  &__keypoints {
-  }
-
   &__content {
     width: 100%;
     height: 100%;
@@ -229,7 +236,6 @@ $artboard-handle-height: 1rem;
     background: #ffffff;
     box-shadow: 0 4px 10px rgba(#000, 0.1);
 
-    webview,
     iframe {
       height: 100%;
       width: 100%;
