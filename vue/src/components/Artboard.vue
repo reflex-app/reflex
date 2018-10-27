@@ -18,7 +18,7 @@
       <div class="artboard__keypoints"></div>
       <div class="artboard__content">
           <iframe 
-            v-bind:src="iframe.src"
+            v-bind:src="url"
             v-on:updateURL="render"
             nwfaketop 
             frameborder="0">
@@ -50,11 +50,14 @@ export default {
         height: this.height,
         width: this.width,
         id: this.id
-      },
-      iframe: {
-        src: ""
       }
     };
+  },
+  computed: {
+    // Bind to our Vuex Store's URL value
+    url() {
+      return this.$store.state.url;
+    }
   },
   methods: {
     render(url) {

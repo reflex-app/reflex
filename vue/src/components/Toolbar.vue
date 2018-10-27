@@ -2,8 +2,7 @@
   <div id="toolbar">
     <div id="toolbar__url-container">
       <input
-        v-model="url" 
-        @keyup.enter="$emit('updateURL', url)"
+        v-model.lazy="url"
         type="text"
         id="toolbar__url"
         name="toolbar__url" 
@@ -28,12 +27,17 @@
 <script>
 export default {
   name: "Toolbar",
-  data() {
-    return {
-      url: ""
-    };
-  },
-  methods: {}
+  computed: {
+    // Bind to our Vuex Store's URL value
+    url: {
+      get() {
+        return this.$store.state.url;
+      },
+      set(value) {
+        this.$store.commit("changeURL", value);
+      }
+    }
+  }
 };
 </script>
 

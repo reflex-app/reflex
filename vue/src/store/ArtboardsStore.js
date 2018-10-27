@@ -1,3 +1,5 @@
+// TODO: Move this file somewhere better
+
 const LOCAL_STORAGE_KEY = 'shift-app';
 
 export const artboardsLocalStorage = {
