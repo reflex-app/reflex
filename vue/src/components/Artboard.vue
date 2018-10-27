@@ -13,7 +13,7 @@
                   </div>
               </div>
           </div>
-          <button class="button button--small artboard__delete-button" onclick="app.artboard.delete(event)">Delete</button>
+          <button class="button button--small artboard__delete-button" v-on:click="$emit('remove', artboard.id)">Delete</button>
       </div>
       <div class="artboard__keypoints"></div>
       <div class="artboard__content">
@@ -22,22 +22,29 @@
               <div class="handle__bottom"></div>
           </div>
       </div>
-      <div class="button-artboard-after" v-on:click="addArtboard()">+</div>
+      <NewArtboardButton @add="$emit('add')"/>
   </div>
 </template>
 
 <script>
+import NewArtboardButton from "./NewArtboardButton";
+
 export default {
   name: "Artboard",
+  components: {
+    NewArtboardButton
+  },
   props: {
     height: Number,
-    width: Number
+    width: Number,
+    id: Number
   },
   data() {
     return {
       artboard: {
         height: this.height,
-        width: this.width
+        width: this.width,
+        id: this.id
       }
     };
   },
@@ -74,8 +81,7 @@ $artboard-handle-height: 1rem;
   }
 
   &:hover {
-    background: #2a2a2a;
-    border: 1px solid #606060;
+    background: #e6e6e6;
     border-radius: 6px;
   }
 
@@ -122,7 +128,8 @@ $artboard-handle-height: 1rem;
     position: relative;
     border: 1px solid white;
     box-sizing: border-box;
-    background: darken(#3c4046, 10%);
+    background: #ffffff;
+    box-shadow: 0 4px 10px rgba(#000, 0.1);
 
     webview,
     iframe {
@@ -148,11 +155,6 @@ $artboard-handle-height: 1rem;
       border: 3px solid transparent;
     }
 
-    // .handle__right {
-    //     top: calc(50% - #{$artboard-handle-height});
-    //     bottom: 0;
-    //     right: -$artboard-handle-height;
-    // }
     .handle__bottom {
       bottom: calc(-#{$artboard-handle-height} - 16px);
       right: calc(-#{$artboard-handle-height} - 16px);
@@ -229,33 +231,5 @@ $artboard-handle-height: 1rem;
       }
     }
   }
-}
-
-.button-artboard-before,
-.button-artboard-after {
-  position: absolute;
-  top: 50%;
-  right: -4.5rem;
-  color: white;
-  background: none;
-  height: 3rem;
-  width: 3rem;
-  border-radius: 50%;
-  font-size: 1.5rem;
-  line-height: 2.7rem;
-  vertical-align: middle;
-  text-align: center;
-  border: 2px solid rgba(#ffffff, 0.2);
-
-  &:hover {
-    cursor: pointer;
-    color: #0070cd;
-    border-color: #0070cd;
-  }
-}
-
-.button-artboard-before {
-  left: -4.5rem;
-  right: 0;
 }
 </style>

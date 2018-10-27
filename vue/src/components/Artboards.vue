@@ -1,24 +1,31 @@
 <template>
   <div id="artboards" v-if="artboards.length">
-    <ArtboardView 
+    <Artboard
       v-for="artboard in artboards"
-      :key="artboard.id"
-      :height="artboard.height"
-      :width="artboard.width"
+        v-bind="artboard"
+        :key="artboard.id"
+        @add="add"
+        @remove="remove"
       />
+  </div>
+  <div class="empty-state" v-else>
+    <p>👋 Welcome to Shift! Click the "+" button to create your first screen size.</p>
+    <NewArtboardButton @add="add"/>
   </div>
 </template>
 
 <script>
-import ArtboardView from "./ArtboardView";
+import Artboard from "./Artboard";
+import NewArtboardButton from "./NewArtboardButton";
 
 // Import localStorage Information
 import { artboardsLocalStorage } from "../store/ArtboardsStore";
 
 export default {
-  name: "ArtboardsList",
+  name: "Artboards",
   components: {
-    ArtboardView
+    Artboard,
+    NewArtboardButton
   },
   data() {
     return {
@@ -34,12 +41,15 @@ export default {
     }
   },
   methods: {
-    add() {
+    add(artboard) {
       this.artboards.push({
         id: artboardsLocalStorage.uid++,
-        width: 400, // TODO: dynamic
-        height: 400 // TODO: dynamic
+        width: 375, // TODO: dynamic
+        height: 667 // TODO: dynamic
       });
+    },
+    remove(artboard) {
+      this.artboards.splice(this.artboards.indexOf(artboard), 1);
     }
   }
 };
@@ -52,15 +62,26 @@ export default {
   flex-direction: row;
   flex-wrap: nowrap;
   user-select: none;
-  background: #3c4046;
-  border-radius: 1rem;
   box-sizing: border-box;
-  padding: 8rem;
   will-change: auto; // Activate GPU rendering
 
   &.is-vertical {
     flex-direction: column;
     align-items: center;
+  }
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  .button-new-artboard {
+    position: relative;
+    top: 3rem;
+    left: 0;
+    right: 0;
   }
 }
 </style>

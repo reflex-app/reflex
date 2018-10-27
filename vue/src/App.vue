@@ -2,20 +2,21 @@
   <div id="app">
     <Toolbar/>
     <div id="canvas">
-      <ArtboardsList/>
+      <Artboards/>
     </div>
   </div>
 </template>
 
 <script>
 import Toolbar from "./components/Toolbar.vue";
-import ArtboardsList from "./components/ArtboardsList.vue";
+import Artboards from "./components/Artboards.vue";
 
 export default {
   name: "app",
   components: {
-    ArtboardsList, // TODO: This should be inside of </Canvas>
+    Artboards, // TODO: This should be inside of </Canvas>
     Toolbar
+    // TODO: Create Settings
   }
 };
 </script>
@@ -46,10 +47,6 @@ export default {
   justify-content: center;
   align-items: center;
 
-  flex-grow: 1;
-  height: 100%;
-
-  // Activate GPU rendering
-  transform: translateZ(0);
+  transform: translateZ(0); // Activate GPU rendering
 }
 </style>
