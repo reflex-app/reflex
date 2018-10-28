@@ -106,33 +106,32 @@ export default {
     "state.isSelected": {
       handler: function() {
         const element = this.$refs.iframe;
-
         if (this.state.isSelected == true) {
           element.style.pointerEvents = "auto";
-          document.addEventListener("keyup", this.keyHandler);
+          // document.addEventListener("keyup", this.keyHandler);
         } else if (this.state.isSelected == false) {
           element.style.pointerEvents = "none";
-          document.removeEventListener("keyup", this.keyHandler);
+          // document.removeEventListener("keyup", this.keyHandler);
         }
       }
     }
   },
 
-  computed: {
-    // Bind to our Vuex Store's URL value
-    url() {
-      return this.$store.state.url;
-    }
-  },
-
   methods: {
-    keyHandler(e) {
-      if (e.defaultPrevented) {
-        return;
-      }
+    // TODO: Re-bind delete key to delete artboards
+    // document.addEventListener("keyup", this.keyHandler);
+    // document.removeEventListener("keyup", this.keyHandler);
+    // Delete artboard if backspace/delete key is pressed
+    // keyHandler(e) {
+    //   let key = e.key || e.keyCode;
 
-      let key = e.key || e.keyCode;
+    //   if (key === "Backspace" || key === 8 || key === "Delete" || key === 46) {
+    //     this.$emit("remove", this.artboard.id);
 
+    //     // Remove the event listener
+    //     document.removeEventListener("keyup", this.keyHandler);
+    //   }
+    // },
 
     // Limits the size of an artboard
     validateArtboardSizeInput(name, value) {
@@ -142,7 +141,7 @@ export default {
       // Make sure we're working with a number
       const _value = typeof value == Number ? value : Number(parseInt(value));
 
-        // eslint-disable-next-line
+      // eslint-disable-next-line
       // console.log(_value);
 
       // Min & Max
@@ -166,10 +165,6 @@ export default {
     },
     triggerResize(e) {
       // Inspired by http://jsfiddle.net/MissoulaLorenzo/gfn6ob3j/
-
-      // eslint-disable-next-line
-      // console.log("Resize event");
-
       let _this = this;
       let parent = e.currentTarget.parentNode.parentNode.parentNode;
 

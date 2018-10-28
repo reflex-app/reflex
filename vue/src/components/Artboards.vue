@@ -51,6 +51,7 @@ export default {
       });
     },
     remove(id) {
+      // TODO: Add test for deleting multiple selected artboards
       // eslint-disable-next-line
       // console.log(id);
 
