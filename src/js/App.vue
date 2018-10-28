@@ -13,9 +13,4 @@ export default {
     ArtboardView
   }
 };
-
-// Create a movable canvas
-// import panzoom from './plugins/panzoom.min';
-// var canvas = document.querySelector('#canvas')
-// panzoom(canvas);
 </script>
