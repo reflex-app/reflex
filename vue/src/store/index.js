@@ -13,9 +13,9 @@ export default new Vuex.Store({
     changeURL(state, val) {
       // Update the URL based on the incoming value
       state.url = val;
+
       // eslint-disable-next-line
-      console.log(this.state.url);
-      
+      console.log("New URL:", this.state.url);
     }
   }
 })

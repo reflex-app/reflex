@@ -24,7 +24,10 @@
                 auto-complete="off"
               />
           </div>
-          <div class="artboard__loader">
+          <div 
+            class="artboard__loader" 
+            :class="{ 'is-loading': state.isLoading }"
+          >
               <div class="content">
                   <div class="lds-ripple">
                       <div></div>
@@ -39,10 +42,9 @@
           <iframe 
             v-bind:src="url"
             ref="iframe"
-            @updateURL="render"
+            class="iframe"
             nwfaketop 
             frameborder="0"
-            class="iframe"
             >
           </iframe>
           <div class="artboard__handles">
@@ -80,8 +82,8 @@ export default {
         id: this.id
       },
       state: {
-        isSelected: false
-        // TODO: Add loading state
+        isSelected: false,
+        isLoading: false
       }
     };
   },
@@ -97,8 +99,7 @@ export default {
     // Watch for changes to the artboard object
     artboard: {
       handler: function() {
-        // Trigger a localStorage update in the parent component
-        this.$emit("resize", this.artboard);
+        this.$emit("resize", this.artboard); // Trigger localStorage update in parent component
       },
       deep: true
     },
@@ -113,6 +114,23 @@ export default {
           element.style.pointerEvents = "none";
           // document.removeEventListener("keyup", this.keyHandler);
         }
+      }
+    },
+    // When the URL is changed, display a loading indicator:
+    url: {
+      handler: function() {
+        const _this = this;
+
+        // Update the iFrame's src
+        this.$refs.iframe.src = this.url;
+
+        // Show loading spinner
+        this.state.isLoading = true;
+
+        // Site is loaded
+        this.$refs.iframe.onload = function() {
+          _this.state.isLoading = false; // Hide loading spinner
+        };
       }
     }
   },
@@ -146,11 +164,9 @@ export default {
 
       // Min & Max
       if (_value > maxSize || _value < minSize) {
-        // Too small or big
         return false;
       } else {
-        // Passed!
-        // Update the size
+        // Size is within range!
         if (name == "height") {
           this.artboard.height = _value;
         } else if (name == "width") {
@@ -159,23 +175,18 @@ export default {
       }
     },
 
-    // Render the website
-    render(url) {
-      this.iframe.src = url;
-    },
     triggerResize(e) {
       // Inspired by http://jsfiddle.net/MissoulaLorenzo/gfn6ob3j/
-      let _this = this;
-      let parent = e.currentTarget.parentNode.parentNode.parentNode;
 
-      let resizable = parent,
+      let _this = this,
+        parent = e.currentTarget.parentNode.parentNode.parentNode,
+        resizable = parent,
         startX,
         startY,
         startWidth,
         startHeight;
 
-      // Trigger the start of a drag
-      initDrag(e);
+      initDrag(e); // Trigger the start of a drag
 
       function initDrag(e) {
         startX = e.clientX;
