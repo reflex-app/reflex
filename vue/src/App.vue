@@ -1,8 +1,10 @@
 <template>
   <div id="app">
     <Toolbar/>
-    <div id="canvas">
-      <Artboards/>
+    <div id="canvas-container">
+      <div id="canvas">
+        <Artboards/>
+      </div>
     </div>
   </div>
 </template>
@@ -39,6 +41,23 @@ export default {
   overscroll-behavior: auto;
 }
 
+#canvas-container {
+  background: $body-bg;
+  height: 100%;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  outline: none;
+
+  &:hover {
+    cursor: grab;
+  }
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
 #canvas {
   height: 100%;
   width: 100%;
@@ -46,7 +65,6 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-
   transform: translateZ(0); // Activate GPU rendering
 }
 </style>
