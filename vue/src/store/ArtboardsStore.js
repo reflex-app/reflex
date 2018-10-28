@@ -20,7 +20,7 @@ export const artboardsLocalStorage = {
       if (artboard.id === artboards[i].id) { //look for match by id
         artboards[i].height = artboard.height; // updated object
         artboards[i].width = artboard.width; // updated object
-        break; //exit loop since you found the person
+        break; //exit loop, object has been updated
       }
     }
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(artboards)); //put the object back

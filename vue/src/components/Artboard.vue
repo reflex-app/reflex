@@ -7,8 +7,22 @@
     >
       <div class="artboard__top">
           <div>
-              W: <input type="text" class="artboard__width" v-model.lazy.number="artboard.width" auto-complete="off"/>
-              H: <input type="text" class="artboard__height" v-model.lazy.number="artboard.height" auto-complete="off"/>
+              W: 
+              <input 
+                type="text" 
+                :value="artboard.width"
+                @keyup.enter="validateArtboardSizeInput('width', $event.target.value)"
+                class="artboard__width" 
+                auto-complete="off"
+              />
+              H: 
+              <input 
+                type="text" 
+                :value="artboard.height"
+                @keyup.enter="validateArtboardSizeInput('height', $event.target.value)"
+                class="artboard__height" 
+                auto-complete="off"
+              />
           </div>
           <div class="artboard__loader">
               <div class="content">
@@ -18,7 +32,7 @@
                   </div>
               </div>
           </div>
-          <!-- <button class="button button--small artboard__delete-button" v-on:click="$emit('remove', artboard.id)">Delete</button> -->
+          <button class="button button--small artboard__delete-button" v-on:click="$emit('remove', artboard.id)">Delete</button>
       </div>
       <div class="artboard__keypoints"></div>
       <div class="artboard__content">
@@ -57,6 +71,7 @@ export default {
     width: Number,
     id: Number
   },
+
   data() {
     return {
       artboard: {
@@ -69,6 +84,13 @@ export default {
         // TODO: Add loading state
       }
     };
+  },
+
+  computed: {
+    // Bind to our Vuex Store's URL value
+    url() {
+      return this.$store.state.url;
+    }
   },
 
   watch: {
@@ -111,14 +133,30 @@ export default {
 
       let key = e.key || e.keyCode;
 
-      if (key === "Backspace" || key === 8 || key === "Delete" || key === 46) {
+
+    // Limits the size of an artboard
+    validateArtboardSizeInput(name, value) {
+      const minSize = 50;
+      const maxSize = 9999;
+
+      // Make sure we're working with a number
+      const _value = typeof value == Number ? value : Number(parseInt(value));
+
         // eslint-disable-next-line
-        // console.log("Deleted:", this.artboard.id);
+      // console.log(_value);
 
-        this.$emit("remove", this.artboard.id);
-
-        // Remove the event listener
-        document.removeEventListener("keyup", this.keyHandler);
+      // Min & Max
+      if (_value > maxSize || _value < minSize) {
+        // Too small or big
+        return false;
+      } else {
+        // Passed!
+        // Update the size
+        if (name == "height") {
+          this.artboard.height = _value;
+        } else if (name == "width") {
+          this.artboard.width = _value;
+        }
       }
     },
 
@@ -253,24 +291,10 @@ $artboard-handle-height: 1rem;
     input[type="text"] {
       border: 0;
       outline: none;
-      background: none;
       font-size: 1rem;
-    }
-  }
-
-  .artboard__delete-button {
-    position: relative;
-    float: right;
-    vertical-align: middle;
-    margin-right: 0;
-    color: white;
-    opacity: 0.6;
-    background: rgb(199, 25, 25);
-
-    &:hover {
-      opacity: 1;
-      color: white;
-      background: lighten(rgb(199, 25, 25), 10%);
+      background: none;
+      width: 3rem;
+      border-bottom: 1px solid darken($body-bg, 15%);
     }
   }
 
