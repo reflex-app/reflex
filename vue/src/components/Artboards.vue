@@ -44,11 +44,13 @@ export default {
   },
   methods: {
     add() {
+      const next_id = this.artboards.length;
       this.artboards.push({
-        id: artboardsLocalStorage.uid++,
+        id: next_id,
         width: 375, // TODO: dynamic
         height: 667 // TODO: dynamic
       });
+
     },
     remove(id) {
       // TODO: Add test for deleting multiple selected artboards
