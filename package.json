@@ -57,6 +57,7 @@
     "regenerator-runtime": "^0.12.1",
     "require-dir": "^1.0.0",
     "sass-loader": "^7.1.0",
+    "sinon": "^7.1.0",
     "undertaker-forward-reference": "^1.0.2",
     "vue-template-compiler": "^2.5.17"
   },
