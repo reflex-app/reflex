@@ -2,8 +2,9 @@
   "name": "shift",
   "version": "0.4.0",
   "main": "index.html",
-  "node-main": "./js/index.js",
+  "node-main": "./main.js",
   "node-remote": "<all_urls>",
+  "private": true,
   "icon": "icon.icns",
   "window": {
     "height": 750,
