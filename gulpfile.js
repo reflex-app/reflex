@@ -2,6 +2,8 @@ const gulp = require('gulp');
 const browserSync = require('browser-sync');
 const requireDir = require('require-dir');
 const forwardReference = require('undertaker-forward-reference');
+const exec = require('child_process').exec;
+
 // Load in the config settings
 const CONFIG = require('./gulp/config.js');
 
@@ -12,28 +14,29 @@ gulp.registry(forwardReference());
 requireDir('./gulp/tasks');
 
 // Tasks
-// 1. Default
-// 2. Build
-// 3. Serve
-// 4. App: Compiles the app
-// 5. Release: Drafts a release of the app to Github
-gulp.task('default', gulp.parallel('serve', 'watch'));
+// 1. Default: copy a development version of the package.json
+// 2. App: Vue + Webpack compile, Compiles the app
+// 3. Release: Drafts a release of the app to Github
 
-// Starts a BrowerSync instance
-gulp.task('build', gulp.series('clean', 'sass', 'javascript', 'copy'));
+// Create a development version of the package.json
+// This will allow NW.JS to run the http://localhost:8080 port
+gulp.task('default', gulp.series('create-package-json:dev'));
 
-// BrowserSync Server
-gulp.task('serve', gulp.series('build', 'create-package-json:dev', function () {
-  browserSync.init({
-    server: CONFIG.DIST,
-    port: CONFIG.SERVER.PORT,
-    notify: false
+// Builds JS + SCSS
+gulp.task('vue:build', function (done) {
+  const command = `vue-cli-service build`;
+  exec(command, (err, stdout, stderr) => {
+    console.log(stdout);
+    console.log(stderr);
+    done();
   });
-}));
+});
 
 // Compile the app
 gulp.task('app', gulp.series(
-  'build',
+  'clean',
+  'vue:build',
+  'copy',
   'create-package-json:main',
   'build-app'
 ));
@@ -44,13 +47,6 @@ gulp.task('release', gulp.series(
   'code-sign-mac',
   'deploy-app'
 ));
-
-// Watch files for changes
-gulp.task('watch', function () {
-  gulp.watch(CONFIG.SRC + 'scss/**/*.scss', gulp.series('sass'));
-  gulp.watch(CONFIG.SRC + 'js/**/*', gulp.series('javascript', reload));
-  gulp.watch(CONFIG.SRC + '**/*.html', gulp.series('copy', reload));
-});
 
 // Reloads BrowserSync
 function reload(done) {

@@ -1,12 +1,13 @@
 module.exports = {
   // Core Directories
   SRC: 'src/',
+  ASSETS: 'src/assets/',
   DIST: 'dist/',
   SHIP: 'ship/',
   TEST: 'test/',
 
   SERVER: {
-    PORT: 8000
+    PORT: 8080
   },
 
   JS_FILES: [

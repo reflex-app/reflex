@@ -8,7 +8,6 @@ const merge = require('merge-stream');
 const exec = require('child_process').exec;
 const chalk = require('chalk');
 const release = require('gulp-github-release');
-const zip = require('gulp-zip');
 const notify = require("gulp-notify");
 const archiver = require('archiver');
 const opn = require('opn');
@@ -113,8 +112,8 @@ gulp.task('build-app:main', function () {
         files: CONFIG.DIST + '**/*', // copy everything inside of /dist to the final app
         buildDir: CONFIG.SHIP, // output directory
         cacheDir: CONFIG.SHIP, // cached NWJS versions (/dist/cache)
-        macCredits: CONFIG.SRC + 'credits.html',
-        macIcns: CONFIG.SRC + 'icon.icns',
+        macCredits: CONFIG.ASSETS + 'credits.html',
+        macIcns: CONFIG.ASSETS + 'icon.icns',
         platforms: ['osx64'] // win32
     })
 
