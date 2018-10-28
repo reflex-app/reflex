@@ -11,6 +11,7 @@
               <input 
                 type="text" 
                 :value="artboard.width"
+                @blur="validateArtboardSizeInput('width', $event.target.value)"
                 @keyup.enter="validateArtboardSizeInput('width', $event.target.value)"
                 class="artboard__width" 
                 auto-complete="off"
@@ -19,15 +20,14 @@
               <input 
                 type="text" 
                 :value="artboard.height"
+                @blur="validateArtboardSizeInput('height', $event.target.value)"
                 @keyup.enter="validateArtboardSizeInput('height', $event.target.value)"
                 class="artboard__height" 
                 auto-complete="off"
               />
           </div>
-          <div 
-            class="artboard__loader" 
-            :class="{ 'is-loading': state.isLoading }"
-          >
+          <!-- Show a loader when state.isLoading == true -->
+          <div class="artboard__loader is-loading" v-if="state.isLoading">
               <div class="content">
                   <div class="lds-ripple">
                       <div></div>
@@ -156,20 +156,32 @@ export default {
       const maxSize = 9999;
 
       // Make sure we're working with a number
-      const _value = typeof value == Number ? value : Number(parseInt(value));
+      const newValue = typeof value == Number ? value : Number(parseInt(value));
 
-      // eslint-disable-next-line
-      // console.log(_value);
+      // Change the data based on the name
+      let oldValue = "";
+      if (name == "height") {
+        oldValue = this.artboard.height;
+      } else if (name == "width") {
+        oldValue = this.artboard.width;
+      }
+
+      // If no change
+      if (oldValue === newValue) {
+        return;
+      }
 
       // Min & Max
-      if (_value > maxSize || _value < minSize) {
+      if (newValue > maxSize || newValue < minSize) {
+        // eslint-disable-next-line
+        // console.log(newValue);
         return false;
       } else {
         // Size is within range!
         if (name == "height") {
-          this.artboard.height = _value;
+          this.artboard.height = newValue;
         } else if (name == "width") {
-          this.artboard.width = _value;
+          this.artboard.width = newValue;
         }
       }
     },
@@ -207,7 +219,8 @@ export default {
         resizable.style.height = startHeight + e.clientY - startY + "px";
 
         // Pause the panzoom
-        this.$panzoomInstance.pause();
+        // TODO: This is broken
+        _this.$panzoom.pause();
 
         // Ignore pointer events on iframes
         let iframes = document.getElementsByClassName("iframe");
@@ -233,7 +246,8 @@ export default {
         );
 
         // Re-enable the panzoom
-        this.$panzoomInstance.resume();
+        // TODO: This is broken
+        _this.$panzoom.resume();
 
         // Re-enable pointer events on iframes
         let iframes = document.getElementsByClassName("iframe");
