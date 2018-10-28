@@ -18,7 +18,7 @@
                   </div>
               </div>
           </div>
-          <button class="button button--small artboard__delete-button" v-on:click="$emit('remove', artboard.id)">Delete</button>
+          <!-- <button class="button button--small artboard__delete-button" v-on:click="$emit('remove', artboard.id)">Delete</button> -->
       </div>
       <div class="artboard__keypoints"></div>
       <div class="artboard__content">
@@ -81,14 +81,16 @@ export default {
       deep: true
     },
     // Toggle iFrame pointer-events based on the isSelected artboard state
-    'state.isSelected': {
+    "state.isSelected": {
       handler: function() {
-        let element = this.$refs.iframe;
+        const element = this.$refs.iframe;
 
-        if ( this.state.isSelected === true ) {
+        if (this.state.isSelected == true) {
           element.style.pointerEvents = "auto";
-        } else {
+          document.addEventListener("keyup", this.keyHandler);
+        } else if (this.state.isSelected == false) {
           element.style.pointerEvents = "none";
+          document.removeEventListener("keyup", this.keyHandler);
         }
       }
     }
@@ -102,6 +104,24 @@ export default {
   },
 
   methods: {
+    keyHandler(e) {
+      if (e.defaultPrevented) {
+        return;
+      }
+
+      let key = e.key || e.keyCode;
+
+      if (key === "Backspace" || key === 8 || key === "Delete" || key === 46) {
+        // eslint-disable-next-line
+        // console.log("Deleted:", this.artboard.id);
+
+        this.$emit("remove", this.artboard.id);
+
+        // Remove the event listener
+        document.removeEventListener("keyup", this.keyHandler);
+      }
+    },
+
     // Render the website
     render(url) {
       this.iframe.src = url;

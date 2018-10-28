@@ -3,6 +3,7 @@
     <Artboard
       v-for="artboard in artboards"
         v-bind="artboard"
+        ref="artboard"
         :key="artboard.id"
         @add="add"
         @remove="remove"
@@ -49,8 +50,25 @@ export default {
         height: 667 // TODO: dynamic
       });
     },
-    remove(artboard) {
-      this.artboards.splice(this.artboards.indexOf(artboard), 1);
+    remove(id) {
+      // eslint-disable-next-line
+      // console.log(id);
+
+      // function filterArtboards(artboards) {
+      //   return artboards.filter(artboard => {
+      //     // eslint-disable-next-line
+      //     console.log(artboard);
+      //     // return artboard.state.isSelected
+      //   });
+      // }
+
+      // eslint-disable-next-line
+      // console.log(filterArtboards(this.artboards));
+      // eslint-disable-next-line
+      // console.log(this.$refs.artboard[id]);
+
+      // Remove from DOM + 
+      this.artboards.splice(this.artboards.indexOf(id), 1);
     },
     resize(artboard) {
       artboardsLocalStorage.updateSize(artboard);
