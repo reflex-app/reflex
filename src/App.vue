@@ -2,7 +2,7 @@
   <div id="app">
     <Toolbar/>
     <div id="canvas-container">
-      <div id="canvas">
+      <div id="canvas" ref="canvas">
         <Artboards/>
       </div>
     </div>
@@ -12,6 +12,7 @@
 <script>
 import Toolbar from "./components/Toolbar.vue";
 import Artboards from "./components/Artboards.vue";
+import panzoom from "panzoom"
 
 export default {
   name: "app",
@@ -19,6 +20,11 @@ export default {
     Artboards, // TODO: This should be inside of </Canvas>
     Toolbar
     // TODO: Create Settings
+  },
+  mounted() {
+    // Attach panzoom
+    // Creates a moveable canvas
+    this.$panzoomInstance = panzoom(this.$refs.canvas);
   }
 };
 </script>

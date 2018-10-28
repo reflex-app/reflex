@@ -60,7 +60,6 @@
 
 <script>
 import NewArtboardButton from "./NewArtboardButton";
-import { panzoomInstance } from "../main.js";
 
 export default {
   name: "Artboard",
@@ -208,7 +207,7 @@ export default {
         resizable.style.height = startHeight + e.clientY - startY + "px";
 
         // Pause the panzoom
-        panzoomInstance.pause();
+        this.$panzoomInstance.pause();
 
         // Ignore pointer events on iframes
         let iframes = document.getElementsByClassName("iframe");
@@ -234,7 +233,7 @@ export default {
         );
 
         // Re-enable the panzoom
-        panzoomInstance.resume();
+        this.$panzoomInstance.resume();
 
         // Re-enable pointer events on iframes
         let iframes = document.getElementsByClassName("iframe");
