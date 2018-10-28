@@ -1,7 +1,9 @@
 <template>
   <div 
     class="artboard" 
-    v-bind:style="{height:artboard.height+'px', width:artboard.width+'px'}"
+    v-bind:style="{ height: artboard.height+'px', width: artboard.width+'px' }"
+    v-bind:class="{ 'is-selected': state.isSelected }"
+    @click="state.isSelected = !state.isSelected"
     >
       <div class="artboard__top">
           <div>
@@ -22,6 +24,7 @@
       <div class="artboard__content">
           <iframe 
             v-bind:src="url"
+            ref="iframe"
             @updateURL="render"
             nwfaketop 
             frameborder="0"
@@ -60,6 +63,9 @@ export default {
         height: this.height,
         width: this.width,
         id: this.id
+      },
+      state: {
+        isSelected: false
         // TODO: Add loading state
       }
     };
@@ -73,6 +79,18 @@ export default {
         this.$emit("resize", this.artboard);
       },
       deep: true
+    },
+    // Toggle iFrame pointer-events based on the isSelected artboard state
+    'state.isSelected': {
+      handler: function() {
+        let element = this.$refs.iframe;
+
+        if ( this.state.isSelected === true ) {
+          element.style.pointerEvents = "auto";
+        } else {
+          element.style.pointerEvents = "none";
+        }
+      }
     }
   },
 
@@ -84,6 +102,7 @@ export default {
   },
 
   methods: {
+    // Render the website
     render(url) {
       this.iframe.src = url;
     },
@@ -191,15 +210,16 @@ $artboard-handle-height: 1rem;
   &:hover {
     background: #e6e6e6;
     border-radius: 6px;
+    cursor: pointer;
   }
 
   &.is-selected {
-    background: #2a2a2a;
-    border: 1px solid #606060;
-    border-radius: 6px;
+    background: rgba(165, 197, 247, 0.1);
+    border: 1px solid #a5c5f7;
+    border-radius: 8px;
   }
 
-  &__top {
+  .artboard__top {
     width: 100%;
     display: flex;
     justify-content: space-between;
@@ -209,9 +229,16 @@ $artboard-handle-height: 1rem;
     & > *:not(:first-child) {
       margin-left: 16px;
     }
+
+    input[type="text"] {
+      border: 0;
+      outline: none;
+      background: none;
+      font-size: 1rem;
+    }
   }
 
-  &__delete-button {
+  .artboard__delete-button {
     position: relative;
     float: right;
     vertical-align: middle;
@@ -227,7 +254,7 @@ $artboard-handle-height: 1rem;
     }
   }
 
-  &__content {
+  .artboard__content {
     width: 100%;
     height: 100%;
     position: relative;
@@ -239,10 +266,11 @@ $artboard-handle-height: 1rem;
     iframe {
       height: 100%;
       width: 100%;
+      pointer-events: none;
     }
   }
 
-  &__handles {
+  .artboard__handles {
     position: absolute;
     bottom: 0;
     right: 0;
