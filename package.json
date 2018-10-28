@@ -13,6 +13,7 @@
     "start": "kill -9 $(lsof -i TCP:8080 | grep LISTEN | awk '{print $2}') & vue-cli-service serve & gulp & nw dist",
     "build": "gulp app",
     "deploy": "gulp release",
+    "test": "jest",
     "lint": "vue-cli-service lint"
   },
   "bugs": {
@@ -22,8 +23,11 @@
     "@vue/cli-plugin-babel": "^3.0.5",
     "@vue/cli-plugin-eslint": "^3.0.5",
     "@vue/cli-service": "^3.0.5",
+    "@vue/test-utils": "^1.0.0-beta.25",
     "archiver": "^3.0.0",
+    "babel-jest": "^23.6.0",
     "babel-loader": "^8.0.4",
+    "babel-preset-env": "^1.7.0",
     "chai": "^4.2.0",
     "chalk": "^1.1.3",
     "dotenv": "^6.0.0",
@@ -40,6 +44,7 @@
     "gulp-sourcemaps": "^2.6.4",
     "gulp-wrap": "^0.14.0",
     "inquirer": "^6.2.0",
+    "jest": "^23.6.0",
     "json-format": "^1.0.1",
     "merge-stream": "^1.0.1",
     "mocha": "^5.2.0",
@@ -47,11 +52,13 @@
     "opn": "^5.4.0",
     "ora": "^1.2.0",
     "path": "^0.12.7",
+    "regenerator-runtime": "^0.12.1",
     "require-dir": "^1.0.0",
     "undertaker-forward-reference": "^1.0.2",
     "vue-template-compiler": "^2.5.17"
   },
   "dependencies": {
+    "jest-vue-preprocessor": "^1.4.0",
     "panzoom": "^6.3.2",
     "vue": "^2.5.17",
     "vuex": "^3.0.1"
@@ -73,6 +80,20 @@
   "postcss": {
     "plugins": {
       "autoprefixer": {}
+    }
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "vue"
+    ],
+    "transform": {
+      ".*\\.(vue)$": "<rootDir>/node_modules/jest-vue-preprocessor",
+      "^.+\\.js$": "<rootDir>/node_modules/babel-jest"
+    },
+    "moduleNameMapper": {
+      "^@/(.*)$": "<rootDir>/src/$1"
     }
   },
   "browserslist": [

@@ -1,4 +1,13 @@
-{
-  "presets": ["env"],
-  "comments": false
+{   
+  "presets": [   
+    ["env", { "modules": false }]   
+  ],   
+  "comments": false,
+  "env": {  
+    "test": {  
+      "presets": [ 
+        ["env", { "targets": { "node": "current" }}]       
+      ]     
+    }   
+  } 
 }
