@@ -12,6 +12,7 @@
 <script>
 import Toolbar from "./components/Toolbar.vue";
 import Artboards from "./components/Artboards.vue";
+import panzoom from "panzoom"
 
 export default {
   name: "app",
@@ -21,10 +22,8 @@ export default {
     // TODO: Create Settings
   },
   mounted() {
-    // Attach panzoom
-    // Creates a moveable canvas
-    // eslint-disable-next-line
-    var canvas = this.$panzoom(this.$refs.canvas);
+    // Attach panzoom (pan + zoom-able canvas)
+    document.panzoomInstance = panzoom(this.$refs.canvas);
   }
 };
 </script>

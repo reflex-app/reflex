@@ -218,10 +218,6 @@ export default {
         resizable.style.width = startWidth + e.clientX - startX + "px";
         resizable.style.height = startHeight + e.clientY - startY + "px";
 
-        // Pause the panzoom
-        // TODO: This is broken
-        _this.$panzoom.pause();
-
         // Ignore pointer events on iframes
         let iframes = document.getElementsByClassName("iframe");
         for (let iframe of iframes) {
@@ -231,6 +227,9 @@ export default {
         // Update the dimensions in the UI
         _this.artboard.height = parseInt(resizable.style.height, 10);
         _this.artboard.width = parseInt(resizable.style.width, 10);
+
+        // Pause the panzoom
+        document.panzoomInstance.pause(); // TODO: Cleaner solution that polluting document?
       }
 
       function stopDrag() {
@@ -245,15 +244,14 @@ export default {
           false
         );
 
-        // Re-enable the panzoom
-        // TODO: This is broken
-        _this.$panzoom.resume();
-
         // Re-enable pointer events on iframes
         let iframes = document.getElementsByClassName("iframe");
         for (let iframe of iframes) {
           iframe.style.pointerEvents = "auto";
         }
+
+        // Re-enable the panzoom
+        document.panzoomInstance.resume(); // TODO: Cleaner solution that polluting document?
       }
     }
   }
