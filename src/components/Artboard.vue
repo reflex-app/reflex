@@ -6,53 +6,53 @@
     @click="state.isSelected = !state.isSelected"
     >
       <div class="artboard__top">
-          <div>
-              W: 
-              <input 
-                type="text" 
-                :value="artboard.width"
-                @blur="validateArtboardSizeInput('width', $event.target.value)"
-                @keyup.enter="validateArtboardSizeInput('width', $event.target.value)"
-                class="artboard__width" 
-                auto-complete="off"
-              />
-              H: 
-              <input 
-                type="text" 
-                :value="artboard.height"
-                @blur="validateArtboardSizeInput('height', $event.target.value)"
-                @keyup.enter="validateArtboardSizeInput('height', $event.target.value)"
-                class="artboard__height" 
-                auto-complete="off"
-              />
+        <div>
+          W: 
+          <input 
+            type="text" 
+            :value="artboard.width"
+            @blur="validateArtboardSizeInput('width', $event.target.value)"
+            @keyup.enter="validateArtboardSizeInput('width', $event.target.value)"
+            class="artboard__width" 
+            auto-complete="off"
+          />
+          H: 
+          <input 
+            type="text" 
+            :value="artboard.height"
+            @blur="validateArtboardSizeInput('height', $event.target.value)"
+            @keyup.enter="validateArtboardSizeInput('height', $event.target.value)"
+            class="artboard__height" 
+            auto-complete="off"
+          />
+        </div>
+        <!-- Show a loader when state.isLoading == true -->
+        <div class="artboard__loader is-loading" v-if="state.isLoading">
+          <div class="content">
+            <div class="lds-ripple">
+              <div></div>
+              <div></div>
+            </div>
           </div>
-          <!-- Show a loader when state.isLoading == true -->
-          <div class="artboard__loader is-loading" v-if="state.isLoading">
-              <div class="content">
-                  <div class="lds-ripple">
-                      <div></div>
-                      <div></div>
-                  </div>
-              </div>
-          </div>
-          <button class="button button--small artboard__delete-button" v-on:click="$emit('remove', artboard.id)">Delete</button>
+        </div>
+        <button class="button button--small artboard__delete-button" v-on:click="$emit('remove', artboard.id)">Delete</button>
       </div>
       <div class="artboard__keypoints"></div>
       <div class="artboard__content">
-          <iframe 
-            v-bind:src="url"
-            ref="iframe"
-            class="iframe"
-            nwfaketop 
-            frameborder="0"
-            >
-          </iframe>
-          <div class="artboard__handles">
-              <div 
-                @mousedown="triggerResize"
-                class="handle__bottom"
-              />
-          </div>
+        <iframe 
+          v-bind:src="url"
+          ref="iframe"
+          class="iframe"
+          nwfaketop 
+          frameborder="0"
+          >
+        </iframe>
+        <div class="artboard__handles">
+            <div 
+              @mousedown="triggerResize"
+              class="handle__bottom"
+            />
+        </div>
       </div>
       <NewArtboardButton @add="$emit('add')"/>
   </div>

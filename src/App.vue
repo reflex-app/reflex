@@ -1,9 +1,9 @@
 <template>
   <div id="app">
-    <Toolbar/>
+    <Toolbar ref="toolbar"/>
     <div id="canvas-container">
       <div id="canvas" ref="canvas">
-        <Artboards/>
+        <Artboards ref="artboards"/>
       </div>
     </div>
   </div>
@@ -12,7 +12,7 @@
 <script>
 import Toolbar from "./components/Toolbar.vue";
 import Artboards from "./components/Artboards.vue";
-import panzoom from "panzoom"
+import panzoom from "panzoom";
 
 export default {
   name: "app",
@@ -21,9 +21,43 @@ export default {
     Toolbar
     // TODO: Create Settings
   },
+  methods: {
+    contentWidth() {
+      const width = window.innerWidth / (this.$refs.artboards.$el.clientWidth / 2);
+      // eslint-disable-next-line 
+      console.log(width);
+      
+      return Number(width);
+    },
+    contentHeight() {
+      const otherElements = this.$refs.toolbar.$el.clientHeight;
+      const height =
+        window.innerHeight / this.$refs.artboards.$el.clientHeight +
+        otherElements;
+      return Number(height);
+    },
+    minZoom() {
+      return Number(Math.min(this.contentWidth(), this.contentHeight()));
+    }
+    // TODO: Add currentZoomScale() to Vuex store
+    // currentZoomScale() {
+    //   return document.panzoomInstance.getTransform();
+    // }
+  },
   mounted() {
     // Attach panzoom (pan + zoom-able canvas)
-    document.panzoomInstance = panzoom(this.$refs.canvas);
+    document.panzoomInstance = panzoom(this.$refs.canvas, {
+      maxZoom: 1,
+      minZoom: 0.1
+    });
+
+    // Start by zooming in
+    // TODO: This currently doesn't calculate the correct height
+    document.panzoomInstance.zoomAbs(
+      this.contentWidth(),
+      this.contentHeight(),
+      this.minZoom()
+    );
   }
 };
 </script>
