@@ -2,13 +2,13 @@
   <div id="artboards" v-if="artboards.length">
     <Artboard
       v-for="artboard in artboards"
-        v-bind="artboard"
-        ref="artboard"
-        :key="artboard.id"
-        @add="add"
-        @remove="remove"
-        @resize="resize"
-      />
+      v-bind="artboard"
+      ref="artboard"
+      :key="artboard.id"
+      @add="add"
+      @remove="remove"
+      @resize="resize"
+    />
   </div>
   <div class="empty-state" v-else>
     <p>👋 Welcome to Shift! Click the "+" button to create your first screen size.</p>
@@ -50,7 +50,6 @@ export default {
         width: 375, // TODO: dynamic
         height: 667 // TODO: dynamic
       });
-
     },
     remove(id) {
       // TODO: Add test for deleting multiple selected artboards
@@ -70,7 +69,7 @@ export default {
       // eslint-disable-next-line
       // console.log(this.$refs.artboard[id]);
 
-      // Remove from DOM + 
+      // Remove from DOM +
       this.artboards.splice(this.artboards.indexOf(id), 1);
     },
     resize(artboard) {

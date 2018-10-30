@@ -61,6 +61,8 @@
 <script>
 import NewArtboardButton from "./NewArtboardButton";
 
+// let resizeDebounce; // keep track of resize debouncing
+
 export default {
   name: "Artboard",
   components: {
@@ -185,10 +187,7 @@ export default {
         }
       }
     },
-
     triggerResize(e) {
-      // Inspired by http://jsfiddle.net/MissoulaLorenzo/gfn6ob3j/
-
       let _this = this,
         parent = e.currentTarget.parentNode.parentNode.parentNode,
         resizable = parent,
@@ -197,39 +196,49 @@ export default {
         startWidth,
         startHeight;
 
-      initDrag(e); // Trigger the start of a drag
+      // Allow resizing, attach event handlers
+      startX = e.clientX;
+      startY = e.clientY;
+      startWidth = parseInt(
+        document.defaultView.getComputedStyle(resizable).width,
+        10
+      );
+      startHeight = parseInt(
+        document.defaultView.getComputedStyle(resizable).height,
+        10
+      );
+      document.documentElement.addEventListener("mousemove", doDrag, false);
+      document.documentElement.addEventListener("mouseup", stopDrag, false);
 
-      function initDrag(e) {
-        startX = e.clientX;
-        startY = e.clientY;
-        startWidth = parseInt(
-          document.defaultView.getComputedStyle(resizable).width,
-          10
-        );
-        startHeight = parseInt(
-          document.defaultView.getComputedStyle(resizable).height,
-          10
-        );
-        document.documentElement.addEventListener("mousemove", doDrag, false);
-        document.documentElement.addEventListener("mouseup", stopDrag, false);
-      }
-
+      // Resize objects
+      let isDraggingTracker;
       function doDrag(e) {
-        resizable.style.width = startWidth + e.clientX - startX + "px";
-        resizable.style.height = startHeight + e.clientY - startY + "px";
-
-        // Ignore pointer events on iframes
-        let iframes = document.getElementsByClassName("iframe");
-        for (let iframe of iframes) {
-          iframe.style.pointerEvents = "none";
+        // This event needs to be debounced, as it's called on mousemove
+        // Debounce via https://gomakethings.com/debouncing-your-javascript-events/
+        if (isDraggingTracker) {
+          window.cancelAnimationFrame(isDraggingTracker);
         }
 
-        // Update the dimensions in the UI
-        _this.artboard.height = parseInt(resizable.style.height, 10);
-        _this.artboard.width = parseInt(resizable.style.width, 10);
+        // Setup the new requestAnimationFrame()
+        isDraggingTracker = window.requestAnimationFrame(function() {
+          // Run our scroll functions
+          resizable.style.width = startWidth + e.clientX - startX + "px";
+          resizable.style.height = startHeight + e.clientY - startY + "px";
 
-        // Pause the panzoom
-        document.panzoomInstance.pause(); // TODO: Cleaner solution that polluting document?
+          // Ignore pointer events on iframes
+          let iframes = document.getElementsByClassName("iframe");
+
+          for (let iframe of iframes) {
+            iframe.style.pointerEvents = "none";
+          }
+
+          // Update the dimensions in the UI
+          _this.artboard.height = parseInt(resizable.style.height, 10);
+          _this.artboard.width = parseInt(resizable.style.width, 10);
+
+          // Pause the panzoom
+          document.panzoomInstance.pause(); // TODO: Cleaner solution that polluting document?
+        });
       }
 
       function stopDrag() {
@@ -246,6 +255,7 @@ export default {
 
         // Re-enable pointer events on iframes
         let iframes = document.getElementsByClassName("iframe");
+
         for (let iframe of iframes) {
           iframe.style.pointerEvents = "auto";
         }
