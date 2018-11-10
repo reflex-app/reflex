@@ -7,7 +7,8 @@ Vue.use(Vuex)
 // Make Store accessible from components
 export default new Vuex.Store({
   state: {
-    url: ""
+    url: "",
+    panzoom: {}
   },
   mutations: {
     changeURL(state, val) {
@@ -16,6 +17,9 @@ export default new Vuex.Store({
 
       // eslint-disable-next-line
       console.log("New URL:", this.state.url);
+    },
+    updatePanzoom(state, val) {
+      state.panzoom = val;
     }
   }
 })

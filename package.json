@@ -63,7 +63,6 @@
   },
   "dependencies": {
     "jest-vue-preprocessor": "^1.4.0",
-    "panzoom": "^6.3.2",
     "vue": "^2.5.17",
     "vuex": "^3.0.1"
   },
