@@ -12,14 +12,13 @@ export default new Vuex.Store({
   },
   mutations: {
     changeURL(state, val) {
-      // Update the URL based on the incoming value
-      state.url = val;
+      state.url = val; // Update the URL based on the incoming value
 
       // eslint-disable-next-line
       console.log("New URL:", this.state.url);
     },
-    updatePanzoom(state, val) {
-      state.panzoom = val;
-    }
+    updatePanzoom: (state, value) => {
+      state.panzoom = value;
+    } 
   }
 })
