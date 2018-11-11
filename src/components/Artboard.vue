@@ -237,7 +237,7 @@ export default {
           _this.artboard.width = parseInt(resizable.style.width, 10);
 
           // Pause the panzoom
-          document.panzoomInstance.pause(); // TODO: Cleaner solution that polluting document?
+          document.$panzoom.pause(); // TODO: Cleaner solution that polluting document?
         });
       }
 
@@ -261,7 +261,7 @@ export default {
         }
 
         // Re-enable the panzoom
-        document.panzoomInstance.resume(); // TODO: Cleaner solution that polluting document?
+        document.$panzoom.resume(); // TODO: Cleaner solution that polluting document?
       }
     }
   }
