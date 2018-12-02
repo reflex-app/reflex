@@ -1,11 +1,17 @@
 <template>
   <div id="app">
     <Toolbar ref="toolbar"/>
-    <!-- <div id="canvas-container"> -->
-      <div id="canvas" ref="canvas">
-        <Artboards ref="artboards"/>
-      </div>
-    <!-- </div> -->
+    <aside id="sidebar">
+      <span>Artboards:</span>
+      <!-- TODO: Add artboards data to Vuex store so it can be accessed here -->
+      <!-- <div v-for="artboard in artboards" v-bind="artboard" :key="artboard.id">
+        {{artboard.height}}
+        {{artboard.width}}
+      </div> -->
+    </aside>
+    <div id="canvas" ref="canvas">
+      <Artboards ref="artboards"/>
+    </div>
   </div>
 </template>
 
@@ -17,9 +23,9 @@ import panzoom from "panzoom";
 export default {
   name: "app",
   components: {
-    Artboards, // TODO: This should be inside of </Canvas>
+    Artboards,
     Toolbar
-    // TODO: Create Settings
+    // TODO: Settings component
   },
   mounted: function() {
     let vm = this;

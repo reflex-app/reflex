@@ -17,8 +17,8 @@ export default new Vuex.Store({
       // eslint-disable-next-line
       console.log("New URL:", this.state.url);
     },
-    updatePanzoom: (state, value) => {
-      state.panzoom = value;
+    updatePanzoom(state, val) {
+      state.panzoom = val;
     } 
   }
 })

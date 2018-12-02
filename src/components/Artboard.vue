@@ -9,7 +9,7 @@
         <div>
           W: 
           <input 
-            type="text" 
+            type="numeric" 
             :value="artboard.width"
             @blur="validateArtboardSizeInput('width', $event.target.value)"
             @keyup.enter="validateArtboardSizeInput('width', $event.target.value)"
@@ -18,7 +18,7 @@
           />
           H: 
           <input 
-            type="text" 
+            type="numeric" 
             :value="artboard.height"
             @blur="validateArtboardSizeInput('height', $event.target.value)"
             @keyup.enter="validateArtboardSizeInput('height', $event.target.value)"
@@ -210,6 +210,11 @@ export default {
       document.documentElement.addEventListener("mousemove", doDrag, false);
       document.documentElement.addEventListener("mouseup", stopDrag, false);
 
+      // Pause the panzoom
+      if (document.$panzoom.state.isEnabled === true) {
+        document.$panzoom.pause(); // TODO: Cleaner solution that polluting document?
+      }
+
       // Resize objects
       let isDraggingTracker;
       function doDrag(e) {
@@ -235,9 +240,6 @@ export default {
           // Update the dimensions in the UI
           _this.artboard.height = parseInt(resizable.style.height, 10);
           _this.artboard.width = parseInt(resizable.style.width, 10);
-
-          // Pause the panzoom
-          document.$panzoom.pause(); // TODO: Cleaner solution that polluting document?
         });
       }
 
@@ -315,7 +317,7 @@ $artboard-handle-height: 1rem;
       margin-left: 16px;
     }
 
-    input[type="text"] {
+    input[type="numeric"] {
       border: 0;
       outline: none;
       font-size: 1rem;

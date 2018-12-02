@@ -82,7 +82,7 @@ export default {
 <style lang="scss" scoped>
 #artboards {
   position: relative;
-  display: flex;
+  display: inline-flex;
   flex-direction: row;
   flex-wrap: nowrap;
   user-select: none;
@@ -93,6 +93,11 @@ export default {
     flex-direction: column;
     align-items: center;
   }
+}
+
+#sidebar {
+  position: fixed;
+  top: 100;
 }
 
 .empty-state {

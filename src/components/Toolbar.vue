@@ -2,7 +2,7 @@
   <div id="toolbar">
     <div id="toolbar__url-container">
       <input
-        v-model="url"
+        v-model.lazy="url"
         placeholder="Enter a website URL (http://website.com)"
         type="text"
         id="toolbar__url"
@@ -13,14 +13,13 @@
     <div id="toolbar__canvas-controls">
       <div>
         <span id="canvas-controls__zoomOut" @click="zoomOut">-</span>
-        <span id="canvas-controls__scale" v-if="panzoom.transformMatrix">{{ panzoom.transformMatrix[0] }}</span>
+        <!-- <span id="canvas-controls__scale" v-if="panzoomInstance.transformMatrix">{{ panzoomInstance.transformMatrix[0] }}</span> -->
         <span id="canvas-controls__zoomIn" @click="zoomIn">+</span>
       </div>
-      <a href="#" id="canvas-controls__reset">Reset</a>
-      <a href="#" id="canvas-controls__fit-to-screen">Fit</a>
+      <a id="canvas-controls__fit-to-screen" @click="center">Center</a>
     </div>
     <!-- <div>
-      <a href="#" id="canvas-controls__orientation">Orientation</a>
+      <a id="canvas-controls__orientation" @click="toggleOrientation">Orientation</a>
     </div> -->
   </div>
 </template>
@@ -38,7 +37,7 @@ export default {
         this.$store.commit("changeURL", value);
       }
     },
-    panzoom() {
+    panzoomInstance() {
       return this.$store.state.panzoom;
     }
   },
@@ -50,7 +49,7 @@ export default {
       document.$panzoom.zoomOut();
     },
     center() {
-      document.$panzoom._center();
+      document.$panzoom.center();
     }
   }
 };
