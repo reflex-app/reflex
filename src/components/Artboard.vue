@@ -35,10 +35,10 @@
           </div>
         </div>
       </div>
-      <button
+      <!-- <button
         class="button button--small artboard__delete-button"
         v-on:click="$emit('remove', artboard.id)"
-      >Delete</button>
+      >Delete</button> -->
     </div>
     <div class="artboard__keypoints"></div>
     <div class="artboard__content">

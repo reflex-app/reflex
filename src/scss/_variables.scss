@@ -4,10 +4,11 @@ $inner-bg: #0b0f13;
 
 // Colors
 $accent-color:#2d77fb;
+$border-color: #c5c5c5;
 
 // GUI
 $gui-bg: rgba(#323232, 0.95);
-$gui-border: 1px solid #c5c5c5;
+$gui-border: 1px solid $border-color;
 $gui-title-bar-height: 22px;
 $gui-header-height: 45px;
 $gui-top-total-height: calc(#{$gui-header-height} + #{$gui-title-bar-height});
@@ -16,7 +17,6 @@ $gui-top-total-height: calc(#{$gui-header-height} + #{$gui-title-bar-height});
 $link-default-color: #000;
 $link-hover-color: lighten($link-default-color, 40%);
 
-$border-color: transparent;
 
 $font-defaults: -apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
 

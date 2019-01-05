@@ -2,8 +2,9 @@
   <div id="app">
     <Toolbar ref="toolbar"/>
     <div id="canvas" ref="canvas">
-      <Artboards ref="artboards"/>
+      <ArtboardList v-if="artboards.length"/>
       <ArtboardControls/>
+      <Artboards ref="artboards"/>
     </div>
   </div>
 </template>
@@ -11,6 +12,7 @@
 <script>
 import Toolbar from "./components/Toolbar.vue";
 import Artboards from "./components/Artboards.vue";
+import ArtboardList from "./components/ArtboardList.vue";
 import ArtboardControls from "./components/ArtboardControls.vue";
 import panzoom from "panzoom";
 
@@ -19,6 +21,7 @@ export default {
   components: {
     Artboards,
     ArtboardControls,
+    ArtboardList,
     Toolbar
     // TODO: Settings component
   },
@@ -40,6 +43,12 @@ export default {
         vm.$store.commit("updatePanzoom", instance);
       });
     });
+  },
+  computed: {
+    // Bind to our Vuex Store's URL value
+    artboards: function() {
+      return this.$store.state.artboards;
+    }
   }
 };
 </script>
