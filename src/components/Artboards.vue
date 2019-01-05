@@ -54,13 +54,13 @@ export default {
 
           if ( flag === true ) {
             return val;
-            break;
           }
         }
       };
 
       this.$store.commit("addArtboard", {
         id: uniqueID(),
+        title: 'Untitled',
         width: 375, // TODO: dynamic
         height: 667 // TODO: dynamic
       });
