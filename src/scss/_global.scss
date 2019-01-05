@@ -24,3 +24,16 @@ body {
   margin: 0;
   padding: 0;
 }
+
+.button {
+	padding: 0.3rem 0.75rem;
+	line-height: 1rem;
+	background: #FFFFFF;
+	border: 1px solid #979797;
+	border-radius: 4px;
+
+	&:active {
+		color: darken(#6f6f6f, 10%);
+		background: gray;
+	}
+}

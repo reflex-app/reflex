@@ -1,21 +1,22 @@
 <template>
-  <div id="toolbar">
-    <div id="toolbar__url-container">
-      <input
-        v-model.lazy="url"
-        placeholder="Enter a website URL (http://website.com)"
-        type="text"
-        id="toolbar__url"
-        name="toolbar__url" 
-      />
-      <div id="toolbar__recentURLs"></div>
+  <div id="ArtboardControls">
+    <div id="toolbar__canvas-controls">
+      <div>
+        <span id="canvas-controls__zoomOut" class="button" @click="zoomOut">-</span>
+        <!-- <span id="canvas-controls__scale" v-if="panzoomInstance.transformMatrix">{{ panzoomInstance.transformMatrix[0] }}</span> -->
+        <span id="canvas-controls__zoomIn" class="button" @click="zoomIn">+</span>
+      </div>
+      <!-- <a id="canvas-controls__fit-to-screen" @click="center">Center</a> -->
     </div>
+    <!-- <div>
+      <a id="canvas-controls__orientation" @click="toggleOrientation">Orientation</a>
+    </div> -->
   </div>
 </template>
 
 <script>
 export default {
-  name: "Toolbar",
+  name: "ArtboardControls",
   computed: {
     // Bind to our Vuex Store's URL value
     url: {
@@ -29,6 +30,17 @@ export default {
     panzoomInstance() {
       return this.$store.state.panzoom;
     }
+  },
+  methods: {
+    zoomIn() {
+      document.$panzoom.zoomIn();
+    },
+    zoomOut() {
+      document.$panzoom.zoomOut();
+    },
+    center() {
+      document.$panzoom.center();
+    }
   }
 };
 </script>
@@ -36,16 +48,18 @@ export default {
 <style lang="scss" scoped>
 @import "../scss/_variables";
 
-#toolbar {
+#ArtboardControls {
   z-index: 1;
-  padding: 0.5rem 1rem;
+  // padding: 0.5rem 1rem;
   color: #434343;
   position: relative;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: white;
-  border-bottom: $gui-border;
+  background: none;
+  position: absolute;
+  bottom: 1rem;
+  right: 0.75rem;
 
   // box-shadow: 0 6px 10px rgba(#000, 0.3);
   & > *:not(:first-child) {
@@ -84,18 +98,8 @@ export default {
     flex-direction: column;
     align-items: center;
 
-    #canvas-controls__zoomIn,
     #canvas-controls__zoomOut {
-      color: #6f6f6f;
-      padding: 0px 6px;
-      box-sizing: border-box;
-      cursor: pointer;
-      border-radius: 2px;
-
-      &:active {
-        color: darken(#6f6f6f, 10%);
-        background: gray;
-      }
+      margin-right: 0.5rem;
     }
 
     #canvas-controls__fit-to-screen {

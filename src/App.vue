@@ -1,16 +1,9 @@
 <template>
   <div id="app">
     <Toolbar ref="toolbar"/>
-    <aside id="sidebar">
-      <span>Artboards:</span>
-      <!-- TODO: Add artboards data to Vuex store so it can be accessed here -->
-      <!-- <div v-for="artboard in artboards" v-bind="artboard" :key="artboard.id">
-        {{artboard.height}}
-        {{artboard.width}}
-      </div> -->
-    </aside>
     <div id="canvas" ref="canvas">
       <Artboards ref="artboards"/>
+      <ArtboardControls/>
     </div>
   </div>
 </template>
@@ -18,12 +11,14 @@
 <script>
 import Toolbar from "./components/Toolbar.vue";
 import Artboards from "./components/Artboards.vue";
+import ArtboardControls from "./components/ArtboardControls.vue";
 import panzoom from "panzoom";
 
 export default {
   name: "app",
   components: {
     Artboards,
+    ArtboardControls,
     Toolbar
     // TODO: Settings component
   },
@@ -50,6 +45,7 @@ export default {
 </script>
 
 <style lang="scss">
+// Make global styles available
 @import "./scss/_global";
 </style>
 
@@ -62,9 +58,10 @@ export default {
   box-sizing: border-box;
   height: 100%;
   width: 100%;
-  background: $body-bg;
   overflow: hidden;
   overscroll-behavior: auto;
+  border-radius: 8px;
+  background: $body-bg;
 }
 
 #canvas {
