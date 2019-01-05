@@ -6,9 +6,20 @@
         placeholder="Enter a website URL (http://website.com)"
         type="text"
         id="toolbar__url"
-        name="toolbar__url" 
-      />
+        name="toolbar__url"
+      >
       <div id="toolbar__recentURLs"></div>
+    </div>
+    <div class="artboard-tabs">
+      <div
+        class="artboard-tab"
+        v-for="artboard in artboards"
+        v-bind="artboard"
+        ref="artboard"
+        :key="artboard.id"
+      >
+        {{ artboard.width }} x {{ artboard.height }}
+      </div>
     </div>
   </div>
 </template>
@@ -28,6 +39,9 @@ export default {
     },
     panzoomInstance() {
       return this.$store.state.panzoom;
+    },
+    artboards: function() {
+      return this.$store.state.artboards;
     }
   }
 };
@@ -60,7 +74,7 @@ export default {
     border: none;
     box-sizing: border-box;
     padding: 0.5rem;
-    background: #FFFFFF;
+    background: #ffffff;
     border: 1px solid #979797;
     border-radius: 4px;
     transition: all 0.125s ease-in-out;
@@ -140,6 +154,29 @@ export default {
           color: white;
           background: $accent-color;
         }
+      }
+    }
+  }
+
+  .artboard-tabs {
+    display: flex;
+    max-width: 400px;
+    overflow: auto;
+
+    .artboard-tab {
+      // flex: 1;
+      background: #ffffff;
+      border: 1px solid #979797;
+      border-radius: 4px;
+      padding: 4px 8px;
+      font-size: 0.9rem;
+      white-space: nowrap;
+      // min-width: 5rem;
+      // overflow: hidden;
+      // text-overflow: ellipsis;
+
+      &:not(:last-child) {
+        margin-right: 8px;
       }
     }
   }
