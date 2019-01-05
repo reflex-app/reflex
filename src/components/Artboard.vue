@@ -78,9 +78,9 @@ export default {
   data() {
     return {
       artboard: {
+        id: this.id,
         height: this.height,
-        width: this.width,
-        id: this.id
+        width: this.width
       },
       state: {
         isSelected: false,
