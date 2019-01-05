@@ -1,9 +1,8 @@
 <template>
   <div id="artboards" v-if="artboards.length">
     <Artboard
-      v-for="(artboard,index) in artboards"
+      v-for="artboard in artboards"
       :key="artboard.id"
-      :id="index"
       v-bind="artboard"
       ref="artboard"
       @add="add"
@@ -46,7 +45,7 @@ export default {
           }
         }
 
-        let increment = artboardsCounter++; // 0+
+        let increment = artboardsCounter; // 0+
         let flag = false;
 
         while(flag === false) {
