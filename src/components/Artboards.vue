@@ -1,10 +1,11 @@
 <template>
   <div id="artboards" v-if="artboards.length">
     <Artboard
-      v-for="artboard in artboards"
+      v-for="(artboard,index) in artboards"
+      :key="artboard.id"
+      :id="index"
       v-bind="artboard"
       ref="artboard"
-      :key="artboard.id"
       @add="add"
       @remove="remove"
       @resize="resize"
@@ -33,11 +34,34 @@ export default {
   },
   methods: {
     add() {
-      const artboards = this.$store.state.artboards;
-      const next_id = artboards.length || 0;
+      let artboards = this.$store.state.artboards;
+      let artboardsCounter = this.$store.state.artboards.length || 0;
+
+      let uniqueID = () => {
+        function check(val) {
+          if (artboards.find(artboard => artboard.id === val)) {
+            return false; // not unique
+          } else {
+            return true; // it's unique
+          }
+        }
+
+        let increment = artboardsCounter++; // 0+
+        let flag = false;
+
+        while(flag === false) {
+          let val = increment++;
+          const flag = check(val); // True or False
+
+          if ( flag === true ) {
+            return val;
+            break;
+          }
+        }
+      };
 
       this.$store.commit("addArtboard", {
-        id: next_id,
+        id: uniqueID(),
         width: 375, // TODO: dynamic
         height: 667 // TODO: dynamic
       });
@@ -45,7 +69,7 @@ export default {
     remove(id) {
       // Remove
       this.$store.commit("removeArtboard", id);
-      
+
       // TODO: Add test for deleting multiple selected artboards
       // eslint-disable-next-line
       // console.log(id);
@@ -64,8 +88,7 @@ export default {
       // console.log(this.$refs.artboard[id]);
     },
     resize(artboard) {
-      // TODO: Update localstorage
-      // artboardsLocalStorage.updateSize(artboard);
+      this.$store.commit("resizeArtboard", artboard);
     }
   }
 };

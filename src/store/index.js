@@ -27,9 +27,9 @@ const store = new Vuex.Store({
       // eslint-disable-next-line
       console.log("New URL:", this.state.url);
     },
-    updatePanzoom(state, val) {
-      // state.panzoom = val;
-    },
+    // updatePanzoom(state, val) {
+    //   // state.panzoom = val;
+    // },
     addArtboard(state, artboard) {
       console.log("Artboard:", artboard);
       state.artboards.push(artboard);
@@ -43,8 +43,8 @@ const store = new Vuex.Store({
 
       for (var i = 0; i < artboards.length; i++) {
         if (payload.id === artboards[i].id) { //look for match by id
-          artboards[i].height = artboard.height; // updated object
-          artboards[i].width = artboard.width; // updated object
+          artboards[i].height = payload.height; // updated object
+          artboards[i].width = payload.width; // updated object
           break; //exit loop, object has been updated
         }
       }
@@ -58,13 +58,13 @@ store.commit('initLocalStorage');
 // Subscribe to store updates
 store.subscribe((mutation, state) => {
   // Ignore Panzoom mutations
-  if ( mutation.type == "updatePanzoom" ) {
+  if (mutation.type == "updatePanzoom") {
     return false;
   }
-  
+
   // Store the state object as a JSON string
   localStorage.setItem('store', JSON.stringify(state));
-  
+
   // Log the changes
   // console.log('Added to localStorage:', mutation, state, );
   // console.log('Updated localStorage:', JSON.parse(localStorage.getItem('store')) );
