@@ -5,21 +5,21 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 // Make Store accessible from components
-export default new Vuex.Store({
+const store = new Vuex.Store({
   state: {
     url: "", // The current URL being viewed
     artboards: [], // All artboards on the screen
-    panzoom: {} // Holds Panzoom class info
+    // panzoom: {} // Holds Panzoom class info
   },
   mutations: {
     initLocalStorage(state) {
-			// Check if the ID exists
-			if(localStorage.getItem('store')) {
-				// Replace the state object with the stored item
-				this.replaceState(
-					Object.assign(state, JSON.parse(localStorage.getItem('store')))
-				);
-			}
+      // Check if the ID exists
+      if (localStorage.getItem('store')) {
+        // Replace the state object with the stored item
+        this.replaceState(
+          Object.assign(state, JSON.parse(localStorage.getItem('store')))
+        );
+      }
     },
     changeURL(state, val) {
       state.url = val; // Update the URL based on the incoming value
@@ -28,15 +28,46 @@ export default new Vuex.Store({
       console.log("New URL:", this.state.url);
     },
     updatePanzoom(state, val) {
-      state.panzoom = val;
+      // state.panzoom = val;
     },
     addArtboard(state, artboard) {
-      // console.log(artboard);
-      console.log(artboard);
+      console.log("Artboard:", artboard);
       state.artboards.push(artboard);
     },
     removeArtboard(state, id) {
+      console.log("Remove Artboard ID: ", id);
       state.artboards.splice(id, 1);
+    },
+    resizeArtboard(state, payload) {
+      const artboards = state.artboards;
+
+      for (var i = 0; i < artboards.length; i++) {
+        if (payload.id === artboards[i].id) { //look for match by id
+          artboards[i].height = artboard.height; // updated object
+          artboards[i].width = artboard.width; // updated object
+          break; //exit loop, object has been updated
+        }
+      }
     }
   }
 })
+
+// Initialize localStorage
+store.commit('initLocalStorage');
+
+// Subscribe to store updates
+store.subscribe((mutation, state) => {
+  // Ignore Panzoom mutations
+  if ( mutation.type == "updatePanzoom" ) {
+    return false;
+  }
+  
+  // Store the state object as a JSON string
+  localStorage.setItem('store', JSON.stringify(state));
+  
+  // Log the changes
+  // console.log('Added to localStorage:', mutation, state, );
+  // console.log('Updated localStorage:', JSON.parse(localStorage.getItem('store')) );
+});
+
+export default store;
