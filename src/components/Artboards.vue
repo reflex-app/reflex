@@ -20,38 +20,32 @@
 import Artboard from "./Artboard";
 import NewArtboardButton from "./NewArtboardButton";
 
-// Import localStorage Information
-import { artboardsLocalStorage } from "../store/ArtboardsStore";
-
 export default {
   name: "Artboards",
   components: {
     Artboard,
     NewArtboardButton
   },
-  data() {
-    return {
-      artboards: artboardsLocalStorage.fetch()
-    };
-  },
-  watch: {
-    artboards: {
-      handler: function(artboards) {
-        artboardsLocalStorage.save(artboards);
-      },
-      deep: true
+  computed: {
+    artboards() {
+      return this.$store.state.artboards;
     }
   },
   methods: {
     add() {
-      const next_id = this.artboards.length;
-      this.artboards.push({
+      const artboards = this.$store.state.artboards;
+      const next_id = artboards.length || 0;
+
+      this.$store.commit("addArtboard", {
         id: next_id,
         width: 375, // TODO: dynamic
         height: 667 // TODO: dynamic
       });
     },
     remove(id) {
+      // Remove
+      this.$store.commit("removeArtboard", id);
+      
       // TODO: Add test for deleting multiple selected artboards
       // eslint-disable-next-line
       // console.log(id);
@@ -68,12 +62,10 @@ export default {
       // console.log(filterArtboards(this.artboards));
       // eslint-disable-next-line
       // console.log(this.$refs.artboard[id]);
-
-      // Remove from DOM +
-      this.artboards.splice(this.artboards.indexOf(id), 1);
     },
     resize(artboard) {
-      artboardsLocalStorage.updateSize(artboard);
+      // TODO: Update localstorage
+      // artboardsLocalStorage.updateSize(artboard);
     }
   }
 };
