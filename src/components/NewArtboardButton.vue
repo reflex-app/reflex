@@ -1,5 +1,5 @@
 <template>
-    <div class="button-new-artboard" v-on:click="$emit('add')">+</div>
+    <div class="button button-new-artboard" v-on:click="$emit('add')">+</div>
 </template>
 
 <script>
@@ -17,24 +17,27 @@ export default {
 @import "../scss/_variables";
 
 .button-new-artboard {
-  position: absolute;
-  top: 50%;
-  right: -4.5rem;
-  color: #0070cd;
-  background: none;
+  position: relative;
   height: 3rem;
-  width: 3rem;
-  border-radius: 50%;
+  border: none;
+  width: 100%;
+  padding: 0;
   font-size: 1.5rem;
   line-height: 2.7rem;
   vertical-align: middle;
   text-align: center;
-  border: 2px solid transparent;
+  border-radius: 0;
+  color: white;
+  background: $accent-color;
 
   &:hover {
     cursor: pointer;
-    color: #0070cd;
-    border-color: #0070cd;
+    background: darken($accent-color, 5%);
+  }
+
+  &:active {
+    color: white;
+    background: darken($accent-color, 15%);
   }
 }
 </style>
