@@ -7,6 +7,7 @@
         type="text"
         id="toolbar__url"
         name="toolbar__url"
+        @focus="$event.target.select()"
       >
       <div id="toolbar__recentURLs"></div>
     </div>
