@@ -2,11 +2,11 @@
   <div id="app">
     <Toolbar ref="toolbar"/>
     <div id="canvasContainer">
-      <ArtboardList v-if="artboards.length"/>
       <ArtboardControls/>
       <div id="canvas" ref="canvas">
         <Artboards ref="artboards"/>
       </div>
+      <ArtboardList v-if="artboards.length"/>
     </div>
   </div>
 </template>
@@ -80,6 +80,7 @@ export default {
   height: calc(100% - 44px); // hard-coded height of toolbar
   width: 100%;
   position: relative;
+  display: flex;
 
   #canvas {
     height: 100%;
