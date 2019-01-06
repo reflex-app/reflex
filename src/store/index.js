@@ -21,15 +21,27 @@ const store = new Vuex.Store({
         );
       }
     },
+
     changeURL(state, val) {
       state.url = val; // Update the URL based on the incoming value
 
       // eslint-disable-next-line
       console.log("New URL:", this.state.url);
     },
+
     // updatePanzoom(state, val) {
     //   // state.panzoom = val;
     // },
+
+    updateArtboardAtIndex(state, artboard) {
+      // 1. Get the artboard.id
+      let id = artboard.id;
+      let index = state.artboards.findIndex(obj => obj.id == id);
+
+      // 2. Change just that artboard's content
+      Vue.set(state.artboards, index, artboard);
+    },
+
     addArtboard(state, artboard) {
       let artboards = this.state.artboards;
       let artboardsCounter = this.state.artboards.length || 0;
