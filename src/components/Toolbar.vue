@@ -11,6 +11,12 @@
       >
       <div id="toolbar__recentURLs"></div>
     </div>
+    <div
+      @click="toggleSidebar()"
+      v-if="artboards.length"
+      v-bind:class="{'button--is-active': sidebar}"
+      class="button"
+    >Sizes</div>
   </div>
 </template>
 
@@ -18,8 +24,11 @@
 export default {
   name: "Toolbar",
   computed: {
-    // Bind to our Vuex Store's URL value
+    sidebar() {
+      return this.$store.state.gui.sidebar;
+    },
     url: {
+      // Bind to our Vuex Store's URL value
       get() {
         return this.$store.state.url;
       },
@@ -32,6 +41,12 @@ export default {
     },
     artboards: function() {
       return this.$store.state.artboards;
+    }
+  },
+  methods: {
+    toggleSidebar() {
+      const newState = !this.sidebar;
+      this.$store.commit("toggleSidebar", newState);
     }
   }
 };
@@ -57,27 +72,27 @@ export default {
   }
 
   & > *:nth-child(1) {
-    flex: 1 0 auto;
-  }
+      flex: 1 0 auto;
+    }
 
-  input[type="text"] {
-    border: none;
-    box-sizing: border-box;
-    padding: 0.5rem;
-    background: #ffffff;
+    input[type="text"] {
+      border: none;
+      box-sizing: border-box;
+      padding: 0.5rem;
+      background: #ffffff;
     border: 1px solid #979797;
-    border-radius: 4px;
+      border-radius: 4px;
     transition: all 0.125s ease-in-out;
     width: 200px;
 
-    &:hover {
-      background: lighten($body-bg, 5%);
-    }
+      &:hover {
+        background: lighten($body-bg, 5%);
+      }
 
-    &:focus {
-      outline: none;
-      background: lighten($body-bg, 3%);
-      border: 1px solid rgba($accent-color, 1);
+      &:focus {
+        outline: none;
+        background: lighten($body-bg, 3%);
+        border: 1px solid rgba($accent-color, 1);
       width: 400px;
     }
   }
@@ -105,11 +120,11 @@ export default {
     #canvas-controls__fit-to-screen {
       margin-top: 0.25rem;
     }
-  }
+      }
 
   a {
     text-decoration: none;
-  }
+    }
 
   #toolbar__url-container {
     position: relative;
