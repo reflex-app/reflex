@@ -56,12 +56,13 @@ export default {
 @import "../scss/_variables";
 
 #toolbar {
+  height: 44px;
   z-index: 1;
   padding: 0.5rem 1rem;
   color: #434343;
   position: relative;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   background: white;
   border-bottom: $gui-border;
@@ -71,7 +72,13 @@ export default {
     margin-left: 16px;
   }
 
-  & > *:nth-child(1) {
+  #toolbar__url-container {
+    position: relative;
+    margin: 0 auto;
+    // max-width: 80vw;
+    // min-width: 12rem;
+
+    @media screen and (max-width: 768px) {
       flex: 1 0 auto;
     }
 
@@ -80,54 +87,27 @@ export default {
       box-sizing: border-box;
       padding: 0.5rem;
       background: #ffffff;
-    border: 1px solid #979797;
+      border: 1px solid transparent;
       border-radius: 4px;
-    transition: all 0.125s ease-in-out;
-    width: 200px;
+      width: 100%;
+      max-width: 80vw;
+      min-width: 320px;
+      text-align: center;
+      text-overflow: ellipsis;
 
       &:hover {
+        border: 1px solid $border-color;
         background: lighten($body-bg, 5%);
       }
 
       &:focus {
+        text-overflow: none;
+        text-align: left;
         outline: none;
         background: lighten($body-bg, 3%);
         border: 1px solid rgba($accent-color, 1);
-      width: 400px;
-    }
-  }
-
-  #toolbar__canvas-controls {
-    user-select: none;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-    #canvas-controls__zoomIn,
-    #canvas-controls__zoomOut {
-      color: #6f6f6f;
-      padding: 0px 6px;
-      box-sizing: border-box;
-      cursor: pointer;
-      border-radius: 2px;
-
-      &:active {
-        color: darken(#6f6f6f, 10%);
-        background: gray;
       }
     }
-
-    #canvas-controls__fit-to-screen {
-      margin-top: 0.25rem;
-    }
-      }
-
-  a {
-    text-decoration: none;
-    }
-
-  #toolbar__url-container {
-    position: relative;
 
     #toolbar__recentURLs {
       display: none;
@@ -161,6 +141,10 @@ export default {
         }
       }
     }
+  }
+
+  .is-active {
+    border-bottom: 2px solid blue;
   }
 }
 </style>
