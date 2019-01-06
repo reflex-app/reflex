@@ -77,15 +77,17 @@ const store = new Vuex.Store({
       // Add to the array
       state.artboards.push(artboard);
     },
+
     removeArtboard(state, id) {
-      // Step 1: Find the element's index by element.id
-      let element = state.artboards.findIndex(obj => obj.id == id);
+      // 1. Get the artboard.id
+      let index = state.artboards.findIndex(obj => obj.id == id);
       
-      // Step 2: Remove the object
-      state.artboards.splice(element ,1)
+      // 2. Change just that artboard's content
+      Vue.delete(state.artboards, index);
 
       // console.log("Remove Artboard ID: ", id, element);
     },
+
     resizeArtboard(state, payload) {
       const artboards = state.artboards;
 
