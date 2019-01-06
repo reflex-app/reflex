@@ -41,6 +41,44 @@ export default {
     center() {
       document.$panzoom.center();
     }
+  },
+  mounted() {
+    if (window.nw) {
+      const vm = this;
+      const nw = window.nw; // Attach to global window
+      const win = nw.Window.get();
+
+      // Create menu container
+      let Menu = new nw.Menu({
+        type: "menubar"
+      });
+
+      // Initialize default mac menu (App, Edit)
+      Menu.createMacBuiltin(nw.App.manifest.name, { hideWindow: true });
+
+      // Setup View's child
+      let viewSubMenu = new nw.Menu();
+      viewSubMenu.append(
+        new nw.MenuItem({
+          label: "Zoom to Fit",
+          click: function() {
+            vm.center();
+  }
+        })
+      );
+
+      // Add View
+      Menu.append(
+        new nw.MenuItem({
+          label: "View",
+          submenu: viewSubMenu
+        })
+      );
+
+      // Append Menu to Window
+      win.menu = Menu;
+      console.log(win.menu);
+    }
   }
 };
 </script>
