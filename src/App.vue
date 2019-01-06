@@ -16,7 +16,7 @@ import Toolbar from "./components/Toolbar.vue";
 import Artboards from "./components/Artboards.vue";
 import ArtboardList from "./components/ArtboardList.vue";
 import ArtboardControls from "./components/ArtboardControls.vue";
-import panzoom from "panzoom";
+import panzoom from "../../panzoom";
 
 export default {
   name: "app",
