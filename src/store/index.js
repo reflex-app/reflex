@@ -9,6 +9,9 @@ const store = new Vuex.Store({
   state: {
     url: "", // The current URL being viewed
     artboards: [], // All artboards on the screen
+    gui: {
+      sidebar: false
+    },
     // panzoom: {} // Holds Panzoom class info
   },
   mutations: {
@@ -24,14 +27,13 @@ const store = new Vuex.Store({
 
     changeURL(state, val) {
       state.url = val; // Update the URL based on the incoming value
-
-      // eslint-disable-next-line
-      console.log("New URL:", this.state.url);
+      // console.log("New URL:", this.state.url);
     },
 
-    // updatePanzoom(state, val) {
-    //   // state.panzoom = val;
-    // },
+    toggleSidebar(state, val) {
+      state.gui.sidebar = val;
+      // console.log("Sidebar open:", state.gui.sidebar);
+    },
 
     updateArtboardAtIndex(state, artboard) {
       // 1. Get the artboard.id
@@ -45,7 +47,7 @@ const store = new Vuex.Store({
     addArtboard(state, artboard) {
       let artboards = this.state.artboards;
       let artboardsCounter = this.state.artboards.length || 0;
-      
+
       const uniqueID = () => {
         function check(val) {
           if (artboards.find(artboard => artboard.id === val)) {
@@ -54,23 +56,23 @@ const store = new Vuex.Store({
             return true; // it's unique
           }
         }
-        
+
         let increment = artboardsCounter; // 0+
         let flag = false;
-        
-        while(flag === false) {
+
+        while (flag === false) {
           let val = increment++;
           const flag = check(val); // True or False
-          
-          if ( flag === true ) {
+
+          if (flag === true) {
             return val;
           }
         }
       };
-      
+
       // Append a unique ID
       artboard.id = uniqueID();
-      
+
       // Log the newly created artboard
       // console.log("Artboard:", artboard);
 
@@ -81,7 +83,7 @@ const store = new Vuex.Store({
     removeArtboard(state, id) {
       // 1. Get the artboard.id
       let index = state.artboards.findIndex(obj => obj.id == id);
-      
+
       // 2. Change just that artboard's content
       Vue.delete(state.artboards, index);
 
@@ -99,6 +101,10 @@ const store = new Vuex.Store({
         }
       }
     }
+
+    // updatePanzoom(state, val) {
+    //   // state.panzoom = val;
+    // },
   }
 })
 
