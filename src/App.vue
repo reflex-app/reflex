@@ -1,10 +1,12 @@
 <template>
   <div id="app">
     <Toolbar ref="toolbar"/>
-    <div id="canvas" ref="canvas">
+    <div id="canvasContainer">
       <ArtboardList v-if="artboards.length"/>
       <ArtboardControls/>
-      <Artboards ref="artboards"/>
+      <div id="canvas" ref="canvas">
+        <Artboards ref="artboards"/>
+      </div>
     </div>
   </div>
 </template>
@@ -73,26 +75,26 @@ export default {
   background: $body-bg;
 }
 
-#canvas {
+#canvasContainer {
   background: $body-bg;
-  height: 100%;
+  height: calc(100% - 44px); // hard-coded height of toolbar
   width: 100%;
   position: relative;
-  overflow: hidden;
-  outline: none;
 
-  &:hover {
-    cursor: grab;
+  #canvas {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    overflow: hidden;
+    outline: none;
+
+    &:hover {
+      cursor: grab;
+    }
+
+    &:active {
+      cursor: grabbing;
+    }
   }
-
-  &:active {
-    cursor: grabbing;
-  }
-}
-
-#canvas {
-  position: relative;
-  display: inline-block;
-  transform: translateZ(0); // Activate GPU rendering
 }
 </style>
