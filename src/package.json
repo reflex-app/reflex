@@ -10,8 +10,7 @@
     "height": 750,
     "width": 1200,
     "min_width": 400,
-    "min_height": 400,
-    "toolbar": true
+    "min_height": 400
   },
   "chromium-args": "--enable-logging=stderr --remote-debugging-port=9999"
 }
