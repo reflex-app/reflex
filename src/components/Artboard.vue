@@ -7,21 +7,11 @@
   >
     <div class="artboard__top">
       <div>
-        {{ this.title }}
-        W:
-        <input
-          type="numeric"
-          :value="this.width"
-          class="artboard__width"
-          auto-complete="off"
-        >
-        H:
-        <input
-          type="numeric"
-          :value="this.height"
-          class="artboard__height"
-          auto-complete="off"
-        >
+        <span class="title">{{ this.title }}</span>
+        <span class="artboard__width dimension">
+
+          W: {{ this.width }}</span>
+        <span class="artboard__height dimension">H: {{ this.height }}</span>
       </div>
       <!-- Show a loader when state.isLoading == true -->
       <div class="artboard__loader is-loading" v-if="state.isLoading">
@@ -32,10 +22,6 @@
           </div>
         </div>
       </div>
-      <!-- <button
-        class="button button--small artboard__delete-button"
-        v-on:click="$emit('remove', artboard.id)"
-      >Delete</button> -->
     </div>
     <div class="artboard__keypoints"></div>
     <div class="artboard__content">
@@ -167,8 +153,7 @@ export default {
     },
     triggerResize(e) {
       const vm = this;
-      let _this = this,
-        parent = e.currentTarget.parentNode.parentNode.parentNode,
+      let parent = e.currentTarget.parentNode.parentNode.parentNode,
         resizable = parent,
         startX,
         startY,
@@ -292,20 +277,19 @@ $artboard-handle-height: 1rem;
     width: 100%;
     display: flex;
     justify-content: space-between;
-    color: #b3b3b3;
     margin-bottom: 0.5rem;
 
     & > *:not(:first-child) {
       margin-left: 16px;
     }
 
-    input[type="numeric"] {
-      border: 0;
-      outline: none;
-      font-size: 1rem;
-      background: none;
-      width: 3rem;
-      border-bottom: 1px solid darken($body-bg, 15%);
+    .title {
+      color: black;
+      margin-right: 1rem;
+    }
+
+    .dimension {
+      color: #636363;
     }
   }
 
