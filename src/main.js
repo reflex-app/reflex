@@ -8,6 +8,6 @@ Vue.config.productionTip = false
 // Create the <App> Vue instance
 new Vue({
   el: "#app",
-  store,
+  store, // Vuex Store
   render: h => h(App)
 })

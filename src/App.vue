@@ -1,16 +1,12 @@
 <template>
   <div id="app">
     <Toolbar ref="toolbar"/>
-    <aside id="sidebar">
-      <span>Artboards:</span>
-      <!-- TODO: Add artboards data to Vuex store so it can be accessed here -->
-      <!-- <div v-for="artboard in artboards" v-bind="artboard" :key="artboard.id">
-        {{artboard.height}}
-        {{artboard.width}}
-      </div> -->
-    </aside>
-    <div id="canvas" ref="canvas">
-      <Artboards ref="artboards"/>
+    <div id="canvasContainer">
+      <ArtboardControls/>
+      <div id="canvas" ref="canvas">
+        <Artboards ref="artboards"/>
+      </div>
+      <ArtboardList v-if="artboards.length"/>
     </div>
   </div>
 </template>
@@ -18,12 +14,16 @@
 <script>
 import Toolbar from "./components/Toolbar.vue";
 import Artboards from "./components/Artboards.vue";
-import panzoom from "panzoom";
+import ArtboardList from "./components/ArtboardList.vue";
+import ArtboardControls from "./components/ArtboardControls.vue";
+import panzoom from "../../panzoom";
 
 export default {
   name: "app",
   components: {
     Artboards,
+    ArtboardControls,
+    ArtboardList,
     Toolbar
     // TODO: Settings component
   },
@@ -45,11 +45,18 @@ export default {
         vm.$store.commit("updatePanzoom", instance);
       });
     });
+  },
+  computed: {
+    // Bind to our Vuex Store's URL value
+    artboards: function() {
+      return this.$store.state.artboards;
+    }
   }
 };
 </script>
 
 <style lang="scss">
+// Make global styles available
 @import "./scss/_global";
 </style>
 
@@ -62,31 +69,33 @@ export default {
   box-sizing: border-box;
   height: 100%;
   width: 100%;
-  background: $body-bg;
   overflow: hidden;
   overscroll-behavior: auto;
+  border-radius: 8px;
+  background: $body-bg;
 }
 
-#canvas {
+#canvasContainer {
   background: $body-bg;
-  height: 100%;
+  height: calc(100% - 44px); // hard-coded height of toolbar
   width: 100%;
   position: relative;
-  overflow: hidden;
-  outline: none;
+  display: flex;
 
-  &:hover {
-    cursor: grab;
+  #canvas {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    overflow: hidden;
+    outline: none;
+
+    &:hover {
+      cursor: grab;
+    }
+
+    &:active {
+      cursor: grabbing;
+    }
   }
-
-  &:active {
-    cursor: grabbing;
-  }
-}
-
-#canvas {
-  position: relative;
-  display: inline-block;
-  transform: translateZ(0); // Activate GPU rendering
 }
 </style>

@@ -6,21 +6,17 @@
         placeholder="Enter a website URL (http://website.com)"
         type="text"
         id="toolbar__url"
-        name="toolbar__url" 
-      />
+        name="toolbar__url"
+        @focus="$event.target.select()"
+      >
       <div id="toolbar__recentURLs"></div>
     </div>
-    <div id="toolbar__canvas-controls">
-      <div>
-        <span id="canvas-controls__zoomOut" @click="zoomOut">-</span>
-        <!-- <span id="canvas-controls__scale" v-if="panzoomInstance.transformMatrix">{{ panzoomInstance.transformMatrix[0] }}</span> -->
-        <span id="canvas-controls__zoomIn" @click="zoomIn">+</span>
-      </div>
-      <a id="canvas-controls__fit-to-screen" @click="center">Center</a>
-    </div>
-    <!-- <div>
-      <a id="canvas-controls__orientation" @click="toggleOrientation">Orientation</a>
-    </div> -->
+    <div
+      @click="toggleSidebar()"
+      v-if="artboards.length"
+      v-bind:class="{'button--is-active': sidebar}"
+      class="button"
+    >Sizes</div>
   </div>
 </template>
 
@@ -28,8 +24,11 @@
 export default {
   name: "Toolbar",
   computed: {
-    // Bind to our Vuex Store's URL value
+    sidebar() {
+      return this.$store.state.gui.sidebar;
+    },
     url: {
+      // Bind to our Vuex Store's URL value
       get() {
         return this.$store.state.url;
       },
@@ -39,17 +38,15 @@ export default {
     },
     panzoomInstance() {
       return this.$store.state.panzoom;
+    },
+    artboards: function() {
+      return this.$store.state.artboards;
     }
   },
   methods: {
-    zoomIn() {
-      document.$panzoom.zoomIn();
-    },
-    zoomOut() {
-      document.$panzoom.zoomOut();
-    },
-    center() {
-      document.$panzoom.center();
+    toggleSidebar() {
+      const newState = !this.sidebar;
+      this.$store.commit("toggleSidebar", newState);
     }
   }
 };
@@ -59,81 +56,58 @@ export default {
 @import "../scss/_variables";
 
 #toolbar {
-  // height: 44px;
+  height: 44px;
   z-index: 1;
   padding: 0.5rem 1rem;
-  border-bottom: $gui-border;
   color: #434343;
   position: relative;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  background: rgba(#fff, 0.95);
+  background: white;
+  border-bottom: $gui-border;
 
   // box-shadow: 0 6px 10px rgba(#000, 0.3);
   & > *:not(:first-child) {
     margin-left: 16px;
   }
 
-  & > *:nth-child(1) {
-    flex: 1 0 auto;
-
-    input[type="text"] {
-      width: 100%;
-    }
-  }
-
-  input[type="text"] {
-    border: none;
-    background: #fff;
-    border: 1px solid rgba(#ffffff, 0.25);
-    border-radius: 4px;
-    padding: 0.5rem;
-    box-sizing: border-box;
-    transition: all 0.125s ease-in-out;
-
-    &:hover {
-      background: lighten($body-bg, 5%);
-    }
-
-    &:focus {
-      outline: none;
-      background: lighten($body-bg, 3%);
-      border: 1px solid rgba($accent-color, 1);
-    }
-  }
-
-  #toolbar__canvas-controls {
-    user-select: none;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-    #canvas-controls__zoomIn,
-    #canvas-controls__zoomOut {
-      color: #6f6f6f;
-      padding: 0px 6px;
-      box-sizing: border-box;
-      cursor: pointer;
-      border-radius: 2px;
-
-      &:active {
-        color: darken(#6f6f6f, 10%);
-        background: gray;
-      }
-    }
-
-    #canvas-controls__fit-to-screen {
-      margin-top: 0.25rem;
-    }
-  }
-
-  a {
-    text-decoration: none;
-  }
-
   #toolbar__url-container {
     position: relative;
+    margin: 0 auto;
+    // max-width: 80vw;
+    // min-width: 12rem;
+
+    @media screen and (max-width: 768px) {
+      flex: 1 0 auto;
+    }
+
+    input[type="text"] {
+      border: none;
+      box-sizing: border-box;
+      padding: 0.5rem;
+      background: #ffffff;
+      border: 1px solid transparent;
+      border-radius: 4px;
+      width: 100%;
+      max-width: 80vw;
+      min-width: 320px;
+      text-align: center;
+      text-overflow: ellipsis;
+
+      &:hover {
+        border: 1px solid $border-color;
+        background: lighten($body-bg, 5%);
+      }
+
+      &:focus {
+        text-overflow: none;
+        text-align: left;
+        outline: none;
+        background: lighten($body-bg, 3%);
+        border: 1px solid rgba($accent-color, 1);
+      }
+    }
 
     #toolbar__recentURLs {
       display: none;
@@ -167,6 +141,10 @@ export default {
         }
       }
     }
+  }
+
+  .is-active {
+    border-bottom: 2px solid blue;
   }
 }
 </style>

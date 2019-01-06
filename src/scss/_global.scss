@@ -8,9 +8,9 @@ html {
 	height: 100%;
 	width: 100%;
 	// border-radius: 80px; // make sure the frame for sure has no hard edges
-  overflow: hidden;
-  margin: 0;
-  padding: 0;
+	overflow: hidden;
+	margin: 0;
+	padding: 0;
 }
 
 body {
@@ -20,7 +20,41 @@ body {
 	font-family: $font-defaults;
 	font-size: 15px;
 	height: 100%;
-  width: 100%;
-  margin: 0;
-  padding: 0;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+.button {
+	padding: 0.3rem 0.75rem;
+	background: #FFFFFF;
+	border: 1px solid #b8b8b8;
+	border-radius: 4px;
+	user-select: none;
+	box-shadow: 0 1px 2px 0px rgba(#6a6a6a, 0.2);
+	cursor: pointer;
+
+	&:hover {
+		background: #f5f5f5;
+	}
+
+	&:active {
+		color: darken(#6f6f6f, 40%);
+		background: gray;
+	}
+
+	&--is-active {
+		color: white;
+		border-color: $accent-color;
+		background: $accent-color;
+		box-shadow: 0 0px 0px 1px $accent-color;
+		color: $accent-color;
+		background: white;
+	}
+}
+
+a {
+	color: $accent-color;
+	text-decoration: none;
+	user-select: none;
 }

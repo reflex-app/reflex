@@ -2,16 +2,16 @@
   <div id="artboards" v-if="artboards.length">
     <Artboard
       v-for="artboard in artboards"
+      :key="artboard.id"
       v-bind="artboard"
       ref="artboard"
-      :key="artboard.id"
       @add="add"
       @remove="remove"
       @resize="resize"
     />
   </div>
   <div class="empty-state" v-else>
-    <p>👋 Welcome to Shift! Click the "+" button to create your first screen size.</p>
+    <p>👋 Welcome to Shift!<br/> Click the "+" button to create your first screen size.</p>
     <NewArtboardButton @add="add"/>
   </div>
 </template>
@@ -20,42 +20,30 @@
 import Artboard from "./Artboard";
 import NewArtboardButton from "./NewArtboardButton";
 
-// Import localStorage Information
-import { artboardsLocalStorage } from "../store/ArtboardsStore";
-
 export default {
   name: "Artboards",
   components: {
     Artboard,
     NewArtboardButton
   },
-  data() {
-    return {
-      artboards: artboardsLocalStorage.fetch()
-    };
-  },
-  watch: {
-    artboards: {
-      handler: function(artboards) {
-        artboardsLocalStorage.save(artboards);
-      },
-      deep: true
+  computed: {
+    artboards() {
+      return this.$store.state.artboards;
     }
   },
   methods: {
     add() {
-      const next_id = this.artboards.length;
-      this.artboards.push({
-        id: next_id,
+      this.$store.commit("addArtboard", {
+        title: 'Untitled',
         width: 375, // TODO: dynamic
         height: 667 // TODO: dynamic
       });
     },
     remove(id) {
-      // TODO: Add test for deleting multiple selected artboards
-      // eslint-disable-next-line
-      // console.log(id);
+      // Remove
+      this.$store.commit("removeArtboard", id);
 
+      // TODO: Add test for deleting multiple selected artboards
       // function filterArtboards(artboards) {
       //   return artboards.filter(artboard => {
       //     // eslint-disable-next-line
@@ -63,17 +51,9 @@ export default {
       //     // return artboard.state.isSelected
       //   });
       // }
-
-      // eslint-disable-next-line
-      // console.log(filterArtboards(this.artboards));
-      // eslint-disable-next-line
-      // console.log(this.$refs.artboard[id]);
-
-      // Remove from DOM +
-      this.artboards.splice(this.artboards.indexOf(id), 1);
     },
     resize(artboard) {
-      artboardsLocalStorage.updateSize(artboard);
+      this.$store.commit("resizeArtboard", artboard);
     }
   }
 };
@@ -105,6 +85,7 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  text-align: center;
 
   .button-new-artboard {
     position: relative;

@@ -1,87 +1,51 @@
 <template>
-  <div 
-    class="artboard" 
-    v-bind:style="{ height: artboard.height+'px', width: artboard.width+'px' }"
+  <div
+    class="artboard"
+    v-bind:style="{ height: this.height+'px', width: this.width+'px' }"
     v-bind:class="{ 'is-selected': state.isSelected }"
     @click="state.isSelected = !state.isSelected"
-    >
-      <div class="artboard__top">
-        <div>
-          W: 
-          <input 
-            type="numeric" 
-            :value="artboard.width"
-            @blur="validateArtboardSizeInput('width', $event.target.value)"
-            @keyup.enter="validateArtboardSizeInput('width', $event.target.value)"
-            class="artboard__width" 
-            auto-complete="off"
-          />
-          H: 
-          <input 
-            type="numeric" 
-            :value="artboard.height"
-            @blur="validateArtboardSizeInput('height', $event.target.value)"
-            @keyup.enter="validateArtboardSizeInput('height', $event.target.value)"
-            class="artboard__height" 
-            auto-complete="off"
-          />
-        </div>
-        <!-- Show a loader when state.isLoading == true -->
-        <div class="artboard__loader is-loading" v-if="state.isLoading">
-          <div class="content">
-            <div class="lds-ripple">
-              <div></div>
-              <div></div>
-            </div>
+  >
+    <div class="artboard__top">
+      <div>
+        <span class="title">{{ this.title }}</span>
+        <span class="artboard__width dimension">
+
+          W: {{ this.width }}</span>
+        <span class="artboard__height dimension">H: {{ this.height }}</span>
+      </div>
+      <!-- Show a loader when state.isLoading == true -->
+      <div class="artboard__loader is-loading" v-if="state.isLoading">
+        <div class="content">
+          <div class="lds-ripple">
+            <div></div>
+            <div></div>
           </div>
         </div>
-        <button class="button button--small artboard__delete-button" v-on:click="$emit('remove', artboard.id)">Delete</button>
       </div>
-      <div class="artboard__keypoints"></div>
-      <div class="artboard__content">
-        <iframe 
-          v-bind:src="url"
-          ref="iframe"
-          class="iframe"
-          nwfaketop 
-          frameborder="0"
-          >
-        </iframe>
-        <div class="artboard__handles">
-            <div 
-              @mousedown="triggerResize"
-              class="handle__bottom"
-            />
-        </div>
+    </div>
+    <div class="artboard__keypoints"></div>
+    <div class="artboard__content">
+      <iframe v-bind:src="url" ref="iframe" class="iframe" nwfaketop frameborder="0"></iframe>
+      <div class="artboard__handles">
+        <div @mousedown="triggerResize" class="handle__bottom"/>
       </div>
-      <NewArtboardButton @add="$emit('add')"/>
+    </div>
   </div>
 </template>
 
 <script>
-import NewArtboardButton from "./NewArtboardButton";
-
-// let resizeDebounce; // keep track of resize debouncing
-
 export default {
   name: "Artboard",
-  components: {
-    NewArtboardButton
-  },
 
   props: {
+    id: Number,
+    title: String,
     height: Number,
-    width: Number,
-    id: Number
+    width: Number
   },
 
   data() {
     return {
-      artboard: {
-        height: this.height,
-        width: this.width,
-        id: this.id
-      },
       state: {
         isSelected: false,
         isLoading: false
@@ -98,12 +62,12 @@ export default {
 
   watch: {
     // Watch for changes to the artboard object
-    artboard: {
-      handler: function() {
-        this.$emit("resize", this.artboard); // Trigger localStorage update in parent component
-      },
-      deep: true
-    },
+    // artboard: {
+    //   handler: function() {
+    //     this.$emit("resize", this.artboard); // Trigger localStorage update in parent component
+    //   },
+    //   deep: true
+    // },
     // Toggle iFrame pointer-events based on the isSelected artboard state
     "state.isSelected": {
       handler: function() {
@@ -188,8 +152,8 @@ export default {
       }
     },
     triggerResize(e) {
-      let _this = this,
-        parent = e.currentTarget.parentNode.parentNode.parentNode,
+      const vm = this;
+      let parent = e.currentTarget.parentNode.parentNode.parentNode,
         resizable = parent,
         startX,
         startY,
@@ -238,8 +202,11 @@ export default {
           }
 
           // Update the dimensions in the UI
-          _this.artboard.height = parseInt(resizable.style.height, 10);
-          _this.artboard.width = parseInt(resizable.style.width, 10);
+          vm.$emit("resize", {
+            id: vm.id,
+            width: parseInt(resizable.style.width, 10),
+            height: parseInt(resizable.style.height, 10)
+          });
         });
       }
 
@@ -310,20 +277,19 @@ $artboard-handle-height: 1rem;
     width: 100%;
     display: flex;
     justify-content: space-between;
-    color: #b3b3b3;
     margin-bottom: 0.5rem;
 
     & > *:not(:first-child) {
       margin-left: 16px;
     }
 
-    input[type="numeric"] {
-      border: 0;
-      outline: none;
-      font-size: 1rem;
-      background: none;
-      width: 3rem;
-      border-bottom: 1px solid darken($body-bg, 15%);
+    .title {
+      color: black;
+      margin-right: 1rem;
+    }
+
+    .dimension {
+      color: #636363;
     }
   }
 
