@@ -1,12 +1,12 @@
 <template>
-  <div id="artboard-tabs">
-    <div class="artboard-tabs__header" @click="dropdownOpen=true">Sizes</div>
-    <div v-if="dropdownOpen==true">
+  <transition name="sidebar-transition">
+    <div id="artboard-tabs" v-if="sidebar==true">
+      <div class="artboard-tabs__header">Sizes</div>
       <div v-for="artboard in artboards" v-bind="artboard" :key="artboard.id" class="artboard-tab">
         <div v-if="editMode==true&&editID==artboard.id" class="editing">
-          <input type="text" ref="input" v-model.lazy="artboard.title">
-          <input type="number" v-model.number.lazy="artboard.width">
-          <input type="number" v-model.number.lazy="artboard.height">
+          <input type="text" placeholder="Title" ref="input" v-model.lazy="artboard.title">
+          <input type="number" placeholder="Width" v-model.number.lazy="artboard.width">
+          <input type="number" placeholder="Height" v-model.number.lazy="artboard.height">
           <div class="buttons">
             <a href="#" @click="editMode=false">Cancel</a>
             <a href="#" @click="save(artboard)">Save</a>
@@ -23,9 +23,9 @@
           </div>
         </div>
       </div>
-      <NewArtboardButton @add="add"/>
+      <NewArtboardButton class="artboard-tabs__button" @add="add"/>
     </div>
-  </div>
+  </transition>
 </template>
 
 <script>
@@ -40,8 +40,7 @@ export default {
   data() {
     return {
       editMode: false,
-      editID: null,
-      dropdownOpen: false
+      editID: null
     };
   },
 
@@ -49,15 +48,18 @@ export default {
     // Bind to our Vuex Store's URL value
     artboards: function() {
       return this.$store.state.artboards;
+    },
+    sidebar() {
+      return this.$store.state.gui.sidebar;
     }
   },
 
   methods: {
-    add(artboard) {
+    add() {
       this.$store.commit("addArtboard", {
         title: "Untitled",
-        width: 375, // TODO: dynamic
-        height: 667 // TODO: dynamic
+        width: 375, // Default
+        height: 667 // Default
       });
     },
     save(artboard) {
@@ -66,8 +68,6 @@ export default {
       this.editID = null;
 
       // Update the values so that VueJS pays attention
-      const artboards = this.artboards;
-
       this.$store.commit("updateArtboardAtIndex", {
         id: artboard.id,
         height: artboard.height || 0,
@@ -94,43 +94,88 @@ export default {
 <style lang="scss" scoped>
 @import "../scss/_variables";
 
+// Animation:Enter
+.sidebar-transition-enter {
+  transform: translateX(20%);
+  opacity: 0;
+  z-index: 1;
+}
+.sidebar-transition-enter-to {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.sidebar-transition-leave {
+  transform: translateX(60%);
+  z-index: 1;
+}
+
+.sidebar-transition-leave-to {
+  transform: translateX(100%);
+  opacity: 0;
+}
+
+// Animation:Settings
+.sidebar-transition-enter-active {
+  transition: all 200ms cubic-bezier(0.250, 0.460, 0.450, 0.940), opacity 200ms;
+}
+.sidebar-transition-leave-active {
+  transition: all 150ms cubic-bezier(0.550, 0.085, 0.680, 0.530), opacity 150ms;
+}
+
 #artboard-tabs {
   display: flex;
   flex-direction: column;
-  // max-width: 400px;
+
+  // Fixed
+  // position: relative;
   position: absolute;
-  top: 1rem;
-  left: 1rem;
+  top: 0;
+  right: 0;
+  height: 100%;
+  border-left: 1px solid $border-color;
+
+  // Absolute
+  // position: absolute;
+  // top: 1rem;
+  // right: 1rem;
+  // border-radius: 4px;
+  // border: 1px solid $border-color;
+  // max-height: 80%;
+
+  max-width: 18rem;
+  min-width: 14rem;
   background: white;
-  border: 1px solid $border-color;
-  border-radius: 4px;
   z-index: 1;
   overflow: auto;
-  max-height: 90%;
   cursor: default;
 
   .artboard-tabs__header {
-    padding: 0.5rem 0.75rem;
+    padding: 1rem 1rem;
     font-size: 1rem;
-    line-height: 1.3;
+    font-weight: bold;
+  }
+
+  .artboard-tabs__button {
+    margin: 1rem 1rem;
+    box-sizing: border-box;
+    width: auto;
+    border-radius: 4px;
   }
 
   .artboard-tab {
-    flex: 1 0 auto;
+    // flex: 1 0 auto;
     height: auto;
     background: #ffffff;
-    padding-left: 0.75rem;
-    padding-right: 0.75rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
     font-size: 0.9rem;
     white-space: nowrap;
-    max-width: 18rem;
-    min-width: 12rem;
     overflow: hidden;
     text-overflow: ellipsis;
     line-height: 1.5;
-    // cursor: pointer;
 
-    &:first-child {
+    &:nth-child(2) {
       border-top: 1px solid $border-color;
     }
 
@@ -139,7 +184,7 @@ export default {
     }
 
     &:hover {
-      background: #f1f1f1;
+      // background: #f1f1f1;
     }
 
     &:active {
@@ -214,8 +259,8 @@ export default {
 
         &:focus {
           border-radius: 2px;
-          box-shadow: 0 0px 0px 2px $accent-color,
-            0 2px 20px 2px rgba($accent-color, 0.3);
+          box-shadow: 0 0px 0px 1px $accent-color,
+            0 4px 10px 2px rgba($accent-color, 0.2);
           color: $accent-color;
           background: white;
         }
