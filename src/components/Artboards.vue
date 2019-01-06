@@ -11,7 +11,7 @@
     />
   </div>
   <div class="empty-state" v-else>
-    <p>👋 Welcome to Shift! Click the "+" button to create your first screen size.</p>
+    <p>👋 Welcome to Shift!<br/> Click the "+" button to create your first screen size.</p>
     <NewArtboardButton @add="add"/>
   </div>
 </template>
@@ -44,9 +44,6 @@ export default {
       this.$store.commit("removeArtboard", id);
 
       // TODO: Add test for deleting multiple selected artboards
-      // eslint-disable-next-line
-      // console.log(id);
-
       // function filterArtboards(artboards) {
       //   return artboards.filter(artboard => {
       //     // eslint-disable-next-line
@@ -54,11 +51,6 @@ export default {
       //     // return artboard.state.isSelected
       //   });
       // }
-
-      // eslint-disable-next-line
-      // console.log(filterArtboards(this.artboards));
-      // eslint-disable-next-line
-      // console.log(this.$refs.artboard[id]);
     },
     resize(artboard) {
       this.$store.commit("resizeArtboard", artboard);
@@ -93,6 +85,7 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  text-align: center;
 
   .button-new-artboard {
     position: relative;
