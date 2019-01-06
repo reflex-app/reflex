@@ -1,27 +1,24 @@
 <template>
   <div
     class="artboard"
-    v-bind:style="{ height: artboard.height+'px', width: artboard.width+'px' }"
+    v-bind:style="{ height: this.height+'px', width: this.width+'px' }"
     v-bind:class="{ 'is-selected': state.isSelected }"
     @click="state.isSelected = !state.isSelected"
   >
     <div class="artboard__top">
       <div>
+        {{ this.title }}
         W:
         <input
           type="numeric"
-          :value="artboard.width"
-          @blur="validateArtboardSizeInput('width', $event.target.value)"
-          @keyup.enter="validateArtboardSizeInput('width', $event.target.value)"
+          :value="this.width"
           class="artboard__width"
           auto-complete="off"
         >
         H:
         <input
           type="numeric"
-          :value="artboard.height"
-          @blur="validateArtboardSizeInput('height', $event.target.value)"
-          @keyup.enter="validateArtboardSizeInput('height', $event.target.value)"
+          :value="this.height"
           class="artboard__height"
           auto-complete="off"
         >
@@ -47,34 +44,22 @@
         <div @mousedown="triggerResize" class="handle__bottom"/>
       </div>
     </div>
-    <NewArtboardButton @add="$emit('add')"/>
   </div>
 </template>
 
 <script>
-import NewArtboardButton from "./NewArtboardButton";
-
-// let resizeDebounce; // keep track of resize debouncing
-
 export default {
   name: "Artboard",
-  components: {
-    NewArtboardButton
-  },
 
   props: {
     id: Number,
+    title: String,
     height: Number,
     width: Number
   },
 
   data() {
     return {
-      artboard: {
-        id: this.id,
-        height: this.height,
-        width: this.width
-      },
       state: {
         isSelected: false,
         isLoading: false
@@ -91,12 +76,12 @@ export default {
 
   watch: {
     // Watch for changes to the artboard object
-    artboard: {
-      handler: function() {
-        this.$emit("resize", this.artboard); // Trigger localStorage update in parent component
-      },
-      deep: true
-    },
+    // artboard: {
+    //   handler: function() {
+    //     this.$emit("resize", this.artboard); // Trigger localStorage update in parent component
+    //   },
+    //   deep: true
+    // },
     // Toggle iFrame pointer-events based on the isSelected artboard state
     "state.isSelected": {
       handler: function() {
@@ -181,6 +166,7 @@ export default {
       }
     },
     triggerResize(e) {
+      const vm = this;
       let _this = this,
         parent = e.currentTarget.parentNode.parentNode.parentNode,
         resizable = parent,
@@ -231,8 +217,11 @@ export default {
           }
 
           // Update the dimensions in the UI
-          _this.artboard.height = parseInt(resizable.style.height, 10);
-          _this.artboard.width = parseInt(resizable.style.width, 10);
+          vm.$emit("resize", {
+            id: vm.id,
+            width: parseInt(resizable.style.width, 10),
+            height: parseInt(resizable.style.height, 10)
+          });
         });
       }
 
