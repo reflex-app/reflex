@@ -31,7 +31,38 @@ const store = new Vuex.Store({
     //   // state.panzoom = val;
     // },
     addArtboard(state, artboard) {
-      console.log("Artboard:", artboard);
+      let artboards = this.state.artboards;
+      let artboardsCounter = this.state.artboards.length || 0;
+      
+      const uniqueID = () => {
+        function check(val) {
+          if (artboards.find(artboard => artboard.id === val)) {
+            return false; // not unique
+          } else {
+            return true; // it's unique
+          }
+        }
+        
+        let increment = artboardsCounter; // 0+
+        let flag = false;
+        
+        while(flag === false) {
+          let val = increment++;
+          const flag = check(val); // True or False
+          
+          if ( flag === true ) {
+            return val;
+          }
+        }
+      };
+      
+      // Append a unique ID
+      artboard.id = uniqueID();
+      
+      // Log the newly created artboard
+      // console.log("Artboard:", artboard);
+
+      // Add to the array
       state.artboards.push(artboard);
     },
     removeArtboard(state, id) {

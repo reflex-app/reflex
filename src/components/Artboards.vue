@@ -33,33 +33,7 @@ export default {
   },
   methods: {
     add() {
-      let artboards = this.$store.state.artboards;
-      let artboardsCounter = this.$store.state.artboards.length || 0;
-
-      let uniqueID = () => {
-        function check(val) {
-          if (artboards.find(artboard => artboard.id === val)) {
-            return false; // not unique
-          } else {
-            return true; // it's unique
-          }
-        }
-
-        let increment = artboardsCounter; // 0+
-        let flag = false;
-
-        while(flag === false) {
-          let val = increment++;
-          const flag = check(val); // True or False
-
-          if ( flag === true ) {
-            return val;
-          }
-        }
-      };
-
       this.$store.commit("addArtboard", {
-        id: uniqueID(),
         title: 'Untitled',
         width: 375, // TODO: dynamic
         height: 667 // TODO: dynamic
