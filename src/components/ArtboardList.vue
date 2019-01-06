@@ -55,6 +55,7 @@ export default {
   },
 
   methods: {
+    // TODO: This is repeated from Artboards component
     add() {
       this.$store.commit("addArtboard", {
         title: "Untitled",
