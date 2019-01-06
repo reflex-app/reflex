@@ -58,8 +58,8 @@ export default {
   align-items: center;
   background: none;
   position: absolute;
-  bottom: 1rem;
-  right: 0.75rem;
+  bottom: 1.5rem;
+  right: 1.25rem;
 
   // box-shadow: 0 6px 10px rgba(#000, 0.3);
   & > *:not(:first-child) {
