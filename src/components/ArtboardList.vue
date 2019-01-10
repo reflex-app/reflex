@@ -2,27 +2,35 @@
   <transition name="sidebar-transition">
     <div id="artboard-tabs" v-if="sidebar==true">
       <div class="artboard-tabs__header">Sizes</div>
-      <div v-for="artboard in artboards" v-bind="artboard" :key="artboard.id" class="artboard-tab">
-        <div v-if="editMode==true&&editID==artboard.id" class="editing">
-          <input type="text" placeholder="Title" ref="input" v-model.lazy="artboard.title">
-          <input type="number" placeholder="Width" v-model.number.lazy="artboard.width">
-          <input type="number" placeholder="Height" v-model.number.lazy="artboard.height">
-          <div class="buttons">
-            <a href="#" @click="editMode=false">Cancel</a>
-            <a href="#" @click="save(artboard)">Save</a>
+      <div class="artboard-tabs__scroll">
+        <div
+          v-for="artboard in artboards"
+          v-bind="artboard"
+          :key="artboard.id"
+          class="artboard-tab"
+        >
+          <div v-if="editMode==true&&editID==artboard.id" class="editing">
+            <input type="text" placeholder="Title" ref="input" v-model.lazy="artboard.title">
+            <input type="number" placeholder="Width" v-model.number.lazy="artboard.width">
+            <input type="number" placeholder="Height" v-model.number.lazy="artboard.height">
+            <div class="buttons">
+              <a href="#" @click="editMode=false">Cancel</a>
+              <a href="#" @click="save(artboard)">Save</a>
+            </div>
           </div>
-        </div>
-        <div class="artboard-tab__container" v-else>
-          <div class="artboard-tab__container-left">
-            <div>{{artboard.title}}</div>
-            <div>{{ artboard.width }} x {{ artboard.height }}</div>
-          </div>
-          <div class="artboard-tab__container-right">
-            <a href="#" @click="edit(artboard.id)">Edit</a> |
-            <a href="#" @click="remove(artboard.id)">Delete</a>
+          <div class="artboard-tab__container" v-else>
+            <div class="artboard-tab__container-left">
+              <div>{{artboard.title}}</div>
+              <div>{{ artboard.width }} x {{ artboard.height }}</div>
+            </div>
+            <div class="artboard-tab__container-right">
+              <a href="#" @click="edit(artboard.id)">Edit</a> |
+              <a href="#" @click="remove(artboard.id)">Delete</a>
+            </div>
           </div>
         </div>
       </div>
+
       <NewArtboardButton class="artboard-tabs__button" @add="add"/>
     </div>
   </transition>
@@ -118,10 +126,10 @@ export default {
 
 // Animation:Settings
 .sidebar-transition-enter-active {
-  transition: all 200ms cubic-bezier(0.250, 0.460, 0.450, 0.940), opacity 200ms;
+  transition: all 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 200ms;
 }
 .sidebar-transition-leave-active {
-  transition: all 150ms cubic-bezier(0.550, 0.085, 0.680, 0.530), opacity 150ms;
+  transition: all 150ms cubic-bezier(0.55, 0.085, 0.68, 0.53), opacity 150ms;
 }
 
 #artboard-tabs {
@@ -144,28 +152,39 @@ export default {
   // border: 1px solid $border-color;
   // max-height: 80%;
 
-  max-width: 18rem;
-  min-width: 14rem;
+  width: 15rem;
   background: white;
   z-index: 1;
   overflow: auto;
   cursor: default;
 
+  .artboard-tabs__inner {
+    position: relative;
+    display: block;
+  }
+
   .artboard-tabs__header {
     padding: 1rem 1rem;
     font-size: 1rem;
     font-weight: bold;
+    border-bottom: 1px solid $border-color;
+  }
+
+  .artboard-tabs__scroll {
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
   }
 
   .artboard-tabs__button {
     margin: 1rem 1rem;
     box-sizing: border-box;
-    width: auto;
     border-radius: 4px;
+    width: auto;
   }
 
   .artboard-tab {
-    // flex: 1 0 auto;
+    flex: 1 0 auto;
     height: auto;
     background: #ffffff;
     padding-left: 1rem;
@@ -175,14 +194,7 @@ export default {
     overflow: hidden;
     text-overflow: ellipsis;
     line-height: 1.5;
-
-    &:nth-child(2) {
-      border-top: 1px solid $border-color;
-    }
-
-    &:not(:last-child) {
-      border-bottom: 1px solid $border-color;
-    }
+    border-bottom: 1px solid $border-color;
 
     &:hover {
       // background: #f1f1f1;
@@ -198,13 +210,7 @@ export default {
       align-items: center;
       padding-top: 0.5rem;
       padding-bottom: 0.5rem;
-
-      // Show the Edit/Delete controls on hover
-      &:hover {
-        .artboard-tab__container-right {
-          display: inline-block;
-        }
-      }
+      overflow: auto;
 
       .artboard-tab__container-left {
         max-width: 9rem;
@@ -223,7 +229,6 @@ export default {
 
       .artboard-tab__container-right {
         margin-left: 20px;
-        display: none;
       }
     }
 
