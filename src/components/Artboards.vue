@@ -46,7 +46,6 @@ export default {
       // TODO: Add test for deleting multiple selected artboards
       // function filterArtboards(artboards) {
       //   return artboards.filter(artboard => {
-      //     // eslint-disable-next-line
       //     console.log(artboard);
       //     // return artboard.state.isSelected
       //   });

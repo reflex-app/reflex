@@ -133,25 +133,13 @@ export default {
 }
 
 #artboard-tabs {
+  position: absolute;
   display: flex;
   flex-direction: column;
-
-  // Fixed
-  // position: relative;
-  position: absolute;
   top: 0;
   right: 0;
   height: 100%;
   border-left: 1px solid $border-color;
-
-  // Absolute
-  // position: absolute;
-  // top: 1rem;
-  // right: 1rem;
-  // border-radius: 4px;
-  // border: 1px solid $border-color;
-  // max-height: 80%;
-
   width: 15rem;
   background: white;
   z-index: 1;

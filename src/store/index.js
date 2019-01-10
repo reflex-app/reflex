@@ -27,30 +27,39 @@ const store = new Vuex.Store({
         );
       }
     },
-
+    
+    /** Sets the Site Title (via iFrame)
+     * @param  {} state
+     * @param  {} val
+     */
     changeSiteTitle(state, val) {
       if (val !== state.site.title) {
         state.site.title = val;
       }
     },
 
+    
+    /** Change the Site URL
+     * @param  {} state
+     * @param  {} val
+     */
     changeSiteURL(state, val) {
       state.site.url = val; // Update the URL based on the incoming value
     },
 
+    /** Toggle the Sidebar on/off
+     * @param  {} state
+     * @param  {} val
+     */
     toggleSidebar(state, val) {
       state.gui.sidebar = val;
     },
 
-    updateArtboardAtIndex(state, artboard) {
-      // 1. Get the artboard.id
-      let id = artboard.id;
-      let index = state.artboards.findIndex(obj => obj.id == id);
-
-      // 2. Change just that artboard's content
-      Vue.set(state.artboards, index, artboard);
-    },
-
+    /**
+     * Add an Artboard
+     * @param  {} state
+     * @param  {} artboard
+     */
     addArtboard(state, artboard) {
       let artboards = this.state.artboards;
       let artboardsCounter = this.state.artboards.length || 0;
@@ -84,16 +93,33 @@ const store = new Vuex.Store({
       state.artboards.push(artboard);
     },
 
+    /**
+     * Remove an Artboard
+     * @param  {} state
+     * @param  {} id
+     */
     removeArtboard(state, id) {
+      let index = state.artboards.findIndex(obj => obj.id == id);
+      Vue.delete(state.artboards, index);
+    },
+
+    /** Modify an Artboard by Index
+     * @param  {} state
+     * @param  {Object} artboard {id}
+     */
+    updateArtboardAtIndex(state, artboard) {
       // 1. Get the artboard.id
+      let id = artboard.id;
       let index = state.artboards.findIndex(obj => obj.id == id);
 
       // 2. Change just that artboard's content
-      Vue.delete(state.artboards, index);
-
-      // console.log("Remove Artboard ID: ", id, element);
+      Vue.set(state.artboards, index, artboard);
     },
 
+    /** Resize an Artboard
+     * @param  {} state
+     * @param  {Object} payload {id, height, width}
+     */
     resizeArtboard(state, payload) {
       const artboards = state.artboards;
 
@@ -105,10 +131,6 @@ const store = new Vuex.Store({
         }
       }
     }
-
-    // updatePanzoom(state, val) {
-    //   // state.panzoom = val;
-    // },
   }
 })
 
@@ -124,10 +146,6 @@ store.subscribe((mutation, state) => {
 
   // Store the state object as a JSON string
   localStorage.setItem('store', JSON.stringify(state));
-
-  // Log the changes
-  // console.log('Added to localStorage:', mutation, state, );
-  // console.log('Updated localStorage:', JSON.parse(localStorage.getItem('store')) );
 });
 
 export default store;

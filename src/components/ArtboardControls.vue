@@ -67,7 +67,6 @@ export default {
 
       // Append Menu to Window
       win.menu = Menu;
-      // console.log(win.menu);
     }
   }
 };

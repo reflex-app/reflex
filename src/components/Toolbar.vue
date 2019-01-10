@@ -40,9 +40,6 @@ export default {
         this.$store.commit("changeSiteURL", value);
       }
     },
-    panzoomInstance() {
-      return this.$store.state.panzoom;
-    },
     artboards: function() {
       return this.$store.state.artboards;
     }
@@ -71,7 +68,6 @@ export default {
   background: white;
   border-bottom: $gui-border;
 
-  // box-shadow: 0 6px 10px rgba(#000, 0.3);
   & > *:not(:first-child) {
     margin-left: 16px;
   }
@@ -87,9 +83,6 @@ export default {
 
   #toolbar__url-container {
     position: relative;
-    // margin: 0 auto;
-    // max-width: 80vw;
-    // min-width: 12rem;
 
     @media screen and (max-width: 768px) {
       flex: 1 0 auto;

@@ -95,23 +95,9 @@ export default {
   },
 
   methods: {
-    // TODO: Re-bind delete key to delete artboards
-    // document.addEventListener("keyup", this.keyHandler);
-    // document.removeEventListener("keyup", this.keyHandler);
-    // Delete artboard if backspace/delete key is pressed
-    // keyHandler(e) {
-    //   let key = e.key || e.keyCode;
-
-    //   if (key === "Backspace" || key === 8 || key === "Delete" || key === 46) {
-    //     this.$emit("remove", this.artboard.id);
-
-    //     // Remove the event listener
-    //     document.removeEventListener("keyup", this.keyHandler);
-    //   }
-    // },
-
     // Limits the size of an artboard
     validateArtboardSizeInput(name, value) {
+      // @TODO: Refactor this into the size editor
       const minSize = 50;
       const maxSize = 9999;
 
@@ -338,18 +324,13 @@ $artboard-handle-height: 1rem;
   }
 
   & .artboard__loader {
-    position: absolute; // left: 50%;
+    position: absolute;
     top: 0;
     left: 0;
     right: 0;
-    display: none;
-    // height: 100%;
-    // width: 100%;
-    // background: rgba($body-bg, 0.95);
 
     .content {
       left: 50%;
-      // top: 50%;
       transform: translateX(-50%);
       color: white;
       position: absolute;
