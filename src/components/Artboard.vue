@@ -8,10 +8,7 @@
     <div class="artboard__top">
       <div>
         <span class="title">{{ this.title }}</span>
-        <span class="artboard__width dimension">
-
-          W: {{ this.width }}</span>
-        <span class="artboard__height dimension">H: {{ this.height }}</span>
+        <span class="dimension">{{ this.width }} x {{ this.height }}</span>
       </div>
       <!-- Show a loader when state.isLoading == true -->
       <div class="artboard__loader is-loading" v-if="state.isLoading">
