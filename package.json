@@ -1,57 +1,42 @@
 {
-  "name": "tunnelframe-builder",
+  "name": "shift-builder",
   "author": "Nick Wittwer",
   "version": "1.0.0",
   "description": "A tool for previewing responsive sites.",
-  "main": "index.js",
+  "private": true,
   "repository": {
     "type": "git",
     "url": "git@github.com:nwittwer/shift.git"
   },
   "homepage": "https://shift.nickwittwer.com",
   "scripts": {
-    "start": "kill -9 $(lsof -i TCP:8000 | grep LISTEN | awk '{print $2}') & gulp & nw dist",
+    "start": "kill -9 $(lsof -i TCP:8080 | grep LISTEN | awk '{print $2}') & vue-cli-service serve & gulp & nw dist",
     "build": "gulp app",
-    "deploy": "gulp release"
+    "deploy": "gulp release",
+    "test": "jest",
+    "lint": "vue-cli-service lint"
   },
   "bugs": {
     "url": "https://github.com/nwittwer/shift/issues"
   },
   "devDependencies": {
+    "@vue/cli-plugin-babel": "^3.0.5",
+    "@vue/cli-plugin-eslint": "^3.0.5",
+    "@vue/cli-service": "^3.0.5",
+    "@vue/test-utils": "^1.0.0-beta.25",
     "archiver": "^3.0.0",
-    "autoprefixer": "^7.1.1",
-    "autoprefixer-loader": "^3.2.0",
-    "babel-core": "^6.24.1",
-    "babel-eslint": "^7.2.3",
-    "babel-loader": "^7.0.0",
-    "babel-plugin-transform-runtime": "^6.23.0",
-    "babel-polyfill": "^6.23.0",
-    "babel-preset-es2015": "^6.24.1",
-    "babel-preset-stage-2": "^6.24.1",
-    "babel-register": "^6.24.1",
+    "autoprefixer": "^9.3.1",
+    "babel-eslint": "^10.0.1",
+    "babel-jest": "^23.6.0",
+    "babel-preset-env": "^1.7.0",
     "chai": "^4.2.0",
     "chalk": "^1.1.3",
-    "css-loader": "^0.28.1",
     "dotenv": "^6.0.0",
-    "eslint": "^3.19.0",
-    "eslint-config-standard": "^10.2.1",
-    "eslint-friendly-formatter": "^3.0.0",
-    "eslint-loader": "^1.7.1",
-    "eslint-plugin-html": "^2.0.3",
-    "eslint-plugin-import": "^2.2.0",
-    "eslint-plugin-node": "^4.2.2",
-    "eslint-plugin-promise": "^3.5.0",
-    "eslint-plugin-standard": "^3.0.1",
-    "eventsource-polyfill": "^0.9.6",
+    "eslint": "^5.8.0",
     "express": "^4.15.3",
-    "extract-text-webpack-plugin": "^2.1.0",
-    "file-loader": "^0.11.1",
-    "friendly-errors-webpack-plugin": "^1.6.1",
     "gulp": "^4.0.0",
-    "gulp-compile-handlebars": "^0.6.1",
     "gulp-concat": "^2.6.1",
     "gulp-declare": "^0.3.0",
-    "gulp-exec": "^3.0.2",
     "gulp-github-release": "^1.2.1",
     "gulp-handlebars": "^5.0.2",
     "gulp-notify": "^3.2.0",
@@ -59,39 +44,64 @@
     "gulp-replace": "^1.0.0",
     "gulp-sass": "^4.0.1",
     "gulp-sourcemaps": "^2.6.4",
-    "gulp-util": "^3.0.8",
     "gulp-wrap": "^0.14.0",
-    "gulp-zip": "^4.2.0",
-    "html-loader": "^0.4.5",
-    "html-webpack-plugin": "^2.30.1",
     "inquirer": "^6.2.0",
-    "ip": "^1.1.5",
+    "jest": "^23.6.0",
     "json-format": "^1.0.1",
-    "json-loader": "^0.5.4",
-    "less": "^2.7.2",
-    "less-loader": "^4.0.3",
     "merge-stream": "^1.0.1",
     "mocha": "^5.2.0",
-    "node-sass": "^4.5.3",
-    "nw": "^0.33.1-sdk",
+    "nw": "^0.35.3-sdk",
     "opn": "^5.4.0",
     "ora": "^1.2.0",
-    "proxy-middleware": "^0.15.0",
-    "q": "^1.5.0",
+    "path": "^0.12.7",
+    "regenerator-runtime": "^0.12.1",
     "require-dir": "^1.0.0",
-    "sass-loader": "^6.0.5",
-    "shelljs": "^0.7.7",
-    "style-loader": "^0.17.0",
-    "stylus": "^0.54.5",
-    "stylus-loader": "^3.0.1",
+    "sass-loader": "^7.1.0",
+    "sinon": "^7.1.0",
     "undertaker-forward-reference": "^1.0.2",
-    "url-loader": "^0.5.8",
-    "webpack": "^2.7.0",
-    "webpack-dev-middleware": "^1.10.2",
-    "webpack-dev-server": "^2.4.5",
-    "webpack-hot-middleware": "^2.18.0",
-    "webpack-merge": "^4.1.0",
-    "webpack-stream": "^5.1.1"
+    "vue-template-compiler": "^2.5.17"
   },
-  "dependencies": {}
+  "dependencies": {
+    "jest-vue-preprocessor": "^1.4.0",
+    "vue": "^2.5.17",
+    "vuex": "^3.0.1"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/essential",
+      "eslint:recommended"
+    ],
+    "rules": {},
+    "parserOptions": {
+      "parser": "babel-eslint"
+    }
+  },
+  "postcss": {
+    "plugins": {
+      "autoprefixer": {}
+    }
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "vue"
+    ],
+    "transform": {
+      ".*\\.(vue)$": "<rootDir>/node_modules/jest-vue-preprocessor",
+      "^.+\\.js$": "<rootDir>/node_modules/babel-jest"
+    },
+    "moduleNameMapper": {
+      "^@/(.*)$": "<rootDir>/src/$1"
+    }
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not ie <= 8"
+  ]
 }

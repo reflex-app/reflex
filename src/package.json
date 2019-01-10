@@ -2,20 +2,18 @@
   "name": "shift",
   "version": "0.4.0",
   "main": "index.html",
+  "node-main": "./main.js",
   "node-remote": "<all_urls>",
+  "private": true,
   "icon": "icon.icns",
   "window": {
     "height": 750,
     "width": 1200,
     "min_width": 400,
-    "min_height": 400,
-    "toolbar": true
+    "min_height": 400
   },
-  "chromium-args": "--enable-logging=stderr --enable-experimental-web-platform-features --remote-debugging-port=9999",
-  "webkit": {
-    "plugin": true
-  },
-  "devDependencies": {
+  "chromium-args": "--enable-logging=stderr --remote-debugging-port=9999",
+  "dependencies": {
     "browser-sync": "^2.26.3"
   }
 }

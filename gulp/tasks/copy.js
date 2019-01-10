@@ -4,7 +4,9 @@ const CONFIG = require('../config.js');
 gulp.task('copy', gulp.series('copy:assets', 'copy:node-modules'));
 
 // Copies static assets
-gulp.task('copy:assets', function() {
+gulp.task('copy', gulp.series('copy:assets'));
+
+gulp.task('copy:assets', function () {
   return gulp.src(CONFIG.ASSETS_FILES)
     .pipe(gulp.dest(CONFIG.DIST + 'assets'));
 });

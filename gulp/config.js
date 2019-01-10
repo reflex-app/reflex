@@ -1,12 +1,13 @@
 module.exports = {
   // Core Directories
   SRC: 'src/',
+  ASSETS: 'src/assets/',
   DIST: 'dist/',
   SHIP: 'ship/',
   TEST: 'test/',
 
   SERVER: {
-    PORT: 8000
+    PORT: 8080
   },
 
   JS_FILES: [
@@ -19,11 +20,5 @@ module.exports = {
     '!img/assets/{js,scss}',
     '!img/assets/{js,scss}/**/*'
   ],
-
-  // Webpack stuff
-  RESOLVE_CONFIG: {
-    EXTENSIONS: ['.js', '.json'],    //webpck extensions
-    ALIAS:{}                          //webpack alias
-  }
 
 };

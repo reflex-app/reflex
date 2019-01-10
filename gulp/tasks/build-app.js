@@ -8,7 +8,6 @@ const merge = require('merge-stream');
 const exec = require('child_process').exec;
 const chalk = require('chalk');
 const release = require('gulp-github-release');
-const zip = require('gulp-zip');
 const notify = require("gulp-notify");
 const archiver = require('archiver');
 const opn = require('opn');
@@ -36,7 +35,7 @@ gulp.task('build-app', gulp.series(
 ));
 
 // Deploy tasks
-// @TODO: Split this into another file? How to keep the variable values across files?
+// TODO: Split this into another file? How to keep the variable values across files?
 gulp.task('deploy-app', gulp.series(
     'deploy-app:changelog',
     'deploy-app:zip-app',
@@ -108,13 +107,13 @@ gulp.task('build-app:version', function () {
 // The final distributable is put into the `ship` folder
 gulp.task('build-app:main', function () {
     var nw = new NwBuilder({
-        version: '0.33.1', // the NWJS version to use
+        version: '0.35.3', // the NWJS version to use
         flavor: 'sdk', // sdk or normal
         files: CONFIG.DIST + '**/*', // copy everything inside of /dist to the final app
         buildDir: CONFIG.SHIP, // output directory
         cacheDir: CONFIG.SHIP, // cached NWJS versions (/dist/cache)
-        macCredits: CONFIG.SRC + 'credits.html',
-        macIcns: CONFIG.SRC + 'icon.icns',
+        macCredits: CONFIG.ASSETS + 'credits.html',
+        macIcns: CONFIG.ASSETS + 'icon.icns',
         platforms: ['osx64'] // win32
     })
 
