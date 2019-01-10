@@ -12,12 +12,15 @@ gulp.registry(forwardReference());
 requireDir('./gulp/tasks');
 
 // Tasks
-// Runs all of the above tasks and then waits for files to change
-// build --> serve --> watch
+// 1. Default
+// 2. Build
+// 3. Serve
+// 4. App: Compiles the app
+// 5. Release: Drafts a release of the app to Github
 gulp.task('default', gulp.parallel('serve', 'watch'));
 
-// Build the app
-gulp.task('app', gulp.series('build', 'create-package-json:main', 'build-app'));
+// Starts a BrowerSync instance
+gulp.task('build', gulp.series('clean', 'sass', 'javascript', 'handlebars'));
 
 // BrowserSync Server
 gulp.task('serve', gulp.series('build', 'create-package-json:dev', function () {
@@ -28,14 +31,25 @@ gulp.task('serve', gulp.series('build', 'create-package-json:dev', function () {
   });
 }));
 
-// Starts a BrowerSync instance
-gulp.task('build', gulp.series('clean', 'copy', 'sass', 'javascript', 'handlebars'));
+// Compile the app
+gulp.task('app', gulp.series(
+  'build',
+  'create-package-json:main',
+  'build-app'
+));
+
+// Draft a release to Github
+gulp.task('release', gulp.series(
+  'app',
+  'code-sign-mac',
+  'deploy-app'
+));
 
 // Watch files for changes
 gulp.task('watch', function () {
   gulp.watch(CONFIG.SRC + 'scss/**/*.scss', gulp.series('sass'));
   gulp.watch(CONFIG.SRC + 'js/**/*.js', gulp.series('javascript', reload));
-  gulp.watch([CONFIG.SRC + 'pages/**/*.hbs', CONFIG.SRC + 'partials/**/*.hbs'], gulp.series('handlebars', reload));
+  gulp.watch([CONFIG.SRC + 'pages/**/*.hbs', CONFIG.SRC + 'partials/**/*.hbs', CONFIG.TEST + '*.hbs'], gulp.series('handlebars', reload));
 });
 
 // Reloads BrowserSync

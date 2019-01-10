@@ -15,7 +15,7 @@
   "webkit": {
     "plugin": true
   },
-  "dependencies": {
-    "browser-sync": "^2.24.7"
+  "devDependencies": {
+    "browser-sync": "^2.26.3"
   }
 }

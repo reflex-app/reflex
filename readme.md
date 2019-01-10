@@ -1,72 +1,103 @@
-# Shift
-> A tool for previewing responsive sites.
+<div >
+    <h3 align="center">Shift</h3>
+    <p align="center">A tool for previewing responsive sites.</p>
+</div>
 
 ![Shift Screenshot](screenshot.png)
 
-## Installation
+Shift is a free, open-source Mac app that makes it easy to see how responsive websites look at different screen sizes. Made especially for designers & developers who are tired of manually resizing their browser window.
 
-[Download the latest version (MacOS 10.12+)](https://github.com/nwittwer/shift/releases/latest)
+---
 
-### Installation Instructions
-1. Move the Application to your Applications folder
-    - If you get a warning like "Cannot be opened because the developer is not verified.", open System Preferences > Security & Privacy > "Open anyway"
-2. Open the application by double-clicking it
+## Download
 
-## Features:
-- [x] MacOS app (hybrid)
-- [x] Preview your changes across many viewport sizes
-- [x] Add all the sizes you want. They're saved automatically.
-- [x] Easily resize your viewports. And they're saved for when you come back.
-- [x] Natural scrolling/panning of the canvas
-- [x] Recent URLs are saved, making it easy to re-access them.
-- [ ] Quickly test an entire user flow, across multiple viewport sizes, in one place using [Browsersync](https://browsersync.io/) built-in
-- [ ] Ability to test high-pixel-density (i.e. Apple's "retina" device resolutions)
-- [ ] Ability to test different user-agents
+**[Download version 0.3.1 (MacOS only)](https://github.com/nwittwer/shift/releases/download/v0.3.1/shift-0.3.1-mac.zip)**
 
-[View upcoming features](https://github.com/nwittwer/shift/projects)
+Or download via command line (Terminal):
+
+Step 1:
+```bash
+URL=$(curl -s https://api.github.com/repos/nwittwer/shift/releases/latest | grep browser_download_url | cut -d '"' -f 4)
+```
+
+Step 2:
+```bash
+curl -LO "$URL"
+```
+
+[Having issues installing?](#faq)
+
+### Features:
+- Preview your web development changes across as many sizes as you want
+- Natural scrolling/panning of the canvas
+- Easily resize the viewports
+- Your setup is saved for the next time you use the app
+
+Check out our [upcoming features](../../projects) and [feature requests](../../issues&q=label%3Afeature-request). If you have an idea that you didn't see it in either of those places, you can create a [new Github issue](../../issues) for it!
+
+---
+
+## Contributing
+
+Please take a look at the [upcoming features](../../projects) and the [open Github issues](../../issues). Bug reports and feature requests are welcome!
+
+---
 
 ## Developing
-Requirements (tested with):
-- Node 10.0+
-- NPM 6+
-- Gulp 4+
 
-1. Clone this repo
-2. `cd` into the created directory and run `npm install`
-3. You'll need to install the NW.js CLI: `npm i nw -g`
-4. If you want to run the app in development, use `npm start`. SCSS, JS, and images will be watched and updated upon saving.
+Please use the following versions: 
+- Node 10.0+, NPM 6+, Gulp 4+
 
-### Tasks
+1. Clone the project to your computer:
+    ```sh
+    $ git clone https://github.com/nwittwer/shift.git
+    $ cd shift
+    ```
 
-#### Default (`npm start`)
+2. Install dependencies:
+    ```sh
+    $ npm install
+    ```
 
-1. Compile & watch JS, SCSS from `src` --> `dist`
-2. On changes, clean directory and compile again
+3. Compile and watch for changes:
+    ```sh
+    $ npm run start
+    ```
 
-#### Build (`npm run build`)
+    To make sure your code works in the final app, run the following command. This will output a `Shift.app` file inside of the `ship/Shift/osx64/` folder for MacOS.
 
-1. Gulp takes everything from `/dist`:
-    - index.html
-    - package.json
-    - etc.
-2. Gulp builds all files to production level
-3. Gulp runs `NW-builder`, which produces apps from NWJS
-4. App is now built in the `/ship` directory
-5. With the right credentials, a release can be created
+    ```sh
+    $ npm run build
+    ```
 
-### Helpful resources
-- Hybrid app ([NWJS](http://docs.nwjs.io/en/latest/))
-- 
+### Debugging
+
+Open the app, right click, and select "Inspect" to open Chrome DevTools
+
+---
 
 ## FAQ
-- `Error: listen EADDRINUSE :::8000`
-    - Terminal: `kill -9 $(lsof -i TCP:8000 | grep LISTEN | awk '{print $2}')`
-- "Your profile can not be used because it is from a newer version of NW.js." 
-    - Terminal: `rm -R ~/Library/Application\ Support/Shift`
-- This project has the ability to build for Windows, but currently only the Mac version is being supported/tested, as it requires a large amount of effort to add another OS to support.
 
-## Debugging
-- Open the app, right click, and select "Inspect" to open Chrome DevTools
+1. Help installing for MacOS
+    1. Move the Application to your Applications folder
+    2. Open the application by double-clicking the icon
+
+2. Does Shift work on Windows OS?
+
+At the moment, only the Mac version is being supported/tested, as it requires a large amount of effort to add another OS to support. With more help, most or all of this project could work on the web, MacOS, and Windows.
+
+3. What should I do if I get one of the following errors?
+    - "Your profile can not be used because it is from a newer version of NW.js." 
+        ```sh
+        $ rm -R ~/Library/Application\ Support/Shift
+        ```
+    - `Error: listen EADDRINUSE :::8000`
+        ```sh
+        $ kill -9 $(lsof -i TCP:8000 | grep LISTEN | awk '{print $2}')
+        ```
+
+---
 
 ## License
-MIT
+
+[MIT](LICENSE)

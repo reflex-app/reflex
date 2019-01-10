@@ -2,16 +2,35 @@ app.toolbar = {
 
     init: function () {
         this.firstLoad();
+        app.toolbar.zoomControls.init();
+        app.toolbar.recentURLs.init();
+        app.toolbar.smartURL.init();
     },
 
     firstLoad: function () {
-        app.toolbar.recentURLs.init();
-
         // Bind the "Enter" key => load URL in artboardInnerFrame
         $("#toolbar__url").on('keypress', function (e) {
             if (e.which == 13) {
                 e.preventDefault();
-                app.toolbar.updateURL();
+
+                // Try to turn the URL into a "smart" URL
+                // This improves the UX when someone types in something like "localhost:8000"
+                // it will automatically prepend "http://" for them or deal with invalid URLs
+                var url = $("#toolbar__url").val();
+                if (app.toolbar.smartURL.make(url) !== false) {
+                    var result = app.toolbar.smartURL.make(url);
+                    $("#toolbar__url").val(result);
+
+                    // Save the URL to LocalStorage RecentURLs
+                    app.toolbar.recentURLs.add(e);
+
+                    // Now update the URL
+                    app.toolbar.updateURL();
+                } else {
+                    // Error, not a valid 
+                    alert(`${url} is not a valid URL`);
+                }
+
             }
         });
     },
@@ -23,19 +42,14 @@ app.toolbar = {
         artboardInnerFrame = $("iframe");
 
         artboardInnerFrame.each(function () {
-
-            console.log($(this));
-
             // Update artboardInnerFrame src
             $(this).attr("src", url_val);
 
             // Show loading spinner
-            $(this).on("loadstart", function () {
-                app.toolbar.isLoading(true, url_val)
-            });
+            app.toolbar.isLoading(true, url_val);
 
             // Site is loaded
-            $(this).on("loadstop", function () {
+            $(this).on("load", function () {
                 // Hide loading spinner
                 app.toolbar.isLoading(false, url_val);
                 // Unregister the load event of any previous artboardInnerFrames
@@ -50,47 +64,58 @@ app.toolbar = {
         var loading_el = $(".artboard__loader");
 
         if (condition === true) {
-            console.log('Loading: ' + url);
+            if (app.environment == "dev") {
+                console.log('Loading: ' + url);
+            }
             loading_el.addClass('is-loading');
         } else if (condition === false) {
-            console.log('Finished Loading: ' + url);
+            if (app.environment == "dev") {
+                console.log('Finished Loading: ' + url);
+            }
             loading_el.removeClass('is-loading');
-        } else {
-            // No action
         }
     },
 
     handleartboardInnerFrameChild: function ($el) {
-        // Run on trigger
-        app.toolbar.injectartboardInnerFrameChildScript($el);
+        // // Run on trigger
+        // app.toolbar.injectartboardInnerFrameChildScript($el);
 
-        // Listen for events
-        window.addEventListener('message', function (e) {
-            console.log("Returned message:" + e.data);
-            // Inject the script again
-            app.toolbar.updateURL();
-        });
+        // // Listen for events
+        // window.addEventListener('message', function (e) {
+        //     if (app.environment == "dev") {
+        //         console.log("Returned message:" + e.data);
+        //     }
 
-        // Send a message to establish connection
-        try {
-            $el.contentWindow.postMessage('hi', '*');
-            console.log("message sent to artboardInnerFrame");
-        } catch (e) {
-            console.log('message to artboardInnerFrame failed');
-        }
+        //     // Inject the script again
+        //     app.toolbar.updateURL();
+        // });
+
+        // // Send a message to establish connection
+        // try {
+        //     $el.contentWindow.postMessage('hi', '*');
+        //     if (app.environment == "dev") {
+        //         console.log("message sent to artboardInnerFrame");
+        //     }
+        // } catch (e) {
+        //     if (app.environment == "dev") {
+        //         console.log('message to artboardInnerFrame failed');
+        //     }
+        // }
     },
 
     injectartboardInnerFrameChildScript: function ($el) {
-        console.log('Link click script injected');
+        // if (app.environment == "dev") {
+        //     console.log('Link click script injected');
+        // }
 
         // Inject a script into the artboardInnerFrame to track click events and propagate it to the parent
         // Make sure to run this function again after click (re-inject)
-        var injection_code = `
-        window.addEventListener('message', function (e) {
-            document.querySelector("a").onclick = function (r) {
-                e.source.postMessage("hello there", "*");
-            }
-        })`;
+        // var injection_code = `
+        // window.addEventListener('message', function (e) {
+        //     document.querySelector("a").onclick = function (r) {
+        //         e.source.postMessage("hello there", "*");
+        //     }
+        // })`;
 
         // $el.addContentScripts([{
         //     name: 'myRule',
@@ -102,9 +127,9 @@ app.toolbar = {
         // }]);
 
         // Inject click handler
-        $el.executeScript({
-            code: injection_code
-        });
+        // $el.executeScript({
+        //     code: injection_code
+        // });
     }
 
 }
