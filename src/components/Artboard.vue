@@ -8,10 +8,7 @@
     <div class="artboard__top">
       <div>
         <span class="title">{{ this.title }}</span>
-        <span class="artboard__width dimension">
-
-          W: {{ this.width }}</span>
-        <span class="artboard__height dimension">H: {{ this.height }}</span>
+        <span class="dimension">{{ this.width }} x {{ this.height }}</span>
       </div>
       <!-- Show a loader when state.isLoading == true -->
       <div class="artboard__loader is-loading" v-if="state.isLoading">
@@ -56,18 +53,11 @@ export default {
   computed: {
     // Bind to our Vuex Store's URL value
     url() {
-      return this.$store.state.url;
+      return this.$store.state.site.url;
     }
   },
 
   watch: {
-    // Watch for changes to the artboard object
-    // artboard: {
-    //   handler: function() {
-    //     this.$emit("resize", this.artboard); // Trigger localStorage update in parent component
-    //   },
-    //   deep: true
-    // },
     // Toggle iFrame pointer-events based on the isSelected artboard state
     "state.isSelected": {
       handler: function() {
@@ -81,7 +71,7 @@ export default {
         }
       }
     },
-    // When the URL is changed, display a loading indicator:
+    // When the URL is changed, do this:
     url: {
       handler: function() {
         const _this = this;
@@ -94,6 +84,10 @@ export default {
 
         // Site is loaded
         this.$refs.iframe.onload = function() {
+          // Set page title (from iFrame)
+          const title = _this.$refs.iframe.contentWindow.document.title;
+          _this.$store.commit('changeSiteTitle', title);
+
           _this.state.isLoading = false; // Hide loading spinner
         };
       }

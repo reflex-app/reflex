@@ -17,14 +17,6 @@ export default {
   name: "ArtboardControls",
   computed: {
     // Bind to our Vuex Store's URL value
-    url: {
-      get() {
-        return this.$store.state.url;
-      },
-      set(value) {
-        this.$store.commit("changeURL", value);
-      }
-    },
     panzoomInstance() {
       return this.$store.state.panzoom;
     }
