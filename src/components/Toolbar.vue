@@ -1,7 +1,7 @@
 <template>
   <div id="toolbar">
     <div id="toolbar__url-container">
-      {{ title }}
+      <span id="toolbar__site-title">{{ title }}</span>
       <input
         v-model.lazy="url"
         placeholder="Enter a website URL (http://website.com)"
@@ -66,7 +66,7 @@ export default {
   color: #434343;
   position: relative;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   background: white;
   border-bottom: $gui-border;
@@ -76,9 +76,18 @@ export default {
     margin-left: 16px;
   }
 
+  #toolbar__site-title {
+    font-size: 0.8rem;
+    font-weight: 500;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    cursor: default;
+    user-select: none;
+  }
+
   #toolbar__url-container {
     position: relative;
-    margin: 0 auto;
+    // margin: 0 auto;
     // max-width: 80vw;
     // min-width: 12rem;
 
@@ -89,22 +98,24 @@ export default {
     input[type="text"] {
       border: none;
       box-sizing: border-box;
-      padding: 0.5rem;
+      padding: 0.2rem 0.5rem;
+      padding-left: 0;
       background: #ffffff;
       border: 1px solid transparent;
       border-radius: 4px;
       width: 100%;
       max-width: 80vw;
       min-width: 320px;
-      text-align: center;
       text-overflow: ellipsis;
+      display: block;
 
       &:hover {
         border: 1px solid $border-color;
-        background: lighten($body-bg, 5%);
+        background: darken($body-bg, 5%);
       }
 
       &:focus {
+        padding: 0.5rem;
         text-overflow: none;
         text-align: left;
         outline: none;
