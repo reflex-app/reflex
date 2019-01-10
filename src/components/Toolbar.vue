@@ -1,6 +1,7 @@
 <template>
   <div id="toolbar">
     <div id="toolbar__url-container">
+      {{ title }}
       <input
         v-model.lazy="url"
         placeholder="Enter a website URL (http://website.com)"
@@ -27,13 +28,16 @@ export default {
     sidebar() {
       return this.$store.state.gui.sidebar;
     },
+    title() {
+      return this.$store.state.site.title;
+    },
     url: {
       // Bind to our Vuex Store's URL value
       get() {
-        return this.$store.state.url;
+        return this.$store.state.site.url;
       },
       set(value) {
-        this.$store.commit("changeURL", value);
+        this.$store.commit("changeSiteURL", value);
       }
     },
     panzoomInstance() {

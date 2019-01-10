@@ -7,7 +7,10 @@ Vue.use(Vuex)
 // Make Store accessible from components
 const store = new Vuex.Store({
   state: {
-    url: "", // The current URL being viewed
+    site: {
+      url: "", // The current URL being viewed
+      title: "" // The title of the page being viewed
+    },
     artboards: [], // All artboards on the screen
     gui: {
       sidebar: false
@@ -25,14 +28,18 @@ const store = new Vuex.Store({
       }
     },
 
-    changeURL(state, val) {
-      state.url = val; // Update the URL based on the incoming value
-      // console.log("New URL:", this.state.url);
+    changeSiteTitle(state, val) {
+      if (val !== state.site.title) {
+        state.site.title = val;
+      }
+    },
+
+    changeSiteURL(state, val) {
+      state.site.url = val; // Update the URL based on the incoming value
     },
 
     toggleSidebar(state, val) {
       state.gui.sidebar = val;
-      // console.log("Sidebar open:", state.gui.sidebar);
     },
 
     updateArtboardAtIndex(state, artboard) {
@@ -72,9 +79,6 @@ const store = new Vuex.Store({
 
       // Append a unique ID
       artboard.id = uniqueID();
-
-      // Log the newly created artboard
-      // console.log("Artboard:", artboard);
 
       // Add to the array
       state.artboards.push(artboard);
