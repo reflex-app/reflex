@@ -1,7 +1,7 @@
 <template>
   <div id="toolbar">
     <div id="toolbar__url-container">
-      <span id="toolbar__site-title">{{ title }}</span>
+      <span v-if="title" id="toolbar__site-title">{{ title }}</span>
       <input
         v-model.lazy="url"
         placeholder="Enter a website URL (http://website.com)"
