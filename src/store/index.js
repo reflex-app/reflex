@@ -27,24 +27,26 @@ const store = new Vuex.Store({
         );
       }
     },
-    
+
     /** Sets the Site Title (via iFrame)
      * @param  {} state
      * @param  {} val
      */
     changeSiteTitle(state, val) {
+      console.log(val);
       if (val !== state.site.title) {
         state.site.title = val;
       }
     },
 
-    
     /** Change the Site URL
      * @param  {} state
      * @param  {} val
      */
     changeSiteURL(state, val) {
-      state.site.url = val; // Update the URL based on the incoming value
+      if (val && val !== "" && val !== state.site.url) {
+        state.site.url = val; // Update the URL based on the incoming value
+      }
     },
 
     /** Toggle the Sidebar on/off
