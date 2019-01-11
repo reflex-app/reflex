@@ -13,6 +13,8 @@
 </template>
 
 <script>
+import { platform } from "../utils";
+
 export default {
   name: "ArtboardControls",
   computed: {
@@ -33,9 +35,10 @@ export default {
     }
   },
   mounted() {
+    // Check native apps
     if (window.nw) {
       const vm = this;
-      const nw = window.nw; // Attach to global window
+      const nw = window.nw;
       const win = nw.Window.get();
 
       // Create menu container
@@ -43,8 +46,10 @@ export default {
         type: "menubar"
       });
 
-      // Initialize default mac menu (App, Edit)
-      Menu.createMacBuiltin(nw.App.manifest.name, { hideWindow: true });
+      if (platform.mac) {
+        // Initialize default mac menu (App, Edit)
+        Menu.createMacBuiltin(nw.App.manifest.name, { hideWindow: true });
+      }
 
       // Setup View's child
       let viewSubMenu = new nw.Menu();

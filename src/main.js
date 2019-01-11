@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import App from './App.vue'
-import store from './store/index'
+import store from './store'
 
 // Vue Configuration
 Vue.config.productionTip = false
