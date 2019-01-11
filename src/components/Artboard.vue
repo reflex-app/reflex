@@ -22,7 +22,6 @@
     </div>
     <div class="artboard__keypoints"></div>
     <div class="artboard__content">
-      <!-- <iframe v-bind:src="url" ref="iframe" class="iframe" nwfaketop frameborder="0"></iframe> -->
       <webview id="foo" v-bind:src="url" ref="iframe" class="iframe"></webview>
       <div class="artboard__handles">
         <div @mousedown="triggerResize" class="handle__bottom"/>
