@@ -22,7 +22,8 @@
     </div>
     <div class="artboard__keypoints"></div>
     <div class="artboard__content">
-      <iframe v-bind:src="url" ref="iframe" class="iframe" nwfaketop frameborder="0"></iframe>
+      <!-- <iframe v-bind:src="url" ref="iframe" class="iframe" nwfaketop frameborder="0"></iframe> -->
+      <webview id="foo" v-bind:src="url" ref="iframe" class="iframe"></webview>
       <div class="artboard__handles">
         <div @mousedown="triggerResize" class="handle__bottom"/>
       </div>
@@ -58,8 +59,8 @@ export default {
   },
 
   watch: {
-    // Toggle iFrame pointer-events based on the isSelected artboard state
     "state.isSelected": {
+      // Toggle iFrame pointer-events based on the isSelected artboard state
       handler: function() {
         const element = this.$refs.iframe;
         if (this.state.isSelected == true) {
@@ -71,30 +72,80 @@ export default {
         }
       }
     },
-    // When the URL is changed, do this:
     url: {
+      // When the URL is changed, do this:
       handler: function() {
-        const _this = this;
-
-        // Update the iFrame's src
-        this.$refs.iframe.src = this.url;
-
-        // Show loading spinner
-        this.state.isLoading = true;
-
-        // Site is loaded
-        this.$refs.iframe.onload = function() {
-          // Set page title (from iFrame)
-          const title = _this.$refs.iframe.contentWindow.document.title;
-          _this.$store.commit('changeSiteTitle', title);
-
-          _this.state.isLoading = false; // Hide loading spinner
-        };
+        this.loadSite();
       }
     }
   },
 
   methods: {
+    loadSite() {
+      const _this = this;
+      const frame = this.$refs.iframe;
+
+      // Update the iFrame's src
+      frame.src = this.$store.state.site.url;
+
+      // When loading of webview starts
+      function loadstart() {
+        _this.state.isLoading = true; // Show loading spinner
+      }
+
+      // Once webview content is loaded
+      function contentload() {
+        // The following will be injected in the webview
+        const execCode = `
+            var data = {
+              title: document.title,
+              url: window.location.href,
+              favicon:
+                "https://www.google.com/s2/favicons?domain=" +
+                window.location.href
+            };
+
+            function respond(event) {
+              event.source.postMessage(data, '*');
+            }
+
+            window.addEventListener("message", respond, false);
+        `;
+
+        frame.executeScript({
+          code: execCode
+        });
+      }
+
+      // Loading has finished
+      function loadstop() {
+        _this.state.isLoading = false; // Hide loading spinner
+        frame.contentWindow.postMessage("Send me your data!", "*"); // Send a request to the webview
+      }
+
+      // Bind events
+      frame.addEventListener("loadstart", loadstart);
+      frame.addEventListener("contentload", contentload);
+      frame.addEventListener("loadstop", loadstop);
+      window.addEventListener("message", receiveHandshake, false); // Listen for response
+
+      function receiveHandshake(event) {
+        // Data is accessible as event.data.*
+        // Refer to the object that's injected during contentload()
+        // for all keys
+        _this.$store.commit("changeSiteTitle", event.data.title);
+        removeListeners();
+      }
+
+      // Remove all event listeners
+      function removeListeners() {
+        frame.removeEventListener("loadstart", loadstart);
+        frame.removeEventListener("contentload", contentload);
+        frame.removeEventListener("loadstop", loadstop);
+        window.removeEventListener("message", receiveHandshake);
+      }
+    },
+
     // Limits the size of an artboard
     validateArtboardSizeInput(name, value) {
       // @TODO: Refactor this into the size editor
