@@ -6,7 +6,7 @@
       <div id="canvas" ref="canvas">
         <Artboards ref="artboards"/>
       </div>
-      <ArtboardList v-if="artboards.length"/>
+      <ArtboardList/>
     </div>
   </div>
 </template>

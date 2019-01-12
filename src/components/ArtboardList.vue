@@ -2,7 +2,7 @@
   <transition name="sidebar-transition">
     <div id="artboard-tabs" v-if="sidebar==true">
       <div class="artboard-tabs__header">Sizes</div>
-      <div class="artboard-tabs__scroll">
+      <div v-if="artboards.length" class="artboard-tabs__scroll">
         <div
           v-for="artboard in artboards"
           v-bind="artboard"
@@ -32,6 +32,11 @@
       </div>
 
       <NewArtboardButton class="artboard-tabs__button" @add="add"/>
+
+      <!-- Show a tip if there's no artboards -->
+      <div v-if="!artboards.length" class="empty-state">
+        <div class="empty-state__text">Click "+" to add a new screen</div>
+      </div>
     </div>
   </transition>
 </template>
@@ -63,7 +68,6 @@ export default {
   },
 
   methods: {
-    // TODO: This is repeated from Artboards component
     add() {
       this.$store.commit("addArtboard", {
         title: "Untitled",
@@ -104,43 +108,43 @@ export default {
 @import "../scss/_variables";
 
 // Animation:Enter
-.sidebar-transition-enter {
-  transform: translateX(20%);
-  opacity: 0;
-  z-index: 1;
-}
-.sidebar-transition-enter-to {
-  transform: translateX(0);
-  opacity: 1;
-}
+// .sidebar-transition-enter {
+//   transform: translateX(20%);
+//   opacity: 0;
+//   z-index: 1;
+// }
+// .sidebar-transition-enter-to {
+//   transform: translateX(0);
+//   opacity: 1;
+// }
 
-.sidebar-transition-leave {
-  transform: translateX(60%);
-  z-index: 1;
-}
+// .sidebar-transition-leave {
+//   transform: translateX(60%);
+//   z-index: 1;
+// }
 
-.sidebar-transition-leave-to {
-  transform: translateX(100%);
-  opacity: 0;
-}
+// .sidebar-transition-leave-to {
+//   transform: translateX(100%);
+//   opacity: 0;
+// }
 
-// Animation:Settings
-.sidebar-transition-enter-active {
-  transition: all 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 200ms;
-}
-.sidebar-transition-leave-active {
-  transition: all 150ms cubic-bezier(0.55, 0.085, 0.68, 0.53), opacity 150ms;
-}
+// // Animation:Settings
+// .sidebar-transition-enter-active {
+//   transition: all 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 200ms;
+// }
+// .sidebar-transition-leave-active {
+//   transition: all 150ms cubic-bezier(0.55, 0.085, 0.68, 0.53), opacity 150ms;
+// }
 
 #artboard-tabs {
-  position: absolute;
+  position: relative;
   display: flex;
   flex-direction: column;
   top: 0;
   right: 0;
   height: 100%;
   border-left: 1px solid $border-color;
-  width: 15rem;
+  width: 18rem;
   background: white;
   z-index: 1;
   overflow: auto;
@@ -259,6 +263,49 @@ export default {
           background: white;
         }
       }
+    }
+  }
+
+  .empty-state {
+    background: #535353;
+    border: 1px solid #434343;
+    box-shadow: 0 1px 4px 0 rgba(102, 102, 102, 0.5);
+    border-radius: 4px;
+    margin: 0 1rem;
+    user-select: none;
+    position: relative;
+    animation: MoveUpDown 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
+
+    @keyframes MoveUpDown {
+      0%,
+      100% {
+        bottom: 0;
+      }
+      50% {
+        bottom: 8px;
+      }
+    }
+
+    // Triangle
+    &:after {
+      content: "";
+      position: absolute;
+      top: -6px;
+      left: 0.5rem;
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 0px 6px 6px 6px;
+      // border-width: 6px 6px 0 6px;
+      border-color: transparent transparent #535353 transparent;
+      // border-color: #535353 transparent transparent transparent;
+    }
+
+    .empty-state__text {
+      padding: 0.5rem;
+      font-size: 0.8rem;
+      line-height: 1.5;
+      color: white;
     }
   }
 }

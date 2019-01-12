@@ -5,26 +5,31 @@
       :key="artboard.id"
       v-bind="artboard"
       ref="artboard"
-      @add="add"
-      @remove="remove"
       @resize="resize"
     />
   </div>
+  <!-- Show empty state if no artboards exist -->
   <div class="empty-state" v-else>
-    <p>👋 Welcome to Shift!<br/> Click the "+" button to create your first screen size.</p>
-    <NewArtboardButton @add="add"/>
+    <img src="@/assets/ftu-vector.svg" class="empty-state__image" alt="Welcome to Shift graphic">
+    <span class="empty-state__title">Welcome to Shift!</span>
+    <p class="empty-state__body">You can create new screens in the Sizes panel on the right.</p>
   </div>
 </template>
 
 <script>
 import Artboard from "./Artboard";
-import NewArtboardButton from "./NewArtboardButton";
 
 export default {
   name: "Artboards",
   components: {
-    Artboard,
-    NewArtboardButton
+    Artboard
+  },
+  watch: {
+    artboards: function() {
+      // @TODO: Panzoom is currently not properly centering
+      // Center the canvas when an artboard is added/deleted
+      document.$panzoom.center();
+    }
   },
   computed: {
     artboards() {
@@ -32,25 +37,6 @@ export default {
     }
   },
   methods: {
-    add() {
-      this.$store.commit("addArtboard", {
-        title: 'Untitled',
-        width: 375, // TODO: dynamic
-        height: 667 // TODO: dynamic
-      });
-    },
-    remove(id) {
-      // Remove
-      this.$store.commit("removeArtboard", id);
-
-      // TODO: Add test for deleting multiple selected artboards
-      // function filterArtboards(artboards) {
-      //   return artboards.filter(artboard => {
-      //     console.log(artboard);
-      //     // return artboard.state.isSelected
-      //   });
-      // }
-    },
     resize(artboard) {
       this.$store.commit("resizeArtboard", artboard);
     }
@@ -80,17 +66,25 @@ export default {
 }
 
 .empty-state {
+  height: 100%;
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
 
-  .button-new-artboard {
-    position: relative;
-    top: 3rem;
-    left: 0;
-    right: 0;
+  .empty-state__image {
+    margin-bottom: 2rem;
+  }
+
+  .empty-state__title {
+    font-size: 1.4rem;
+  }
+
+  .empty-state__body {
+    line-height: 1.6;
+    max-width: 250px;
   }
 }
 </style>

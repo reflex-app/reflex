@@ -1,5 +1,5 @@
 <template>
-  <div id="ArtboardControls">
+  <div id="ArtboardControls" v-if="artboards.length">
     <div id="toolbar__canvas-controls">
       <span id="canvas-controls__zoomIn" class="button" @click="zoomIn">+</span>
       <span id="canvas-controls__zoomOut" class="button" @click="zoomOut">-</span>
@@ -18,9 +18,8 @@ import { platform } from "../utils";
 export default {
   name: "ArtboardControls",
   computed: {
-    // Bind to our Vuex Store's URL value
-    panzoomInstance() {
-      return this.$store.state.panzoom;
+    artboards: function() {
+      return this.$store.state.artboards;
     }
   },
   methods: {
