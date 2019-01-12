@@ -1,24 +1,21 @@
 <template>
   <div id="toolbar">
     <div id="toolbar__url-container">
-      <span v-if="title" id="toolbar__site-title">{{ title }}</span>
-      <input
-        v-model.lazy="url"
-        placeholder="Enter a website URL (http://website.com)"
-        type="text"
-        id="toolbar__url"
-        name="toolbar__url"
-        @focus="$event.target.select()"
-        autocomplete="off"
-      >
+      <div v-if="artboards.length">
+        <span id="toolbar__site-title">{{ title }}</span>
+        <input
+          v-model.lazy="url"
+          placeholder="Enter a website URL (http://website.com)"
+          type="text"
+          id="toolbar__url"
+          name="toolbar__url"
+          @focus="$event.target.select()"
+          autocomplete="off"
+        >
+      </div>
       <div id="toolbar__recentURLs"></div>
     </div>
-    <div
-      @click="toggleSidebar()"
-      v-if="artboards.length"
-      v-bind:class="{'button--is-active': sidebar}"
-      class="button"
-    >Sizes</div>
+    <div @click="toggleSidebar()" v-bind:class="{'button--is-active': sidebar}" class="button">Sizes</div>
   </div>
 </template>
 
@@ -41,14 +38,13 @@ export default {
         this.$store.commit("changeSiteURL", value);
       }
     },
-    artboards: function() {
+    artboards() {
       return this.$store.state.artboards;
     }
   },
   methods: {
     toggleSidebar() {
-      const newState = !this.sidebar;
-      this.$store.commit("toggleSidebar", newState);
+      this.$store.commit("toggleSidebar");
     }
   }
 };

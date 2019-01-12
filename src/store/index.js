@@ -53,8 +53,8 @@ const store = new Vuex.Store({
      * @param  {} state
      * @param  {} val
      */
-    toggleSidebar(state, val) {
-      state.gui.sidebar = val;
+    toggleSidebar(state) {
+      state.gui.sidebar = !state.gui.sidebar;
     },
 
     /**
