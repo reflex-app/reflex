@@ -13,7 +13,7 @@ const store = new Vuex.Store({
     },
     artboards: [], // All artboards on the screen
     gui: {
-      sidebar: false
+      sidebar: true
     },
     // panzoom: {} // Holds Panzoom class info
   },
