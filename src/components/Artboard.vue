@@ -376,8 +376,7 @@ $artboard-handle-height: 1rem;
   & .artboard__loader {
     position: absolute;
     top: 0;
-    left: 0;
-    right: 0;
+    right: 2rem;
 
     .content {
       left: 50%;
