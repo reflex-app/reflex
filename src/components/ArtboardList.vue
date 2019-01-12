@@ -1,7 +1,7 @@
 <template>
   <transition name="sidebar-transition">
     <div id="artboard-tabs" v-if="sidebar==true">
-      <div class="artboard-tabs__header">Sizes</div>
+      <div class="artboard-tabs__header">Screens</div>
       <div v-if="artboards.length" class="artboard-tabs__scroll">
         <div
           v-for="artboard in artboards"

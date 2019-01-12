@@ -2,7 +2,7 @@
   <div id="toolbar">
     <div id="toolbar__url-container">
       <div v-if="artboards.length">
-        <span id="toolbar__site-title">{{ title }}</span>
+        <span id="toolbar__site-title" v-bind:title="title">{{ title }}</span>
         <input
           v-model.lazy="url"
           placeholder="Enter a website URL (http://website.com)"
@@ -15,7 +15,11 @@
       </div>
       <div id="toolbar__recentURLs"></div>
     </div>
-    <div @click="toggleSidebar()" v-bind:class="{'button--is-active': sidebar}" class="button">Sizes</div>
+    <div
+      @click="toggleSidebar()"
+      v-bind:class="{'button--is-active': sidebar}"
+      class="button"
+    >Screens</div>
   </div>
 </template>
 

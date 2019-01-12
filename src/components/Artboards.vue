@@ -11,8 +11,8 @@
   <!-- Show empty state if no artboards exist -->
   <div class="empty-state" v-else>
     <img src="@/assets/ftu-vector.svg" class="empty-state__image" alt="Welcome to Shift graphic">
-    <span class="empty-state__title">Welcome to Shift!</span>
-    <p class="empty-state__body">You can create new screens in the Sizes panel on the right.</p>
+    <span class="empty-state__title">Welcome to Shift</span>
+    <p class="empty-state__body">You can create new screens in the Screens panel on the right.</p>
   </div>
 </template>
 
@@ -79,11 +79,11 @@ export default {
   }
 
   .empty-state__title {
-    font-size: 1.4rem;
+    font-size: 1.6rem;
   }
 
   .empty-state__body {
-    line-height: 1.6;
+    line-height: 1.5;
     max-width: 250px;
   }
 }
