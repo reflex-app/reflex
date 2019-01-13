@@ -2,7 +2,7 @@
   "name": "shift",
   "version": "0.4.0",
   "main": "index.html",
-  "node-main": "./main.js",
+  "node-main": "./index.js",
   "node-remote": "<all_urls>",
   "private": true,
   "icon": "icon.icns",
@@ -12,8 +12,5 @@
     "min_width": 400,
     "min_height": 400
   },
-  "chromium-args": "--enable-logging=stderr --remote-debugging-port=9999",
-  "dependencies": {
-    "browser-sync": "^2.26.3"
-  }
+  "chromium-args": "--enable-logging=stderr --remote-debugging-port=9999"
 }

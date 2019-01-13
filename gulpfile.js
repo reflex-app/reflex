@@ -20,7 +20,7 @@ requireDir('./gulp/tasks');
 
 // Create a development version of the package.json
 // This will allow NW.JS to run the http://localhost:8080 port
-gulp.task('default', gulp.series('create-package-json:dev'));
+gulp.task('default', gulp.series('copy', 'create-package-json:dev'));
 
 // Builds JS + SCSS
 gulp.task('vue:build', function (done) {
