@@ -114,12 +114,13 @@ export default {
         frame.executeScript({
           code: execCode
         });
+
+        frame.contentWindow.postMessage("Send me your data!", "*"); // Send a request to the webview
       }
 
       // Loading has finished
       function loadstop() {
         _this.state.isLoading = false; // Hide loading spinner
-        frame.contentWindow.postMessage("Send me your data!", "*"); // Send a request to the webview
       }
 
       // Bind events
