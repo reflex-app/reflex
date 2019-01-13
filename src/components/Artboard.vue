@@ -127,7 +127,7 @@ export default {
       frame.addEventListener("loadstart", loadstart);
       frame.addEventListener("contentload", contentload);
       frame.addEventListener("loadstop", loadstop);
-      window.addEventListener("message", receiveHandshake, false); // Listen for response
+      frame.addEventListener("message", receiveHandshake, false); // Listen for response
 
       function receiveHandshake(event) {
         // Data is accessible as event.data.*
@@ -142,7 +142,7 @@ export default {
         frame.removeEventListener("loadstart", loadstart);
         frame.removeEventListener("contentload", contentload);
         frame.removeEventListener("loadstop", loadstop);
-        window.removeEventListener("message", receiveHandshake);
+        frame.removeEventListener("message", receiveHandshake);
       }
     },
 
