@@ -29,8 +29,8 @@ export default {
     zoomOut() {
       document.$panzoom.zoomOut();
     },
-    center() {
-      document.$panzoom.center();
+    fitToScreen() {
+      document.$panzoom.fitToScreen();
     }
   },
   mounted() {
@@ -56,7 +56,7 @@ export default {
         new nw.MenuItem({
           label: "Zoom to Fit",
           click: function() {
-            vm.center();
+            vm.fitToScreen();
           }
         })
       );
