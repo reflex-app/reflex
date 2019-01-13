@@ -107,7 +107,7 @@ gulp.task('build-app:version', function () {
 // The final distributable is put into the `ship` folder
 gulp.task('build-app:main', function () {
     var nw = new NwBuilder({
-        version: '0.35.3', // the NWJS version to use
+        version: '0.35.4', // the NWJS version to use
         flavor: 'sdk', // sdk or normal
         files: CONFIG.DIST + '**/*', // copy everything inside of /dist to the final app
         buildDir: CONFIG.SHIP, // output directory
