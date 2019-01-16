@@ -12,5 +12,8 @@
     "min_width": 400,
     "min_height": 400
   },
-  "chromium-args": "--enable-logging=stderr --remote-debugging-port=9999"
+  "chromium-args": "--enable-logging=stderr --remote-debugging-port=9999",
+  "dependencies": {
+    "browser-sync": "^2.26.3"
+  }
 }
