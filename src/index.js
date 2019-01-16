@@ -43,6 +43,7 @@ exports.changeProxyURL = async function (newURL) {
       setTimeout(exitServer, 100);
     } else if (bs.active === false) {
       await startServer(newURL);
+      return true;
     }
   }
 

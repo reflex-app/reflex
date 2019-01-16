@@ -14,7 +14,7 @@
           autocomplete="off"
         >
         <button @click="browserSyncGetProxy()">BS</button>
-        <button @click="browserSyncChangeProxy('http://google.com')">BS</button>
+        <input v-model="proxyURL" @keyup.enter="browserSyncChangeProxy()" placeholder="Proxy URL">
       </div>
       <div id="toolbar__recentURLs"></div>
     </div>
@@ -29,6 +29,11 @@
 <script>
 export default {
   name: "Toolbar",
+  data() {
+    return {
+      proxyURL: ''
+    }
+  },
   computed: {
     sidebar() {
       return this.$store.state.gui.sidebar;
@@ -65,15 +70,21 @@ export default {
         url: nw.global.browserSync
       });
     },
-    async browserSyncChangeProxy(url) {
+    async browserSyncChangeProxy() {
       if (window.nw) {
         // Changes the BrowserSync proxy URL
+        const url = this.proxyURL;
         const nw = window.nw;
+
         // Trigger the change
         const newURL = await nw.process.mainModule.exports.changeProxyURL(url);
-        console.log(newURL);
-        
-        // Now update our UI
+
+        // Reload URL
+        this.$store.commit("changeSiteData", {
+          url: nw.global.browserSync
+        });
+
+        console.log(this.$store.state.site.url)
       }
     }
   }
