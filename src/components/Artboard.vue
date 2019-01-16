@@ -22,7 +22,7 @@
     </div>
     <div class="artboard__keypoints"></div>
     <div class="artboard__content">
-      <webview id="foo" v-bind:src="url" ref="iframe" class="iframe"></webview>
+      <webview v-bind:src="url" ref="iframe" class="iframe"></webview>
       <div class="artboard__handles">
         <div @mousedown="triggerResize" class="handle__bottom"/>
       </div>
@@ -98,17 +98,16 @@ export default {
         const execCode = `
             var data = {
               title: document.title,
-              url: window.location.href,
               favicon:
                 "https://www.google.com/s2/favicons?domain=" +
                 window.location.href
-            };
+            }
 
             function respond(event) {
               event.source.postMessage(data, '*');
             }
 
-            window.addEventListener("message", respond, false);
+            window.addEventListener("message", respond);
         `;
 
         frame.executeScript({
@@ -127,13 +126,20 @@ export default {
       frame.addEventListener("loadstart", loadstart);
       frame.addEventListener("contentload", contentload);
       frame.addEventListener("loadstop", loadstop);
-      frame.addEventListener("message", receiveHandshake, false); // Listen for response
+      window.addEventListener("message", receiveHandshake, false); // Listen for response
 
       function receiveHandshake(event) {
         // Data is accessible as event.data.*
         // Refer to the object that's injected during contentload()
         // for all keys
-        _this.$store.commit("changeSiteTitle", event.data.title);
+        const title = event.data.title;
+        const favicon = event.data.favicon;
+
+        _this.$store.commit("changeSiteData", {
+          title: title,
+          favicon: favicon
+        });
+        
         removeListeners();
       }
 
@@ -142,7 +148,7 @@ export default {
         frame.removeEventListener("loadstart", loadstart);
         frame.removeEventListener("contentload", contentload);
         frame.removeEventListener("loadstop", loadstop);
-        frame.removeEventListener("message", receiveHandshake);
+        window.removeEventListener("message", receiveHandshake);
       }
     },
 
