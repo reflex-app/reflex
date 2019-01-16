@@ -3,7 +3,7 @@
     <div id="toolbar__url-container">
       <div v-if="artboards.length">
         <img v-bind:src="favicon" alt="Site Icon" height="10" width="10">
-        <span id="toolbar__site-title" v-bind:title="title"> {{ title }}</span>
+        <span id="toolbar__site-title" v-bind:title="title">{{ title }}</span>
         <input
           v-model.lazy="url"
           placeholder="Enter a website URL (http://website.com)"
@@ -13,6 +13,8 @@
           @focus="$event.target.select()"
           autocomplete="off"
         >
+        <button @click="browserSyncGetProxy()">BS</button>
+        <button @click="browserSyncChangeProxy('http://google.com')">BS</button>
       </div>
       <div id="toolbar__recentURLs"></div>
     </div>
@@ -55,6 +57,24 @@ export default {
   methods: {
     toggleSidebar() {
       this.$store.commit("toggleSidebar");
+    },
+    browserSyncGetProxy() {
+      // Updates the UI URL to the BrowserSync proxy's URL
+      const nw = window.nw;
+      this.$store.commit("changeSiteData", {
+        url: nw.global.browserSync
+      });
+    },
+    async browserSyncChangeProxy(url) {
+      if (window.nw) {
+        // Changes the BrowserSync proxy URL
+        const nw = window.nw;
+        // Trigger the change
+        const newURL = await nw.process.mainModule.exports.changeProxyURL(url);
+        console.log(newURL);
+        
+        // Now update our UI
+      }
     }
   }
 };
