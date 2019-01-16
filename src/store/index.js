@@ -9,7 +9,8 @@ const store = new Vuex.Store({
   state: {
     site: {
       url: "", // The current URL being viewed
-      title: "" // The title of the page being viewed
+      title: "", // The title of the page being viewed
+      favicon: "" // The URL's favicon
     },
     artboards: [], // All artboards on the screen
     gui: {
@@ -32,20 +33,23 @@ const store = new Vuex.Store({
      * @param  {} state
      * @param  {} val
      */
-    changeSiteTitle(state, val) {
-      console.log(val);
-      if (val !== state.site.title) {
-        state.site.title = val;
-      }
-    },
+    changeSiteData(state, val) {
+      if (!val) throw new Error('No value');
 
-    /** Change the Site URL
-     * @param  {} state
-     * @param  {} val
-     */
-    changeSiteURL(state, val) {
-      if (val && val !== "" && val !== state.site.url) {
-        state.site.url = val; // Update the URL based on the incoming value
+      if (val.title) {
+        if (val !== state.site.title) {
+          state.site.title = val.title;
+        }
+      }
+
+      if (val.url) {
+        if (val && val !== "" && val !== state.site.url) {
+          state.site.url = val.url; // Update the URL based on the incoming value
+        }
+      }
+
+      if (val.favicon) {
+        state.site.favicon = val.favicon; // Update the URL based on the incoming value
       }
     },
 

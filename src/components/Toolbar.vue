@@ -2,7 +2,8 @@
   <div id="toolbar">
     <div id="toolbar__url-container">
       <div v-if="artboards.length">
-        <span id="toolbar__site-title" v-bind:title="title">{{ title }}</span>
+        <img v-bind:src="favicon" alt="Site Icon" height="10" width="10">
+        <span id="toolbar__site-title" v-bind:title="title"> {{ title }}</span>
         <input
           v-model.lazy="url"
           placeholder="Enter a website URL (http://website.com)"
@@ -39,8 +40,13 @@ export default {
         return this.$store.state.site.url;
       },
       set(value) {
-        this.$store.commit("changeSiteURL", value);
+        this.$store.commit("changeSiteData", {
+          url: value
+        });
       }
+    },
+    favicon() {
+      return this.$store.state.site.favicon;
     },
     artboards() {
       return this.$store.state.artboards;
