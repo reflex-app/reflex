@@ -43,9 +43,9 @@ const store = new Vuex.Store({
       }
 
       if (val.url) {
-        if (val.url !== state.site.url) {
+        // if (val.url !== state.site.url) {
           state.site.url = val.url; // Update the URL based on the incoming value
-        }
+        // }
       }
 
       if (val.favicon) {

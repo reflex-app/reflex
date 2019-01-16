@@ -2,7 +2,7 @@
   <div id="toolbar">
     <div id="toolbar__url-container">
       <div v-if="artboards.length">
-        <img v-bind:src="favicon" alt="Site Icon" height="10" width="10">
+        <img v-if="favicon" v-bind:src="favicon" alt="Site Icon" height="10" width="10">
         <span id="toolbar__site-title" v-bind:title="title">{{ title }}</span>
         <input
           v-model.lazy="url"
@@ -13,27 +13,24 @@
           @focus="$event.target.select()"
           autocomplete="off"
         >
-        <button @click="browserSyncGetProxy()">BS</button>
-        <input v-model="proxyURL" @keyup.enter="browserSyncChangeProxy()" placeholder="Proxy URL">
+        <!-- <button @click="browserSyncGetProxy()">BS</button> -->
       </div>
       <div id="toolbar__recentURLs"></div>
     </div>
-    <div
-      @click="toggleSidebar()"
-      v-bind:class="{'button--is-active': sidebar}"
-      class="button"
-    >Screens</div>
+    <div>
+      <div class="button" @click="browserSyncChangeProxy()">Sync this URL</div>
+      <div
+        @click="toggleSidebar()"
+        v-bind:class="{'button--is-active': sidebar}"
+        class="button"
+      >Screens</div>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
   name: "Toolbar",
-  data() {
-    return {
-      proxyURL: ''
-    }
-  },
   computed: {
     sidebar() {
       return this.$store.state.gui.sidebar;
@@ -73,7 +70,7 @@ export default {
     async browserSyncChangeProxy() {
       if (window.nw) {
         // Changes the BrowserSync proxy URL
-        const url = this.proxyURL;
+        const url = this.url;
         const nw = window.nw;
 
         // Trigger the change
@@ -84,7 +81,7 @@ export default {
           url: nw.global.browserSync
         });
 
-        console.log(this.$store.state.site.url)
+        console.log(this.$store.state.site.url);
       }
     }
   }
