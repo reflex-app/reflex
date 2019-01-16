@@ -45,7 +45,7 @@ export default {
         type: "menubar"
       });
 
-      if (platform.mac) {
+      if (platform.isMac) {
         // Initialize default mac menu (App, Edit)
         Menu.createMacBuiltin(nw.App.manifest.name, { hideWindow: true });
       }
