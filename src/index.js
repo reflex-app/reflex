@@ -5,19 +5,22 @@ const bs = require("browser-sync").create('Server');
 startServer();
 
 // Initialize a BrowserSync Server
-function startServer(url) {
-  url = url || 'https://www.wikipedia.org/';
+async function startServer(url) {
+  return new Promise((resolve, reject) => {
+    url = url || 'https://www.wikipedia.org/';
 
-  bs.init({
-    proxy: url,
-    open: false,
-    callbacks: {
-      ready: function (err, bs) {
-        const localURL = bs.getOption('urls').get('local'); // Options: local, external, ui, ui-external
-        window.browserSync = localURL;
-        console.log('URL: ', url)
+    bs.init({
+      proxy: url,
+      open: false,
+      callbacks: {
+        ready: function (err, bs) {
+          const localURL = bs.getOption('urls').get('local'); // Options: local, external, ui, ui-external
+          window.browserSync = localURL;
+          // console.log('URL: ', url)
+          resolve(url);
+        }
       }
-    }
+    });
   });
 }
 
@@ -26,21 +29,21 @@ function startServer(url) {
 // window.nw.process.mainModule.exports.changeProxyURL(url)
 // (From inside of the web app)
 exports.changeProxyURL = async function (newURL) {
-
-  function checkServerStatus() {
-    return new Promise((resolve, reject) => {
+  async function checkServerStatus() {
+    function exitServer() {
       bs.exit(); // Exit current instance
-      console.log('server status', bs.active);
+    }
 
-      if (bs.active === true) {
-        setTimeout(checkServerStatus, 100); /* check every 100 milliseconds*/
-      } else {
-        // Exitted!
-        console.log('Done!')
-        startServer(newURL); // Start a new server with our url
-        resolve(newURL); // Return the new URL to the caller
-      }
-    });
+    // Close the server
+    exitServer();
+
+    // Confirm it's closed
+    // Otherwise, try again every 100ms
+    if (bs.active === true) {
+      setTimeout(exitServer, 100);
+    } else if (bs.active === false) {
+      await startServer(newURL);
+    }
   }
 
   var theURL = await checkServerStatus();
