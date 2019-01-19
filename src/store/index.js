@@ -44,7 +44,7 @@ const store = new Vuex.Store({
 
       if (val.url) {
         // if (val.url !== state.site.url) {
-          state.site.url = val.url; // Update the URL based on the incoming value
+        state.site.url = val.url; // Update the URL based on the incoming value
         // }
       }
 
@@ -55,10 +55,18 @@ const store = new Vuex.Store({
 
     /** Toggle the Sidebar on/off
      * @param  {} state
-     * @param  {} val
+     * @param  {Boolean} bool
      */
-    toggleSidebar(state) {
-      state.gui.sidebar = !state.gui.sidebar;
+    toggleSidebar(state, bool) {
+      if (!bool) bool = '';
+
+      if (bool === true) {
+        state.gui.sidebar = true;
+      } else if (bool === false) {
+        state.gui.sidebar = false;
+      } else {
+        state.gui.sidebar = !state.gui.sidebar;
+      }
     },
 
     /**

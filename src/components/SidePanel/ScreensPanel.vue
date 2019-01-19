@@ -1,7 +1,6 @@
 <template>
   <transition name="sidebar-transition">
-    <div id="artboard-tabs" v-if="sidebar==true">
-      <div class="artboard-tabs__header">Screens</div>
+    <div id="artboard-tabs">
       <div v-if="artboards.length" class="artboard-tabs__scroll">
         <div
           v-for="artboard in artboards"
@@ -30,22 +29,21 @@
           </div>
         </div>
       </div>
-
       <NewArtboardButton class="artboard-tabs__button" @add="add"/>
 
       <!-- Show a tip if there's no artboards -->
       <div v-if="!artboards.length" class="empty-state">
-        <div class="empty-state__text">Click "+" to add a new screen</div>
+        <div class="empty-state__text">Click to create a new screen</div>
       </div>
     </div>
   </transition>
 </template>
 
 <script>
-import NewArtboardButton from "./NewArtboardButton";
+import NewArtboardButton from "../NewArtboardButton";
 
 export default {
-  name: "ArtboardList",
+  name: "ScreensPanel",
   components: {
     NewArtboardButton
   },
@@ -61,9 +59,6 @@ export default {
     // Bind to our Vuex Store's URL value
     artboards: function() {
       return this.$store.state.artboards;
-    },
-    sidebar() {
-      return this.$store.state.gui.sidebar;
     }
   },
 
@@ -105,70 +100,27 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../scss/_variables";
-
-// Animation:Enter
-// .sidebar-transition-enter {
-//   transform: translateX(20%);
-//   opacity: 0;
-//   z-index: 1;
-// }
-// .sidebar-transition-enter-to {
-//   transform: translateX(0);
-//   opacity: 1;
-// }
-
-// .sidebar-transition-leave {
-//   transform: translateX(60%);
-//   z-index: 1;
-// }
-
-// .sidebar-transition-leave-to {
-//   transform: translateX(100%);
-//   opacity: 0;
-// }
-
-// // Animation:Settings
-// .sidebar-transition-enter-active {
-//   transition: all 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 200ms;
-// }
-// .sidebar-transition-leave-active {
-//   transition: all 150ms cubic-bezier(0.55, 0.085, 0.68, 0.53), opacity 150ms;
-// }
+@import "../../scss/_variables";
 
 #artboard-tabs {
-  position: relative;
   display: flex;
   flex-direction: column;
-  top: 0;
-  right: 0;
+  width: 100%;
   height: 100%;
-  border-left: 1px solid $border-color;
-  width: 18rem;
-  background: white;
-  z-index: 1;
   overflow: auto;
-  cursor: default;
-
-  .artboard-tabs__inner {
-    position: relative;
-    display: block;
-  }
-
-  .artboard-tabs__header {
-    padding: 1rem 1rem;
-    font-size: 1rem;
-    font-weight: bold;
-    border-bottom: 1px solid $border-color;
-  }
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
 
   .artboard-tabs__scroll {
-    height: 100%;
-    overflow-x: hidden;
-    overflow-y: auto;
+    flex-grow: 1;
+    min-height: 0;
+    overflow: auto;
   }
 
   .artboard-tabs__button {
+    position: relative;
     margin: 1rem 1rem;
     box-sizing: border-box;
     border-radius: 4px;
@@ -177,7 +129,6 @@ export default {
 
   .artboard-tab {
     flex: 1 0 auto;
-    height: auto;
     background: #ffffff;
     padding-left: 1rem;
     padding-right: 1rem;

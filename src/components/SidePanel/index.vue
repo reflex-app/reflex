@@ -1,0 +1,124 @@
+<template>
+  <transition name="sidebar-transition">
+    <div class="side-panel">
+      <div class="side-panel__track">
+        <div
+          class="station button"
+          @click="setActive('Screens')"
+          v-bind:class="{ 'button--is-active' : isActive('Screens') }"
+        >
+          <img src="@/assets/icons/screens.svg" alt="Screens">
+        </div>
+        <div
+          v-if="artboards.length"
+          class="station button"
+          @click="setActive('Sync')"
+          v-bind:class="{ 'button--is-active' : isActive('Sync') }"
+        >
+          <img src="@/assets/icons/sync.svg" alt="Sync">
+        </div>
+        <!-- <div class="station button" @click="setActive('Screenshot')">3</div> -->
+      </div>
+      <div class="side-panel__content" v-if="sidebar===true">
+        <PanelComponent :title="activeStation"/>
+      </div>
+    </div>
+  </transition>
+</template>
+
+<script>
+import PanelComponent from "./PanelComponent.vue";
+
+export default {
+  name: "SidePanel",
+  components: {
+    PanelComponent
+  },
+  data() {
+    return {
+      activeStation: "Screens"
+    };
+  },
+  computed: {
+    // Bind to our Vuex Store's URL value
+    artboards: function() {
+      return this.$store.state.artboards;
+    },
+    sidebar() {
+      return this.$store.state.gui.sidebar;
+    }
+  },
+
+  methods: {
+    setActive: function(val) {
+      // Handle hide/show side panel
+      if (this.sidebar && this.activeStation !== val) {
+        // Normal State
+        // Simply set the clicked station to active
+        this.activeStation = val;
+      } else if (this.sidebar && this.activeStation === val) {
+        // Close State
+        // When clicking on the same station,
+        // it should close the sidebar
+        this.toggleSidebar(false);
+        this.activeStation = "";
+      } else if (this.sidebar === false) {
+        // Closed State
+        // Sidebar is closed, re-open
+        this.toggleSidebar(true);
+        this.activeStation = val;
+      }
+    },
+    isActive: function(val) {
+      // Make sure to open the sidebar
+      // if it was open in last session
+      // Otherwise, don't set an active state
+      if (this.sidebar === true) {
+        return this.activeStation === val;
+      } else {
+        return "";
+      }
+    },
+    toggleSidebar() {
+      this.$store.commit("toggleSidebar");
+    }
+  }
+};
+</script>
+
+<style lang="scss" scoped>
+@import "../../scss/_variables";
+
+.side-panel {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: 1fr;
+
+  .side-panel__track {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(3, min-content);
+    height: 100%;
+    background: #ffffff;
+    border-right: 1px solid $border-color;
+
+    &.is-active {
+      border: pink;
+    }
+
+    .station {
+      margin: 0.5rem 0.5rem;
+      padding: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+      border-radius: 50%;
+
+      &:first-child {
+        margin-top: 1rem;
+      }
+    }
+  }
+}
+</style>

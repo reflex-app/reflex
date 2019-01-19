@@ -2,11 +2,11 @@
   <div id="app">
     <Toolbar ref="toolbar"/>
     <div id="canvasContainer">
+      <SidePanel/>
       <ArtboardControls/>
       <div id="canvas" ref="canvas">
         <Artboards ref="artboards"/>
       </div>
-      <ArtboardList/>
     </div>
   </div>
 </template>
@@ -14,7 +14,7 @@
 <script>
 import Toolbar from "./components/Toolbar.vue";
 import Artboards from "./components/Artboards.vue";
-import ArtboardList from "./components/ArtboardList.vue";
+import SidePanel from "./components/SidePanel";
 import ArtboardControls from "./components/ArtboardControls.vue";
 import panzoom from "../../panzoom";
 
@@ -23,9 +23,8 @@ export default {
   components: {
     Artboards,
     ArtboardControls,
-    ArtboardList,
+    SidePanel,
     Toolbar
-    // TODO: Settings component
   },
   mounted: function() {
     let vm = this;
