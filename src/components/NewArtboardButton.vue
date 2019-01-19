@@ -27,7 +27,7 @@ export default {
 
   &:hover {
     cursor: pointer;
-    background: darken($accent-color, 5%);
+    background: $accent-color;
   }
 
   &:active {
