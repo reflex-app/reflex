@@ -144,6 +144,10 @@ const store = new Vuex.Store({
           break; //exit loop, object has been updated
         }
       }
+    },
+
+    setArtboardList(state, payload) {
+      state.artboards = payload; 
     }
   }
 })

@@ -2,32 +2,34 @@
   <transition name="sidebar-transition">
     <div id="artboard-tabs">
       <div v-if="artboards.length" class="artboard-tabs__scroll">
-        <div
-          v-for="artboard in artboards"
-          v-bind="artboard"
-          :key="artboard.id"
-          class="artboard-tab"
-        >
-          <div v-if="editMode==true&&editID==artboard.id" class="editing">
-            <input type="text" placeholder="Title" ref="input" v-model.lazy="artboard.title">
-            <input type="number" placeholder="Width" v-model.number.lazy="artboard.width">
-            <input type="number" placeholder="Height" v-model.number.lazy="artboard.height">
-            <div class="buttons">
-              <a href="#" @click="editMode=false">Cancel</a>
-              <a href="#" @click="save(artboard)">Save</a>
+        <draggable v-model="artboards" :options="{draggable:'.artboard-tab'}">
+          <div
+            v-for="artboard in artboards"
+            v-bind="artboard"
+            :key="artboard.id"
+            class="artboard-tab"
+          >
+            <div v-if="editMode==true&&editID==artboard.id" class="editing">
+              <input type="text" placeholder="Title" ref="input" v-model.lazy="artboard.title" @keyup.enter="save(artboard), editMode=false">
+              <input type="number" placeholder="Width" v-model.number.lazy="artboard.width" @keyup.enter="save(artboard), editMode=false">
+              <input type="number" placeholder="Height" v-model.number.lazy="artboard.height" @keyup.enter="save(artboard), editMode=false">
+              <div class="buttons">
+                <a href="#" @click="editMode=false">Cancel</a>
+                <a href="#" @click="save(artboard)">Save</a>
+              </div>
+            </div>
+            <div class="artboard-tab__container" v-else>
+              <div class="artboard-tab__container-left">
+                <div>{{artboard.title}}</div>
+                <div>{{ artboard.width }} x {{ artboard.height }}</div>
+              </div>
+              <div class="artboard-tab__container-right">
+                <a href="#" @click="edit(artboard.id)">Edit</a> |
+                <a href="#" @click="remove(artboard.id)">Delete</a>
+              </div>
             </div>
           </div>
-          <div class="artboard-tab__container" v-else>
-            <div class="artboard-tab__container-left">
-              <div>{{artboard.title}}</div>
-              <div>{{ artboard.width }} x {{ artboard.height }}</div>
-            </div>
-            <div class="artboard-tab__container-right">
-              <a href="#" @click="edit(artboard.id)">Edit</a> |
-              <a href="#" @click="remove(artboard.id)">Delete</a>
-            </div>
-          </div>
-        </div>
+        </draggable>
       </div>
       <NewArtboardButton class="artboard-tabs__button" @add="add"/>
 
@@ -41,11 +43,13 @@
 
 <script>
 import NewArtboardButton from "../NewArtboardButton";
+import draggable from "vuedraggable";
 
 export default {
   name: "ScreensPanel",
   components: {
-    NewArtboardButton
+    NewArtboardButton,
+    draggable
   },
 
   data() {
@@ -57,8 +61,13 @@ export default {
 
   computed: {
     // Bind to our Vuex Store's URL value
-    artboards: function() {
-      return this.$store.state.artboards;
+    artboards: {
+      get() {
+        return this.$store.state.artboards;
+      },
+      set(value) {
+        this.$store.commit("setArtboardList", value);
+      }
     }
   },
 
