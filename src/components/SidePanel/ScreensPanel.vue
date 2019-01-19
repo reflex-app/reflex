@@ -99,6 +99,7 @@ export default {
       // Auto-focus on the first field
       this.$nextTick(() => {
         this.$refs.input[0].focus();
+        this.$refs.input[0].select();
       });
     },
     remove(id) {
