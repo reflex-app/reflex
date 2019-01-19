@@ -12,7 +12,7 @@
   <div class="empty-state" v-else>
     <img src="@/assets/ftu-vector.svg" class="empty-state__image" alt="Welcome to Shift graphic">
     <span class="empty-state__title">Welcome to Shift</span>
-    <p class="empty-state__body">You can create new screens in the Screens panel on the right.</p>
+    <p class="empty-state__body">You can create new screens in the Screens panel on the left.</p>
   </div>
 </template>
 
