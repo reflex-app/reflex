@@ -7,11 +7,12 @@ startServer();
 // Initialize a BrowserSync Server
 async function startServer(url) {
   return new Promise((resolve, reject) => {
-    url = url || 'https://www.wikipedia.org/';
+    url = url || 'https://shift.nickwittwer.com/';
 
     bs.init({
       proxy: url,
       open: false,
+      notify: false,
       callbacks: {
         ready: function (err, bs) {
           const localURL = bs.getOption('urls').get('local'); // Options: local, external, ui, ui-external
