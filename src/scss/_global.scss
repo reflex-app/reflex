@@ -41,7 +41,7 @@ body {
 
 	&:active {
 		color: darken(#6f6f6f, 40%);
-		background: gray;
+		background: darken(white, 20%);
 	}
 
 	&--is-active {

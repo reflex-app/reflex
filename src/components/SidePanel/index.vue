@@ -107,8 +107,8 @@ export default {
     }
 
     .station {
-      margin: 0.5rem 1rem;
-      padding: 0.75rem;
+      margin: 0.5rem 0.75rem;
+      padding: 0.5rem;
       display: flex;
       align-items: center;
       justify-content: center;
