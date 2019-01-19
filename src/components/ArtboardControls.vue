@@ -1,8 +1,8 @@
 <template>
   <div id="ArtboardControls" v-if="artboards.length">
     <div id="toolbar__canvas-controls">
-      <span id="canvas-controls__zoomIn" class="button" @click="zoomIn">+</span>
       <span id="canvas-controls__zoomOut" class="button" @click="zoomOut">-</span>
+      <span id="canvas-controls__zoomIn" class="button" @click="zoomIn">+</span>
       <!-- <span id="canvas-controls__scale" v-if="panzoomInstance.transformMatrix">{{ panzoomInstance.transformMatrix[0] }}</span> -->
       <!-- <a id="canvas-controls__fit-to-screen" @click="center">Center</a> -->
     </div>
@@ -88,8 +88,8 @@ export default {
   align-items: center;
   background: none;
   position: absolute;
-  bottom: 1.5rem;
-  left: 1.25rem;
+  top: 0.5rem;
+  right: 0.5rem;
 
   & > * {
     flex: 1 0 auto;
