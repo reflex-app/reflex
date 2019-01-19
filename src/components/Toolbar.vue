@@ -5,7 +5,7 @@
         <img v-if="favicon" v-bind:src="favicon" alt="Site Icon" height="10" width="10">
         <span id="toolbar__site-title" v-bind:title="title">{{ title }}</span>
         <input
-          v-model.lazy="url"
+          v-model="url"
           placeholder="Enter a website URL (http://website.com)"
           type="text"
           id="toolbar__url"
@@ -17,14 +17,10 @@
       </div>
       <div id="toolbar__recentURLs"></div>
     </div>
-    <div>
-      <div class="button" @click="browserSyncChangeProxy()">Sync this URL</div>
-      <div
-        @click="toggleSidebar()"
-        v-bind:class="{'button--is-active': sidebar}"
-        class="button"
-      >Screens</div>
-    </div>
+    <!-- <div class="toolbar__right">
+      <div class="toolbar__button-group">
+      </div>
+    </div> -->
   </div>
 </template>
 
@@ -32,9 +28,6 @@
 export default {
   name: "Toolbar",
   computed: {
-    sidebar() {
-      return this.$store.state.gui.sidebar;
-    },
     title() {
       return this.$store.state.site.title;
     },
@@ -56,35 +49,7 @@ export default {
       return this.$store.state.artboards;
     }
   },
-  methods: {
-    toggleSidebar() {
-      this.$store.commit("toggleSidebar");
-    },
-    browserSyncGetProxy() {
-      // Updates the UI URL to the BrowserSync proxy's URL
-      const nw = window.nw;
-      this.$store.commit("changeSiteData", {
-        url: nw.global.browserSync
-      });
-    },
-    async browserSyncChangeProxy() {
-      if (window.nw) {
-        // Changes the BrowserSync proxy URL
-        const url = this.url;
-        const nw = window.nw;
-
-        // Trigger the change
-        const newURL = await nw.process.mainModule.exports.changeProxyURL(url);
-
-        // Reload URL
-        this.$store.commit("changeSiteData", {
-          url: nw.global.browserSync
-        });
-
-        console.log(this.$store.state.site.url);
-      }
-    }
-  }
+  methods: {}
 };
 </script>
 
@@ -186,8 +151,12 @@ export default {
     }
   }
 
-  .is-active {
-    border-bottom: 2px solid blue;
+  .toolbar__right {
+    display: flex;
+
+    .toolbar__button-group:not(:last-child) {
+      margin-right: 24px;
+    }
   }
 }
 </style>
