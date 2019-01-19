@@ -42,16 +42,16 @@ export default {
   height: 100%;
   border-right: 1px solid $border-color;
   width: 18rem;
-  background: white;
   z-index: 1;
   overflow: auto;
   cursor: default;
   overflow: hidden;
+  background: white;
 
   .panel__header {
     padding: 1rem 1rem;
-    font-size: 1rem;
-    font-weight: bold;
+    font-size: 1.3rem;
+    // font-weight: bold;
     border-bottom: 1px solid $border-color;
   }
 
