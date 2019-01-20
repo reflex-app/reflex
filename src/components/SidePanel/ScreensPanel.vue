@@ -142,7 +142,6 @@ export default {
     background: #ffffff;
     padding-left: 1rem;
     padding-right: 1rem;
-    font-size: 0.9rem;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

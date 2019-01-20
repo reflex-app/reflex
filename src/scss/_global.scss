@@ -1,5 +1,9 @@
 @import 'variables';
 
+html, body {
+	font-size: 15px;
+}
+
 html {
 	background: none;
 	background-size: cover;
@@ -18,7 +22,6 @@ body {
 	// border-radius: 5px;
 	overflow: hidden;
 	font-family: $font-defaults;
-	font-size: 15px;
 	line-height: 1.5;
 	height: 100%;
 	width: 100%;
