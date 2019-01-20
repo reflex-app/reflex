@@ -36,10 +36,11 @@ const store = new Vuex.Store({
     changeSiteData(state, val) {
       if (!val) throw new Error('No value');
 
-      if (val.title) {
-        if (val !== state.site.title) {
-          state.site.title = val.title;
-        }
+      // @TODO: Throttle this fn, as it will be called by
+      // each <webview> when it loads, and doesn't need to keep changing
+
+      if (val.title && val.title !== state.site.title) {
+        state.site.title = val.title;
       }
 
       if (val.url) {
@@ -147,7 +148,7 @@ const store = new Vuex.Store({
     },
 
     setArtboardList(state, payload) {
-      state.artboards = payload; 
+      state.artboards = payload;
     }
   }
 })
