@@ -63,6 +63,7 @@
   },
   "dependencies": {
     "jest-vue-preprocessor": "^1.4.0",
+    "lodash.debounce": "^4.0.8",
     "vue": "^2.5.17",
     "vuedraggable": "^2.17.0",
     "vuex": "^3.0.1"

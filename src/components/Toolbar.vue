@@ -49,7 +49,16 @@ export default {
       return this.$store.state.artboards;
     }
   },
-  methods: {}
+  methods: {
+    changeURL: debounce(function(event) {
+      const value = event.target.value;
+      // @TODO: Check if it's a valid URL
+
+      this.$store.commit("changeSiteData", {
+        url: value
+      });
+    }, 100)
+  }
 };
 </script>
 
