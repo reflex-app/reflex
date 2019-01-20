@@ -36,12 +36,14 @@ export default {
 @import "../../scss/_variables";
 
 #panel-container {
-  position: relative;
+  // position: relative;
+  position: absolute;
+  top: 0;
   display: flex;
   flex-direction: column;
   height: 100%;
   border-right: 1px solid $border-color;
-  width: 18rem;
+  width: 17rem;
   z-index: 1;
   overflow: auto;
   cursor: default;
