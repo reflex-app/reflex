@@ -2,20 +2,23 @@
   <transition name="sidebar-transition">
     <div class="side-panel">
       <div class="side-panel__track">
-        <div
-          class="station button"
-          @click="setActive('Screens')"
-          v-bind:class="{ 'button--is-active' : isActive('Screens') }"
-        >
-          <img src="@/assets/icons/screens.svg" alt="Screens">
+        <div class="station" @click="setActive('Screens')" title="Screens">
+          <div
+            class="station__button button"
+            v-bind:class="{ 'button--is-active' : isActive('Screens') }"
+          >
+            <img src="@/assets/icons/screens.svg" alt="Screens">
+          </div>
+          <span class="station__title">Screens</span>
         </div>
-        <div
-          v-if="artboards.length"
-          class="station button"
-          @click="setActive('Sync')"
-          v-bind:class="{ 'button--is-active' : isActive('Sync') }"
-        >
-          <img src="@/assets/icons/sync.svg" alt="Sync">
+        <div v-if="artboards.length" class="station" @click="setActive('Sync')" title="Sync">
+          <div
+            class="station__button button"
+            v-bind:class="{ 'button--is-active' : isActive('Sync') }"
+          >
+            <img src="@/assets/icons/sync.svg" alt="Sync">
+          </div>
+          <div class="station__title">Sync</div>
         </div>
         <!-- <div class="station button" @click="setActive('Screenshot')">3</div> -->
       </div>
@@ -95,6 +98,7 @@ export default {
   grid-template-rows: 1fr;
 
   .side-panel__track {
+    position: relative;
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: repeat(3, min-content);
@@ -108,16 +112,34 @@ export default {
 
     .station {
       margin: 0.5rem 0.75rem;
-      padding: 0.5rem;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      box-sizing: border-box;
-      border-radius: 50%;
 
       &:first-child {
         margin-top: 1rem;
       }
+
+      .station__button {
+        // margin: 0.5rem 0.75rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.4rem;
+        box-sizing: border-box;
+        border-radius: 50%;
+      }
+
+      .station__title {
+        color: #757575;
+        margin-top: 0.25rem;
+        font-size: 0.8rem;
+      }
+    }
+
+    .side-panel__content {
+      position: relative;
     }
   }
 }
