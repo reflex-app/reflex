@@ -2,17 +2,33 @@
   <div id="toolbar">
     <div id="toolbar__url-container">
       <div v-if="artboards.length">
-        <img v-if="favicon" v-bind:src="favicon" alt="Site Icon" height="10" width="10">
-        <span id="toolbar__site-title" v-bind:title="title">{{ title }}</span>
-        <input
-          v-model="url"
-          placeholder="Enter a website URL (http://website.com)"
-          type="text"
-          id="toolbar__url"
-          name="toolbar__url"
-          @focus="$event.target.select()"
-          autocomplete="off"
+        <div
+          v-if="toolbarDefaultState===true"
+          class="defaultState"
+          @click="toolbarDefaultState=false"
         >
+          <img v-if="favicon" v-bind:src="favicon" class="favicon" height="10" width="10">
+          <span id="toolbar__site-title" v-bind:title="title">{{ title }}</span>
+          <div class="link-container">
+            <a href="#">EDIT</a>
+          </div>
+        </div>
+        <div v-else-if="toolbarDefaultState===false" class="editState">
+          <!-- <div>Back</div>
+          <div>Forward</div>
+          <div>Reload</div>-->
+          <input
+            ref="urlInput"
+            placeholder="Enter a website URL (http://website.com)"
+            type="text"
+            id="toolbar__url"
+            name="toolbar__url"
+            v-bind:value="url"
+            v-on:keyup.enter="changeURL"
+            @blur="toolbarDefaultState=true"
+            autocomplete="off"
+          >
+        </div>
         <!-- <button @click="browserSyncGetProxy()">BS</button> -->
       </div>
       <div id="toolbar__recentURLs"></div>
@@ -20,27 +36,37 @@
     <!-- <div class="toolbar__right">
       <div class="toolbar__button-group">
       </div>
-    </div> -->
+    </div>-->
   </div>
 </template>
 
 <script>
+const debounce = require("lodash.debounce");
+
 export default {
   name: "Toolbar",
+  data() {
+    return {
+      toolbarDefaultState: true
+    };
+  },
+  watch: {
+    toolbarDefaultState: function() {
+      const vm = this;
+      if (this.toolbarDefaultState === false) {
+        vm.$nextTick(() => {
+          vm.$refs.urlInput.focus();
+          vm.$refs.urlInput.select();
+        });
+      }
+    }
+  },
   computed: {
     title() {
       return this.$store.state.site.title;
     },
-    url: {
-      // Bind to our Vuex Store's URL value
-      get() {
-        return this.$store.state.site.url;
-      },
-      set(value) {
-        this.$store.commit("changeSiteData", {
-          url: value
-        });
-      }
+    url() {
+      return this.$store.state.site.url;
     },
     favicon() {
       return this.$store.state.site.favicon;
@@ -81,28 +107,51 @@ export default {
     margin-left: 16px;
   }
 
-  #toolbar__site-title {
-    font-size: 0.8rem;
-    font-weight: 500;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    cursor: default;
-    user-select: none;
+  .defaultState {
+    text-align: center;
+
+    #toolbar__site-title {
+      font-size: 1rem;
+      font-weight: 500;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      cursor: default;
+      user-select: none;
+    }
+
+    .link-container {
+      margin-top: -0.25rem;
+    }
+
+    a {
+      font-size: 0.8rem;
+      margin-top: -0.5rem;
+      font-weight: bold;
+    }
+  }
+
+  .editState {
+    display: flex;
   }
 
   #toolbar__url-container {
     position: relative;
+    margin: 0 auto;
 
     @media screen and (max-width: 768px) {
       flex: 1 0 auto;
     }
 
+    .favicon {
+      margin-right: 0.25rem;
+    }
+
     input[type="text"] {
       border: none;
+      font-size: 14px;
       box-sizing: border-box;
       padding: 0.2rem 0.5rem;
       padding-left: 0;
-      background: #ffffff;
       border: 1px solid transparent;
       border-radius: 4px;
       width: 100%;
@@ -110,6 +159,8 @@ export default {
       min-width: 320px;
       text-overflow: ellipsis;
       display: block;
+      padding: 0.25rem 0.5rem;
+      background: $body-bg;
 
       &:hover {
         border: 1px solid $border-color;
@@ -117,7 +168,6 @@ export default {
       }
 
       &:focus {
-        padding: 0.5rem;
         text-overflow: none;
         text-align: left;
         outline: none;
@@ -160,12 +210,12 @@ export default {
     }
   }
 
-  .toolbar__right {
-    display: flex;
+  // .toolbar__right {
+  //   display: flex;
 
-    .toolbar__button-group:not(:last-child) {
-      margin-right: 24px;
-    }
-  }
+  //   .toolbar__button-group:not(:last-child) {
+  //     margin-right: 24px;
+  //   }
+  // }
 }
 </style>

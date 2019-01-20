@@ -11,7 +11,7 @@
         <span class="dimension">{{ this.width }} x {{ this.height }}</span>
       </div>
       <!-- Show a loader when state.isLoading == true -->
-      <div class="artboard__loader is-loading" v-if="state.isLoading">
+      <div v-show="state.isLoading" class="artboard__loader is-loading">
         <div class="content">
           <div class="lds-ripple">
             <div></div>
@@ -22,7 +22,7 @@
     </div>
     <div class="artboard__keypoints"></div>
     <div class="artboard__content">
-      <webview v-bind:src="url" ref="iframe" class="iframe"></webview>
+      <webview ref="iframe" class="iframe"></webview>
       <div class="artboard__handles">
         <div @mousedown="triggerResize" class="handle__bottom"/>
       </div>
@@ -79,13 +79,17 @@ export default {
     }
   },
 
+  mounted() {
+    this.$nextTick(() => {
+      // Load the <webview> the initial time
+      this.loadSite();
+    });
+  },
+
   methods: {
     loadSite() {
       const _this = this;
       const frame = this.$refs.iframe;
-
-      // Update the iFrame's src
-      frame.src = this.$store.state.site.url;
 
       // When loading of webview starts
       function loadstart() {
@@ -117,17 +121,6 @@ export default {
         frame.contentWindow.postMessage("Send me your data!", "*"); // Send a request to the webview
       }
 
-      // Loading has finished
-      function loadstop() {
-        _this.state.isLoading = false; // Hide loading spinner
-      }
-
-      // Bind events
-      frame.addEventListener("loadstart", loadstart);
-      frame.addEventListener("contentload", contentload);
-      frame.addEventListener("loadstop", loadstop);
-      window.addEventListener("message", receiveHandshake, false); // Listen for response
-
       function receiveHandshake(event) {
         // Data is accessible as event.data.*
         // Refer to the object that's injected during contentload()
@@ -139,8 +132,29 @@ export default {
           title: title,
           favicon: favicon
         });
-        
+
+        window.removeEventListener("message", receiveHandshake);
+      }
+
+      // Loading has finished
+      function loadstop() {
+        _this.state.isLoading = false; // Hide loading spinner
         removeListeners();
+      }
+
+      function loadabort() {
+        new Notification("Aborted", {
+          body: "The site stopped loading for some reason."
+        });
+      }
+
+      // Bind events
+      function addListeners() {
+        frame.addEventListener("loadstart", loadstart);
+        frame.addEventListener("contentload", contentload);
+        frame.addEventListener("loadstop", loadstop);
+        frame.addEventListener("loadabort", loadabort);
+        window.addEventListener("message", receiveHandshake, false); // Listen for response
       }
 
       // Remove all event listeners
@@ -148,8 +162,14 @@ export default {
         frame.removeEventListener("loadstart", loadstart);
         frame.removeEventListener("contentload", contentload);
         frame.removeEventListener("loadstop", loadstop);
-        window.removeEventListener("message", receiveHandshake);
+        frame.removeEventListener("loadabort", loadabort);
       }
+
+      // Initialize the event listeners
+      addListeners();
+
+      // Set the URL
+      frame.setAttribute('src', this.url)
     },
 
     // Limits the size of an artboard
