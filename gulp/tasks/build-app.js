@@ -24,12 +24,12 @@ let NEXT_APP_VERSION;
 
 // Changelog variable
 let CHANGELOG;
+let COMPARE_VERSION;
 let PATH_TO_MAC_ZIP;
 
 // Build task
 gulp.task('build-app', gulp.series(
     'build-app:prompt-version',
-    'build-app:prompt-version-diff',
     'build-app:version',
     'build-app:main'
 ));
@@ -37,6 +37,7 @@ gulp.task('build-app', gulp.series(
 // Deploy tasks
 // TODO: Split this into another file? How to keep the variable values across files?
 gulp.task('deploy-app', gulp.series(
+    'deploy-app:prompt-version-diff',
     'deploy-app:changelog',
     'deploy-app:zip-app',
     'deploy-app:draft-release',
@@ -66,29 +67,6 @@ gulp.task('build-app:prompt-version', function (done) {
         });
 });
 
-// Choose what version you'd like to compare to
-// This will create a link viewable in Github
-// Defaults to master branch
-gulp.task('build-app:prompt-version-diff', function (done) {
-    inquirer.prompt([{
-            type: 'input',
-            name: 'version',
-            message: `Branch/Git tag to compare to ${NEXT_APP_VERSION}: `
-        }])
-        .then(function (res) {
-            if (res.version) {
-                // Successful comparison to x version
-                COMPARE_VERSION = res.version;
-                console.log(chalk.yellow(`Got it, will compare changes in ${COMPARE_VERSION} to ${NEXT_APP_VERSION} 👍`));
-            } else {
-                // Nothing chosen, default to master
-                COMPARE_VERSION = "master";
-                console.log(chalk.yellow(`Comparing changes in ${COMPARE_VERSION} to master`));
-            }
-            done();
-        });
-});
-
 // Bumps the version number
 // `src/package.json` and `dist/package.json`
 gulp.task('build-app:version', function () {
@@ -107,6 +85,8 @@ gulp.task('build-app:version', function () {
 // The final distributable is put into the `ship` folder
 gulp.task('build-app:main', function () {
     var nw = new NwBuilder({
+        appName: 'Shift',
+        appVersion: NEXT_APP_VERSION,
         version: '0.35.4', // the NWJS version to use
         flavor: 'sdk', // sdk or normal
         files: CONFIG.DIST + '**/*', // copy everything inside of /dist to the final app
@@ -127,6 +107,29 @@ gulp.task('build-app:main', function () {
         .catch(function (err) {
             gutil.log('nw-builder', err);
         })
+});
+
+// Choose what version you'd like to compare to
+// This will create a link viewable in Github
+// Defaults to master branch
+gulp.task('deploy-app:prompt-version-diff', function (done) {
+    inquirer.prompt([{
+            type: 'input',
+            name: 'version',
+            message: `Branch/Git tag to compare to ${NEXT_APP_VERSION}: `
+        }])
+        .then(function (res) {
+            if (res.version) {
+                // Successful comparison to x version
+                COMPARE_VERSION = res.version;
+                console.log(chalk.yellow(`Got it, will compare changes in ${COMPARE_VERSION} to ${NEXT_APP_VERSION} 👍`));
+            } else {
+                // Nothing chosen, default to master
+                COMPARE_VERSION = "master";
+                console.log(chalk.yellow(`Comparing changes in ${COMPARE_VERSION} to master`));
+            }
+            done();
+        });
 });
 
 // Creates a changelog from Git log
