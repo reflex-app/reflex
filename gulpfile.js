@@ -17,6 +17,6 @@ gulp.task('app', gulp.series(
 // Draft a release to Github
 gulp.task('release', gulp.series(
   'app',
-  'code-sign-mac',
+  // 'code-sign-mac',
   'deploy-app'
 ))
