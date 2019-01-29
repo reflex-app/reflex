@@ -1,13 +1,41 @@
-{   
-  "presets": [   
-    ["env", { "modules": false }]   
-  ],   
+{
   "comments": false,
-  "env": {  
-    "test": {  
-      "presets": [ 
-        ["env", { "targets": { "node": "current" }}]       
-      ]     
-    }   
-  } 
+  "env": {
+    "main": {
+      "presets": [
+        ["env", {
+          "targets": {
+            "node": 7
+          }
+        }],
+        "stage-0"
+      ]
+    },
+    "renderer": {
+      "presets": [
+        ["env", {
+          "modules": false
+        }],
+        "stage-0"
+      ]
+    },
+    "web": {
+      "presets": [
+        ["env", {
+          "modules": false
+        }],
+        "stage-0"
+      ]
+    },
+    "test": {
+      "presets": [
+        ["env", {
+          "targets": {
+            "node": "current"
+          }
+        }]
+      ]
+    }
+  },
+  "plugins": ["transform-runtime"]
 }
