@@ -1,13 +1,13 @@
 // Node Context
-const bs = require("browser-sync").create('Server');
+const bs = require('browser-sync').create('Server')
 
 // Start our server
-startServer();
+startServer()
 
 // Initialize a BrowserSync Server
 async function startServer(url) {
   return new Promise((resolve, reject) => {
-    url = url || 'https://shift.nickwittwer.com/';
+    url = url || 'https://shift.nickwittwer.com/'
 
     bs.init({
       proxy: url,
@@ -15,14 +15,14 @@ async function startServer(url) {
       notify: false,
       callbacks: {
         ready: function (err, bs) {
-          const localURL = bs.getOption('urls').get('local'); // Options: local, external, ui, ui-external
-          window.browserSync = localURL;
+          const localURL = bs.getOption('urls').get('local') // Options: local, external, ui, ui-external
+          window.browserSync = localURL
           // console.log('URL: ', url)
-          resolve(url);
+          resolve(url)
         }
       }
-    });
-  });
+    })
+  })
 }
 
 // Change the Proxy URL
@@ -32,22 +32,22 @@ async function startServer(url) {
 exports.changeProxyURL = async function (newURL) {
   async function checkServerStatus() {
     function exitServer() {
-      bs.exit(); // Exit current instance
+      bs.exit() // Exit current instance
     }
 
     // Close the server
-    exitServer();
+    exitServer()
 
     // Confirm it's closed
     // Otherwise, try again every 100ms
     if (bs.active === true) {
-      setTimeout(exitServer, 100);
+      setTimeout(exitServer, 100)
     } else if (bs.active === false) {
-      await startServer(newURL);
-      return true;
+      await startServer(newURL)
+      return true
     }
   }
 
-  var theURL = await checkServerStatus();
-  return theURL;
+  var theURL = await checkServerStatus()
+  return theURL
 }

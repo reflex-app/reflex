@@ -12,15 +12,15 @@
 </template>
 
 <script>
-import Toolbar from "../components/Toolbar.vue";
-import Artboards from "../components/Artboards.vue";
-import SidePanel from "../components/SidePanel";
-import ArtboardControls from "../components/ArtboardControls.vue";
+import Toolbar from '../components/Toolbar.vue'
+import Artboards from '../components/Artboards.vue'
+import SidePanel from '../components/SidePanel'
+import ArtboardControls from '../components/ArtboardControls.vue'
 
 import panzoom from '../mixins/panzoom' // @TODO: package this
 
 export default {
-  name: "main-view",
+  name: 'main-view',
   components: {
     Artboards,
     ArtboardControls,
@@ -28,11 +28,11 @@ export default {
     Toolbar
   },
   mounted: function() {
-    let vm = this;
+    let vm = this
 
     vm.$nextTick(() => {
-      const myElement = vm.$refs["artboards"].$el;
-      const myControllerEl = vm.$refs["canvas"];
+      const myElement = vm.$refs['artboards'].$el
+      const myControllerEl = vm.$refs['canvas']
 
       // Initialize Panzoom
       let instance = panzoom(myElement, myControllerEl, {
@@ -44,15 +44,15 @@ export default {
       // instance.on('panzoom:change', () => {
       //   vm.$store.commit('updatePanzoom', instance)
       // })
-    });
+    })
   },
   computed: {
     // Bind to our Vuex Store's URL value
     artboards: function() {
-      return this.$store.state.artboards;
+      return this.$store.state.artboards
     }
   }
-};
+}
 </script>
 
 <style lang="scss">

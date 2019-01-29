@@ -6,8 +6,8 @@
 
 <script>
 export default {
-  name: "reflex"
-};
+  name: 'reflex'
+}
 </script>
 
 <style lang="scss" scoped>

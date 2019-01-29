@@ -27,7 +27,7 @@ export default {
     },
     notBrowserSyncURL () {
       // @TODO: Rewrite NW functions into Electron
-      
+
       // Provides simple logic for when to
       // show/hide the "Sync" button
 
