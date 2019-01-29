@@ -1,14 +1,10 @@
-const fs = require('fs')
 const gulp = require('gulp')
-const gutil = require('gulp-util')
 const replace = require('gulp-replace')
 const inquirer = require('inquirer')
-const merge = require('merge-stream')
 const exec = require('child_process').exec
 const chalk = require('chalk')
 const release = require('gulp-github-release')
 const notify = require('gulp-notify')
-const archiver = require('archiver')
 const opn = require('opn')
 
 // Update process.env based on .env file (in root directory)
@@ -114,50 +110,6 @@ gulp.task('deploy-app:changelog', function (cb) {
     });
 });
 
-// Create a ZIP of executable file
-gulp.task('deploy-app:zip-app', function (done) {
-    // create a file to stream archive data to.
-    var output = fs.createWriteStream(PATH_TO_MAC_ZIP);
-    var archive = archiver('zip', {
-        zlib: {
-            level: 9 // Sets the compression level.
-        }
-    });
-
-    // listen for all archive data to be written
-    // 'close' event is fired only when a file descriptor is involved
-    output.on('close', function () {
-        console.log(chalk.yellow('ZIP created: ' + archive.pointer() + ' total bytes'));
-        console.log(chalk.yellow(`🚀 Setting up the Github release...`));
-        done();
-    });
-
-    // Catch warnings
-    archive.on('warning', function (err) {
-        if (err.code === 'ENOENT') {
-            // log warning
-            console.log(err);
-        } else {
-            // throw error
-            throw err;
-        }
-    });
-
-    // Catch error
-    archive.on('error', function (err) {
-        throw err;
-    });
-
-    // Pipe archive data to the file
-    archive.pipe(output);
-
-    // Path to the app, app name
-    archive.directory('ship/Shift/osx64/Shift.app/', 'Shift.app');
-
-    // Finish the ZIP
-    archive.finalize();
-});
-
 // Creates a draft release on Github
 // 1. Open the file: `.env` (root directory of this project)
 // 2. You can create a Github token here: https://github.com/settings/tokens
@@ -204,7 +156,6 @@ gulp.task('build-app', gulp.series(
 gulp.task('deploy-app', gulp.series(
     'deploy-app:prompt-version-diff',
     'deploy-app:changelog',
-    'deploy-app:zip-app',
     'deploy-app:draft-release',
     'deploy-app:open-release-in-browser'
 ));
