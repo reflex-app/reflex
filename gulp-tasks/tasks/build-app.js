@@ -7,6 +7,13 @@ const release = require('gulp-github-release')
 const notify = require('gulp-notify')
 const opn = require('opn')
 
+// PROCESS
+// Ask about the version
+// Help out with bumping (optional) + creating a changelog
+// Build Mac, Windows + sign (MacOS) using Electron-Builder
+// Draft a release on Github, and upload the Mac + Windows files
+// Clean up the /build folder
+
 // Update process.env based on .env file (in root directory)
 require('dotenv').config()
 
@@ -39,9 +46,9 @@ gulp.task('build-app:prompt-version', function (done) {
             }
 
             // Update the final ZIP path with the version
-            PATH_TO_MAC_ZIP = 'ship/shift-' + NEXT_APP_VERSION + '-mac.zip';
+            PATH_TO_MAC_ZIP = 'build/Reflex-' + NEXT_APP_VERSION + '-mac.zip'
 
-            done();
+            done()
         });
 });
 
