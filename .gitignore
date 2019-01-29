@@ -1,18 +1,27 @@
-.env
-dist/
-ship/
+# Src
 src/*.app/
 src/app/*.app/**/*
 src/**/*.css
 src/**/*.css.map
 src/build/
 src/cache/
+
+# Build
+/dist
+dist/electron/*
+dist/web/*
+build/*
+!build/icons
+
+# Ship
+ship/
+
+# Git & NPM
+.env
+!.gitkeep
+.DS_Store
 node_modules/
 package-lock.json
-
-.DS_Store
-node_modules
-/dist
 
 # local env files
 .env.local
