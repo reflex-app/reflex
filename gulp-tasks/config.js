@@ -19,6 +19,6 @@ module.exports = {
     'img/assets/**/*',
     '!img/assets/{js,scss}',
     '!img/assets/{js,scss}/**/*'
-  ],
+  ]
 
-};
+}
