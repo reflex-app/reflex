@@ -7,10 +7,7 @@
       "request": "launch",
       "cwd": "${workspaceRoot}",
       "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron",
-      "windows": {
-        "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron.cmd"
-      },
-      "args" : ["."]
+      "program": "${workspaceRoot}/dist/electron/main.js"
     }
   ]
 }
