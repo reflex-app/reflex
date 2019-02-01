@@ -7,31 +7,47 @@
           class="defaultState"
           @click="toolbarDefaultState=false"
         >
-          <img v-if="favicon" v-bind:src="favicon" class="favicon" height="10" width="10">
-          <span id="toolbar__site-title" v-bind:title="title">{{ title }}</span>
+          <img
+            v-if="favicon"
+            :src="favicon"
+            class="favicon"
+            height="10"
+            width="10"
+          >
+          <span
+            id="toolbar__site-title"
+            :title="title"
+          >
+            {{ title }}
+          </span>
           <div class="link-container">
-            <a href="#">EDIT</a>
+            <a href="#">
+              EDIT
+            </a>
           </div>
         </div>
-        <div v-else-if="toolbarDefaultState===false" class="editState">
+        <div
+          v-else-if="toolbarDefaultState===false"
+          class="editState"
+        >
           <!-- <div>Back</div>
           <div>Forward</div>
           <div>Reload</div>-->
           <input
+            id="toolbar__url"
             ref="urlInput"
             placeholder="Enter a website URL (http://website.com)"
             type="text"
-            id="toolbar__url"
             name="toolbar__url"
-            v-bind:value="url"
-            v-on:keyup.enter="changeURL"
-            @blur="toolbarDefaultState=true"
+            :value="url"
             autocomplete="off"
+            @keyup.enter="changeURL"
+            @blur="toolbarDefaultState=true"
           >
         </div>
         <!-- <button @click="browserSyncGetProxy()">BS</button> -->
       </div>
-      <div id="toolbar__recentURLs"></div>
+      <div id="toolbar__recentURLs" />
     </div>
     <!-- <div class="toolbar__right">
       <div class="toolbar__button-group">
@@ -50,17 +66,6 @@ export default {
       toolbarDefaultState: true
     }
   },
-  watch: {
-    toolbarDefaultState: function () {
-      const vm = this
-      if (this.toolbarDefaultState === false) {
-        vm.$nextTick(() => {
-          vm.$refs.urlInput.focus()
-          vm.$refs.urlInput.select()
-        })
-      }
-    }
-  },
   computed: {
     title () {
       return this.$store.state.site.title
@@ -73,6 +78,17 @@ export default {
     },
     artboards () {
       return this.$store.state.artboards
+    }
+  },
+  watch: {
+    toolbarDefaultState: function () {
+      const vm = this
+      if (this.toolbarDefaultState === false) {
+        vm.$nextTick(() => {
+          vm.$refs.urlInput.focus()
+          vm.$refs.urlInput.select()
+        })
+      }
     }
   },
   methods: {

@@ -1,30 +1,43 @@
 <template>
   <div
     class="artboard"
-    v-bind:style="{ height: this.height+'px', width: this.width+'px' }"
-    v-bind:class="{ 'is-selected': state.isSelected }"
+    :style="{ height: this.height+'px', width: this.width+'px' }"
+    :class="{ 'is-selected': state.isSelected }"
     @click="state.isSelected = !state.isSelected"
   >
     <div class="artboard__top">
       <div>
-        <span class="title">{{ this.title }}</span>
-        <span class="dimension">{{ this.width }} x {{ this.height }}</span>
+        <span class="title">
+          {{ this.title }}
+        </span>
+        <span class="dimension">
+          {{ this.width }} x {{ this.height }}
+        </span>
       </div>
       <!-- Show a loader when state.isLoading == true -->
-      <div v-show="state.isLoading" class="artboard__loader is-loading">
+      <div
+        v-show="state.isLoading"
+        class="artboard__loader is-loading"
+      >
         <div class="content">
           <div class="lds-ripple">
-            <div></div>
-            <div></div>
+            <div />
+            <div />
           </div>
         </div>
       </div>
     </div>
-    <div class="artboard__keypoints"></div>
+    <div class="artboard__keypoints" />
     <div class="artboard__content">
-      <webview ref="frame" class="frame"></webview>
+      <webview
+        ref="frame"
+        class="frame"
+      />
       <div class="artboard__handles">
-        <div @mousedown="triggerResize" class="handle__bottom"/>
+        <div
+          class="handle__bottom"
+          @mousedown="triggerResize"
+        />
       </div>
     </div>
   </div>
@@ -94,7 +107,6 @@ export default {
       // When loading of webview starts
       function loadstart() {
         _this.state.isLoading = true // Show loading spinner
-        console.log('myevent - loading....')
       }
 
       // Once webview content is loaded
@@ -118,7 +130,6 @@ export default {
           // After successfully injecting...
           // Request the data
           frame.contentWindow.postMessage('Send me your data!', '*')
-          console.log('webview-data executed', frame.getWebContents())
         })
       }
 
@@ -134,8 +145,6 @@ export default {
           favicon: favicon
         })
 
-        console.log(title, favicon)
-
         window.removeEventListener('message', receiveHandshake)
       }
 
@@ -146,6 +155,7 @@ export default {
       }
 
       function loadabort() {
+        // @TODO: Update with Electron API
         new Notification('Aborted', {
           body: 'The site stopped loading for some reason.'
         })

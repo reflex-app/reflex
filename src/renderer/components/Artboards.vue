@@ -1,18 +1,32 @@
 <template>
-  <div id="artboards" v-if="artboards.length">
+  <div
+    v-if="artboards.length"
+    id="artboards"
+  >
     <Artboard
       v-for="artboard in artboards"
       :key="artboard.id"
-      v-bind="artboard"
       ref="artboard"
+      v-bind="artboard"
       @resize="resize"
     />
   </div>
   <!-- Show empty state if no artboards exist -->
-  <div class="empty-state" v-else>
-    <img src="@/assets/ftu-vector.svg" class="empty-state__image" alt="Welcome to Shift graphic">
-    <span class="empty-state__title">Welcome to Shift</span>
-    <p class="empty-state__body">You can create new screens in the Screens panel on the left.</p>
+  <div
+    v-else
+    class="empty-state"
+  >
+    <img
+      src="@/assets/ftu-vector.svg"
+      class="empty-state__image"
+      alt="Welcome to Shift graphic"
+    >
+    <span class="empty-state__title">
+      Welcome to Shift
+    </span>
+    <p class="empty-state__body">
+      You can create new screens in the Screens panel on the left.
+    </p>
   </div>
 </template>
 
@@ -24,16 +38,16 @@ export default {
   components: {
     Artboard
   },
+  computed: {
+    artboards () {
+      return this.$store.state.artboards
+    }
+  },
   watch: {
     artboards: function () {
       // @TODO: Panzoom is currently not properly centering
       // Center the canvas when an artboard is added/deleted
       document.$panzoom.center()
-    }
-  },
-  computed: {
-    artboards () {
-      return this.$store.state.artboards
     }
   },
   methods: {

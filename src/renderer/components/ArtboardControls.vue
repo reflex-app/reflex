@@ -1,8 +1,23 @@
 <template>
-  <div id="ArtboardControls" v-if="artboards.length">
+  <div
+    v-if="artboards.length"
+    id="ArtboardControls"
+  >
     <div id="toolbar__canvas-controls">
-      <span id="canvas-controls__zoomOut" class="button" @click="zoomOut">-</span>
-      <span id="canvas-controls__zoomIn" class="button" @click="zoomIn">+</span>
+      <span
+        id="canvas-controls__zoomOut"
+        class="button"
+        @click="zoomOut"
+      >
+        -
+      </span>
+      <span
+        id="canvas-controls__zoomIn"
+        class="button"
+        @click="zoomIn"
+      >
+        +
+      </span>
       <!-- <span id="canvas-controls__scale" v-if="panzoomInstance.transformMatrix">{{ panzoomInstance.transformMatrix[0] }}</span> -->
       <!-- <a id="canvas-controls__fit-to-screen" @click="center">Center</a> -->
     </div>
@@ -20,17 +35,6 @@ export default {
   computed: {
     artboards: function () {
       return this.$store.state.artboards
-    }
-  },
-  methods: {
-    zoomIn () {
-      document.$panzoom.zoomIn()
-    },
-    zoomOut () {
-      document.$panzoom.zoomOut()
-    },
-    fitToScreen () {
-      document.$panzoom.fitToScreen()
     }
   },
   mounted () {
@@ -71,6 +75,17 @@ export default {
 
       // Append Menu to Window
       win.menu = Menu
+    }
+  },
+  methods: {
+    zoomIn () {
+      document.$panzoom.zoomIn()
+    },
+    zoomOut () {
+      document.$panzoom.zoomOut()
+    },
+    fitToScreen () {
+      document.$panzoom.fitToScreen()
     }
   }
 }

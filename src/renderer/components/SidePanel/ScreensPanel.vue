@@ -1,41 +1,97 @@
 <template>
   <transition name="sidebar-transition">
     <div id="artboard-tabs">
-      <div v-if="artboards.length" class="artboard-tabs__scroll">
-        <draggable v-model="artboards" :options="{draggable:'.artboard-tab'}">
+      <div
+        v-if="artboards.length"
+        class="artboard-tabs__scroll"
+      >
+        <draggable
+          v-model="artboards"
+          :options="{draggable:'.artboard-tab'}"
+        >
           <div
             v-for="artboard in artboards"
-            v-bind="artboard"
             :key="artboard.id"
+            v-bind="artboard"
             class="artboard-tab"
           >
-            <div v-if="editMode==true&&editID==artboard.id" class="editing">
-              <input type="text" placeholder="Title" ref="input" v-model.lazy="artboard.title" @keyup.enter="save(artboard), editMode=false">
-              <input type="number" placeholder="Width" v-model.number.lazy="artboard.width" @keyup.enter="save(artboard), editMode=false">
-              <input type="number" placeholder="Height" v-model.number.lazy="artboard.height" @keyup.enter="save(artboard), editMode=false">
+            <div
+              v-if="editMode==true&&editID==artboard.id"
+              class="editing"
+            >
+              <input
+                ref="input"
+                v-model.lazy="artboard.title"
+                type="text"
+                placeholder="Title"
+                @keyup.enter="save(artboard), editMode=false"
+              >
+              <input
+                v-model.number.lazy="artboard.width"
+                type="number"
+                placeholder="Width"
+                @keyup.enter="save(artboard), editMode=false"
+              >
+              <input
+                v-model.number.lazy="artboard.height"
+                type="number"
+                placeholder="Height"
+                @keyup.enter="save(artboard), editMode=false"
+              >
               <div class="buttons">
-                <a href="#" @click="editMode=false">Cancel</a>
-                <a href="#" @click="save(artboard)">Save</a>
+                <a
+                  href="#"
+                  @click="editMode=false"
+                >
+                  Cancel
+                </a>
+                <a
+                  href="#"
+                  @click="save(artboard)"
+                >
+                  Save
+                </a>
               </div>
             </div>
-            <div class="artboard-tab__container" v-else>
+            <div
+              v-else
+              class="artboard-tab__container"
+            >
               <div class="artboard-tab__container-left">
-                <div>{{artboard.title}}</div>
+                <div>{{ artboard.title }}</div>
                 <div>{{ artboard.width }} x {{ artboard.height }}</div>
               </div>
               <div class="artboard-tab__container-right">
-                <a href="#" @click="edit(artboard.id)">Edit</a> |
-                <a href="#" @click="remove(artboard.id)">Delete</a>
+                <a
+                  href="#"
+                  @click="edit(artboard.id)"
+                >
+                  Edit
+                </a> |
+                <a
+                  href="#"
+                  @click="remove(artboard.id)"
+                >
+                  Delete
+                </a>
               </div>
             </div>
           </div>
         </draggable>
       </div>
-      <NewArtboardButton class="artboard-tabs__button" @add="add"/>
+      <NewArtboardButton
+        class="artboard-tabs__button"
+        @add="add"
+      />
 
       <!-- Show a tip if there's no artboards -->
-      <div v-if="!artboards.length" class="empty-state">
-        <div class="empty-state__text">Click to create a new screen</div>
+      <div
+        v-if="!artboards.length"
+        class="empty-state"
+      >
+        <div class="empty-state__text">
+          Click to create a new screen
+        </div>
       </div>
     </div>
   </transition>

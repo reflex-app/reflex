@@ -1,11 +1,14 @@
 <template>
   <div id="main-view">
-    <Toolbar ref="toolbar"/>
+    <Toolbar ref="toolbar" />
     <div id="canvasContainer">
-      <SidePanel/>
-      <ArtboardControls/>
-      <div id="canvas" ref="canvas">
-        <Artboards ref="artboards"/>
+      <SidePanel />
+      <ArtboardControls />
+      <div
+        id="canvas"
+        ref="canvas"
+      >
+        <Artboards ref="artboards" />
       </div>
     </div>
   </div>
@@ -20,12 +23,18 @@ import ArtboardControls from '../components/ArtboardControls.vue'
 import panzoom from '../mixins/panzoom' // @TODO: package this
 
 export default {
-  name: 'main-view',
+  name: 'MainView',
   components: {
     Artboards,
     ArtboardControls,
     SidePanel,
     Toolbar
+  },
+  computed: {
+    // Bind to our Vuex Store's URL value
+    artboards: function() {
+      return this.$store.state.artboards
+    }
   },
   mounted: function() {
     let vm = this
@@ -45,12 +54,6 @@ export default {
       //   vm.$store.commit('updatePanzoom', instance)
       // })
     })
-  },
-  computed: {
-    // Bind to our Vuex Store's URL value
-    artboards: function() {
-      return this.$store.state.artboards
-    }
   }
 }
 </script>

@@ -1,9 +1,11 @@
 <template>
   <div id="panel-container">
-    <div class="panel__header">{{ title }}</div>
+    <div class="panel__header">
+      {{ title }}
+    </div>
     <div class="panel__content">
-      <ScreensPanel v-show="isChildPanel('Screens')"/>
-      <SyncPanel v-show="isChildPanel('Sync')"/>
+      <ScreensPanel v-show="isChildPanel('Screens')" />
+      <SyncPanel v-show="isChildPanel('Sync')" />
     </div>
   </div>
 </template>

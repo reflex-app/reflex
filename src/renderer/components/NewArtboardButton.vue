@@ -1,5 +1,10 @@
 <template>
-  <div class="button button-new-artboard" v-on:click="$emit('add')">+</div>
+  <div
+    class="button button-new-artboard"
+    @click="$emit('add')"
+  >
+    +
+  </div>
 </template>
 
 <script>

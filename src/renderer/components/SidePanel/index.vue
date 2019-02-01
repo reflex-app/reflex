@@ -2,28 +2,50 @@
   <transition name="sidebar-transition">
     <div class="side-panel">
       <div class="side-panel__track">
-        <div class="station" @click="setActive('Screens')" title="Screens">
+        <div
+          class="station"
+          title="Screens"
+          @click="setActive('Screens')"
+        >
           <div
             class="station__button button"
-            v-bind:class="{ 'button--is-active' : isActive('Screens') }"
+            :class="{ 'button--is-active' : isActive('Screens') }"
           >
-            <img src="@/assets/icons/screens.svg" alt="Screens">
+            <img
+              src="@/assets/icons/screens.svg"
+              alt="Screens"
+            >
           </div>
-          <span class="station__title">Screens</span>
+          <span class="station__title">
+            Screens
+          </span>
         </div>
-        <div v-if="artboards.length" class="station" @click="setActive('Sync')" title="Sync">
+        <div
+          v-if="artboards.length"
+          class="station"
+          title="Sync"
+          @click="setActive('Sync')"
+        >
           <div
             class="station__button button"
-            v-bind:class="{ 'button--is-active' : isActive('Sync') }"
+            :class="{ 'button--is-active' : isActive('Sync') }"
           >
-            <img src="@/assets/icons/sync.svg" alt="Sync">
+            <img
+              src="@/assets/icons/sync.svg"
+              alt="Sync"
+            >
           </div>
-          <div class="station__title">Sync</div>
+          <div class="station__title">
+            Sync
+          </div>
         </div>
         <!-- <div class="station button" @click="setActive('Screenshot')">3</div> -->
       </div>
-      <div class="side-panel__content" v-if="sidebar===true">
-        <PanelComponent :title="activeStation"/>
+      <div
+        v-if="sidebar===true"
+        class="side-panel__content"
+      >
+        <PanelComponent :title="activeStation" />
       </div>
     </div>
   </transition>
