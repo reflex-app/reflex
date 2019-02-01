@@ -83,6 +83,7 @@ Please use the following versions:
     3. If asked if you would like to open the application that was downloaded from the Internet, confirm. This is a standard MacOS security feature.
 
 2. Does Shift work on Windows OS?
+3. Issues with BrowserSync/Node-GYP? Try removing `node_modules` and `package-lock.json` and re-installing with `npm install --no-optional`.
 
 At the moment, only the Mac version is being supported/tested, as it requires a large amount of effort to add another OS to support. With more help, most or all of this project could work on the web, MacOS, and Windows.
 
