@@ -1,16 +1,13 @@
 {
   "version": "0.2.0",
   "configurations": [
-      {
-          "type": "chrome",
-          "request": "launch",
-          "name": "vuejs: chrome",
-          "url": "http://localhost:8080",
-          "webRoot": "${workspaceFolder}/src",
-          "breakOnLoad": true,
-          "sourceMapPathOverrides": {
-              "webpack:///src/*": "${webRoot}/*"
-          }
-      }
+    {
+      "name": "Debug Main Process",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceRoot}",
+      "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron",
+      "program": "${workspaceRoot}/dist/electron/main.js"
+    }
   ]
 }

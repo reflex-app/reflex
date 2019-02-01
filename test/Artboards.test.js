@@ -3,18 +3,18 @@ import {
   createLocalVue
 } from '@vue/test-utils'
 
-import Vuex from "vuex"
+import Vuex from 'vuex'
+
+import Artboards from '../src/components/Artboards.vue'
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
-    artboards: [], // All artboards on the screen
+    artboards: [] // All artboards on the screen
   }
 })
-
-import Artboards from '../src/components/Artboards.vue'
 
 describe('Artboards', () => {
   const wrapper = shallowMount(Artboards, {

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.6 (67491) - http://www.bohemiancoding.com/sketch -->
+    <title>screenshot</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Hi-Fi" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group-14" transform="translate(3.000000, 5.000000)" fill="#252525" fill-rule="nonzero">
+            <path d="M6,2 L6,1.25 C6,0.559644063 6.55964406,5.70905538e-16 7.25,4.4408921e-16 L10.75,0 C11.4403559,-1.26816328e-16 12,0.559644063 12,1.25 L12,2 L16.5,2 C17.3284271,2 18,2.67157288 18,3.5 L18,12.5 C18,13.3284271 17.3284271,14 16.5,14 L1.5,14 C0.671572875,14 1.01453063e-16,13.3284271 0,12.5 L0,3.5 C-1.01453063e-16,2.67157288 0.671572875,2 1.5,2 L6,2 Z M9,11 C10.6568542,11 12,9.65685425 12,8 C12,6.34314575 10.6568542,5 9,5 C7.34314575,5 6,6.34314575 6,8 C6,9.65685425 7.34314575,11 9,11 Z" id="Camera"></path>
+        </g>
+        <g id="Group-3"></g>
+    </g>
+</svg>
