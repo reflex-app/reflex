@@ -2,10 +2,14 @@
 
 import {
   app,
-  BrowserWindow
+  BrowserWindow,
+  ipcMain
 } from 'electron'
 
-import * as sync from './browsersync.js'
+// Chrome CLI Settings
+// https://electronjs.org/docs/api/chrome-command-line-switches
+app.commandLine.appendSwitch('ignore-certificate-errors', 'true')
+app.commandLine.appendSwitch('allow-insecure-localhost', 'true')
 
 /**
  * Set `__static` path to static files in production
@@ -16,9 +20,9 @@ if (process.env.NODE_ENV !== 'development') {
 }
 
 let mainWindow
-const winURL = process.env.NODE_ENV === 'development'
-  ? `http://localhost:9080`
-  : `file://${__dirname}/index.html`
+const winURL = process.env.NODE_ENV === 'development' ?
+  `http://localhost:9080` :
+  `file://${__dirname}/index.html`
 
 async function createWindow() {
   /**
@@ -31,10 +35,6 @@ async function createWindow() {
   })
 
   mainWindow.loadURL(winURL)
-
-  // Start our synchronization server
-  // Returns the URL
-  mainWindow.browserSync = await sync.startServer()
 
   mainWindow.on('closed', () => {
     mainWindow = null
@@ -64,13 +64,13 @@ app.on('activate', () => {
  */
 
 /*
-import { autoUpdater } from 'electron-updater'
+ import { autoUpdater } from 'electron-updater'
 
-autoUpdater.on('update-downloaded', () => {
-  autoUpdater.quitAndInstall()
-})
+ autoUpdater.on('update-downloaded', () => {
+   autoUpdater.quitAndInstall()
+ })
 
-app.on('ready', () => {
-  if (process.env.NODE_ENV === 'production') autoUpdater.checkForUpdates()
-})
- */
+ app.on('ready', () => {
+   if (process.env.NODE_ENV === 'production') autoUpdater.checkForUpdates()
+ })
+  */

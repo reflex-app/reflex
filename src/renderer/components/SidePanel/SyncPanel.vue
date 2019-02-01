@@ -2,8 +2,8 @@
   <div id="sync-panel">
     <div class="panel-section" v-if="notBrowserSyncURL">
       <div>Synchronize scrolls, clicks, and form inputs across your screens.</div>
-      <div class="button" @click="browserSyncChangeProxy()">Sync this Website</div>
-      <div class="button" @click="browserSyncGetProxy()">Visit Existing Sync URL</div>
+      <div class="button" @click="syncSite()">Sync this Website</div>
+      <!-- <div class="button" @click="browserSyncGetProxy()">Visit Existing Sync URL</div> -->
     </div>
     <div class="panel-section" v-else>
       <p>You are currently on a synced URL. Interactions on this domain will be synchronized across screen sizes.</p>
@@ -14,14 +14,18 @@
 
 <script>
 // Synchronization server
-const electron = require("electron");
+import * as electron from "electron";
+import * as sync from "../../../main/browsersync.js";
+
 const currentWindow = electron.remote.getCurrentWindow();
 
 export default {
   name: "SyncPanel",
 
   data() {
-    return {};
+    return {
+      syncServer: ""
+    };
   },
 
   computed: {
@@ -30,55 +34,76 @@ export default {
       return this.$store.state.site.url;
     },
     notBrowserSyncURL() {
-      // @TODO: Rewrite NW functions into Electron
-
       // Provides simple logic for when to
       // show/hide the "Sync" button
-
-      const currentURL = this.url;
-      // const nw = window.nw
-
-      if (currentURL !== currentWindow) {
+      if (this.url !== this.syncServer) {
         return true;
       } else {
         return false;
       }
-    },
-    browserSyncURL() {
-      // @TODO: Rewrite NW functions into Electron
-      // const nw = window.nw
-      return currentWindow.browserSync;
+    }
+  },
+
+  watch: {
+    url: function() {
+      // When the URL changes...
+      // update notBrowserSyncURL
     }
   },
 
   methods: {
-    browserSyncGetProxy() {
-      // Updates the UI URL to the BrowserSync proxy's URL
-      this.$store.commit("changeSiteData", {
-        url: currentWindow.browserSync
-      });
-    },
-    async browserSyncChangeProxy() {
+    async syncSite() {
+      // Avoid cyclical server
+      function compareHosts(url1, url2) {
+        function returnHost(url) {
+          var pathArray = url.split("/");
+          var protocol = pathArray[0];
+          var host = pathArray[2];
+          return host;
+        }
+
+        const host1 = returnHost(url1);
+        const host2 = returnHost(url2);
+
+        console.log(host1, host2);
+
+        if (host1 === host2) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+
       // Changes the BrowserSync proxy URL
-      const currentURL = this.url;
-
-      if (currentURL !== currentWindow.browserSync) {
+      if (compareHosts(this.url, this.syncServer) === false) {
         // Trigger the NodeJS change
-        await currentWindow.changeProxyURL(currentURL);
+        // Send request to change the URL being proxied
+        await sync.changeURL(this.url);
 
-        // Update URL
+        // Update the global URL
         this.$store.commit("changeSiteData", {
-          url: currentWindow.browserSync
+          url: this.syncServer
         });
 
         console.log(this.$store.state.site.url);
       } else {
-        // Prevent an endless BrowserSync URL loop
-        // var notification = new Notification('Notification Title', {
-        //   body: 'Cannot sync the sync URL.'
-        // })
+        console.log("Contains sync server", this.url, this.syncServer);
       }
     }
+  },
+
+  mounted() {
+    const vm = this;
+
+    vm.$nextTick().then(async function() {
+      // Start our synchronization server
+      const setup = await sync.startServer();
+      console.log("setup", setup);
+
+      // Fill in syncServer URL
+      vm.syncServer = setup.proxy;
+      console.log("sync server", vm.syncServer);
+    });
   }
 };
 </script>

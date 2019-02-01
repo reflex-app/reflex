@@ -1,25 +1,44 @@
 // Node Context
 const bs = require('browser-sync').create('Server')
 
+let SITE_URL = ''
+let PROXY_SERVER_URL = ''
+
 // Initialize a BrowserSync Server
-export async function startServer(url) {
+export function startServer(url) {
   return new Promise((resolve, reject) => {
-    url = url || 'http://shift.nickwittwer.com/'
+    SITE_URL = url || 'https://shift.nickwittwer.com/'
+
     bs.init({
-      proxy: url,
+      proxy: SITE_URL,
       open: false,
-      notify: false,
+      logPrefix: 'Synced',
+      reloadOnRestart: true,
+      notify: true,
+      https: true,
       callbacks: {
         ready: function () {
-          const localURL = bs.getOption('urls').get('local') // Options: local, external, ui, ui-external
-          // mainWindow.browserSync = localURL
-          console.log('Proxy URL: ', url)
-          console.log('Serve URL: ', localURL)
-          resolve(url)
+          try {
+            PROXY_SERVER_URL = bs.getOption('urls').get('local') // Options: local, external, ui, ui-external
+
+            resolve({
+              site: SITE_URL,
+              proxy: PROXY_SERVER_URL
+            })
+          } catch (e) {
+            console.log('Sync Server Error: ', e);
+          }
         }
       }
     })
   })
+}
+
+export function sendServerDetails() {
+  return {
+    url: SITE_URL,
+    proxy: PROXY_SERVER_URL
+  }
 }
 
 // Change the Proxy URL
@@ -27,7 +46,7 @@ export async function startServer(url) {
 // window.nw.process.mainModule.exports.changeProxyURL(url)
 // (From inside of the web app)
 
-exports.changeProxyURL = async function (newURL) {
+export async function changeURL(newURL) {
   async function checkServerStatus() {
     function exitServer() {
       bs.exit() // Exit current instance
@@ -50,10 +69,7 @@ exports.changeProxyURL = async function (newURL) {
   return theURL
 }
 
-
-
-
-// // toggle server 
+// // toggle server
 // ipcMain.on('toggleServer', function(event, arg) {
 //   //console.log('before', bs.active);
 //   //console.log(arg);
