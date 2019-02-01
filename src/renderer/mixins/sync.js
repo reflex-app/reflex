@@ -26,7 +26,7 @@ export function startServer(url) {
               proxy: PROXY_SERVER_URL
             })
           } catch (e) {
-            console.log('Sync Server Error: ', e);
+            console.log('Sync Server Error: ', e)
           }
         }
       }

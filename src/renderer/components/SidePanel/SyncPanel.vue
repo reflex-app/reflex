@@ -15,7 +15,7 @@
 <script>
 // Synchronization server
 import * as electron from "electron";
-import * as sync from "../../../main/browsersync.js";
+import * as sync from "../../mixins/sync.js";
 
 const currentWindow = electron.remote.getCurrentWindow();
 
