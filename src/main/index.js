@@ -5,6 +5,10 @@ import {
   BrowserWindow
 } from 'electron'
 
+import {
+  setMenu
+} from './menu'
+
 // Chrome CLI Settings
 // https://electronjs.org/docs/api/chrome-command-line-switches
 app.commandLine.appendSwitch('ignore-certificate-errors', 'true')
@@ -19,9 +23,9 @@ if (process.env.NODE_ENV !== 'development') {
 }
 
 let mainWindow
-const winURL = process.env.NODE_ENV === 'development'
-  ? `http://localhost:9080`
-  : `file://${__dirname}/index.html`
+const winURL = process.env.NODE_ENV === 'development' ?
+  `http://localhost:9080` :
+  `file://${__dirname}/index.html`
 
 async function createWindow() {
   /**
@@ -35,6 +39,9 @@ async function createWindow() {
 
   mainWindow.loadURL(winURL)
 
+  // Setup the menu
+  setMenu(mainWindow)
+
   mainWindow.on('closed', () => {
     mainWindow = null
   })
@@ -43,9 +50,7 @@ async function createWindow() {
 app.on('ready', createWindow)
 
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit()
-  }
+  app.quit()
 })
 
 app.on('activate', () => {

@@ -29,6 +29,7 @@
 
 <script>
 import { platform } from '../utils'
+import { ipcRenderer } from 'electron'
 
 export default {
   name: 'ArtboardControls',
@@ -38,44 +39,11 @@ export default {
     }
   },
   mounted () {
-    // Check native apps
-    if (window.nw) {
-      const vm = this
-      const nw = window.nw
-      const win = nw.Window.get()
-
-      // Create menu container
-      let Menu = new nw.Menu({
-        type: 'menubar'
-      })
-
-      if (platform.isMac) {
-        // Initialize default mac menu (App, Edit)
-        Menu.createMacBuiltin(nw.App.manifest.name, { hideWindow: true })
-      }
-
-      // Setup View's child
-      let viewSubMenu = new nw.Menu()
-      viewSubMenu.append(
-        new nw.MenuItem({
-          label: 'Zoom to Fit',
-          click: function () {
-            vm.fitToScreen()
-          }
-        })
-      )
-
-      // Add View
-      Menu.append(
-        new nw.MenuItem({
-          label: 'View',
-          submenu: viewSubMenu
-        })
-      )
-
-      // Append Menu to Window
-      win.menu = Menu
-    }
+    const vm = this;
+    // Listen for menu click "menu_zoom-to-fit"
+    ipcRenderer.on('menu_zoom-to-fit', () => {
+      vm.fitToScreen()
+    });
   },
   methods: {
     zoomIn () {
