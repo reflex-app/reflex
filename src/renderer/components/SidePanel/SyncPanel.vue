@@ -2,7 +2,7 @@
   <div id="sync-panel">
     <div class="panel-section" v-if="notBrowserSyncURL">
       <div>Synchronize scrolls, clicks, and form inputs across your screens.</div>
-      <div class="button"  @click="browserSyncChangeProxy()">Sync this Website</div>
+      <div class="button" @click="browserSyncChangeProxy()">Sync this Website</div>
       <div class="button" @click="browserSyncGetProxy()">Visit Existing Sync URL</div>
     </div>
     <div class="panel-section" v-else>
@@ -13,74 +13,74 @@
 </template>
 
 <script>
-export default {
-  name: 'SyncPanel',
+// Synchronization server
+const electron = require("electron");
+const currentWindow = electron.remote.getCurrentWindow();
 
-  data () {
-    return {}
+export default {
+  name: "SyncPanel",
+
+  data() {
+    return {};
   },
 
   computed: {
-    url () {
+    url() {
       // Bind to our Vuex Store's URL value
-      return this.$store.state.site.url
+      return this.$store.state.site.url;
     },
-    notBrowserSyncURL () {
+    notBrowserSyncURL() {
       // @TODO: Rewrite NW functions into Electron
 
       // Provides simple logic for when to
       // show/hide the "Sync" button
 
-      // const currentURL = this.url
+      const currentURL = this.url;
       // const nw = window.nw
 
-      // if (currentURL !== nw.global.browserSync) {
-      //   return true
-      // } else {
-      //   return false
-      // }
+      if (currentURL !== currentWindow) {
+        return true;
+      } else {
+        return false;
+      }
     },
-    browserSyncURL () {
+    browserSyncURL() {
       // @TODO: Rewrite NW functions into Electron
       // const nw = window.nw
-      // return nw.global.browserSync
+      return currentWindow.browserSync;
     }
   },
 
   methods: {
-    browserSyncGetProxy () {
+    browserSyncGetProxy() {
       // Updates the UI URL to the BrowserSync proxy's URL
-      const nw = window.nw
-      this.$store.commit('changeSiteData', {
-        url: nw.global.browserSync
-      })
+      this.$store.commit("changeSiteData", {
+        url: currentWindow.browserSync
+      });
     },
-    async browserSyncChangeProxy () {
-      if (window.nw) {
-        // Changes the BrowserSync proxy URL
-        const currentURL = this.url
-        const nw = window.nw
+    async browserSyncChangeProxy() {
+      // Changes the BrowserSync proxy URL
+      const currentURL = this.url;
 
-        if (currentURL !== nw.global.browserSync) {
-          // Trigger the NodeJS change
-          await nw.process.mainModule.exports.changeProxyURL(currentURL)
+      if (currentURL !== currentWindow.browserSync) {
+        // Trigger the NodeJS change
+        await currentWindow.changeProxyURL(currentURL);
 
-          // Update URL
-          this.$store.commit('changeSiteData', {
-            url: nw.global.browserSync
-          })
+        // Update URL
+        this.$store.commit("changeSiteData", {
+          url: currentWindow.browserSync
+        });
 
-          console.log(this.$store.state.site.url)
-        } else {
-          // Prevent an endless BrowserSync URL loop
-          // var notification = new Notification('Notification Title', {
-          //   body: 'Cannot sync the sync URL.'
-          // })
-        }
+        console.log(this.$store.state.site.url);
+      } else {
+        // Prevent an endless BrowserSync URL loop
+        // var notification = new Notification('Notification Title', {
+        //   body: 'Cannot sync the sync URL.'
+        // })
       }
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

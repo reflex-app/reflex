@@ -5,6 +5,8 @@ import {
   BrowserWindow
 } from 'electron'
 
+import * as sync from './browsersync.js'
+
 /**
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
@@ -14,11 +16,11 @@ if (process.env.NODE_ENV !== 'development') {
 }
 
 let mainWindow
-const winURL = process.env.NODE_ENV === 'development' ?
-  `http://localhost:9080` :
-  `file://${__dirname}/index.html`
+const winURL = process.env.NODE_ENV === 'development'
+  ? `http://localhost:9080`
+  : `file://${__dirname}/index.html`
 
-function createWindow() {
+async function createWindow() {
   /**
    * Initial window options
    */
@@ -29,6 +31,10 @@ function createWindow() {
   })
 
   mainWindow.loadURL(winURL)
+
+  // Start our synchronization server
+  // Returns the URL
+  mainWindow.browserSync = await sync.startServer()
 
   mainWindow.on('closed', () => {
     mainWindow = null

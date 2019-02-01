@@ -16,7 +16,7 @@
     "pack": "npm run pack:main && npm run pack:renderer",
     "pack:main": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.main.config.js",
     "pack:renderer": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.renderer.config.js",
-    "postinstall": "npm run lint:fix",
+    "postinstall": "electron-builder install-app-deps",
     "deploy": "gulp release",
     "test": "jest"
   },
@@ -71,6 +71,7 @@
     }
   },
   "dependencies": {
+    "browser-sync": "^2.26.3",
     "vue": "^2.5.16",
     "vue-electron": "^1.0.6",
     "vue-router": "^3.0.1",
@@ -89,6 +90,7 @@
     "babel-preset-stage-0": "^6.24.1",
     "babel-register": "^6.26.0",
     "babili-webpack-plugin": "^0.1.2",
+    "browser-sync-webpack-plugin": "^2.2.2",
     "cfonts": "^2.1.2",
     "chalk": "^2.4.2",
     "copy-webpack-plugin": "^4.5.1",
@@ -96,7 +98,7 @@
     "css-loader": "^0.28.11",
     "del": "^3.0.0",
     "devtron": "^1.4.0",
-    "electron": "^3.1.2",
+    "electron": "^4.0.3",
     "electron-builder": "^20.38.5",
     "electron-debug": "^1.5.0",
     "electron-devtools-installer": "^2.2.4",

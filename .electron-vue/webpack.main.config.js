@@ -3,10 +3,13 @@
 process.env.BABEL_ENV = 'main'
 
 const path = require('path')
-const { dependencies } = require('../package.json')
+const {
+  dependencies
+} = require('../package.json')
 const webpack = require('webpack')
 
 const BabiliWebpackPlugin = require('babili-webpack-plugin')
+const BrowserSyncPlugin = require('browser-sync-webpack-plugin')
 
 let mainConfig = {
   entry: {
@@ -14,11 +17,12 @@ let mainConfig = {
   },
   externals: [
     ...Object.keys(dependencies || {}),
-    {'electron-debug': 'electron-debug'}
+    {
+      'electron-debug': 'electron-debug'
+    }
   ],
   module: {
-    rules: [
-      {
+    rules: [{
         test: /\.(js)$/,
         enforce: 'pre',
         exclude: /node_modules/,
@@ -50,7 +54,19 @@ let mainConfig = {
     path: path.join(__dirname, '../dist/electron')
   },
   plugins: [
-    new webpack.NoEmitOnErrorsPlugin()
+    new webpack.NoEmitOnErrorsPlugin(),
+    new BrowserSyncPlugin({
+      host: 'localhost',
+      port: 9999,
+      open: false,
+      files: ['index.html', 'index.css', 'build/main.js'],
+      server: {
+        baseDir: ['.'],
+        routes: {
+          "/vendor": "./src/vendor"
+        }
+      }
+    })
   ],
   resolve: {
     extensions: ['.js', '.json', '.node']
