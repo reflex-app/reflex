@@ -2,8 +2,7 @@
 
 import {
   app,
-  BrowserWindow,
-  ipcMain
+  BrowserWindow
 } from 'electron'
 
 // Chrome CLI Settings
