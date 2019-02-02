@@ -11,7 +11,7 @@
             <SyncButton/>
           </div>
         </div>
-        <div class="bar__right">
+        <div class="bar__right" :class="{ 'is-active' : inputStateActive }">
           <div v-show="!inputStateActive" @click="inputStateActive=!inputStateActive">
             <!-- <img v-if="favicon" :src="favicon" class="favicon" height="10" width="10"> -->
             <span class="title" :title="title">{{ title }}</span>
@@ -115,34 +115,43 @@ export default {
       display: flex;
       align-items: center;
       min-width: 500px;
-      background: #eeeeee;
       border-radius: 6px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
       user-select: none;
+      display: flex;
+      align-items: stretch;
     }
 
     .bar__left {
+      position: relative;
+      display: block;
+
       .sync {
-        // background: darkgray;
-        // padding: 0.3rem 0.5rem;
-        display: flex;
-        align-items: center;
+        position: relative;
+        display: inline-block;
+        line-height: normal;
+        vertical-align: baseline;
+        height: 100%;
       }
     }
 
     .bar__right {
       display: flex;
+      flex: 1;
       width: 100%;
-      padding: 0.5rem 1rem;
+      background: #eeeeee;
+      transition: background 0.15s ease-out;
+      padding: 0.4rem 1rem;
 
       &:hover {
         cursor: pointer;
+        background: darken(#eeeeee, 10%);
       }
 
-      & > * {
-        // flex: 1;
+      &.is-active {
+        padding: 0;
       }
 
       .title {

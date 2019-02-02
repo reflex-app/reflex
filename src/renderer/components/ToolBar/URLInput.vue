@@ -84,13 +84,13 @@ input[type="text"] {
   border: none;
   font-size: 1rem;
   box-sizing: border-box;
-  border: 1px solid transparent;
-  border-radius: 4px;
   width: 100%;
-  text-overflow: ellipsis;
   display: block;
+  border-radius: 6px;
   background: $body-bg;
-  // padding: 0 0.15rem;
+  text-overflow: ellipsis;
+  border: 1px solid transparent;
+  padding: 0.4rem 0.5rem;
 
   &:hover {
     border-color: $border-color;

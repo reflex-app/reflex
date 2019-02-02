@@ -1,8 +1,6 @@
 <template>
-  <div id="sync-button" :class="{ 'is-active' : isOnSyncURL }">
-    <div @click="syncSite()">
-      <img src="@/assets/icons/sync.svg" alt>
-    </div>
+  <div id="sync-button" :class="{ 'is-active' : isOnSyncURL }" @click="syncSite()">
+    <img src="@/assets/icons/sync.svg" alt>
   </div>
 </template>
 
@@ -110,13 +108,27 @@ export default {
 @import "../../scss/_variables";
 
 #sync-button {
-  display: flex;
+  background: #e0e0e0;
+  display: inline-flex;
   align-items: center;
-  background: darkgray;
-  padding: 0.3rem 0.5rem;
+  height: 100%;
+  padding: 0 0.75rem;
+
+  &:hover {
+    cursor: pointer;
+  }
 
   &.is-active {
     background: #d1cff5;
+  }
+
+  & > div {
+    line-height: normal;
+    vertical-align: baseline;
+
+    img {
+      display: inline-block;
+    }
   }
 }
 </style>
