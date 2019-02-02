@@ -9,8 +9,6 @@ const mutations = {
     } else {
       localStorage.setItem('store', JSON.stringify(this.state))
     }
-
-    console.log('hit inner localstorage fn')
   }
 }
 

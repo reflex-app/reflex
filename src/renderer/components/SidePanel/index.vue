@@ -2,25 +2,16 @@
   <transition name="sidebar-transition">
     <div class="side-panel">
       <div class="side-panel__track">
-        <div
-          class="station"
-          title="Screens"
-          @click="setActive('Screens')"
-        >
+        <div class="station" title="Screens" @click="setActive('Screens')">
           <div
             class="station__button button"
             :class="{ 'button--is-active' : isActive('Screens') }"
           >
-            <img
-              src="@/assets/icons/screens.svg"
-              alt="Screens"
-            >
+            <img src="@/assets/icons/screens.svg" alt="Screens">
           </div>
-          <span class="station__title">
-            Screens
-          </span>
+          <span class="station__title">Screens</span>
         </div>
-        <div
+        <!-- <div
           v-if="artboards.length"
           class="station"
           title="Sync"
@@ -38,77 +29,74 @@
           <div class="station__title">
             Sync
           </div>
-        </div>
+        </div>-->
         <!-- <div class="station button" @click="setActive('Screenshot')">3</div> -->
       </div>
-      <div
-        v-if="sidebar===true"
-        class="side-panel__content"
-      >
-        <PanelComponent :title="activeStation" />
+      <div v-if="sidebar===true" class="side-panel__content">
+        <PanelComponent :title="activeStation"/>
       </div>
     </div>
   </transition>
 </template>
 
 <script>
-import PanelComponent from './PanelComponent.vue'
+import PanelComponent from "./PanelComponent.vue";
 
 export default {
-  name: 'SidePanel',
+  name: "SidePanel",
   components: {
     PanelComponent
   },
-  data () {
+  data() {
     return {
-      activeStation: 'Screens'
-    }
+      activeStation: "Screens"
+    };
   },
   computed: {
     // Bind to our Vuex Store's URL value
-    artboards: function () {
-      return this.$store.state.artboards
+    artboards: function() {
+      return this.$store.state.artboards;
     },
-    sidebar () {
-      return this.$store.state.gui.sidebar
+    sidebar() {
+      return this.$store.state.gui.sidebar;
     }
   },
 
   methods: {
-    setActive: function (val) {
+    setActive: function(val) {
       // Handle hide/show side panel
       if (this.sidebar && this.activeStation !== val) {
         // Normal State
         // Simply set the clicked station to active
-        this.activeStation = val
+        this.activeStation = val;
       } else if (this.sidebar && this.activeStation === val) {
         // Close State
         // When clicking on the same station,
         // it should close the sidebar
-        this.toggleSidebar(false)
-        this.activeStation = ''
+        this.toggleSidebar(false);
+        this.activeStation = "";
       } else if (this.sidebar === false) {
         // Closed State
         // Sidebar is closed, re-open
-        this.toggleSidebar(true)
-        this.activeStation = val
+        this.toggleSidebar(true);
+        this.activeStation = val;
       }
     },
-    isActive: function (val) {
+    isActive: function(val) {
       // Make sure to open the sidebar
       // if it was open in last session
       // Otherwise, don't set an active state
       if (this.sidebar === true) {
-        return this.activeStation === val
+        return this.activeStation === val;
       } else {
-        return ''
+        return "";
       }
     },
-    toggleSidebar () {
-      this.$store.commit('toggleSidebar')
+    toggleSidebar() {
+      this.$store.commit("toggleSidebar");
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
