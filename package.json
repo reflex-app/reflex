@@ -1,96 +1,143 @@
 {
-  "name": "tunnelframe-builder",
+  "name": "reflex",
+  "description": "Make responsive websites without the guesswork.",
+  "version": "0.4.0",
   "author": "Nick Wittwer",
-  "version": "1.0.0",
-  "description": "A tool for previewing responsive sites.",
-  "main": "index.js",
+  "license": "MIT",
+  "main": "./dist/electron/main.js",
+  "scripts": {
+    "start": "node .electron-vue/dev-runner.js",
+    "build": "node .electron-vue/build.js && electron-builder -mw",
+    "build:dir": "node .electron-vue/build.js && electron-builder -mw --dir",
+    "build:clean": "cross-env BUILD_TARGET=clean node .electron-vue/build.js",
+    "build:web": "cross-env BUILD_TARGET=web node .electron-vue/build.js",
+    "lint": "eslint --ext .js,.vue -f ./node_modules/eslint-friendly-formatter src",
+    "lint:fix": "eslint 'src/**/*.{js,vue}' --fix",
+    "pack": "npm run pack:main && npm run pack:renderer",
+    "pack:main": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.main.config.js",
+    "pack:renderer": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.renderer.config.js",
+    "postinstall": "electron-builder install-app-deps",
+    "deploy": "gulp release",
+    "test": "jest"
+  },
   "repository": {
     "type": "git",
-    "url": "git@github.com:nwittwer/shift.git"
+    "url": "git@github.com:nwittwer/reflex.git"
   },
-  "homepage": "https://shift.nickwittwer.com",
-  "scripts": {
-    "start": "kill -9 $(lsof -i TCP:8000 | grep LISTEN | awk '{print $2}') & gulp & nw dist",
-    "build": "gulp app",
-    "deploy": "gulp release"
+  "private": true,
+  "build": {
+    "productName": "Reflex",
+    "appId": "com.reflex.app",
+    "directories": {
+      "output": "build"
+    },
+    "files": [
+      "dist/electron/**/*"
+    ],
+    "dmg": {
+      "contents": [
+        {
+          "x": 410,
+          "y": 150,
+          "type": "link",
+          "path": "/Applications"
+        },
+        {
+          "x": 130,
+          "y": 150,
+          "type": "file"
+        }
+      ]
+    },
+    "mac": {
+      "icon": "build/icons/icon.icns"
+    },
+    "win": {
+      "icon": "build/icons/icon.ico"
+    }
   },
-  "bugs": {
-    "url": "https://github.com/nwittwer/shift/issues"
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "vue"
+    ],
+    "transform": {
+      ".*\\.(vue)$": "<rootDir>/node_modules/jest-vue-preprocessor",
+      "^.+\\.js$": "<rootDir>/node_modules/babel-jest"
+    },
+    "moduleNameMapper": {
+      "^@/(.*)$": "<rootDir>/src/$1"
+    }
+  },
+  "dependencies": {
+    "browser-sync": "^2.26.3",
+    "vue": "^2.5.16",
+    "vue-electron": "^1.0.6",
+    "vue-router": "^3.0.1",
+    "vuedraggable": "^2.17.0",
+    "vuex": "^3.0.1",
+    "vuex-electron": "^1.0.0"
   },
   "devDependencies": {
-    "archiver": "^3.0.0",
-    "autoprefixer": "^7.1.1",
-    "autoprefixer-loader": "^3.2.0",
-    "babel-core": "^6.24.1",
-    "babel-eslint": "^7.2.3",
-    "babel-loader": "^7.0.0",
+    "ajv": "^6.5.0",
+    "babel-core": "^6.26.3",
+    "babel-eslint": "^8.2.3",
+    "babel-jest": "^24.0.0",
+    "babel-loader": "^7.1.4",
     "babel-plugin-transform-runtime": "^6.23.0",
-    "babel-polyfill": "^6.23.0",
-    "babel-preset-es2015": "^6.24.1",
-    "babel-preset-stage-2": "^6.24.1",
-    "babel-register": "^6.24.1",
-    "chai": "^4.2.0",
-    "chalk": "^1.1.3",
-    "css-loader": "^0.28.1",
-    "dotenv": "^6.0.0",
-    "eslint": "^3.19.0",
-    "eslint-config-standard": "^10.2.1",
-    "eslint-friendly-formatter": "^3.0.0",
-    "eslint-loader": "^1.7.1",
-    "eslint-plugin-html": "^2.0.3",
-    "eslint-plugin-import": "^2.2.0",
-    "eslint-plugin-node": "^4.2.2",
-    "eslint-plugin-promise": "^3.5.0",
-    "eslint-plugin-standard": "^3.0.1",
-    "eventsource-polyfill": "^0.9.6",
-    "express": "^4.15.3",
-    "extract-text-webpack-plugin": "^2.1.0",
-    "file-loader": "^0.11.1",
-    "friendly-errors-webpack-plugin": "^1.6.1",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-stage-0": "^6.24.1",
+    "babel-register": "^6.26.0",
+    "babili-webpack-plugin": "^0.1.2",
+    "browser-sync-webpack-plugin": "^2.2.2",
+    "cfonts": "^2.1.2",
+    "chalk": "^2.4.2",
+    "copy-webpack-plugin": "^4.5.1",
+    "cross-env": "^5.1.6",
+    "css-loader": "^0.28.11",
+    "del": "^3.0.0",
+    "devtron": "^1.4.0",
+    "electron": "^4.0.3",
+    "electron-builder": "^20.38.5",
+    "electron-debug": "^1.5.0",
+    "electron-devtools-installer": "^2.2.4",
+    "electron-rebuild": "^1.8.2",
+    "eslint": "^4.19.1",
+    "eslint-config-standard": "^11.0.0",
+    "eslint-friendly-formatter": "^4.0.1",
+    "eslint-loader": "^2.0.0",
+    "eslint-plugin-import": "^2.16.0",
+    "eslint-plugin-node": "^6.0.1",
+    "eslint-plugin-promise": "^3.8.0",
+    "eslint-plugin-standard": "^3.1.0",
+    "eslint-plugin-vue": "^5.1.0",
+    "file-loader": "^1.1.11",
     "gulp": "^4.0.0",
-    "gulp-compile-handlebars": "^0.6.1",
-    "gulp-concat": "^2.6.1",
-    "gulp-declare": "^0.3.0",
-    "gulp-exec": "^3.0.2",
     "gulp-github-release": "^1.2.1",
-    "gulp-handlebars": "^5.0.2",
+    "gulp-hub": "^4.2.0",
     "gulp-notify": "^3.2.0",
-    "gulp-rename": "^1.4.0",
     "gulp-replace": "^1.0.0",
-    "gulp-sass": "^4.0.1",
-    "gulp-sourcemaps": "^2.6.4",
-    "gulp-util": "^3.0.8",
-    "gulp-wrap": "^0.14.0",
-    "gulp-zip": "^4.2.0",
-    "html-loader": "^0.4.5",
-    "html-webpack-plugin": "^2.30.1",
-    "inquirer": "^6.2.0",
-    "ip": "^1.1.5",
-    "json-format": "^1.0.1",
-    "json-loader": "^0.5.4",
-    "less": "^2.7.2",
-    "less-loader": "^4.0.3",
-    "merge-stream": "^1.0.1",
-    "mocha": "^5.2.0",
-    "node-sass": "^4.5.3",
-    "nw": "^0.33.1-sdk",
+    "html-webpack-plugin": "^3.2.0",
+    "jest": "^24.0.0",
+    "jest-vue-preprocessor": "^1.4.0",
+    "mini-css-extract-plugin": "0.4.0",
+    "multispinner": "^0.2.1",
+    "node-loader": "^0.6.0",
+    "node-sass": "^4.9.2",
     "opn": "^5.4.0",
-    "ora": "^1.2.0",
-    "proxy-middleware": "^0.15.0",
-    "q": "^1.5.0",
-    "require-dir": "^1.0.0",
-    "sass-loader": "^6.0.5",
-    "shelljs": "^0.7.7",
-    "style-loader": "^0.17.0",
-    "stylus": "^0.54.5",
-    "stylus-loader": "^3.0.1",
-    "undertaker-forward-reference": "^1.0.2",
-    "url-loader": "^0.5.8",
-    "webpack": "^2.7.0",
-    "webpack-dev-middleware": "^1.10.2",
-    "webpack-dev-server": "^2.4.5",
-    "webpack-hot-middleware": "^2.18.0",
-    "webpack-merge": "^4.1.0",
-    "webpack-stream": "^5.1.1"
+    "sass-loader": "^7.0.3",
+    "style-loader": "^0.21.0",
+    "url-loader": "^1.0.1",
+    "vue-eslint-parser": "^5.0.0",
+    "vue-html-loader": "^1.2.4",
+    "vue-loader": "^15.2.4",
+    "vue-style-loader": "^4.1.0",
+    "vue-template-compiler": "^2.5.16",
+    "webpack": "^4.15.1",
+    "webpack-cli": "^3.0.8",
+    "webpack-dev-server": "^3.1.4",
+    "webpack-hot-middleware": "^2.22.2",
+    "webpack-merge": "^4.1.3"
   }
 }

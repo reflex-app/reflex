@@ -1,11 +1,42 @@
-.env
-dist/
-ship/
+# Src
 src/*.app/
 src/app/*.app/**/*
 src/**/*.css
 src/**/*.css.map
 src/build/
 src/cache/
+
+# Build
+/dist
+dist/electron/*
+dist/web/*
+build/*
+!build/icons
+
+# Ship
+ship/
+
+# Git & NPM
+.env
+!.gitkeep
+.DS_Store
 node_modules/
 package-lock.json
+
+# local env files
+.env.local
+.env.*.local
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw*
