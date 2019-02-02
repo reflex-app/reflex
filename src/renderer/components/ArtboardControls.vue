@@ -78,8 +78,8 @@ export default {
   align-items: center;
   background: none;
   position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
+  bottom: 1rem;
+  right: 1rem;
 
   & > * {
     flex: 1 0 auto;
