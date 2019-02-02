@@ -39,10 +39,17 @@ export default {
     }
   },
   mounted () {
-    const vm = this;
-    // Listen for menu click "menu_zoom-to-fit"
+    // @TODO: Add tests for these
     ipcRenderer.on('menu_zoom-to-fit', () => {
-      vm.fitToScreen()
+      this.fitToScreen()
+    });
+
+    ipcRenderer.on('menu_zoom-in', () => {
+      this.zoomIn()
+    });
+
+    ipcRenderer.on('menu_zoom-out', () => {
+      this.zoomOut()
     });
   },
   methods: {

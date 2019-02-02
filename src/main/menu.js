@@ -50,14 +50,24 @@ export function setMenu(window) {
         {
           type: 'separator'
         },
+        // {
+        //   role: 'resetzoom'
+        // },
         {
-          role: 'resetzoom'
+          label: 'Zoom In',
+          accelerator: 'CmdOrCtrl+=',
+          // role: 'zoomin',
+          click() {
+            window.webContents.send('menu_zoom-in')
+          }
         },
         {
-          role: 'zoomin'
-        },
-        {
-          role: 'zoomout'
+          label: 'Zoom Out',
+          accelerator: 'CmdOrCtrl+-',
+          // role: 'zoomout'
+          click() {
+            window.webContents.send('menu_zoom-out')
+          }
         },
         {
           type: 'separator'
@@ -67,7 +77,7 @@ export function setMenu(window) {
         },
         {
           label: 'Fit to Screen',
-          click: function() {
+          click() {
             window.webContents.send('menu_zoom-to-fit')
           }
         }
