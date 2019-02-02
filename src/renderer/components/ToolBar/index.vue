@@ -1,54 +1,33 @@
 <template>
   <div id="toolbar">
-    <div id="toolbar__url-container">
-      <div v-if="artboards.length">
-        <div
-          v-if="toolbarDefaultState===true"
-          class="defaultState"
-          @click="toolbarDefaultState=false"
-        >
-          <img
-            v-if="favicon"
-            :src="favicon"
-            class="favicon"
-            height="10"
-            width="10"
-          >
-          <span
-            id="toolbar__site-title"
-            :title="title"
-          >
-            {{ title }}
-          </span>
-          <div class="link-container">
-            <a href="#">
-              EDIT
-            </a>
+    <div id="toolbar__url-container" v-if="artboards.length">
+      <!-- <div class="controls">
+        <div>Back</div>
+        <div>Forward</div>
+      </div>-->
+      <div class="bar">
+        <div class="bar__left">
+          <div class="sync" v-show="!inputStateActive">
+            <SyncButton/>
           </div>
         </div>
-        <div
-          v-else-if="toolbarDefaultState===false"
-          class="editState"
-        >
-          <!-- <div>Back</div>
-          <div>Forward</div>
-          <div>Reload</div>-->
-          <input
-            id="toolbar__url"
-            ref="urlInput"
-            placeholder="Enter a website URL (http://website.com)"
-            type="text"
-            name="toolbar__url"
-            :value="url"
-            autocomplete="off"
-            @keyup.enter="changeURL"
-            @blur="toolbarDefaultState=true"
-          >
+        <div class="bar__right">
+          <div v-show="!inputStateActive" @click="inputStateActive=!inputStateActive">
+            <!-- <img v-if="favicon" :src="favicon" class="favicon" height="10" width="10"> -->
+            <span class="title" :title="title">{{ title }}</span>
+          </div>
+          <URLInput
+            class="input"
+            :state="inputStateActive"
+            v-on:url-changed="changeURL"
+            v-on:toggle-input="inputStateActive=!inputStateActive"
+          />
         </div>
-        <!-- <button @click="browserSyncGetProxy()">BS</button> -->
       </div>
-      <div id="toolbar__recentURLs" />
+      <!-- <button @click="browserSyncGetProxy()">BS</button> -->
     </div>
+    <div id="toolbar__recentURLs"/>
+
     <!-- <div class="toolbar__right">
       <div class="toolbar__button-group">
       </div>
@@ -57,51 +36,48 @@
 </template>
 
 <script>
-const debounce = require('lodash.debounce')
+const debounce = require("lodash.debounce");
+import URLInput from "./URLInput.vue";
+import SyncButton from "./SyncButton.vue";
 
 export default {
-  name: 'ToolBar',
-  data () {
+  name: "ToolBar",
+  components: {
+    URLInput,
+    SyncButton
+  },
+  data() {
     return {
-      toolbarDefaultState: true
-    }
+      inputStateActive: false
+    };
   },
   computed: {
-    title () {
-      return this.$store.state.site.title
+    title() {
+      return this.$store.state.site.title;
     },
-    url () {
-      return this.$store.state.site.url
+    url() {
+      return this.$store.state.site.url;
     },
-    favicon () {
-      return this.$store.state.site.favicon
+    favicon() {
+      return this.$store.state.site.favicon;
     },
-    artboards () {
-      return this.$store.state.artboards
-    }
-  },
-  watch: {
-    toolbarDefaultState: function () {
-      const vm = this
-      if (this.toolbarDefaultState === false) {
-        vm.$nextTick(() => {
-          vm.$refs.urlInput.focus()
-          vm.$refs.urlInput.select()
-        })
-      }
+    artboards() {
+      return this.$store.state.artboards;
     }
   },
   methods: {
-    changeURL: debounce(function (event) {
-      const value = event.target.value
+    changeURL: debounce(function(url) {
       // @TODO: Check if it's a valid URL
 
-      this.$store.commit('changeSiteData', {
-        url: value
-      })
+      this.$store.commit("changeSiteData", {
+        url: url
+      });
+
+      // Off
+      this.inputStateActive = false;
     }, 100)
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -123,33 +99,6 @@ export default {
     margin-left: 16px;
   }
 
-  .defaultState {
-    text-align: center;
-
-    #toolbar__site-title {
-      font-size: 1rem;
-      font-weight: 500;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      cursor: default;
-      user-select: none;
-    }
-
-    .link-container {
-      margin-top: -0.25rem;
-    }
-
-    a {
-      font-size: 0.8rem;
-      margin-top: -0.5rem;
-      font-weight: bold;
-    }
-  }
-
-  .editState {
-    display: flex;
-  }
-
   #toolbar__url-container {
     position: relative;
     margin: 0 auto;
@@ -158,37 +107,55 @@ export default {
       flex: 1 0 auto;
     }
 
-    .favicon {
-      margin-right: 0.25rem;
+    .controls {
+      display: flex;
     }
 
-    input[type="text"] {
-      border: none;
-      font-size: 14px;
-      box-sizing: border-box;
-      padding: 0.2rem 0.5rem;
-      padding-left: 0;
-      border: 1px solid transparent;
-      border-radius: 4px;
-      width: 100%;
-      max-width: 80vw;
-      min-width: 320px;
+    .bar {
+      display: flex;
+      align-items: center;
+      min-width: 500px;
+      background: #eeeeee;
+      border-radius: 6px;
+      white-space: nowrap;
+      overflow: hidden;
       text-overflow: ellipsis;
-      display: block;
-      padding: 0.25rem 0.5rem;
-      background: $body-bg;
+      user-select: none;
+    }
+
+    .bar__left {
+      .sync {
+        // background: darkgray;
+        // padding: 0.3rem 0.5rem;
+        display: flex;
+        align-items: center;
+      }
+    }
+
+    .bar__right {
+      display: flex;
+      width: 100%;
+      padding: 0.5rem 1rem;
 
       &:hover {
-        border: 1px solid $border-color;
-        background: darken($body-bg, 5%);
+        cursor: pointer;
       }
 
-      &:focus {
-        text-overflow: none;
-        text-align: left;
-        outline: none;
-        background: lighten($body-bg, 3%);
-        border: 1px solid rgba($accent-color, 1);
+      & > * {
+        // flex: 1;
+      }
+
+      .title {
+        font-weight: bold;
+        display: block;
+        margin-right: 0.5rem;
+        max-width: 24rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .favicon {
+        margin-right: 0.25rem;
       }
     }
 
