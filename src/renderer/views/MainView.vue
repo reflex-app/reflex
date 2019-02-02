@@ -1,6 +1,6 @@
 <template>
   <div id="main-view">
-    <Toolbar ref="toolbar" />
+    <ToolBar ref="toolbar" />
     <div id="canvasContainer">
       <SidePanel />
       <ArtboardControls />
@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import Toolbar from '../components/Toolbar.vue'
+import ToolBar from '../components/ToolBar'
 import Artboards from '../components/Artboards.vue'
 import SidePanel from '../components/SidePanel'
 import ArtboardControls from '../components/ArtboardControls.vue'
@@ -28,7 +28,7 @@ export default {
     Artboards,
     ArtboardControls,
     SidePanel,
-    Toolbar
+    ToolBar
   },
   computed: {
     // Bind to our Vuex Store's URL value

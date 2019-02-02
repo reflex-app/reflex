@@ -60,7 +60,7 @@
 const debounce = require('lodash.debounce')
 
 export default {
-  name: 'Toolbar',
+  name: 'ToolBar',
   data () {
     return {
       toolbarDefaultState: true
@@ -105,7 +105,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../scss/_variables";
+@import "~@/scss/_variables";
 
 #toolbar {
   height: 44px;
