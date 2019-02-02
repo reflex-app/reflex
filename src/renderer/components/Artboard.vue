@@ -107,6 +107,10 @@ export default {
       // When loading of webview starts
       function loadstart() {
         _this.state.isLoading = true // Show loading spinner
+
+        _this.$store.commit('changeSiteData', {
+          title: 'Loading...'
+        })
       }
 
       // Once webview content is loaded
