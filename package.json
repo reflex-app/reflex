@@ -7,8 +7,8 @@
   "main": "./dist/electron/main.js",
   "scripts": {
     "start": "node .electron-vue/dev-runner.js",
-    "build": "node .electron-vue/build.js && electron-builder -mw",
-    "build:dir": "node .electron-vue/build.js && electron-builder -mw --dir",
+    "build": "node .electron-vue/build.js && electron-builder -m",
+    "build:dir": "node .electron-vue/build.js && electron-builder -m --dir",
     "build:clean": "cross-env BUILD_TARGET=clean node .electron-vue/build.js",
     "build:web": "cross-env BUILD_TARGET=web node .electron-vue/build.js",
     "lint": "eslint --ext .js,.vue -f ./node_modules/eslint-friendly-formatter src",
