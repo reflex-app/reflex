@@ -67,7 +67,7 @@ export function setMenu(window) {
         },
         {
           label: 'Fit to Screen',
-          click: function() {
+          click: function () {
             window.webContents.send('menu_zoom-to-fit')
           }
         }
@@ -106,71 +106,68 @@ export function setMenu(window) {
     }
   ]
 
-  if (process.platform === 'darwin') {
-    template.unshift({
-      label: app.getName(),
-      submenu: [{
-          role: 'about'
-        },
-        {
-          type: 'separator'
-        },
-        {
-          role: 'services'
-        },
-        {
-          type: 'separator'
-        },
-        {
-          role: 'hide'
-        },
-        {
-          role: 'hideothers'
-        },
-        {
-          role: 'unhide'
-        },
-        {
-          type: 'separator'
-        },
-        {
-          role: 'quit'
-        }
-      ]
-    })
-
-    // Edit menu
-    template[1].submenu.push({
-      type: 'separator'
-    }, {
-      label: 'Speech',
-      submenu: [{
-          role: 'startspeaking'
-        },
-        {
-          role: 'stopspeaking'
-        }
-      ]
-    })
-
-    // Window menu
-    template[3].submenu = [{
-        role: 'close'
-      },
-      {
-        role: 'minimize'
-      },
-      {
-        role: 'zoom'
+  // if (process.platform === 'darwin') {
+  template.unshift({
+    label: app.getName(),
+    submenu: [{
+        role: 'about'
       },
       {
         type: 'separator'
       },
       {
-        role: 'front'
+        role: 'services'
+      },
+      {
+        type: 'separator'
+      },
+      {
+        role: 'hide'
+      },
+      {
+        role: 'hideothers'
+      },
+      {
+        role: 'unhide'
+      },
+      {
+        type: 'separator'
+      },
+      {
+        role: 'quit'
       }
     ]
-  }
+  })
+
+  // Edit menu
+  template[1].submenu.push({
+    type: 'separator'
+  }, {
+    label: 'Speech',
+    submenu: [{
+        role: 'startspeaking'
+      },
+      {
+        role: 'stopspeaking'
+      }
+    ]
+  })
+
+  // Window menu
+  template[3].submenu = [{
+      role: 'minimize'
+    },
+    {
+      role: 'zoom'
+    },
+    {
+      type: 'separator'
+    },
+    {
+      role: 'front'
+    }
+  ]
+  // }
 
   const menu = Menu.buildFromTemplate(template)
   Menu.setApplicationMenu(menu)
