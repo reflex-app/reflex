@@ -1,5 +1,6 @@
 // Node Context
 const bs = require('browser-sync').create('Server')
+// const historyApiFallback = require('connect-history-api-fallback')
 
 let SITE_URL = ''
 let PROXY_SERVER_URL = ''
@@ -11,11 +12,12 @@ export function startServer(url) {
 
     bs.init({
       proxy: SITE_URL,
+      // middleware: [historyApiFallback()], // via https://github.com/BrowserSync/browser-sync/issues/204#issuecomment-60410751
       open: false,
-      logPrefix: 'Synced',
-      reloadOnRestart: true,
+      logPrefix: 'Synced!',
       notify: true,
       https: true,
+      // reloadOnRestart: true,
       callbacks: {
         ready: function () {
           try {
@@ -42,10 +44,6 @@ export function sendServerDetails() {
 }
 
 // Change the Proxy URL
-// This can be called as:
-// window.nw.process.mainModule.exports.changeProxyURL(url)
-// (From inside of the web app)
-
 export async function changeURL(newURL) {
   async function checkServerStatus() {
     function exitServer() {
@@ -65,46 +63,12 @@ export async function changeURL(newURL) {
     }
   }
 
-  var theURL = await checkServerStatus()
-  return theURL
+  // Wait for server to restart
+  await checkServerStatus()
+
+  // Send back the new site and Proxy
+  return {
+    site: SITE_URL,
+    proxy: PROXY_SERVER_URL
+  }
 }
-
-// // toggle server
-// ipcMain.on('toggleServer', function(event, arg) {
-//   //console.log('before', bs.active);
-//   //console.log(arg);
-//   if (!bs.active && arg.command == 'start') {
-//       // no server started so lets start
-//       bs.init({
-//           // server:true,
-//           proxy: arg.url,
-//           browser: arg.selectedBrowsers || undefined,
-//           logPrefix: "My Sync tester Project",
-//           reloadOnRestart: true,
-//           notify: true,
-//           open: "external",
-//           ghostMode: {
-//       clicks: true,
-//       location: false,
-//       forms: true,
-//       scroll: true
-//     }
-
-//       }, function(err, bs) {
-//           //console.log('bs-active', bs.active);
-//           if (bs.active) {
-
-//           }
-//           event.sender.send('toggleServer-reply', 'started', 'WOW!!! Browsersync is running now!',bs);
-//       });
-//   }
-//   else if (arg.command == 'stop') {
-//       //console.log('server is going to stop');
-//           bs.exit(function() {
-//               //console.log('server stopped');
-//           });
-//           event.sender.send('toggleServer-reply', 'stopped', 'Browsersync is stopped!!',bs);
-
-//   }
-
-// });

@@ -50,11 +50,9 @@ export default {
     vm.$nextTick().then(async function() {
       // Start our synchronization server
       const setup = await sync.startServer();
-      console.log("setup", setup);
 
       // Fill in syncServer URL
       vm.syncServer = setup.proxy;
-      console.log("sync server", vm.syncServer);
     });
   },
 
@@ -81,24 +79,29 @@ export default {
         }
       }
 
+      // Trigger the NodeJS change
+      // Send request to change the URL being proxied
+      const data = await sync.changeURL(this.url);
+
+      // Update the global URL to the proxy URL
+      // This will navigate to synced site via the proxy url
+      this.$store.commit("changeSiteData", {
+        url: data.proxy
+      });
+
+      // Update the sync server url locally
+      this.syncServer = data.proxy;
+
+      console.log(this.syncServer);
+      console.log(this.$store.state.site.url);
+
       // Changes the BrowserSync proxy URL
-      if (compareHosts(this.url, this.syncServer) === false) {
-        // Trigger the NodeJS change
-        // Send request to change the URL being proxied
-        await sync.changeURL(this.url);
-
-        // Update the global URL
-        this.$store.commit("changeSiteData", {
-          url: this.syncServer
-        });
-
-        console.log(this.syncServer);
-        console.log(this.$store.state.site.url);
-        return true;
-      } else {
-        console.log("Contains sync server", this.url, this.syncServer);
-        return false;
-      }
+      // if (compareHosts(this.url, this.syncServer) === false) {
+      //   return true;
+      // } else {
+      //   console.log("Contains sync server", this.url, this.syncServer);
+      //   return false;
+      // }
     }
   }
 };
