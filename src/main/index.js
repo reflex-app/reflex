@@ -9,11 +9,6 @@ import {
   setMenu
 } from './menu'
 
-// Chrome CLI Settings
-// https://electronjs.org/docs/api/chrome-command-line-switches
-app.commandLine.appendSwitch('ignore-certificate-errors', 'true')
-app.commandLine.appendSwitch('allow-insecure-localhost', 'true')
-
 /**
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
@@ -34,7 +29,10 @@ async function createWindow() {
   mainWindow = new BrowserWindow({
     height: 750,
     width: 1200,
-    useContentSize: true
+    useContentSize: true,
+    webPreferences: {
+      webviewTag: true
+    }
   })
 
   mainWindow.loadURL(winURL)
@@ -59,6 +57,27 @@ app.on('activate', () => {
   }
 })
 
+// Workarounds to allow accessing self-signed HTTPS sites
+// @TODO: Add this as an opt-in from the UI somehow?
+app.on('certificate-error', (event, webContents, url, error, certificate, callback) => {
+  // On certificate error we disable default behaviour (stop loading the page)
+  // and we then say "it is all fine - true" to the callback
+  event.preventDefault()
+  callback(true)
+}).on('select-client-certificate', (event, webContents, url, list, callback) => {
+  event.preventDefault()
+  callback(list[0])
+}).on('web-contents-created', (event, contents) => {
+  contents.on('will-attach-webview', (event, webPreferences, params) => {
+    webPreferences.nodeIntegration = false // Disable Node.js integration inside <webview>
+    webPreferences.webSecurity = false // Disable web security
+
+    // Strip away preload scripts if unused or verify their location is legitimate
+    delete webPreferences.preload
+    delete webPreferences.preloadURL
+  })
+})
+
 /**
  * Auto Updater
  *
@@ -77,4 +96,4 @@ app.on('activate', () => {
  app.on('ready', () => {
    if (process.env.NODE_ENV === 'production') autoUpdater.checkForUpdates()
  })
-  */
+*/
