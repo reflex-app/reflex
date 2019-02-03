@@ -72,6 +72,7 @@
   },
   "dependencies": {
     "browser-sync": "^2.26.3",
+    "terser": "3.14.1",
     "vue": "^2.5.16",
     "vue-electron": "^1.0.6",
     "vue-router": "^3.0.1",
