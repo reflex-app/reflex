@@ -32,10 +32,10 @@ let PATH_TO_MAC_ZIP
 // Confirm version number
 gulp.task('version-app:prompt-version', function (done) {
   inquirer.prompt([{
-    type: 'input',
-    name: 'version',
-    message: 'What release version is this? (Currently ' + CURRENT_APP_VERSION + '):'
-  }])
+      type: 'input',
+      name: 'version',
+      message: 'What release version is this? (Currently ' + CURRENT_APP_VERSION + '):'
+    }])
     .then(function (res) {
       if (res.version) {
         NEXT_APP_VERSION = res.version
@@ -55,9 +55,9 @@ gulp.task('version-app:prompt-version', function (done) {
 // Bumps the version number
 // `src/package.json` and `dist/package.json`
 gulp.task('version-app:version', function () {
-  return gulp.src('./package.json')
+  return gulp.src('./package.json', {base: './'})
     .pipe(replace(CURRENT_APP_VERSION, NEXT_APP_VERSION))
-    .pipe(gulp.dest(CONFIG.SRC))
+    .pipe(gulp.dest('./'))
 })
 
 // Clean the `build` folder
@@ -80,10 +80,10 @@ gulp.task('build-app:main', (done) => {
 // Defaults to master branch
 gulp.task('version-app:prompt-version-diff', function (done) {
   inquirer.prompt([{
-    type: 'input',
-    name: 'version',
-    message: `Branch/Git tag to compare to ${NEXT_APP_VERSION}: `
-  }])
+      type: 'input',
+      name: 'version',
+      message: `Branch/Git tag to compare to ${NEXT_APP_VERSION}: `
+    }])
     .then(function (res) {
       if (res.version) {
         // Successful comparison to x version

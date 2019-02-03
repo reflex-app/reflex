@@ -11,7 +11,7 @@ gulp.registry(hub)
 
 // Draft a release to Github
 gulp.task('release', gulp.series(
-  'build-app',
   'version-app',
+  'build-app',
   'deploy-app'
 ))
