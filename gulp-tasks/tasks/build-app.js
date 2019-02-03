@@ -61,16 +61,17 @@ gulp.task('version-app:version', function () {
 })
 
 // Clean the `build` folder
-gulp.task('build-app:clean', function (done) {
-  return exec(`npm run build:clean`, function (err, stdout, stderr) {
+gulp.task('build-app:clean', (done) => {
+  exec(`npm run build:clean`, function (err, stdout, stderr) {
     if (err) return false
+    done()
   })
 })
 
-gulp.task('build-app:main', function (done) {
-  // Build returns a promise, return it so the task isn't called in parallel
-  return exec(`npm run build`, function (err, stdout, stderr) {
+gulp.task('build-app:main', (done) => {
+  exec(`npm run build`, function (err, stdout, stderr) {
     if (err) return false
+    done()
   })
 })
 
