@@ -8,8 +8,8 @@ const {
 } = require('../package.json')
 const webpack = require('webpack')
 
-const BabiliWebpackPlugin = require('babili-webpack-plugin')
-const BrowserSyncPlugin = require('browser-sync-webpack-plugin')
+const BabiliWebpackPlugin = require('babel-minify-webpack-plugin')
+// const BrowserSyncPlugin = require('browser-sync-webpack-plugin')
 
 let mainConfig = {
   entry: {
@@ -55,18 +55,18 @@ let mainConfig = {
   },
   plugins: [
     new webpack.NoEmitOnErrorsPlugin(),
-    new BrowserSyncPlugin({
-      host: 'localhost',
-      port: 9999,
-      open: false,
-      files: ['index.html', 'index.css', 'build/main.js'],
-      server: {
-        baseDir: ['.'],
-        routes: {
-          "/vendor": "./src/vendor"
-        }
-      }
-    })
+    // new BrowserSyncPlugin({
+    //   host: 'localhost',
+    //   port: 9999,
+    //   open: false,
+    //   files: ['index.html', 'index.css', 'build/main.js'],
+    //   server: {
+    //     baseDir: ['.'],
+    //     routes: {
+    //       "/vendor": "./src/vendor"
+    //     }
+    //   }
+    // })
   ],
   resolve: {
     extensions: ['.js', '.json', '.node']
