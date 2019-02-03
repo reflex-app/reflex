@@ -60,11 +60,21 @@
           </div>
         </draggable>
       </div>
-      <NewArtboardButton class="artboard-tabs__button" @add="add"/>
 
+      <NewArtboardButton class="artboard-tabs__button" @add="add"/>
       <!-- Show a tip if there's no artboards -->
       <div v-if="!artboards.length" class="empty-state">
         <div class="empty-state__text">Click to create a new screen</div>
+      </div>
+
+      <div class="panel-section">
+        <span>Or choose from template:</span>
+        <select v-model="defaultSizeSelection" @change="addDefaultSizes">
+          <option disabled value>Select template...</option>
+          <option value="basic">Basic</option>
+          <option value="bootstrap">Bootstrap 4</option>
+          <option value="foundation">Foundation 6</option>
+        </select>
       </div>
     </div>
   </transition>
@@ -84,7 +94,8 @@ export default {
   data() {
     return {
       editMode: false,
-      editID: null
+      editID: null,
+      defaultSizeSelection: ""
     };
   },
 
@@ -104,9 +115,99 @@ export default {
     add() {
       this.$store.dispatch("addArtboard", {
         title: "Untitled",
-        width: 375, // Default
-        height: 667 // Default
+        width: 375,
+        height: 667
       });
+    },
+    addDefaultSizes() {
+      if (!this.defaultSizeSelection) return false;
+
+      let sizes; // This will contain the size data
+
+      const defaults = {
+        small: {
+          title: "Small",
+          width: 375,
+          height: 667
+        },
+        medium: {
+          title: "Medium",
+          width: 768,
+          height: 1024
+        },
+        large: {
+          title: "Large",
+          width: 1024,
+          height: 720
+        }
+      };
+
+      const bootstrap = {
+        xsmall: {
+          title: "XS",
+          width: 375,
+          height: 500
+        },
+        small: {
+          title: "S",
+          width: 576,
+          height: 800
+        },
+        medium: {
+          title: "M",
+          width: 768,
+          height: 1000
+        },
+        large: {
+          title: "MD",
+          width: 992,
+          height: 1200
+        },
+        xlarge: {
+          title: "LG",
+          width: 1200,
+          height: 1400
+        }
+      };
+
+      const foundation = {
+        small: {
+          title: "Small",
+          width: 400,
+          height: 600
+        },
+        medium: {
+          title: "Medium",
+          width: 640,
+          height: 800
+        },
+        large: {
+          title: "Large",
+          width: 1024,
+          height: 1200
+        }
+      };
+
+      switch (this.defaultSizeSelection) {
+        case "basic":
+          sizes = defaults;
+          break;
+        case "bootstrap":
+          sizes = bootstrap;
+          break;
+        case "foundation":
+          sizes = foundation;
+          break;
+      }
+
+      console.log(this.defaultSizeSelection, sizes);
+
+      this.$store.dispatch("addMultipleArtboards", {
+        data: sizes
+      });
+
+      // Empty selected value
+      this.defaultSizeSelection = '';
     },
     save(artboard) {
       // Disable editing mode
