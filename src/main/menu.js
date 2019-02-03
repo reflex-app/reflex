@@ -38,18 +38,7 @@ export function setMenu(window) {
     },
     {
       label: 'View',
-      submenu: [{
-          role: 'reload'
-        },
-        {
-          role: 'forcereload'
-        },
-        {
-          role: 'toggledevtools'
-        },
-        {
-          type: 'separator'
-        },
+      submenu: [
         // {
         //   role: 'resetzoom'
         // },
@@ -76,11 +65,24 @@ export function setMenu(window) {
           role: 'togglefullscreen'
         },
         {
-          label: 'Fit to Screen',
+          label: 'Center to Screen',
+          accelerator: 'CmdOrCtrl+0',
           click() {
             window.webContents.send('menu_zoom-to-fit')
           }
-        }
+        },
+        {
+          type: 'separator'
+        },
+        // {
+        //   role: 'reload'
+        // },
+        {
+          role: 'forcereload'
+        },
+        // {
+        //   role: 'toggledevtools'
+        // },
       ]
     },
     {
