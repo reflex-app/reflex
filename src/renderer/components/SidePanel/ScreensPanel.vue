@@ -68,7 +68,7 @@
       </div>
 
       <div class="panel-section">
-        <span>Or choose from template:</span>
+        <span>Add from template:</span>
         <select v-model="defaultSizeSelection" @change="addDefaultSizes">
           <option disabled value>Select template...</option>
           <option value="basic">Basic</option>
