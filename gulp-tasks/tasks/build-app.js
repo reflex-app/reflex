@@ -55,24 +55,11 @@ gulp.task('version-app:prompt-version', function (done) {
 // Bumps the version number
 // `src/package.json` and `dist/package.json`
 gulp.task('version-app:version', function () {
-  return gulp.src('./package.json', {base: './'})
+  return gulp.src('./package.json', {
+      base: './'
+    })
     .pipe(replace(CURRENT_APP_VERSION, NEXT_APP_VERSION))
     .pipe(gulp.dest('./'))
-})
-
-// Clean the `build` folder
-gulp.task('build-app:clean', (done) => {
-  exec(`npm run build:clean`, function (err, stdout, stderr) {
-    if (err) return false
-    done()
-  })
-})
-
-gulp.task('build-app:main', (done) => {
-  exec(`npm run build`, function (err, stdout, stderr) {
-    if (err) return false
-    done()
-  })
 })
 
 // Choose what version you'd like to compare to
@@ -115,6 +102,21 @@ gulp.task('version-app:changelog', function (cb) {
     CHANGELOG += `\n\n [View all changes since ${COMPARE_VERSION}](../../compare/${COMPARE_VERSION}..${NEXT_APP_VERSION})`
     console.log(chalk.yellow('Changelog:\n' + CHANGELOG))
     cb(err)
+  })
+})
+
+// Clean the `build` folder
+gulp.task('build-app:clean', (done) => {
+  exec(`npm run build:clean`, function (err, stdout, stderr) {
+    if (err) return false
+    done()
+  })
+})
+
+gulp.task('build-app:main', (done) => {
+  exec(`npm run build`, function (err, stdout, stderr) {
+    if (err) return false
+    done()
   })
 })
 
