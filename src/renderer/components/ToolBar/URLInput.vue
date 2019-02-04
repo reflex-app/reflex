@@ -26,6 +26,8 @@
 </template>
 
 <script>
+import autoCorrectURL from "@/mixins/autoCorrectURL.js";
+
 export default {
   name: "URLInput",
   props: ["state"],
@@ -51,8 +53,12 @@ export default {
     }
   },
   methods: {
-    triggerSiteLoad(url) {
-      this.$emit("url-changed", url);
+    async triggerSiteLoad(url) {
+      if (!url) return false;
+
+      // Validate URL
+      const newURL = await this.validateURL(url); 
+      this.$emit("url-changed", newURL);
       this.blur();
     },
     blur() {
@@ -61,6 +67,14 @@ export default {
       vm.$nextTick(() => {
         vm.$refs.input.blur();
       });
+    },
+    async validateURL(url) {
+      try {
+        // @TODO: Refactor/simplify the URL corrector
+        return autoCorrectURL(url)
+      } catch(e) {
+        return false;
+      }
     }
   }
 };
