@@ -10,8 +10,8 @@
   </div>
   <!-- Show empty state if no artboards exist -->
   <div v-else class="empty-state">
-    <img src="@/assets/ftu-vector.svg" class="empty-state__image" alt="Welcome to Shift graphic">
-    <span class="empty-state__title">Welcome to Shift</span>
+    <img src="@/assets/ftu-vector.svg" class="empty-state__image" alt="Welcome graphic">
+    <span class="empty-state__title">Welcome to {{appName}}</span>
     <p class="empty-state__body">You can create new screens in the Screens panel on the left.</p>
   </div>
 </template>
@@ -29,7 +29,13 @@ export default {
   },
   computed: {
     artboards() {
+      // Returns an array of artboards
       return this.$store.state.artboards;
+    },
+    appName() {
+      // Return the name of the Electron app
+      // From package.json (name or productName)
+      return remote.app.getName();
     }
   },
   watch: {
