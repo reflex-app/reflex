@@ -6,7 +6,7 @@
         id="toolbar__url"
         ref="input"
         type="text"
-        placeholder="Enter a website URL (http://website.com)"
+        placeholder="Enter a website URL (https://google.com)"
         :value="url"
         autocomplete="off"
         @keyup.enter="triggerSiteLoad($event.target.value)"
@@ -17,7 +17,10 @@
     </div>
     <!-- State: Initial -->
     <div v-else>
-      <span @click="$emit('toggle-input')">{{url}}</span>
+      <span @click="$emit('toggle-input')">
+        <span v-if="url">{{url}}</span>
+        <span v-else>Enter a website URL</span>
+      </span>
     </div>
   </div>
 </template>
@@ -44,7 +47,7 @@ export default {
     url: function() {
       // When the URL changes...
       // update notBrowserSyncURL
-      console.log('url changed');
+      console.log("url changed");
     }
   },
   methods: {
