@@ -12,12 +12,10 @@ export function startServer(url) {
 
     bs.init({
       proxy: SITE_URL,
-      // middleware: [historyApiFallback()], // via https://github.com/BrowserSync/browser-sync/issues/204#issuecomment-60410751
-      open: false,
       logPrefix: 'Synced!',
       notify: true,
-      https: true,
-      // reloadOnRestart: true,
+      open: false,
+      // middleware: [historyApiFallback()], // via https://github.com/BrowserSync/browser-sync/issues/204#issuecomment-60410751
       callbacks: {
         ready: function () {
           try {

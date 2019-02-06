@@ -92,8 +92,8 @@ export default {
       // Update the sync server url locally
       this.syncServer = data.proxy;
 
-      console.log(this.syncServer);
-      console.log(this.$store.state.site.url);
+      // console.log(this.syncServer);
+      // console.log(this.$store.state.site.url);
 
       // Changes the BrowserSync proxy URL
       // if (compareHosts(this.url, this.syncServer) === false) {
