@@ -1,6 +1,5 @@
 // Node Context
-const bs = require('browser-sync').create('Server')
-// const historyApiFallback = require('connect-history-api-fallback')
+const bs = require('browser-sync').create()
 
 let SITE_URL = ''
 let PROXY_SERVER_URL = ''
@@ -9,15 +8,20 @@ let PROXY_SERVER_URL = ''
 export function startServer(url) {
   return new Promise((resolve, reject) => {
     SITE_URL = url || 'https://shift.nickwittwer.com/'
+    const needsHTTPS = SITE_URL.includes('https://')
 
     bs.init({
-      proxy: SITE_URL,
-      logPrefix: 'Synced!',
+      proxy: {
+        target: SITE_URL
+      },
+      https: needsHTTPS, // Only set if it contains https
       notify: true,
       open: false,
-      // middleware: [historyApiFallback()], // via https://github.com/BrowserSync/browser-sync/issues/204#issuecomment-60410751
+      logPrefix: 'Synced!',
+      // reloadOnRestart: true,
+      // logLevel: process.env.NODE_ENV !== 'production' ? 'debug' : '',
       callbacks: {
-        ready: function () {
+        ready: () => {
           try {
             PROXY_SERVER_URL = bs.getOption('urls').get('local') // Options: local, external, ui, ui-external
 
@@ -30,6 +34,24 @@ export function startServer(url) {
           }
         }
       }
+    }, function (err, instance) {
+      if (err) throw new Error(err)
+
+      // instance.io.sockets.on('connection', function (socket) {
+      // @TODO: Emit event for UI
+      // const notif = new Notification('Synced!', {
+      //   body: 'This site has been synced across all your screens.'
+      // })
+      // })
+
+      // Custom 404
+      // instance.addMiddleware('*', function (req, res) {
+      //   // @TODO: 404 page could be nicer
+      //   // res.writeHead(302, {
+      //   // location: "404.html"
+      //   // })
+      //   res.end('404! Page not found.')
+      // })
     })
   })
 }
