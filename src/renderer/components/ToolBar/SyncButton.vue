@@ -1,37 +1,44 @@
 <template>
-  <div id="sync-button" :class="{ 'is-active' : isOnSyncURL }" @click="syncSite()">
-    <img src="@/assets/icons/sync.svg" alt>
+  <div
+    id="sync-button"
+    :class="{ 'is-active' : isOnSyncURL }"
+    @click="syncSite()"
+  >
+    <img
+      src="@/assets/icons/sync.svg"
+      alt
+    >
   </div>
 </template>
 
 <script>
 // Synchronization server
-import * as electron from "electron";
-import * as sync from "../../mixins/sync.js";
+import * as electron from 'electron'
+import * as sync from '../../mixins/sync.js'
 
-const currentWindow = electron.remote.getCurrentWindow();
+const currentWindow = electron.remote.getCurrentWindow()
 
 export default {
-  name: "SyncButton",
+  name: 'SyncButton',
 
   data() {
     return {
-      syncServer: ""
-    };
+      syncServer: ''
+    }
   },
 
   computed: {
     url() {
       // Bind to our Vuex Store's URL value
-      return this.$store.state.site.url;
+      return this.$store.state.site.url
     },
     isOnSyncURL() {
       // Provides simple logic for when to
       // show/hide the "Sync" button
       if (this.url === this.syncServer) {
-        return true;
+        return true
       } else {
-        return false;
+        return false
       }
     }
   },
@@ -45,15 +52,15 @@ export default {
   },
 
   mounted() {
-    const vm = this;
+    const vm = this
 
     vm.$nextTick().then(async function() {
       // Start our synchronization server
-      const setup = await sync.startServer();
+      const setup = await sync.startServer()
 
       // Fill in syncServer URL
-      vm.syncServer = setup.proxy;
-    });
+      vm.syncServer = setup.proxy
+    })
   },
 
   methods: {
@@ -61,36 +68,36 @@ export default {
       // Avoid cyclical server
       function compareHosts(url1, url2) {
         function returnHost(url) {
-          var pathArray = url.split("/");
-          var protocol = pathArray[0];
-          var host = pathArray[2];
-          return host;
+          var pathArray = url.split('/')
+          var protocol = pathArray[0]
+          var host = pathArray[2]
+          return host
         }
 
-        const host1 = returnHost(url1);
-        const host2 = returnHost(url2);
+        const host1 = returnHost(url1)
+        const host2 = returnHost(url2)
 
-        console.log(host1, host2);
+        console.log(host1, host2)
 
         if (host1 === host2) {
-          return true;
+          return true
         } else {
-          return false;
+          return false
         }
       }
 
       // Trigger the NodeJS change
       // Send request to change the URL being proxied
-      const data = await sync.changeURL(this.url);
+      const data = await sync.changeURL(this.url)
 
       // Update the global URL to the proxy URL
       // This will navigate to synced site via the proxy url
-      this.$store.commit("changeSiteData", {
+      this.$store.commit('changeSiteData', {
         url: data.proxy
-      });
+      })
 
       // Update the sync server url locally
-      this.syncServer = data.proxy;
+      this.syncServer = data.proxy
 
       // console.log(this.syncServer);
       // console.log(this.$store.state.site.url);
@@ -104,7 +111,7 @@ export default {
       // }
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>

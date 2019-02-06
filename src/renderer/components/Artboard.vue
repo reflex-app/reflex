@@ -228,12 +228,17 @@ export default {
     },
     triggerResize(e) {
       const vm = this
-      let parent = e.currentTarget.parentNode.parentNode.parentNode,
-        resizable = parent,
-        startX,
-        startY,
-        startWidth,
-        startHeight
+      let parent = e.currentTarget.parentNode.parentNode.parentNode
+
+      let resizable = parent
+
+      let startX
+
+      let startY
+
+      let startWidth
+
+      let startHeight
 
       // Allow resizing, attach event handlers
       startX = e.clientX

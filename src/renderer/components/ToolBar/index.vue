@@ -1,32 +1,49 @@
 <template>
   <div id="toolbar">
-    <div id="toolbar__url-container" v-if="artboards.length">
+    <div
+      v-if="artboards.length"
+      id="toolbar__url-container"
+    >
       <!-- <div class="controls">
         <div>Back</div>
         <div>Forward</div>
       </div>-->
       <div class="bar">
         <div class="bar__left">
-          <div class="sync" v-show="!inputStateActive">
-            <SyncButton/>
+          <div
+            v-show="!inputStateActive"
+            class="sync"
+          >
+            <SyncButton />
           </div>
         </div>
-        <div class="bar__right" :class="{ 'is-active' : inputStateActive }">
-          <div v-show="!inputStateActive" @click="inputStateActive=!inputStateActive">
+        <div
+          class="bar__right"
+          :class="{ 'is-active' : inputStateActive }"
+        >
+          <div
+            v-show="!inputStateActive"
+            @click="inputStateActive=!inputStateActive"
+          >
             <!-- <img v-if="favicon" :src="favicon" class="favicon" height="10" width="10"> -->
-            <span class="title" :title="title">{{ title }}</span>
+            <span
+              class="title"
+              :title="title"
+            >
+              {{ title }}
+            </span>
           </div>
           <URLInput
             class="input"
             :state="inputStateActive"
-            v-on:url-changed="changeURL"
-            v-on:toggle-input="inputStateActive=!inputStateActive"
+            @url-changed="changeURL"
+            @toggle-input="inputStateActive=!inputStateActive"
           />
         </div>
       </div>
       <!-- <button @click="browserSyncGetProxy()">BS</button> -->
     </div>
-    <div id="toolbar__recentURLs"/>
+    <div id="toolbar__recentURLs" />
 
     <!-- <div class="toolbar__right">
       <div class="toolbar__button-group">
@@ -36,12 +53,12 @@
 </template>
 
 <script>
-const debounce = require("lodash.debounce");
-import URLInput from "./URLInput.vue";
-import SyncButton from "./SyncButton.vue";
+import URLInput from './URLInput.vue'
+import SyncButton from './SyncButton.vue'
+const debounce = require('lodash.debounce')
 
 export default {
-  name: "ToolBar",
+  name: 'ToolBar',
   components: {
     URLInput,
     SyncButton
@@ -49,35 +66,35 @@ export default {
   data() {
     return {
       inputStateActive: false
-    };
+    }
   },
   computed: {
     title() {
-      return this.$store.state.site.title;
+      return this.$store.state.site.title
     },
     url() {
-      return this.$store.state.site.url;
+      return this.$store.state.site.url
     },
     favicon() {
-      return this.$store.state.site.favicon;
+      return this.$store.state.site.favicon
     },
     artboards() {
-      return this.$store.state.artboards;
+      return this.$store.state.artboards
     }
   },
   methods: {
     changeURL: debounce(function(url) {
       // @TODO: Check if it's a valid URL
 
-      this.$store.commit("changeSiteData", {
+      this.$store.commit('changeSiteData', {
         url: url
-      });
+      })
 
       // Off
-      this.inputStateActive = false;
+      this.inputStateActive = false
     }, 100)
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>

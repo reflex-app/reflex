@@ -9,77 +9,80 @@
         placeholder="Enter a website URL (https://google.com)"
         :value="url"
         autocomplete="off"
+        tabindex="1"
         @keyup.enter="triggerSiteLoad($event.target.value)"
         @keyup.esc="blur()"
         @blur="$emit('toggle-input')"
-        tabindex="1"
       >
     </div>
     <!-- State: Initial -->
     <div v-else>
       <span @click="$emit('toggle-input')">
-        <span v-if="url">{{url}}</span>
-        <span v-else>Enter a website URL</span>
+        <span v-if="url">
+          {{ url }}
+        </span>
+        <span v-else>
+          Enter a website URL
+        </span>
       </span>
     </div>
   </div>
 </template>
 
 <script>
-import autoCorrectURL from "@/mixins/autoCorrectURL.js";
+import autoCorrectURL from '@/mixins/autoCorrectURL.js'
 
 export default {
-  name: "URLInput",
-  props: ["state"],
+  name: 'URLInput',
+  props: ['state'],
   computed: {
     url() {
-      return this.$store.state.site.url;
+      return this.$store.state.site.url
     }
   },
   watch: {
     state: function() {
-      const vm = this;
+      const vm = this
       if (this.state === true) {
         vm.$nextTick(() => {
-          vm.$refs.input.focus();
-          vm.$refs.input.select();
-        });
+          vm.$refs.input.focus()
+          vm.$refs.input.select()
+        })
       }
     },
     url: function() {
       // When the URL changes...
       // update notBrowserSyncURL
-      console.log("url changed");
+      console.log('url changed')
     }
   },
   methods: {
     async triggerSiteLoad(url) {
-      if (!url) return false;
+      if (!url) return false
 
       // Validate URL
-      const newURL = await this.validateURL(url); 
-      this.$emit("url-changed", newURL);
-      this.blur();
+      const newURL = await this.validateURL(url)
+      this.$emit('url-changed', newURL)
+      this.blur()
     },
     blur() {
       // Blur the input
-      const vm = this;
+      const vm = this
       vm.$nextTick(() => {
-        vm.$refs.input.blur();
-      });
+        vm.$refs.input.blur()
+      })
     },
     async validateURL(url) {
       try {
         // @TODO: Refactor/simplify the URL corrector
         return autoCorrectURL(url)
-      } catch(e) {
-        return false;
+      } catch (e) {
+        return false
       }
     }
   }
-};
+}
 </script>
-
 
 <style lang="scss" scoped>
 @import "~@/scss/_variables";

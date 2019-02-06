@@ -1,7 +1,7 @@
 // @TODO: Refactor/simplify this
 export default function (url) {
   return new Promise((resolve, reject) => {
-    if (typeof url !== "string") {
+    if (typeof url !== 'string') {
       throw new TypeError(
         `Expected url to be of type string, got ${typeof url}`
       )
@@ -15,34 +15,34 @@ export default function (url) {
     // Step 1: Does it have http:// or https:// ?
     // The "?" in the Regex accepts http or https
     if (new RegExp(/^https?/).test(url) == true) {
-      hasHttpPrefix = true;
+      hasHttpPrefix = true
     } else if (new RegExp(/^HTTPS?/).test(url)) {
       // Case: HTTP://somesite.com/SOMETHING
       //         ^ only replace this part
       if (new RegExp(/^HTTP/).test(url)) {
-        url = url.replace(/^HTTP/, "http");
-        hasHttpPrefix = true;
+        url = url.replace(/^HTTP/, 'http')
+        hasHttpPrefix = true
       } else if (new RegExp(/^HTTPS/).test(url)) {
-        url = url.replace(/^HTTPS/, "https");
-        hasHttpPrefix = true;
+        url = url.replace(/^HTTPS/, 'https')
+        hasHttpPrefix = true
       }
     }
 
     // Step 2: Does it have .* (i.e. ".com") ?
-    if (url.includes(".") == true) {
-      hasDot = true;
+    if (url.includes('.') == true) {
+      hasDot = true
     }
 
     // Step 3: Does it include "localhost"?
-    if (url.includes("localhost") == true) {
-      hasLocalhost = true;
+    if (url.includes('localhost') == true) {
+      hasLocalhost = true
     }
 
     // Step 4: Does it include:
     // Mac: "file://"
     // Windows: "file:///C:/"
-    if (url.includes("file://") == true) {
-      hasLocalPath = true;
+    if (url.includes('file://') == true) {
+      hasLocalPath = true
     }
 
     // Handle localhost URLs
@@ -51,7 +51,7 @@ export default function (url) {
         // Example: http://localhost:8000
         resolve(url)
       } else {
-        url = "http://" + url;
+        url = 'http://' + url
         resolve(url)
       }
     }
@@ -74,7 +74,7 @@ export default function (url) {
         reject()
       } else {
         // The URL can be prepended by http://
-        url = "http://" + url;
+        url = 'https://' + url
         resolve(url)
       }
     } else {
@@ -82,5 +82,5 @@ export default function (url) {
       // Example: alert(url + " is not a valid URL.");
       reject()
     }
-  });
+  })
 }
