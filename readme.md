@@ -47,7 +47,7 @@ Please use the following versions:
 
 2. Install dependencies:
     ```sh
-    $ npm install
+    $ npm install --no-optional
     ```
 
 3. Compile and watch for changes:
