@@ -57,8 +57,20 @@ app.on('activate', () => {
   }
 })
 
+// Webview Settings
+app.on('web-contents-created', (event, contents) => {
+  contents.on('will-attach-webview', (event, webPreferences, params) => {
+    webPreferences.nodeIntegration = false // Disable Node.js integration inside <webview>
+    // webPreferences.webSecurity = false // Disable web security
+
+    // Strip away preload scripts if unused or verify their location is legitimate
+    delete webPreferences.preload
+    delete webPreferences.preloadURL
+  })
+})
+
 // Workarounds to allow accessing self-signed HTTPS sites
-// @TODO: Add this as an opt-in from the UI somehow? It's useful in some cases, but poses security risks for most
+// @TODO: Can this be solved w/ BrowserSync's self-signed?
 app.on('certificate-error', (event, webContents, url, error, certificate, callback) => {
   // On certificate error we disable default behaviour (stop loading the page)
   // and we then say "it is all fine - true" to the callback
@@ -67,15 +79,6 @@ app.on('certificate-error', (event, webContents, url, error, certificate, callba
 }).on('select-client-certificate', (event, webContents, url, list, callback) => {
   event.preventDefault()
   callback(list[0])
-}).on('web-contents-created', (event, contents) => {
-  contents.on('will-attach-webview', (event, webPreferences, params) => {
-    webPreferences.nodeIntegration = false // Disable Node.js integration inside <webview>
-    webPreferences.webSecurity = false // Disable web security
-
-    // Strip away preload scripts if unused or verify their location is legitimate
-    delete webPreferences.preload
-    delete webPreferences.preloadURL
-  })
 })
 
 /**
