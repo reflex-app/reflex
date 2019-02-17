@@ -254,8 +254,6 @@ export default {
           break
       }
 
-      console.log(this.defaultSizeSelection, sizes)
-
       this.$store.dispatch('addMultipleArtboards', {
         data: sizes
       })
