@@ -6,7 +6,6 @@
 
 <script>
 const { dialog } = require("electron").remote;
-const window = require("electron").remote.BrowserWindow;
 const path = require("path");
 const fs = require("fs");
 
@@ -22,9 +21,9 @@ export default {
 
   methods: {
     capture() {
-      // const webview = document.querySelector("webview").contentWindow;
-      const webview = window.getFocusedWindow();
-      console.log(webview);
+      const webview = document.querySelector("webview");
+      console.log("webview: ", webview);
+      console.log("window:", window);
 
       function saveScreenshot(screenshot) {
         // Prompt location to save screenshot
@@ -50,19 +49,10 @@ export default {
         );
       }
 
-      // Run
-      // ([dimensions], callback)
-      const rect = {
-        x: 0,
-        y: 0,
-        width: 500,
-        height: 500
-      };
-
-      webview.capturePage(image => {
+      // Capture the <webview>
+      webview.getWebContents().capturePage(image => {
         const PNG = image.toPNG();
         saveScreenshot(PNG);
-        console.log(PNG);
       });
     }
   }
