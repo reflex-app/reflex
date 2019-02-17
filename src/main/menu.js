@@ -79,10 +79,10 @@ export function setMenu(window) {
       // },
       {
         role: 'forcereload'
+      },
+      {
+        role: 'toggledevtools'
       }
-      // {
-      //   role: 'toggledevtools'
-      // },
     ]
   },
   {
