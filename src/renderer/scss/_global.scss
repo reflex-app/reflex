@@ -1,6 +1,7 @@
 @import 'variables';
 
-html, body {
+html,
+body {
 	font-size: 15px;
 }
 
@@ -47,7 +48,29 @@ body {
 		background: darken(white, 20%);
 	}
 
-	&--is-active {
+	&.button--primary {
+		position: relative;
+		border: none;
+		width: 100%;
+		padding: 0.75rem 0;
+		vertical-align: middle;
+		text-align: center;
+		border-radius: 0;
+		color: white;
+		background: $accent-color;
+
+		&:hover {
+			cursor: pointer;
+			background: $accent-color;
+		}
+
+		&:active {
+			color: white;
+			background: darken($accent-color, 15%);
+		}
+	}
+
+	&.button--is-active {
 		color: white;
 		border-color: $accent-color;
 		background: $accent-color;
