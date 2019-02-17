@@ -1,6 +1,7 @@
 <template>
   <div
     class="artboard"
+    ref="artboard"
     :style="{ height: this.height+'px', width: this.width+'px' }"
     :class="{ 'is-selected': state.isSelected }"
     @click="state.isSelected = !state.isSelected"
@@ -44,6 +45,8 @@
 </template>
 
 <script>
+const debounce = require('lodash.debounce')
+
 export default {
   name: 'Artboard',
 
@@ -228,21 +231,18 @@ export default {
     },
     triggerResize(e) {
       const vm = this
-      let parent = e.currentTarget.parentNode.parentNode.parentNode
 
-      let resizable = parent
-
-      let startX
-
-      let startY
-
-      let startWidth
-
-      let startHeight
+      let parent = vm.$refs.artboard,
+      resizable = parent,
+      startX,
+      startY,
+      startWidth,
+      startHeight
 
       // Allow resizing, attach event handlers
       startX = e.clientX
       startY = e.clientY
+
       startWidth = parseInt(
         document.defaultView.getComputedStyle(resizable).width,
         10
@@ -251,6 +251,7 @@ export default {
         document.defaultView.getComputedStyle(resizable).height,
         10
       )
+
       document.documentElement.addEventListener('mousemove', doDrag, false)
       document.documentElement.addEventListener('mouseup', stopDrag, false)
 
@@ -270,7 +271,7 @@ export default {
 
         // Setup the new requestAnimationFrame()
         isDraggingTracker = window.requestAnimationFrame(function() {
-          // Run our scroll functions
+          // Run our scroll functions 
           resizable.style.width = startWidth + e.clientX - startX + 'px'
           resizable.style.height = startHeight + e.clientY - startY + 'px'
 
