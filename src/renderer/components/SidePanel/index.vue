@@ -20,26 +20,24 @@
             Screens
           </span>
         </div>
-        <!-- <div
-          v-if="artboards.length"
+        <div
           class="station"
-          title="Sync"
-          @click="setActive('Sync')"
+          title="Screenshot"
+          @click="setActive('Screenshot')"
         >
           <div
             class="station__button button"
-            :class="{ 'button--is-active' : isActive('Sync') }"
+            :class="{ 'button--is-active' : isActive('Screenshot') }"
           >
             <img
-              src="@/assets/icons/sync.svg"
-              alt="Sync"
+              src="@/assets/icons/screenshot.svg"
+              alt="Screenshot"
             >
           </div>
-          <div class="station__title">
-            Sync
-          </div>
-        </div>-->
-        <!-- <div class="station button" @click="setActive('Screenshot')">3</div> -->
+          <span class="station__title">
+            Screenshot
+          </span>
+        </div>
       </div>
       <div
         v-if="sidebar===true"
