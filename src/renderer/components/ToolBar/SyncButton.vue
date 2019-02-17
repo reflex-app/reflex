@@ -44,7 +44,7 @@ export default {
       let siteHost = this.returnHost(this.url);
       let syncServerHost = this.returnHost(this.syncServer);
 
-      if (syncServerHost.includes(siteHost)) {
+      if (syncServerHost && syncServerHost.includes(siteHost)) {
         return true;
       } else {
         return false;
