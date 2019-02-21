@@ -9,14 +9,16 @@
         <div class="title">{{artboard.title}}</div>
         <div class="dimensions">{{artboard.width}} x {{artboard.height}}</div>
       </div>
-      <div class="button button--secondary" @click="capture(index, artboard.title)">Capture</div>
+      <div class="button button--secondary" @click="captureToClipboard(index)">Copy</div>
+      <div class="button button--secondary" @click="capture(index, artboard.title)">Save</div>
     </div>
-    <div class="button button--primary" @click="captureAll()">Capture All</div>
+    <div class="button button--primary" @click="captureAll()">Save All</div>
   </div>
 </template>
 
 <script>
 const { dialog } = require("electron").remote;
+const { clipboard, nativeImage } = require("electron");
 const path = require("path");
 const fs = require("fs");
 const moment = require("moment");
@@ -70,24 +72,27 @@ export default {
           screenshot,
           err => {
             if (err) throw err;
-            popNotification();
+            // Alert the user that the screenshot was saved
+            let notification = new Notification("Screenshot saved", {
+              body: filePath
+            });
           }
         );
-
-        function popNotification() {
-          // Alert the user that the screenshot was saved
-          let notification = new Notification("Screenshot saved", {
-            body: filePath
-          });
-        }
       }
 
-      // Capture the <webview>
-      webview.getWebContents().capturePage(image => {
-        const PNG = image.toPNG();
-        saveScreenshot(PNG);
-      });
+      try {
+        // Capture the <webview>
+        const webview = document.querySelectorAll("webview")[id];
+        webview.getWebContents().capturePage(image => {
+          const PNG = image.toPNG();
+          saveScreenshot(PNG);
+        });
+      } catch (error) {
+        throw new Error(error);
+      }
     },
+
+    // Capture ALL the screens
     async captureAll() {
       const vm = this;
 
@@ -109,6 +114,35 @@ export default {
           }
         }
       );
+    },
+
+    // Take a screenshot
+    async screenshot(id) {
+      const webview = document.querySelectorAll("webview")[id];
+
+      return new Promise((resolve, reject) => {
+        try {
+          webview.getWebContents().capturePage(image => {
+            // Output the image as a NativeImage in PNG format
+            // https://electronjs.org/docs/api/native-image
+            // via https://github.com/electron/electron/issues/8151#issuecomment-265288291
+            const output = nativeImage.createFromBuffer(image.toPNG());
+            resolve(output);
+          });
+        } catch (error) {
+          reject(error);
+        }
+      });
+    },
+
+    // Save an image to the user's clipboard
+    async captureToClipboard(id) {
+      // Take screenshot
+      const image = await this.screenshot(id);
+
+      // Save to Clipboard
+      // https://electronjs.org/docs/api/clipboard#clipboardwriteimageimage-type
+      clipboard.writeImage(image);
     }
   }
 };
@@ -132,6 +166,12 @@ export default {
     border-bottom: 1px solid $border-color;
     padding: 0.5rem 1rem;
     user-select: none;
+
+    .title {
+      // max-width: 5rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
 
     .dimensions {
       color: gray;
