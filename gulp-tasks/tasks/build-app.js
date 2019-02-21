@@ -32,10 +32,10 @@ let PATH_TO_MAC_ZIP
 // Confirm version number
 gulp.task('version-app:prompt-version', function (done) {
   inquirer.prompt([{
-      type: 'input',
-      name: 'version',
-      message: 'What release version is this? (Currently ' + CURRENT_APP_VERSION + '):'
-    }])
+    type: 'input',
+    name: 'version',
+    message: 'What release version is this? (Currently ' + CURRENT_APP_VERSION + '):'
+  }])
     .then(function (res) {
       if (res.version) {
         NEXT_APP_VERSION = res.version
@@ -56,8 +56,8 @@ gulp.task('version-app:prompt-version', function (done) {
 // `src/package.json` and `dist/package.json`
 gulp.task('version-app:version', function () {
   return gulp.src('./package.json', {
-      base: './'
-    })
+    base: './'
+  })
     .pipe(replace(CURRENT_APP_VERSION, NEXT_APP_VERSION))
     .pipe(gulp.dest('./'))
 })
@@ -67,10 +67,10 @@ gulp.task('version-app:version', function () {
 // Defaults to master branch
 gulp.task('version-app:prompt-version-diff', function (done) {
   inquirer.prompt([{
-      type: 'input',
-      name: 'version',
-      message: `Branch/Git tag to compare to ${NEXT_APP_VERSION}: `
-    }])
+    type: 'input',
+    name: 'version',
+    message: `Branch/Git tag to compare to ${NEXT_APP_VERSION}: `
+  }])
     .then(function (res) {
       if (res.version) {
         // Successful comparison to x version
@@ -98,8 +98,8 @@ gulp.task('version-app:changelog', function (cb) {
   }
 
   exec(`git log ${COMPARE_VERSION}.. --abbrev-commit --pretty=oneline`, function (err, stdout, stderr) {
-    CHANGELOG = stdout
-    CHANGELOG += `\n\n [View all changes since ${COMPARE_VERSION}](../../compare/${COMPARE_VERSION}..${NEXT_APP_VERSION})`
+    // CHANGELOG = stdout
+    CHANGELOG = `\n\n [View all changes since ${COMPARE_VERSION}](../../compare/${COMPARE_VERSION}..${NEXT_APP_VERSION})`
     console.log(chalk.yellow('Changelog:\n' + CHANGELOG))
     cb(err)
   })
