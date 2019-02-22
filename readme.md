@@ -5,7 +5,7 @@
 
 ![Reflex Screenshot](screenshot.gif)
 
-Reflex is a free, open-source Mac app that makes it easy to see how responsive websites look at different screen sizes. Made especially for designers & developers who are tired of manually resizing their browser window.
+Reflex is a free, open-source Mac app that makes it easy to see how responsive websites look at different screen sizes. Made for people who are tired of manually resizing their browser.
 
 ---
 
@@ -18,11 +18,10 @@ Reflex is a free, open-source Mac app that makes it easy to see how responsive w
 ---
 
 ### Features:
-- Preview your web development changes across as many sizes as you want
-- Natural scrolling/panning of the canvas
-- Easily resize the viewports
-- Your setup is saved for the next time you use the app
+- Preview your website across as many sizes as you want
+- Screenshot individual screens or all at once
 - Synchronized interactions (scrolling, clicks, form inputs)
+- Chromium DevTools built-in
 
 Check out our [upcoming features](../../projects) and [feature requests](../../issues&q=label%3Afeature-request). If you have an idea that you didn't see it in either of those places, you can create a [new Github issue](../../issues) for it!
 
@@ -83,9 +82,10 @@ Please use the following versions:
     3. If asked if you would like to open the application that was downloaded from the Internet, confirm. This is a standard MacOS security feature.
 
 2. Does Shift work on Windows OS?
+At the moment, only the Mac version is being supported/tested, as it requires a large amount of effort to add another OS to support. With more help, most or all of this project could work on the web, MacOS, and Windows.
+
 3. Issues with BrowserSync/Node-GYP? Try removing `node_modules` and `package-lock.json` and re-installing with `npm install --no-optional`.
 
-At the moment, only the Mac version is being supported/tested, as it requires a large amount of effort to add another OS to support. With more help, most or all of this project could work on the web, MacOS, and Windows.
 
 ---
 
