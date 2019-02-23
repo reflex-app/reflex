@@ -1,24 +1,15 @@
 <template>
   <transition name="sidebar-transition">
     <div id="artboard-tabs">
-      <div
-        v-if="artboards.length"
-        class="artboard-tabs__scroll"
-      >
-        <draggable
-          v-model="artboards"
-          :options="{draggable:'.artboard-tab'}"
-        >
+      <div v-if="artboards.length" class="artboard-tabs__scroll">
+        <draggable v-model="artboards" :options="{draggable:'.artboard-tab'}">
           <div
             v-for="artboard in artboards"
             :key="artboard.id"
             v-bind="artboard"
             class="artboard-tab"
           >
-            <div
-              v-if="editMode==true&&editID==artboard.id"
-              class="editing"
-            >
+            <div v-if="editMode==true&&editID==artboard.id" class="editing">
               <div class="group">
                 <label>Title</label>
                 <input
@@ -51,83 +42,39 @@
                 </div>
 
                 <div class="buttons">
-                  <a
-                    href="#"
-                    @click="editMode=false"
-                  >
-                    Cancel
-                  </a>
-                  <a
-                    href="#"
-                    @click="save(artboard)"
-                  >
-                    Save
-                  </a>
+                  <a href="#" @click="editMode=false">Cancel</a>
+                  <a href="#" @click="save(artboard)">Save</a>
                 </div>
               </div>
             </div>
-            <div
-              v-else
-              class="artboard-tab__container"
-            >
+            <div v-else class="artboard-tab__container">
               <div class="artboard-tab__container-left">
                 <div>{{ artboard.title }}</div>
                 <div>{{ artboard.width }} x {{ artboard.height }}</div>
               </div>
               <div class="artboard-tab__container-right">
-                <a
-                  href="#"
-                  @click="edit(artboard.id)"
-                >
-                  Edit
-                </a>
-                <a
-                  href="#"
-                  @click="remove(artboard.id)"
-                >
-                  &times;
-                </a>
+                <a href="#" @click="edit(artboard.id)">Edit</a>
+                <a href="#" @click="remove(artboard.id)">&times;</a>
               </div>
             </div>
           </div>
         </draggable>
       </div>
 
-      <NewArtboardButton
-        class="artboard-tabs__button"
-        @add="add"
-      />
+      <div class="artboard-tabs__button button button--primary" @click="add()">New Screen</div>
+
       <!-- Show a tip if there's no artboards -->
-      <div
-        v-if="!artboards.length"
-        class="empty-state"
-      >
-        <div class="empty-state__text">
-          Click to create a new screen
-        </div>
+      <div v-if="!artboards.length" class="empty-state">
+        <div class="empty-state__text">Click to create a new screen</div>
       </div>
 
       <div class="panel-section">
         <span>Add from template:</span>
-        <select
-          v-model="defaultSizeSelection"
-          @change="addDefaultSizes"
-        >
-          <option
-            disabled
-            value
-          >
-            Select template...
-          </option>
-          <option value="basic">
-            Basic
-          </option>
-          <option value="bootstrap">
-            Bootstrap 4
-          </option>
-          <option value="foundation">
-            Foundation 6
-          </option>
+        <select v-model="defaultSizeSelection" @change="addDefaultSizes">
+          <option disabled value>Select template...</option>
+          <option value="basic">Basic</option>
+          <option value="bootstrap">Bootstrap 4</option>
+          <option value="foundation">Foundation 6</option>
         </select>
       </div>
     </div>
@@ -135,13 +82,11 @@
 </template>
 
 <script>
-import NewArtboardButton from '../NewArtboardButton'
-import draggable from 'vuedraggable'
+import draggable from "vuedraggable";
 
 export default {
-  name: 'ScreensPanel',
+  name: "ScreensPanel",
   components: {
-    NewArtboardButton,
     draggable
   },
 
@@ -149,146 +94,146 @@ export default {
     return {
       editMode: false,
       editID: null,
-      defaultSizeSelection: ''
-    }
+      defaultSizeSelection: ""
+    };
   },
 
   computed: {
     // Bind to our Vuex Store's URL value
     artboards: {
       get() {
-        return this.$store.state.artboards
+        return this.$store.state.artboards;
       },
       set(value) {
-        this.$store.commit('setArtboardList', value)
+        this.$store.commit("setArtboardList", value);
       }
     }
   },
 
   methods: {
     add() {
-      this.$store.dispatch('addArtboard', {
-        title: 'Untitled',
+      this.$store.dispatch("addArtboard", {
+        title: "Untitled",
         width: 375,
         height: 667
-      })
+      });
     },
     addDefaultSizes() {
-      if (!this.defaultSizeSelection) return false
+      if (!this.defaultSizeSelection) return false;
 
-      let sizes // This will contain the size data
+      let sizes; // This will contain the size data
 
       const defaults = {
         small: {
-          title: 'Small',
+          title: "Small",
           width: 375,
           height: 667
         },
         medium: {
-          title: 'Medium',
+          title: "Medium",
           width: 768,
           height: 1024
         },
         large: {
-          title: 'Large',
+          title: "Large",
           width: 1024,
           height: 720
         }
-      }
+      };
 
       const bootstrap = {
         xsmall: {
-          title: 'XS',
+          title: "XS",
           width: 375,
           height: 500
         },
         small: {
-          title: 'S',
+          title: "S",
           width: 576,
           height: 800
         },
         medium: {
-          title: 'M',
+          title: "M",
           width: 768,
           height: 1000
         },
         large: {
-          title: 'MD',
+          title: "MD",
           width: 992,
           height: 1200
         },
         xlarge: {
-          title: 'LG',
+          title: "LG",
           width: 1200,
           height: 1400
         }
-      }
+      };
 
       const foundation = {
         small: {
-          title: 'Small',
+          title: "Small",
           width: 400,
           height: 600
         },
         medium: {
-          title: 'Medium',
+          title: "Medium",
           width: 640,
           height: 800
         },
         large: {
-          title: 'Large',
+          title: "Large",
           width: 1024,
           height: 1200
         }
-      }
+      };
 
       switch (this.defaultSizeSelection) {
-        case 'basic':
-          sizes = defaults
-          break
-        case 'bootstrap':
-          sizes = bootstrap
-          break
-        case 'foundation':
-          sizes = foundation
-          break
+        case "basic":
+          sizes = defaults;
+          break;
+        case "bootstrap":
+          sizes = bootstrap;
+          break;
+        case "foundation":
+          sizes = foundation;
+          break;
       }
 
-      this.$store.dispatch('addMultipleArtboards', {
+      this.$store.dispatch("addMultipleArtboards", {
         data: sizes
-      })
+      });
 
       // Empty selected value
-      this.defaultSizeSelection = ''
+      this.defaultSizeSelection = "";
     },
     save(artboard) {
       // Disable editing mode
-      this.editMode = false
-      this.editID = null
+      this.editMode = false;
+      this.editID = null;
 
       // Update the values so that VueJS pays attention
-      this.$store.commit('updateArtboardAtIndex', {
+      this.$store.commit("updateArtboardAtIndex", {
         id: artboard.id,
         height: artboard.height || 0,
         width: artboard.width || 0,
-        title: artboard.title || 'Untitled'
-      })
+        title: artboard.title || "Untitled"
+      });
     },
     edit(id) {
-      this.editMode = true
-      this.editID = id
+      this.editMode = true;
+      this.editID = id;
 
       // Auto-focus on the first field
       this.$nextTick(() => {
-        this.$refs.input[0].focus()
-        this.$refs.input[0].select()
-      })
+        this.$refs.input[0].focus();
+        this.$refs.input[0].select();
+      });
     },
     remove(id) {
-      this.$store.commit('removeArtboard', id)
+      this.$store.commit("removeArtboard", id);
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
