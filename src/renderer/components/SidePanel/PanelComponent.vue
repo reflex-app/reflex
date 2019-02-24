@@ -5,20 +5,17 @@
     </div>
     <div class="panel__content">
       <ScreensPanel v-show="isChildPanel('Screens')" />
-      <ScreenshotPanel v-show="isChildPanel('Screenshot')" />
     </div>
   </div>
 </template>
 
 <script>
 import ScreensPanel from './ScreensPanel.vue'
-import ScreenshotPanel from './ScreenshotPanel.vue'
 
 export default {
   name: 'PanelComponent',
   components: {
-    ScreensPanel,
-    ScreenshotPanel
+    ScreensPanel
   },
   props: ['title'],
   computed: {},
@@ -38,7 +35,6 @@ export default {
 @import "../../scss/_variables";
 
 #panel-container {
-  // position: relative;
   position: absolute;
   top: 0;
   display: flex;
@@ -46,11 +42,11 @@ export default {
   height: 100%;
   border-right: 1px solid $border-color;
   width: 17rem;
-  z-index: 1;
   overflow: auto;
   cursor: default;
   overflow: hidden;
   background: white;
+  z-index: 1;
 
   .panel__header {
     padding: 1rem 1rem;

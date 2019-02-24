@@ -45,6 +45,8 @@
     </div>
     <div id="toolbar__recentURLs" />
 
+    <Screenshot/>
+
     <!-- <div class="toolbar__right">
       <div class="toolbar__button-group">
       </div>
@@ -55,13 +57,16 @@
 <script>
 import URLInput from './URLInput.vue'
 import SyncButton from './SyncButton.vue'
+import Screenshot from './Screenshot'
+
 const debounce = require('lodash.debounce')
 
 export default {
   name: 'ToolBar',
   components: {
     URLInput,
-    SyncButton
+    SyncButton,
+    Screenshot
   },
   data() {
     return {
