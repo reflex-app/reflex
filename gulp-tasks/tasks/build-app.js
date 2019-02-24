@@ -30,7 +30,7 @@ let COMPARE_VERSION
 let PATH_TO_MAC_ZIP
 
 // Confirm version number
-gulp.task('build-app:prompt-version', function (done) {
+gulp.task('version-app:prompt-version', function (done) {
   inquirer.prompt([{
     type: 'input',
     name: 'version',
@@ -54,29 +54,18 @@ gulp.task('build-app:prompt-version', function (done) {
 
 // Bumps the version number
 // `src/package.json` and `dist/package.json`
-gulp.task('build-app:version', function () {
-  return gulp.src('./package.json')
-    .pipe(replace(CURRENT_APP_VERSION, NEXT_APP_VERSION))
-    .pipe(gulp.dest(CONFIG.SRC))
-})
-
-// Build the app into a Mac/Windows executable format
-// The final distributable is put into the `build` folder
-gulp.task('build-app:main', function (done) {
-  // Build returns a promise, return it so the task isn't called in parallel
-  exec(`node .electron-vue/build.js`, function (err, stdout, stderr) {
-    exec(`electron-builder`, function (err, stdout, stderr) {
-      // Done!
-      console.log('done!')
-      done()
-    })
+gulp.task('version-app:version', function () {
+  return gulp.src('./package.json', {
+    base: './'
   })
+    .pipe(replace(CURRENT_APP_VERSION, NEXT_APP_VERSION))
+    .pipe(gulp.dest('./'))
 })
 
 // Choose what version you'd like to compare to
 // This will create a link viewable in Github
 // Defaults to master branch
-gulp.task('deploy-app:prompt-version-diff', function (done) {
+gulp.task('version-app:prompt-version-diff', function (done) {
   inquirer.prompt([{
     type: 'input',
     name: 'version',
@@ -100,7 +89,7 @@ gulp.task('deploy-app:prompt-version-diff', function (done) {
 // Compares the commits from branch A that are not in branch B
 // Then stores it to a variable that can later be used for a
 // git log origin/branch-a..origin/branch-b --abbrev-commit --pretty=oneline
-gulp.task('deploy-app:changelog', function (cb) {
+gulp.task('version-app:changelog', function (cb) {
   // As long as the new version isn't comparing to master...
   // Prepend with a "v" ("v1.0.0") instead of just "1.0.0"
   if (COMPARE_VERSION.includes('master') == false) {
@@ -109,10 +98,25 @@ gulp.task('deploy-app:changelog', function (cb) {
   }
 
   exec(`git log ${COMPARE_VERSION}.. --abbrev-commit --pretty=oneline`, function (err, stdout, stderr) {
-    CHANGELOG = stdout
-    CHANGELOG += `\n\n [View all changes since ${COMPARE_VERSION}](../../compare/${COMPARE_VERSION}..${NEXT_APP_VERSION})`
+    // CHANGELOG = stdout
+    CHANGELOG = `\n\n [View all changes since ${COMPARE_VERSION}](../../compare/${COMPARE_VERSION}..${NEXT_APP_VERSION})`
     console.log(chalk.yellow('Changelog:\n' + CHANGELOG))
     cb(err)
+  })
+})
+
+// Clean the `build` folder
+gulp.task('build-app:clean', (done) => {
+  exec(`npm run build:clean`, function (err, stdout, stderr) {
+    if (err) return false
+    done()
+  })
+})
+
+gulp.task('build-app:main', (done) => {
+  exec(`npm run build`, function (err, stdout, stderr) {
+    if (err) return false
+    done()
   })
 })
 
@@ -147,16 +151,21 @@ gulp.task('deploy-app:open-release-in-browser', function (done) {
 
 // Build task
 gulp.task('build-app', gulp.series(
-  'build-app:prompt-version',
-  'build-app:version',
+  'build-app:clean',
   'build-app:main'
+))
+
+// Versioning tasks
+gulp.task('version-app', gulp.series(
+  'version-app:prompt-version',
+  'version-app:version',
+  'version-app:prompt-version-diff',
+  'version-app:changelog'
 ))
 
 // Deploy tasks
 // TODO: Split this into another file? How to keep the variable values across files?
 gulp.task('deploy-app', gulp.series(
-  'deploy-app:prompt-version-diff',
-  'deploy-app:changelog',
   'deploy-app:draft-release',
   'deploy-app:open-release-in-browser'
 ))

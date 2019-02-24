@@ -5,20 +5,20 @@
     </div>
     <div class="panel__content">
       <ScreensPanel v-show="isChildPanel('Screens')" />
-      <SyncPanel v-show="isChildPanel('Sync')" />
+      <ScreenshotPanel v-show="isChildPanel('Screenshot')" />
     </div>
   </div>
 </template>
 
 <script>
 import ScreensPanel from './ScreensPanel.vue'
-import SyncPanel from './SyncPanel.vue'
+import ScreenshotPanel from './ScreenshotPanel.vue'
 
 export default {
   name: 'PanelComponent',
   components: {
     ScreensPanel,
-    SyncPanel
+    ScreenshotPanel
   },
   props: ['title'],
   computed: {},

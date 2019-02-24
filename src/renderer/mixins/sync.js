@@ -1,5 +1,5 @@
 // Node Context
-const bs = require('browser-sync').create('Server')
+const bs = require('browser-sync').create()
 
 let SITE_URL = ''
 let PROXY_SERVER_URL = ''
@@ -8,16 +8,20 @@ let PROXY_SERVER_URL = ''
 export function startServer(url) {
   return new Promise((resolve, reject) => {
     SITE_URL = url || 'https://shift.nickwittwer.com/'
+    const needsHTTPS = SITE_URL.includes('https://')
 
     bs.init({
-      proxy: SITE_URL,
-      open: false,
-      logPrefix: 'Synced',
-      reloadOnRestart: true,
+      proxy: {
+        target: SITE_URL
+      },
+      https: needsHTTPS, // Only set if it contains https
       notify: true,
-      https: true,
+      open: false,
+      logPrefix: 'Synced!',
+      // reloadOnRestart: true,
+      // logLevel: process.env.NODE_ENV !== 'production' ? 'debug' : '',
       callbacks: {
-        ready: function () {
+        ready: () => {
           try {
             PROXY_SERVER_URL = bs.getOption('urls').get('local') // Options: local, external, ui, ui-external
 
@@ -30,6 +34,24 @@ export function startServer(url) {
           }
         }
       }
+    }, function (err, instance) {
+      if (err) throw new Error(err)
+
+      // instance.io.sockets.on('connection', function (socket) {
+      // @TODO: Emit event for UI
+      // const notif = new Notification('Synced!', {
+      //   body: 'This site has been synced across all your screens.'
+      // })
+      // })
+
+      // Custom 404
+      // instance.addMiddleware('*', function (req, res) {
+      //   // @TODO: 404 page could be nicer
+      //   // res.writeHead(302, {
+      //   // location: "404.html"
+      //   // })
+      //   res.end('404! Page not found.')
+      // })
     })
   })
 }
@@ -42,10 +64,6 @@ export function sendServerDetails() {
 }
 
 // Change the Proxy URL
-// This can be called as:
-// window.nw.process.mainModule.exports.changeProxyURL(url)
-// (From inside of the web app)
-
 export async function changeURL(newURL) {
   async function checkServerStatus() {
     function exitServer() {
@@ -65,46 +83,12 @@ export async function changeURL(newURL) {
     }
   }
 
-  var theURL = await checkServerStatus()
-  return theURL
+  // Wait for server to restart
+  await checkServerStatus()
+
+  // Send back the new site and Proxy
+  return {
+    site: SITE_URL,
+    proxy: PROXY_SERVER_URL
+  }
 }
-
-// // toggle server
-// ipcMain.on('toggleServer', function(event, arg) {
-//   //console.log('before', bs.active);
-//   //console.log(arg);
-//   if (!bs.active && arg.command == 'start') {
-//       // no server started so lets start
-//       bs.init({
-//           // server:true,
-//           proxy: arg.url,
-//           browser: arg.selectedBrowsers || undefined,
-//           logPrefix: "My Sync tester Project",
-//           reloadOnRestart: true,
-//           notify: true,
-//           open: "external",
-//           ghostMode: {
-//       clicks: true,
-//       location: false,
-//       forms: true,
-//       scroll: true
-//     }
-
-//       }, function(err, bs) {
-//           //console.log('bs-active', bs.active);
-//           if (bs.active) {
-
-//           }
-//           event.sender.send('toggleServer-reply', 'started', 'WOW!!! Browsersync is running now!',bs);
-//       });
-//   }
-//   else if (arg.command == 'stop') {
-//       //console.log('server is going to stop');
-//           bs.exit(function() {
-//               //console.log('server stopped');
-//           });
-//           event.sender.send('toggleServer-reply', 'stopped', 'Browsersync is stopped!!',bs);
-
-//   }
-
-// });

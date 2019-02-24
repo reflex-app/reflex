@@ -21,25 +21,23 @@
           </span>
         </div>
         <div
-          v-if="artboards.length"
           class="station"
-          title="Sync"
-          @click="setActive('Sync')"
+          title="Screenshot"
+          @click="setActive('Screenshot')"
         >
           <div
             class="station__button button"
-            :class="{ 'button--is-active' : isActive('Sync') }"
+            :class="{ 'button--is-active' : isActive('Screenshot') }"
           >
             <img
-              src="@/assets/icons/sync.svg"
-              alt="Sync"
+              src="@/assets/icons/screenshot.svg"
+              alt="Screenshot"
             >
           </div>
-          <div class="station__title">
-            Sync
-          </div>
+          <span class="station__title">
+            Screenshot
+          </span>
         </div>
-        <!-- <div class="station button" @click="setActive('Screenshot')">3</div> -->
       </div>
       <div
         v-if="sidebar===true"
@@ -59,23 +57,23 @@ export default {
   components: {
     PanelComponent
   },
-  data () {
+  data() {
     return {
       activeStation: 'Screens'
     }
   },
   computed: {
     // Bind to our Vuex Store's URL value
-    artboards: function () {
+    artboards: function() {
       return this.$store.state.artboards
     },
-    sidebar () {
+    sidebar() {
       return this.$store.state.gui.sidebar
     }
   },
 
   methods: {
-    setActive: function (val) {
+    setActive: function(val) {
       // Handle hide/show side panel
       if (this.sidebar && this.activeStation !== val) {
         // Normal State
@@ -94,7 +92,7 @@ export default {
         this.activeStation = val
       }
     },
-    isActive: function (val) {
+    isActive: function(val) {
       // Make sure to open the sidebar
       // if it was open in last session
       // Otherwise, don't set an active state
@@ -104,7 +102,7 @@ export default {
         return ''
       }
     },
-    toggleSidebar () {
+    toggleSidebar() {
       this.$store.commit('toggleSidebar')
     }
   }

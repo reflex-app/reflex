@@ -9,14 +9,9 @@ const hub = new HubRegistry([
 // Load tasks
 gulp.registry(hub)
 
-// Compile the app
-gulp.task('app', gulp.series(
-  'build-app'
-))
-
 // Draft a release to Github
 gulp.task('release', gulp.series(
-  'app',
-  // 'code-sign-mac',
+  'version-app',
+  'build-app',
   'deploy-app'
 ))

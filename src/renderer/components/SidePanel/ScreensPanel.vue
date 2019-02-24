@@ -1,168 +1,239 @@
 <template>
   <transition name="sidebar-transition">
     <div id="artboard-tabs">
-      <div
-        v-if="artboards.length"
-        class="artboard-tabs__scroll"
-      >
-        <draggable
-          v-model="artboards"
-          :options="{draggable:'.artboard-tab'}"
-        >
+      <div v-if="artboards.length" class="artboard-tabs__scroll">
+        <draggable v-model="artboards" :options="{draggable:'.artboard-tab'}">
           <div
             v-for="artboard in artboards"
             :key="artboard.id"
             v-bind="artboard"
             class="artboard-tab"
           >
-            <div
-              v-if="editMode==true&&editID==artboard.id"
-              class="editing"
-            >
-              <input
-                ref="input"
-                v-model.lazy="artboard.title"
-                type="text"
-                placeholder="Title"
-                @keyup.enter="save(artboard), editMode=false"
-              >
-              <input
-                v-model.number.lazy="artboard.width"
-                type="number"
-                placeholder="Width"
-                @keyup.enter="save(artboard), editMode=false"
-              >
-              <input
-                v-model.number.lazy="artboard.height"
-                type="number"
-                placeholder="Height"
-                @keyup.enter="save(artboard), editMode=false"
-              >
-              <div class="buttons">
-                <a
-                  href="#"
-                  @click="editMode=false"
+            <div v-if="editMode==true&&editID==artboard.id" class="editing">
+              <div class="group">
+                <label>Title</label>
+                <input
+                  ref="input"
+                  v-model.lazy="artboard.title"
+                  type="text"
+                  placeholder="Title"
+                  @keyup.enter="save(artboard), editMode=false"
                 >
-                  Cancel
-                </a>
-                <a
-                  href="#"
-                  @click="save(artboard)"
-                >
-                  Save
-                </a>
+              </div>
+              <div class="group">
+                <label>Dimensions</label>
+                <div class="group__input-with-right-label">
+                  <input
+                    v-model.number.lazy="artboard.width"
+                    type="number"
+                    placeholder="Width"
+                    @keyup.enter="save(artboard), editMode=false"
+                  >
+                  <label>W</label>
+                </div>
+                <div class="group__input-with-right-label">
+                  <input
+                    v-model.number.lazy="artboard.height"
+                    type="number"
+                    placeholder="Height"
+                    @keyup.enter="save(artboard), editMode=false"
+                  >
+                  <label>H</label>
+                </div>
+
+                <div class="buttons">
+                  <a href="#" @click="editMode=false">Cancel</a>
+                  <a href="#" @click="save(artboard)">Save</a>
+                </div>
               </div>
             </div>
-            <div
-              v-else
-              class="artboard-tab__container"
-            >
+            <div v-else class="artboard-tab__container">
               <div class="artboard-tab__container-left">
                 <div>{{ artboard.title }}</div>
                 <div>{{ artboard.width }} x {{ artboard.height }}</div>
               </div>
               <div class="artboard-tab__container-right">
-                <a
-                  href="#"
-                  @click="edit(artboard.id)"
-                >
-                  Edit
-                </a> |
-                <a
-                  href="#"
-                  @click="remove(artboard.id)"
-                >
-                  Delete
-                </a>
+                <a href="#" @click="edit(artboard.id)">Edit</a>
+                <a href="#" @click="remove(artboard.id)">&times;</a>
               </div>
             </div>
           </div>
         </draggable>
       </div>
-      <NewArtboardButton
-        class="artboard-tabs__button"
-        @add="add"
-      />
+
+      <div class="artboard-tabs__button button button--primary" @click="add()">New Screen</div>
 
       <!-- Show a tip if there's no artboards -->
-      <div
-        v-if="!artboards.length"
-        class="empty-state"
-      >
-        <div class="empty-state__text">
-          Click to create a new screen
-        </div>
+      <div v-if="!artboards.length" class="empty-state">
+        <div class="empty-state__text">Click to create a new screen</div>
+      </div>
+
+      <div class="panel-section">
+        <span>Add from template:</span>
+        <select v-model="defaultSizeSelection" @change="addDefaultSizes">
+          <option disabled value>Select template...</option>
+          <option value="basic">Basic</option>
+          <option value="bootstrap">Bootstrap 4</option>
+          <option value="foundation">Foundation 6</option>
+        </select>
       </div>
     </div>
   </transition>
 </template>
 
 <script>
-import NewArtboardButton from '../NewArtboardButton'
-import draggable from 'vuedraggable'
+import draggable from "vuedraggable";
 
 export default {
-  name: 'ScreensPanel',
+  name: "ScreensPanel",
   components: {
-    NewArtboardButton,
     draggable
   },
 
-  data () {
+  data() {
     return {
       editMode: false,
-      editID: null
-    }
+      editID: null,
+      defaultSizeSelection: ""
+    };
   },
 
   computed: {
     // Bind to our Vuex Store's URL value
     artboards: {
-      get () {
-        return this.$store.state.artboards
+      get() {
+        return this.$store.state.artboards;
       },
-      set (value) {
-        this.$store.commit('setArtboardList', value)
+      set(value) {
+        this.$store.commit("setArtboardList", value);
       }
     }
   },
 
   methods: {
-    add () {
-      this.$store.dispatch('addArtboard', {
-        title: 'Untitled',
-        width: 375, // Default
-        height: 667 // Default
-      })
+    add() {
+      this.$store.dispatch("addArtboard", {
+        title: "Untitled",
+        width: 375,
+        height: 667
+      });
     },
-    save (artboard) {
+    addDefaultSizes() {
+      if (!this.defaultSizeSelection) return false;
+
+      let sizes; // This will contain the size data
+
+      const defaults = {
+        small: {
+          title: "Small",
+          width: 375,
+          height: 667
+        },
+        medium: {
+          title: "Medium",
+          width: 768,
+          height: 1024
+        },
+        large: {
+          title: "Large",
+          width: 1024,
+          height: 720
+        }
+      };
+
+      const bootstrap = {
+        xsmall: {
+          title: "XS",
+          width: 375,
+          height: 500
+        },
+        small: {
+          title: "S",
+          width: 576,
+          height: 800
+        },
+        medium: {
+          title: "M",
+          width: 768,
+          height: 1000
+        },
+        large: {
+          title: "MD",
+          width: 992,
+          height: 1200
+        },
+        xlarge: {
+          title: "LG",
+          width: 1200,
+          height: 1400
+        }
+      };
+
+      const foundation = {
+        small: {
+          title: "Small",
+          width: 400,
+          height: 600
+        },
+        medium: {
+          title: "Medium",
+          width: 640,
+          height: 800
+        },
+        large: {
+          title: "Large",
+          width: 1024,
+          height: 1200
+        }
+      };
+
+      switch (this.defaultSizeSelection) {
+        case "basic":
+          sizes = defaults;
+          break;
+        case "bootstrap":
+          sizes = bootstrap;
+          break;
+        case "foundation":
+          sizes = foundation;
+          break;
+      }
+
+      this.$store.dispatch("addMultipleArtboards", {
+        data: sizes
+      });
+
+      // Empty selected value
+      this.defaultSizeSelection = "";
+    },
+    save(artboard) {
       // Disable editing mode
-      this.editMode = false
-      this.editID = null
+      this.editMode = false;
+      this.editID = null;
 
       // Update the values so that VueJS pays attention
-      this.$store.commit('updateArtboardAtIndex', {
+      this.$store.commit("updateArtboardAtIndex", {
         id: artboard.id,
         height: artboard.height || 0,
         width: artboard.width || 0,
-        title: artboard.title || 'Untitled'
-      })
+        title: artboard.title || "Untitled"
+      });
     },
-    edit (id) {
-      this.editMode = true
-      this.editID = id
+    edit(id) {
+      this.editMode = true;
+      this.editID = id;
 
       // Auto-focus on the first field
       this.$nextTick(() => {
-        this.$refs.input[0].focus()
-        this.$refs.input[0].select()
-      })
+        this.$refs.input[0].focus();
+        this.$refs.input[0].select();
+      });
     },
-    remove (id) {
-      this.$store.commit('removeArtboard', id)
+    remove(id) {
+      this.$store.commit("removeArtboard", id);
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -193,11 +264,11 @@ export default {
     width: auto;
   }
 
+  $artboard-tab-side-padding: 1rem;
+
   .artboard-tab {
     flex: 1 0 auto;
     background: #ffffff;
-    padding-left: 1rem;
-    padding-right: 1rem;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -216,8 +287,7 @@ export default {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding-top: 0.5rem;
-      padding-bottom: 0.5rem;
+      padding: 0.5rem $artboard-tab-side-padding;
       overflow: auto;
 
       .artboard-tab__container-left {
@@ -237,14 +307,18 @@ export default {
 
       .artboard-tab__container-right {
         margin-left: 20px;
+
+        // Add space between Edit & Delete links
+        a:not(:last-child) {
+          margin-right: 8px;
+        }
       }
     }
 
     .editing {
-      display: flex;
-      flex-direction: column;
-      padding-top: 1rem;
-      padding-bottom: 1rem;
+      box-sizing: border-box;
+      padding: 1rem $artboard-tab-side-padding;
+      background: #f4f4f4;
 
       .buttons {
         display: flex;
@@ -252,31 +326,64 @@ export default {
         margin: 0.5rem 0 0;
       }
 
+      .group {
+        display: flex;
+        flex-direction: column;
+
+        &:not(:first-child) {
+          margin-top: 1rem;
+        }
+      }
+
+      label {
+        margin-bottom: 0.5rem;
+      }
+
+      .group__input-with-right-label {
+        display: flex;
+        width: 100%;
+        position: relative;
+        align-items: center;
+
+        input {
+          width: 100%;
+        }
+
+        label {
+          position: absolute;
+          top: 0.3rem;
+          right: 1.5rem;
+          color: gray;
+          text-align: right;
+        }
+      }
+
       input[type="text"],
       input[type="number"] {
-        border: none;
-        border-bottom: 1px solid $border-color;
+        position: relative;
+        border: 1px solid $border-color;
+        border-radius: 4px;
         font-size: 0.9rem;
-        background: none;
-        width: auto;
+        background: white;
         padding: 0.5rem 0.5rem;
         outline: none;
 
         &:not(:last-child) {
-          margin-bottom: 4px;
+          margin-bottom: 0.25rem;
         }
 
         &:hover {
-          background: white;
-          box-shadow: 0 0px 0px 1px #cbcbcb;
+          // background: white;
+          // box-shadow: 0 0px 0px 1px #cbcbcb;
         }
 
         &:focus {
-          border-radius: 2px;
-          box-shadow: 0 0px 0px 1px $accent-color,
-            0 4px 10px 2px rgba($accent-color, 0.2);
+          border-color: $accent-color;
           color: $accent-color;
-          background: white;
+        }
+
+        & + input {
+          margin-top: 4px;
         }
       }
     }

@@ -2,6 +2,7 @@
   <div
     v-if="artboards.length"
     id="artboards"
+    @contextmenu="rightClickMenu($event)"
   >
     <Artboard
       v-for="artboard in artboards"
@@ -19,10 +20,10 @@
     <img
       src="@/assets/ftu-vector.svg"
       class="empty-state__image"
-      alt="Welcome to Shift graphic"
+      alt="Welcome graphic"
     >
     <span class="empty-state__title">
-      Welcome to Shift
+      Welcome to {{ appName }}
     </span>
     <p class="empty-state__body">
       You can create new screens in the Screens panel on the left.
@@ -33,26 +34,52 @@
 <script>
 import Artboard from './Artboard'
 
+import { remote } from 'electron'
+const { Menu, MenuItem } = remote
+
 export default {
   name: 'Artboards',
   components: {
     Artboard
   },
   computed: {
-    artboards () {
+    artboards() {
+      // Returns an array of artboards
       return this.$store.state.artboards
+    },
+    appName() {
+      // Return the name of the Electron app
+      // From package.json (name or productName)
+      return remote.app.getName()
     }
   },
   watch: {
-    artboards: function () {
-      // @TODO: Panzoom is currently not properly centering
-      // Center the canvas when an artboard is added/deleted
+    artboards: function() {
       document.$panzoom.center()
     }
   },
   methods: {
-    resize (artboard) {
+    resize(artboard) {
       this.$store.commit('resizeArtboard', artboard)
+    },
+    rightClickMenu(e) {
+      const element = e.target.querySelector('.frame')
+
+      // Only display menu if a <webview> was found near the click
+      if (element) {
+        const menu = new Menu()
+        menu.append(
+          new MenuItem({
+            label: 'Open Inspector',
+            click() {
+              console.log(element)
+              element.openDevTools()
+            }
+          })
+        )
+
+        menu.popup(remote.getCurrentWindow())
+      }
     }
   }
 }

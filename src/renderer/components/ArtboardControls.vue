@@ -39,11 +39,18 @@ export default {
     }
   },
   mounted () {
-    const vm = this;
-    // Listen for menu click "menu_zoom-to-fit"
+    // @TODO: Add tests for these
     ipcRenderer.on('menu_zoom-to-fit', () => {
-      vm.fitToScreen()
-    });
+      this.fitToScreen()
+    })
+
+    ipcRenderer.on('menu_zoom-in', () => {
+      this.zoomIn()
+    })
+
+    ipcRenderer.on('menu_zoom-out', () => {
+      this.zoomOut()
+    })
   },
   methods: {
     zoomIn () {
@@ -71,8 +78,8 @@ export default {
   align-items: center;
   background: none;
   position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
+  bottom: 1rem;
+  right: 1rem;
 
   & > * {
     flex: 1 0 auto;

@@ -88,6 +88,13 @@ const mutations = {
 const actions = {
   addArtboard({commit}, artboard) {
     commit('addArtboard', artboard)
+  },
+  async addMultipleArtboards({commit}, payload) {
+    const artboards = payload.data
+
+    for (let i in artboards) {
+      commit('addArtboard', artboards[i])
+    }
   }
 }
 
