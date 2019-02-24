@@ -94,6 +94,7 @@ export default {
   user-select: none;
   box-sizing: border-box;
   will-change: auto; // Activate GPU rendering
+  z-index: 0;
 
   &.is-vertical {
     flex-direction: column;
