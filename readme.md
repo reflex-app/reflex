@@ -3,7 +3,7 @@
     <p align="center">Make responsive websites without the guesswork.</p>
 </div>
 
-![Reflex Screenshot](screenshot.gif)
+![Reflex Screenshot](screenshot.png)
 
 Reflex is a free, open-source Mac app that makes it easy to see how responsive websites look at different screen sizes. Made for people who are tired of manually resizing their browser.
 
