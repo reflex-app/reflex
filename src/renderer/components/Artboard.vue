@@ -4,53 +4,42 @@
     ref="artboard"
     :style="{ height: this.height+'px', width: this.width+'px' }"
     :class="{ 'is-selected': state.isSelected }"
-    @click="state.isSelected = !state.isSelected"
+    @click="toggleSelectedState()"
   >
     <div class="artboard__top">
       <div>
-        <span class="title">
-          {{ this.title }}
-        </span>
-        <span class="dimension">
-          {{ this.width }} x {{ this.height }}
-        </span>
+        <span class="title">{{ this.title }}</span>
+        <span class="dimension">{{ this.width }} x {{ this.height }}</span>
       </div>
       <!-- Show a loader when state.isLoading == true -->
-      <div
-        v-show="state.isLoading"
-        class="artboard__loader is-loading"
-      >
+      <div v-show="state.isLoading" class="artboard__loader is-loading">
         <div class="content">
           <div class="lds-ripple">
-            <div />
-            <div />
+            <div/>
+            <div/>
           </div>
         </div>
       </div>
     </div>
-    <div class="artboard__keypoints" />
+    <div class="artboard__keypoints"/>
     <div class="artboard__content">
-      <webview
-        ref="frame"
-        class="frame"
-      />
+      <webview ref="frame" class="frame"/>
       <div class="artboard__handles">
-        <div
-          class="handle__bottom"
-          @mousedown="triggerResize"
-        />
+        <div class="handle__bottom" @mousedown="triggerResize"/>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-const debounce = require('lodash.debounce')
+import store from "../store";
+const debounce = require("lodash.debounce");
 
 export default {
-  name: 'Artboard',
+  name: "Artboard",
 
   props: {
+    index: Number,
     id: Number,
     title: String,
     height: Number,
@@ -63,26 +52,26 @@ export default {
         isSelected: false,
         isLoading: false
       }
-    }
+    };
   },
 
   computed: {
     // Bind to our Vuex Store's URL value
     url() {
-      return this.$store.state.site.url
+      return this.$store.state.site.url;
     }
   },
 
   watch: {
-    'state.isSelected': {
+    "state.isSelected": {
       // Toggle frame pointer-events based on the isSelected artboard state
       handler: function() {
-        const element = this.$refs.frame
+        const element = this.$refs.frame;
         if (this.state.isSelected == true) {
-          element.style.pointerEvents = 'auto'
+          element.style.pointerEvents = "auto";
           // document.addEventListener("keyup", this.keyHandler);
         } else if (this.state.isSelected == false) {
-          element.style.pointerEvents = 'none'
+          element.style.pointerEvents = "none";
           // document.removeEventListener("keyup", this.keyHandler);
         }
       }
@@ -90,7 +79,7 @@ export default {
     url: {
       // When the URL is changed, do this:
       handler: function() {
-        this.loadSite()
+        this.loadSite();
       }
     }
   },
@@ -98,22 +87,26 @@ export default {
   mounted() {
     this.$nextTick(() => {
       // Load the <webview> the initial time
-      this.loadSite()
-    })
+      this.loadSite();
+
+      // Remove any leftover selected artboards
+      // @TODO: This should be done from VueX Store, or wiped before quitting
+      store.dispatch("selectedArtboardsEmpty");
+    });
   },
 
   methods: {
     loadSite() {
-      const _this = this
-      const frame = _this.$refs.frame
+      const _this = this;
+      const frame = _this.$refs.frame;
 
       // When loading of webview starts
       function loadstart() {
-        _this.state.isLoading = true // Show loading spinner
+        _this.state.isLoading = true; // Show loading spinner
 
-        _this.$store.commit('changeSiteData', {
-          title: 'Loading...'
-        })
+        _this.$store.commit("changeSiteData", {
+          title: "Loading..."
+        });
       }
 
       // Once webview content is loaded
@@ -130,192 +123,206 @@ export default {
           }
 
           window.addEventListener("message", respond, false);
-        `
+        `;
 
         // Execute
         frame.executeJavaScript(execCode, function() {
           // After successfully injecting...
           // Request the data
-          frame.contentWindow.postMessage('Send me your data!', '*')
-        })
+          frame.contentWindow.postMessage("Send me your data!", "*");
+        });
       }
 
       function receiveHandshake(event) {
         // Data is accessible as event.data.*
         // Refer to the object that's injected during contentload()
         // for all keys
-        const title = event.data.title
-        const favicon = event.data.favicon
+        const title = event.data.title;
+        const favicon = event.data.favicon;
 
-        _this.$store.commit('changeSiteData', {
+        _this.$store.commit("changeSiteData", {
           title: title,
           favicon: favicon
-        })
+        });
 
-        window.removeEventListener('message', receiveHandshake)
+        window.removeEventListener("message", receiveHandshake);
       }
 
       // Loading has finished
       function loadstop() {
-        _this.state.isLoading = false // Hide loading spinner
-        removeListeners()
+        _this.state.isLoading = false; // Hide loading spinner
+        removeListeners();
       }
 
       function loadabort() {
         // @TODO: Update with Electron API
-        new Notification('Aborted', {
-          body: 'The site stopped loading for some reason.'
-        })
+        new Notification("Aborted", {
+          body: "The site stopped loading for some reason."
+        });
       }
 
       // Bind events
       function addListeners() {
-        frame.addEventListener('did-start-loading', loadstart) // loadstart
-        frame.addEventListener('dom-ready', contentload) // contentload
-        frame.addEventListener('did-stop-loading', loadstop) // loadstop
-        frame.addEventListener('loadabort', loadabort) // loadabort
-        window.addEventListener('message', receiveHandshake, false) // Listen for response
+        frame.addEventListener("did-start-loading", loadstart); // loadstart
+        frame.addEventListener("dom-ready", contentload); // contentload
+        frame.addEventListener("did-stop-loading", loadstop); // loadstop
+        frame.addEventListener("loadabort", loadabort); // loadabort
+        window.addEventListener("message", receiveHandshake, false); // Listen for response
       }
 
       // Remove all event listeners
       function removeListeners() {
-        frame.removeEventListener('did-start-loading', loadstart)
-        frame.removeEventListener('dom-ready', contentload)
-        frame.removeEventListener('did-stop-loading', loadstop)
-        frame.removeEventListener('loadabort', loadabort)
+        frame.removeEventListener("did-start-loading", loadstart);
+        frame.removeEventListener("dom-ready", contentload);
+        frame.removeEventListener("did-stop-loading", loadstop);
+        frame.removeEventListener("loadabort", loadabort);
       }
 
       // Initialize the event listeners
-      addListeners()
+      addListeners();
 
       // Set the URL
-      frame.setAttribute('src', this.url)
+      frame.setAttribute("src", this.url);
     },
 
     // Limits the size of an artboard
     validateArtboardSizeInput(name, value) {
       // @TODO: Refactor this into the size editor
-      const minSize = 50
-      const maxSize = 9999
+      const minSize = 50;
+      const maxSize = 9999;
 
       // Make sure we're working with a number
       const newValue =
-        typeof value === Number ? value : Number(parseInt(value))
+        typeof value === Number ? value : Number(parseInt(value));
 
       // Change the data based on the name
-      let oldValue = ''
-      if (name == 'height') {
-        oldValue = this.artboard.height
-      } else if (name == 'width') {
-        oldValue = this.artboard.width
+      let oldValue = "";
+      if (name == "height") {
+        oldValue = this.artboard.height;
+      } else if (name == "width") {
+        oldValue = this.artboard.width;
       }
 
       // If no change
       if (oldValue === newValue) {
-        return
+        return;
       }
 
       // Min & Max
       if (newValue > maxSize || newValue < minSize) {
         // eslint-disable-next-line
         // console.log(newValue);
-        return false
+        return false;
       } else {
         // Size is within range!
-        if (name == 'height') {
-          this.artboard.height = newValue
-        } else if (name == 'width') {
-          this.artboard.width = newValue
+        if (name == "height") {
+          this.artboard.height = newValue;
+        } else if (name == "width") {
+          this.artboard.width = newValue;
         }
       }
     },
     triggerResize(e) {
-      const vm = this
+      const vm = this;
 
       let parent = vm.$refs.artboard,
-      resizable = parent,
-      startX,
-      startY,
-      startWidth,
-      startHeight
+        resizable = parent,
+        startX,
+        startY,
+        startWidth,
+        startHeight;
 
       // Allow resizing, attach event handlers
-      startX = e.clientX
-      startY = e.clientY
+      startX = e.clientX;
+      startY = e.clientY;
 
       startWidth = parseInt(
         document.defaultView.getComputedStyle(resizable).width,
         10
-      )
+      );
       startHeight = parseInt(
         document.defaultView.getComputedStyle(resizable).height,
         10
-      )
+      );
 
-      document.documentElement.addEventListener('mousemove', doDrag, false)
-      document.documentElement.addEventListener('mouseup', stopDrag, false)
+      document.documentElement.addEventListener("mousemove", doDrag, false);
+      document.documentElement.addEventListener("mouseup", stopDrag, false);
 
       // Pause the panzoom
       if (document.$panzoom.state.isEnabled === true) {
-        document.$panzoom.pause() // TODO: Cleaner solution that polluting document?
+        document.$panzoom.pause(); // TODO: Cleaner solution that polluting document?
       }
 
       // Resize objects
-      let isDraggingTracker
+      let isDraggingTracker;
       function doDrag(e) {
         // This event needs to be debounced, as it's called on mousemove
         // Debounce via https://gomakethings.com/debouncing-your-javascript-events/
         if (isDraggingTracker) {
-          window.cancelAnimationFrame(isDraggingTracker)
+          window.cancelAnimationFrame(isDraggingTracker);
         }
 
         // Setup the new requestAnimationFrame()
         isDraggingTracker = window.requestAnimationFrame(function() {
-          // Run our scroll functions 
-          resizable.style.width = startWidth + e.clientX - startX + 'px'
-          resizable.style.height = startHeight + e.clientY - startY + 'px'
+          // Run our scroll functions
+          resizable.style.width = startWidth + e.clientX - startX + "px";
+          resizable.style.height = startHeight + e.clientY - startY + "px";
 
           // Ignore pointer events on frames
-          let frames = document.getElementsByClassName('frame')
+          let frames = document.getElementsByClassName("frame");
 
           for (let frame of frames) {
-            frame.style.pointerEvents = 'none'
+            frame.style.pointerEvents = "none";
           }
 
           // Update the dimensions in the UI
-          vm.$emit('resize', {
+          vm.$emit("resize", {
             id: vm.id,
             width: parseInt(resizable.style.width, 10),
             height: parseInt(resizable.style.height, 10)
-          })
-        })
+          });
+        });
       }
 
       function stopDrag() {
         document.documentElement.removeEventListener(
-          'mousemove',
+          "mousemove",
           doDrag,
           false
-        )
+        );
         document.documentElement.removeEventListener(
-          'mouseup',
+          "mouseup",
           stopDrag,
           false
-        )
+        );
 
         // Re-enable pointer events on frames
-        let frames = document.getElementsByClassName('frame')
+        let frames = document.getElementsByClassName("frame");
 
         for (let frame of frames) {
-          frame.style.pointerEvents = 'auto'
+          frame.style.pointerEvents = "auto";
         }
 
         // Re-enable the panzoom
-        document.$panzoom.resume() // TODO: Cleaner solution that polluting document?
+        document.$panzoom.resume(); // TODO: Cleaner solution that polluting document?
+      }
+    },
+
+    toggleSelectedState() {
+      // Change the state
+      this.state.isSelected = !this.state.isSelected;
+
+      // Update the VueX Store
+      if (this.state.isSelected === true) {
+        // Add to Store
+        store.dispatch("selectedArtboardsAdd", this.index);
+      } else {
+        // Remove from Store
+        store.dispatch("selectedArtboardsRemove", this.index);
       }
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
