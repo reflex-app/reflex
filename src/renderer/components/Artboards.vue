@@ -5,10 +5,11 @@
     @contextmenu="rightClickMenu($event)"
   >
     <Artboard
-      v-for="artboard in artboards"
-      :key="artboard.id"
-      ref="artboard"
+      v-for="(artboard, index) in artboards"
       v-bind="artboard"
+      :key="artboard.id"
+      :index="index"
+      ref="artboard"
       @resize="resize"
     />
   </div>
