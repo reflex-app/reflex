@@ -66,54 +66,77 @@ export async function capture(id, title, screenshotPath) {
   }
 }
 
-// Capture ALL the screens
-export async function captureAll(vm) {
+export function captureMultiple(ids) {
+  // Accepts an array of ids to capture [ 0, 1 ]
+  if (!ids) return false
+
   // 1. Capture the path to save all
   dialog.showOpenDialog({
     properties: ['openFile', 'openDirectory', 'createDirectory']
   },
   async function (filePaths) {
     try {
-      // 2. Capture each & save it
-      for (let i = 0; i < vm.artboards.length; i++) {
-        await capture(
-          i,
-          `${vm.artboards[i].title}_${i}`,
-          filePaths[0]
-        )
+      // Capture each & save it
+      const captureEach = async (array) => {
+        for (let item of array) {
+          await capture(
+            item,
+            `${item}`,
+            filePaths[0]
+          )
+        }
       }
-    } catch (e) {
+
+      await captureEach(ids)
+      return filePaths[0]
+    } catch (err) {
       // Nothing was selected
     }
   }
   )
 }
 
+// Capture ALL the screens
+export async function captureAll(vm) {
+  // 1. Get the file path to save all
+  dialog.showOpenDialog({
+    properties: ['openFile', 'openDirectory', 'createDirectory']
+  },
+  async function (filePaths) {
+    // 2. Capture each & save it
+    for (let i = 0; i < vm.artboards.length; i++) {
+      await capture(
+        i,
+        `${vm.artboards[i].title}_${i}`,
+        filePaths[0]
+      )
+    }
+
+    return filePaths[0]
+  }
+  )
+}
+
 // Take a screenshot
 export async function screenshot(id) {
-  const webview = document.querySelectorAll('webview')[id]
+  const webview = document.querySelector('webview')[id]
 
-  return new Promise((resolve, reject) => {
-    try {
-      webview.getWebContents().capturePage(image => {
-        // Output the image as a NativeImage in PNG format
-        // https://electronjs.org/docs/api/native-image
-        // via https://github.com/electron/electron/issues/8151#issuecomment-265288291
-        const output = nativeImage.createFromBuffer(image.toPNG())
-        resolve(output)
-      })
-    } catch (error) {
-      reject(error)
-    }
-  })
+  try {
+    webview.getWebContents().capturePage(image => {
+      // Output the image as a NativeImage in PNG format
+      // https://electronjs.org/docs/api/native-image
+      // via https://github.com/electron/electron/issues/8151#issuecomment-265288291
+      const output = nativeImage.createFromBuffer(image.toPNG())
+      return output
+    })
+  } catch (error) {
+    throw new Error(error)
+  }
 }
 
 // Save an image to the user's clipboard
-export async function captureToClipboard(id) {
-  // Take screenshot
-  const image = await this.screenshot(id)
-
-  // Save to Clipboard
-  // https://electronjs.org/docs/api/clipboard#clipboardwriteimageimage-type
+// https://electronjs.org/docs/api/clipboard#clipboardwriteimageimage-type
+export async function copyToClipboard(id) {
+  const image = await screenshot(id)
   clipboard.writeImage(image)
 }
