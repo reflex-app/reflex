@@ -31,7 +31,8 @@ async function createWindow() {
     width: 1200,
     useContentSize: true,
     webPreferences: {
-      webviewTag: true
+      webviewTag: true,
+      nodeIntegration: true // add this
     }
   })
 

@@ -1,37 +1,17 @@
 <template>
   <div id="toolbar">
-    <div
-      v-if="artboards.length"
-      id="toolbar__url-container"
-    >
-      <!-- <div class="controls">
-        <div>Back</div>
-        <div>Forward</div>
-      </div>-->
+    <HistoryControls />
+    <div v-if="artboards.length" id="toolbar__url-container">
       <div class="bar">
         <div class="bar__left">
-          <div
-            v-show="!inputStateActive"
-            class="sync"
-          >
+          <div v-show="!inputStateActive" class="sync">
             <SyncButton />
           </div>
         </div>
-        <div
-          class="bar__right"
-          :class="{ 'is-active' : inputStateActive }"
-        >
-          <div
-            v-show="!inputStateActive"
-            @click="inputStateActive=!inputStateActive"
-          >
+        <div class="bar__right" :class="{ 'is-active' : inputStateActive }">
+          <div v-show="!inputStateActive" @click="inputStateActive=!inputStateActive">
             <!-- <img v-if="favicon" :src="favicon" class="favicon" height="10" width="10"> -->
-            <span
-              class="title"
-              :title="title"
-            >
-              {{ title }}
-            </span>
+            <span class="title" :title="title">{{ title }}</span>
           </div>
           <URLInput
             class="input"
@@ -43,10 +23,8 @@
       </div>
       <!-- <button @click="browserSyncGetProxy()">BS</button> -->
     </div>
-    <div id="toolbar__recentURLs" />
-
-    <Screenshot/>
-
+    <div id="toolbar__recentURLs"></div>
+    <Screenshot />
     <!-- <div class="toolbar__right">
       <div class="toolbar__button-group">
       </div>
@@ -55,51 +33,59 @@
 </template>
 
 <script>
-import URLInput from './URLInput.vue'
-import SyncButton from './SyncButton.vue'
-import Screenshot from './Screenshot'
+import store from "@/store"
+import URLInput from "./URLInput.vue";
+import SyncButton from "./SyncButton.vue";
+import Screenshot from "./Screenshot";
+import HistoryControls from "./HistoryControls.vue";
 
-const debounce = require('lodash.debounce')
+const debounce = require("lodash.debounce");
 
 export default {
-  name: 'ToolBar',
+  name: "ToolBar",
   components: {
     URLInput,
+    HistoryControls,
     SyncButton,
     Screenshot
   },
   data() {
     return {
       inputStateActive: false
-    }
+    };
   },
   computed: {
     title() {
-      return this.$store.state.site.title
+      return this.$store.state.history.currentPage.title;
     },
     url() {
-      return this.$store.state.site.url
+      return this.$store.state.history.currentPage.url;
     },
     favicon() {
-      return this.$store.state.site.favicon
+      return this.$store.state.history.currentPage.favicon;
     },
     artboards() {
-      return this.$store.state.artboards
+      return this.$store.state.artboards;
     }
   },
   methods: {
     changeURL: debounce(function(url) {
-      // @TODO: Check if it's a valid URL
-
-      this.$store.commit('changeSiteData', {
+      // Change the URL
+      // TODO Check if it's a valid URL
+      this.$store.commit("changeSiteData", {
         url: url
-      })
+      });
+
+      console.log('change url triggered');
+
+      // Add this new page to the history
+      store.dispatch('addPageToHistory', url)
 
       // Off
-      this.inputStateActive = false
+      this.inputStateActive = false;
     }, 100)
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -124,20 +110,18 @@ export default {
   #toolbar__url-container {
     position: relative;
     margin: 0 auto;
+    display: flex;
+    align-items: center;
 
     @media screen and (max-width: 768px) {
       flex: 1 0 auto;
-    }
-
-    .controls {
-      display: flex;
     }
 
     .bar {
       display: flex;
       align-items: center;
       min-width: 500px;
-      border-radius: 6px;
+      border-radius: 40px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;

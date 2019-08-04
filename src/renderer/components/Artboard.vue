@@ -15,29 +15,36 @@
       <div v-show="state.isLoading" class="artboard__loader is-loading">
         <div class="content">
           <div class="lds-ripple">
-            <div/>
-            <div/>
+            <div />
+            <div />
           </div>
         </div>
       </div>
     </div>
-    <div class="artboard__keypoints"/>
+    <div class="artboard__keypoints"></div>
     <div class="artboard__content">
-      <webview ref="frame" class="frame"/>
+      <WebPage
+        ref="frame"
+        :preventInteractions="state.isSelected"
+        @loadstart="state.isLoading = true"
+        @loadend="state.isLoading = false"
+      />
       <div class="artboard__handles">
-        <div class="handle__bottom" @mousedown="triggerResize"/>
+        <div class="handle__bottom" @mousedown="triggerResize" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import store from "../store";
-const debounce = require("lodash.debounce");
+import store from "@/store";
+import WebPage from "./WebPage.vue";
 
 export default {
   name: "Artboard",
-
+  components: {
+    WebPage
+  },
   props: {
     index: Number,
     id: Number,
@@ -45,7 +52,6 @@ export default {
     height: Number,
     width: Number
   },
-
   data() {
     return {
       state: {
@@ -54,41 +60,14 @@ export default {
       }
     };
   },
-
   computed: {
     // Bind to our Vuex Store's URL value
     url() {
-      return this.$store.state.site.url;
+      return this.$store.state.history.currentPage.url;
     }
   },
-
-  watch: {
-    "state.isSelected": {
-      // Toggle frame pointer-events based on the isSelected artboard state
-      handler: function() {
-        const element = this.$refs.frame;
-        if (this.state.isSelected == true) {
-          element.style.pointerEvents = "auto";
-          // document.addEventListener("keyup", this.keyHandler);
-        } else if (this.state.isSelected == false) {
-          element.style.pointerEvents = "none";
-          // document.removeEventListener("keyup", this.keyHandler);
-        }
-      }
-    },
-    url: {
-      // When the URL is changed, do this:
-      handler: function() {
-        this.loadSite();
-      }
-    }
-  },
-
   mounted() {
     this.$nextTick(() => {
-      // Load the <webview> the initial time
-      this.loadSite();
-
       // Remove any leftover selected artboards
       // @TODO: This should be done from VueX Store, or wiped before quitting
       store.dispatch("selectedArtboardsEmpty");
@@ -96,95 +75,6 @@ export default {
   },
 
   methods: {
-    loadSite() {
-      const _this = this;
-      const frame = _this.$refs.frame;
-
-      // When loading of webview starts
-      function loadstart() {
-        _this.state.isLoading = true; // Show loading spinner
-
-        _this.$store.commit("changeSiteData", {
-          title: "Loading..."
-        });
-      }
-
-      // Once webview content is loaded
-      function contentload() {
-        const execCode = `
-          let data = {
-            title: document.title,
-            favicon: "https://www.google.com/s2/favicons?domain=" +
-              window.location.href
-          }
-
-          function respond(event) {
-            event.source.postMessage(data, '*');
-          }
-
-          window.addEventListener("message", respond, false);
-        `;
-
-        // Execute
-        frame.executeJavaScript(execCode, function() {
-          // After successfully injecting...
-          // Request the data
-          frame.contentWindow.postMessage("Send me your data!", "*");
-        });
-      }
-
-      function receiveHandshake(event) {
-        // Data is accessible as event.data.*
-        // Refer to the object that's injected during contentload()
-        // for all keys
-        const title = event.data.title;
-        const favicon = event.data.favicon;
-
-        _this.$store.commit("changeSiteData", {
-          title: title,
-          favicon: favicon
-        });
-
-        window.removeEventListener("message", receiveHandshake);
-      }
-
-      // Loading has finished
-      function loadstop() {
-        _this.state.isLoading = false; // Hide loading spinner
-        removeListeners();
-      }
-
-      function loadabort() {
-        // @TODO: Update with Electron API
-        new Notification("Aborted", {
-          body: "The site stopped loading for some reason."
-        });
-      }
-
-      // Bind events
-      function addListeners() {
-        frame.addEventListener("did-start-loading", loadstart); // loadstart
-        frame.addEventListener("dom-ready", contentload); // contentload
-        frame.addEventListener("did-stop-loading", loadstop); // loadstop
-        frame.addEventListener("loadabort", loadabort); // loadabort
-        window.addEventListener("message", receiveHandshake, false); // Listen for response
-      }
-
-      // Remove all event listeners
-      function removeListeners() {
-        frame.removeEventListener("did-start-loading", loadstart);
-        frame.removeEventListener("dom-ready", contentload);
-        frame.removeEventListener("did-stop-loading", loadstop);
-        frame.removeEventListener("loadabort", loadabort);
-      }
-
-      // Initialize the event listeners
-      addListeners();
-
-      // Set the URL
-      frame.setAttribute("src", this.url);
-    },
-
     // Limits the size of an artboard
     validateArtboardSizeInput(name, value) {
       // @TODO: Refactor this into the size editor
@@ -390,11 +280,11 @@ $artboard-handle-height: 1rem;
     background: #ffffff;
     box-shadow: 0 4px 10px rgba(#000, 0.1);
 
-    .frame {
-      height: 100%;
-      width: 100%;
-      pointer-events: none;
-    }
+    // .frame {
+    //   height: 100%;
+    //   width: 100%;
+    //   pointer-events: none;
+    // }
   }
 
   .artboard__handles {
