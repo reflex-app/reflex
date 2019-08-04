@@ -23,7 +23,12 @@
     </div>
     <div class="artboard__keypoints"></div>
     <div class="artboard__content">
-      <WebPage ref="frame" :preventInteractions="state.isSelected"/>
+      <WebPage
+        ref="frame"
+        :preventInteractions="state.isSelected"
+        @loadstart="state.isLoading = true"
+        @loadend="state.isLoading = false"
+      />
       <div class="artboard__handles">
         <div class="handle__bottom" @mousedown="triggerResize" />
       </div>
@@ -38,7 +43,7 @@ import WebPage from "./WebPage.vue";
 export default {
   name: "Artboard",
   components: {
-    WebPage,
+    WebPage
   },
   props: {
     index: Number,

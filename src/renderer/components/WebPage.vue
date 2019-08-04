@@ -6,20 +6,20 @@
 import store from "@/store";
 export default {
   props: ["preventInteractions"],
-  data() {
-    return {
-      state: {
-        isLoading: false
-      }
-    };
-  },
   computed: {
     url() {
       return store.state.history.currentPage.url; // Bind to our Vuex Store's URL value
     }
   },
   mounted() {
+    const vm = this;
+
+    // Once the WebView is rendered
     this.$nextTick(() => {
+      // Permament events
+      const frame = vm.$refs.frame;
+      frame.addEventListener("will-navigate", this.willNavigate); // NOTE This listener is not removed upon loading! Needs to be removed if component is destroyed
+
       // Load the <webview> the initial time
       this.loadSite();
 
@@ -47,7 +47,18 @@ export default {
       });
     });
   },
+  beforeDestroy() {
+    // Remove navigation event
+    const frame = this.$refs.frame;
+    frame.removeEventListener("will-navigate", this.willNavigate);
+  },
   watch: {
+    url: {
+      // When the URL is changed, load the new site
+      handler: function() {
+        this.loadSite();
+      }
+    },
     preventInteractions: function(value) {
       // Toggle frame pointer-events based on the isSelected artboard state
       const element = this.$refs.frame;
@@ -55,12 +66,6 @@ export default {
         element.style.pointerEvents = "none";
       } else if (value == true) {
         element.style.pointerEvents = "auto";
-      }
-    },
-    url: {
-      // When the URL is changed, do this:
-      handler: function() {
-        this.loadSite();
       }
     }
   },
@@ -112,16 +117,16 @@ export default {
       // store.dispatch("loadNewSite", "site.com")
     },
     loadSite() {
-      const _this = this;
-      const frame = _this.$refs.frame;
+      const vm = this;
+      const frame = this.$refs.frame;
 
       // When loading of webview starts
       function loadstart() {
-        _this.state.isLoading = true; // Show loading spinner
+        vm.$emit("loadstart"); // Show loading spinner
 
         // Change the title to Loading...
         // TODO Add a VueX action for this?
-        _this.$store.commit("changeSiteData", {
+        store.commit("changeSiteData", {
           title: "Loading..."
         });
       }
@@ -129,13 +134,8 @@ export default {
       // Initialize the event listeners
       addListeners();
 
-      // Set the URL
+      // Set the URL, start loading
       frame.setAttribute("src", this.url);
-
-      // Remove permanent listeners
-      this.$once("hook:beforeDestroy", function() {
-        frame.removeEventListener("will-navigate", willNavigate);
-      });
 
       // Once webview content is loaded
       function contentloaded() {
@@ -169,7 +169,7 @@ export default {
         const favicon = event.data.favicon;
 
         // TODO Add to VueX Action
-        _this.$store.commit("changeSiteData", {
+        store.commit("changeSiteData", {
           title: title,
           favicon: favicon
         });
@@ -179,12 +179,13 @@ export default {
 
       // Loading has finished
       function loadstop() {
-        _this.state.isLoading = false; // Hide loading spinner
+        vm.$emit("loadend"); // Hide loading spinner
 
         // Update History
         // TODO Put this in a more obvious place
-        _this.$store.commit("updateHistory", frame.getWebContents().history); // Array with URLs
+        store.commit("updateHistory", frame.getWebContents().history); // Array with URLs
 
+        // Remove the event listeners related to site loading
         removeListeners();
       }
 
@@ -195,33 +196,30 @@ export default {
         });
       }
 
-      // Handle user clicking on a link inside of the webview
-      // TODO This should add a new page to the History
-      // TODO This should trigger the loading indicator
-      function willNavigate(event, url) {
-        console.log("loading new url", event, event.url);
-      }
-
       // Bind events
       function addListeners() {
-        // Loading events
         frame.addEventListener("did-start-loading", loadstart); // loadstart
         frame.addEventListener("dom-ready", contentloaded); // contentload
         frame.addEventListener("did-stop-loading", loadstop); // loadstop
         frame.addEventListener("loadabort", loadabort); // loadabort
         window.addEventListener("message", receiveHandshake, false); // Listen for response
-
-        // Permament events
-        frame.addEventListener("will-navigate", willNavigate); // NOTE This listener is not removed upon loading! Needs to be removed if component is destroyed
       }
 
-      // Remove all event listeners related to loading
+      // Remove all event listeners
       function removeListeners() {
         frame.removeEventListener("did-start-loading", loadstart);
         frame.removeEventListener("dom-ready", contentloaded);
         frame.removeEventListener("did-stop-loading", loadstop);
         frame.removeEventListener("loadabort", loadabort);
       }
+    },
+    willNavigate(event) {
+      // Handle user clicking on a link inside of the webview
+      // TODO This should add a new page to the History
+      // TODO Add to VueX Action
+      store.commit("changeSiteData", {
+        url: event.url
+      });
     }
   }
 };
