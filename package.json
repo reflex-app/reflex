@@ -71,6 +71,7 @@
     }
   },
   "dependencies": {
+    "@simonwep/selection-js": "^1.1.1",
     "browser-sync": "^2.26.7",
     "lodash.debounce": "^4.0.8",
     "vue": "^2.6.10",
@@ -86,13 +87,11 @@
     "@babel/preset-env": "^7.5.5",
     "@babel/runtime": "^7.5.5",
     "@vue/cli": "^3.10.0",
-    "ajv": "^6.10.2",
     "babel-core": "^7.0.0-bridge.0",
     "babel-eslint": "^10.0.2",
     "babel-jest": "^24.8.0",
     "babel-loader": "^8.0.6",
     "babel-minify-webpack-plugin": "^0.3.1",
-    "babili-webpack-plugin": "^0.1.2",
     "browser-sync-webpack-plugin": "^2.2.2",
     "cfonts": "^2.4.4",
     "chalk": "^2.4.2",
