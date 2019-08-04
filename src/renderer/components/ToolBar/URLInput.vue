@@ -44,6 +44,7 @@ export default {
     state: function() {
       const vm = this
       if (this.state === true) {
+        // When clicked, select the text in the input
         vm.$nextTick(() => {
           vm.$refs.input.focus()
           vm.$refs.input.select()
@@ -106,11 +107,12 @@ input[type="text"] {
   box-sizing: border-box;
   width: 100%;
   display: block;
-  border-radius: 6px;
+  // border-radius: 6px;
   background: $body-bg;
   text-overflow: ellipsis;
+  border-radius: 40px;
   border: 1px solid transparent;
-  padding: 0.4rem 0.5rem;
+  padding: 0.4rem 1rem;
 
   &:hover {
     border-color: $border-color;

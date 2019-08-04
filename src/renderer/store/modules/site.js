@@ -1,5 +1,5 @@
 const state = {
-  url: '', // The current URL being viewed
+  url: null, // The current URL being viewed
   title: '', // The title of the page being viewed
   favicon: '' // The URL's favicon
 }
