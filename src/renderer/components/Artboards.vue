@@ -87,7 +87,7 @@ export default {
       //------------------------------------------
 
       // this event is triggered on mouse drag, not move
-      onMove({ changedElements, selectedElements }) {
+      onMove({ changedElements }) {
         /**
          * Only add / remove selected class to increase selection performance.
          */
@@ -127,6 +127,10 @@ export default {
          * to find the selected nodes. Find these and append they
          * to the current selection.
          */
+
+        // Remove all in case temporarily added
+        store.dispatch("selectedArtboardsEmpty");
+
         // Push the new IDs
         selectedElements.forEach(item => {
           const id = item.getAttribute("artboard-id");
@@ -192,7 +196,7 @@ export default {
   box-sizing: border-box;
   will-change: auto; // Activate GPU rendering
   z-index: 0;
-  border: 2px solid green;
+  // border: 2px solid green;
 
   &.is-vertical {
     flex-direction: column;
@@ -201,7 +205,7 @@ export default {
 }
 
 .artboard {
-  border: 1px solid red;
+  // border: 1px solid red;
 }
 
 #sidebar {
