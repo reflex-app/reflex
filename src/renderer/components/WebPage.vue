@@ -15,7 +15,7 @@ export default {
   },
   computed: {
     url() {
-      return store.state.site.url; // Bind to our Vuex Store's URL value
+      return store.state.history.currentPage.url; // Bind to our Vuex Store's URL value
     }
   },
   mounted() {
@@ -77,8 +77,8 @@ export default {
 
       // VueX
       const pages = store.state.history.pages;
-      const currentPage = store.state.history.currentPage;
-      const nextPage = store.state.history.currentPage - 1;
+      const currentPage = store.state.history.currentPage.index;
+      const nextPage = store.state.history.currentPage.index - 1;
       // frame.loadURL(pages[nextPage]);
 
       // Update the URL in the store
@@ -97,8 +97,8 @@ export default {
 
       // VueX
       const pages = store.state.history.pages;
-      const currentPage = store.state.history.currentPage;
-      const nextPage = store.state.history.currentPage + 1;
+      const currentPage = store.state.history.currentPage.index;
+      const nextPage = store.state.history.currentPage.index + 1;
       // frame.loadURL(pages[nextPage]);
 
       // Update the URL in the store

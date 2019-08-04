@@ -1,5 +1,5 @@
 <template>
-  <draggable v-model="artboards" :options="{draggable:'.artboard-tab'}">
+  <draggable v-model="artboards">
     <div v-for="(artboard, index) in artboards" :key="artboard.id" v-bind="artboard" class="artboard-tab">
       <!-- Editing state -->
       <div v-if="editMode==true&&editID==artboard.id" class="editing">

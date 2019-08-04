@@ -37,7 +37,7 @@ export default {
   props: ['state'],
   computed: {
     url() {
-      return this.$store.state.site.url
+      return this.$store.state.history.currentPage.url
     }
   },
   watch: {

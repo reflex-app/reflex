@@ -1,6 +1,11 @@
 const state = {
   pages: [],
-  currentPage: 0
+  currentPage: {
+    index: 0,
+    url: null,
+    title: null,
+    favicon: null
+  }
 }
 
 const mutations = {
@@ -10,25 +15,47 @@ const mutations = {
   addPage: (state, payload) => {
     state.pages.push(payload)
   },
-  setCurrentPage: (state, payload) => {
+  setCurrentPageIndex: (state, payload) => {
     switch (payload) {
       case "forward":
-        state.currentPage = state.currentPage + 1
+        state.currentPage.index = state.currentPage.index + 1
         break;
 
       case "back":
-        state.currentPage = state.currentPage - 1
+        state.currentPage.index = state.currentPage.index - 1
         break;
 
         // If adding a new page (i.e. user has entered a URL in the search input bar)
       case "new":
-        state.currentPage = state.pages.length - 1 // zero indexed
+        state.currentPage.index = state.pages.length - 1 // zero indexed
         break;
 
         // Allow to set to a specific index
       default:
-        state.currentPage = payload
+        state.currentPage.index = payload
         break;
+    }
+  },
+  /** Sets the Site Title (via iFrame)
+   * @param  {} state
+   * @param  {} val
+   */
+  changeSiteData: (state, val) => {
+    if (!val) throw new Error('No value')
+
+    // @TODO: Throttle this fn, as it will be called by
+    // each <webview> when it loads, and doesn't need to keep changing
+
+    if (val.title && val.title !== state.currentPage.title) {
+      state.currentPage.title = val.title
+    }
+
+    if (val.url) {
+      state.currentPage.url = val.url // Update the URL based on the incoming value
+    }
+
+    if (val.favicon) {
+      state.currentPage.favicon = val.favicon // Update the URL based on the incoming value
     }
   }
 }
@@ -38,18 +65,18 @@ const actions = {
   back({
     commit
   }) {
-    commit('setCurrentPage', 'back')
+    commit('setCurrentPageIndex', 'back')
   },
   forward({
     commit
   }) {
-    commit('setCurrentPage', 'forward')
+    commit('setCurrentPageIndex', 'forward')
   },
   addPageToHistory({
     commit
   }, payload) {
     commit('addPage', payload) // Add to the array
-    commit('setCurrentPage', 'new') // Update the current page
+    commit('setCurrentPageIndex', 'new') // Update the current page
   }
 }
 

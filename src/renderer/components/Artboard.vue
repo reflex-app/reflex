@@ -58,7 +58,7 @@ export default {
   computed: {
     // Bind to our Vuex Store's URL value
     url() {
-      return this.$store.state.site.url;
+      return this.$store.state.history.currentPage.url;
     }
   },
   mounted() {

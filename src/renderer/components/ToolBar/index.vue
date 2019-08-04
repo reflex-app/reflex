@@ -56,13 +56,13 @@ export default {
   },
   computed: {
     title() {
-      return this.$store.state.site.title;
+      return this.$store.state.history.currentPage.title;
     },
     url() {
-      return this.$store.state.site.url;
+      return this.$store.state.history.currentPage.url;
     },
     favicon() {
-      return this.$store.state.site.favicon;
+      return this.$store.state.history.currentPage.favicon;
     },
     artboards() {
       return this.$store.state.artboards;

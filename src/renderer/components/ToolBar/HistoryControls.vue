@@ -20,7 +20,7 @@ export default {
   computed: {
     ...mapState({
       pages: state => state.history.pages,
-      currentPage: state => state.history.currentPage,
+      currentPage: state => state.history.currentPage.index,
       history: state => state.history
     }),
     canGoBack() {
