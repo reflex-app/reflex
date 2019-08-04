@@ -8,31 +8,28 @@ const {
 } = require('../package.json')
 const webpack = require('webpack')
 
-const BabiliWebpackPlugin = require('babel-minify-webpack-plugin')
-// const BrowserSyncPlugin = require('browser-sync-webpack-plugin')
+const BabiliWebpackPlugin = require('babili-webpack-plugin')
 
 let mainConfig = {
   entry: {
     main: path.join(__dirname, '../src/main/index.js')
   },
   externals: [
-    ...Object.keys(dependencies || {}),
-    {
-      'electron-debug': 'electron-debug'
-    }
+    ...Object.keys(dependencies || {})
   ],
   module: {
-    rules: [{
-        test: /\.(js)$/,
-        enforce: 'pre',
-        exclude: /node_modules/,
-        // use: {
-        //   loader: 'eslint-loader',
-        //   options: {
-        //     formatter: require('eslint-friendly-formatter')
-        //   }
-        // }
-      },
+    rules: [
+      // {
+      //   test: /\.(js)$/,
+      //   enforce: 'pre',
+      //   exclude: /node_modules/,
+      //   use: {
+      //     loader: 'eslint-loader',
+      //     options: {
+      //       formatter: require('eslint-friendly-formatter')
+      //     }
+      //   }
+      // },
       {
         test: /\.js$/,
         use: 'babel-loader',
@@ -54,19 +51,7 @@ let mainConfig = {
     path: path.join(__dirname, '../dist/electron')
   },
   plugins: [
-    new webpack.NoEmitOnErrorsPlugin(),
-    // new BrowserSyncPlugin({
-    //   host: 'localhost',
-    //   port: 9999,
-    //   open: false,
-    //   files: ['index.html', 'index.css', 'build/main.js'],
-    //   server: {
-    //     baseDir: ['.'],
-    //     routes: {
-    //       "/vendor": "./src/vendor"
-    //     }
-    //   }
-    // })
+    new webpack.NoEmitOnErrorsPlugin()
   ],
   resolve: {
     extensions: ['.js', '.json', '.node']
