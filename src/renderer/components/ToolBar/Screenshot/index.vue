@@ -1,44 +1,27 @@
 <template>
   <div id="screenshots">
-    <div
-      class="button button--secondary"
-      @click="startScreenshot()"
-      :class="{ 'button--is-active' : isScreenshotMode }"
-    >Screenshot</div>
-
-    <div v-if="isScreenshotMode && currentModal===1" class="modal modal-1">
-      <div>
-        <span>Click on a screen to screenshot or</span>
-        <a href="#" @click="screenshotAll()">Screenshot All</a>
-      </div>
-      <div @click="stopScreenshot()" class="modal__close">Close</div>
-    </div>
-
-    <div v-if="isScreenshotMode && currentModal===2" class="modal modal-2">
+    <!-- One selected -->
+    <transition name="slide-fade">
+    <div v-if="selectedArtboards.length > 0" class="modal">
       <div>
         <a
           href="#"
           @click="screenshotSelected()"
         >Save {{ selectedArtboards.length > 1 ? selectedArtboards.length + ' screens...' : selectedArtboards.length + ' screen...' }}</a>
-        <!-- only show copy to clipboard if one artboard is selected -->
         <a href="#" v-if="selectedArtboards.length===1" @click="copyToClipboard()">Copy to Clipboard</a>
       </div>
-      <div @click="stopScreenshot()" class="modal__close">Close</div>
+      <div @click="clearAllSelected()" class="modal__close button">Clear Selection</div>
     </div>
+    </transition>
 
-    <div v-if="isScreenshotMode && currentModal===3" class="modal modal-3">
-      <div>
-        <span>Saved successfully.</span>
-        <!-- @TODO: Show the file path in Finder -->
-        <a href="#" @click="showInFinder()">Show in Finder</a>
-      </div>
-      <div @click="stopScreenshot()" class="modal__close">Close</div>
-    </div>
+    <!-- TODO Show the file path in Finder -->
+    <!-- <a href="#" @click="showInFinder()">Show in Finder</a> -->
   </div>
 </template>
 
 <script>
 import * as capture from "./capture.js";
+import { mapState } from "vuex";
 import store from "@/store";
 import { shell } from "electron";
 
@@ -60,7 +43,10 @@ export default {
     },
     selectedArtboards() {
       return this.$store.state.selectedArtboards;
-    }
+    },
+    ...mapState({
+      selectedArtboards: state => state.selectedArtboards
+    })
   },
 
   methods: {
@@ -94,16 +80,8 @@ export default {
       }
     },
 
-    stopScreenshot() {
-      // Disable mode
-      this.isScreenshotMode = false;
-      this.currentModal = 1;
-
-      // Unbind all listeners
-      const el = document.getElementsByClassName("artboard");
-      for (var i = 0; i < el.length; i++) {
-        el[i].removeEventListener("click", this.artboardSelected);
-      }
+    clearAllSelected() {
+      store.dispatch("selectedArtboardsEmpty");
     },
 
     async screenshotAll() {
@@ -128,22 +106,9 @@ export default {
       }
     },
 
-    copyToClipboard() {
-      const el = document.querySelectorAll(".artboard");
-
-      // Find which index has '.is-selected'
-      const id = () => {
-        for (let i in el) {
-          let counter = 0;
-          if (el[i].classList.contains("is-selected") === false) {
-            return false;
-          } else {
-            return counter;
-          }
-        }
-      };
-
+    async copyToClipboard() {
       capture.copyToClipboard(this.selectedArtboards);
+      // TODO Notify the user when the image has been saved to clipboard
     },
 
     showInFinder() {
@@ -173,6 +138,7 @@ export default {
 .modal {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   max-width: 500px;
   background: white;
   padding: 1rem;
@@ -186,5 +152,18 @@ export default {
     color: black;
     cursor: pointer;
   }
+}
+
+/* Enter and leave animations can use different */
+/* durations and timing functions.              */
+.slide-fade-enter-active {
+  transition: all 250ms ease;
+}
+.slide-fade-leave-active {
+  transition: all 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.slide-fade-enter, .slide-fade-leave-to {
+  transform: translateY(4rem);
+  opacity: 0;
 }
 </style>

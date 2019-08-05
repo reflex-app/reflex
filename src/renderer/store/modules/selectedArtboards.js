@@ -1,5 +1,3 @@
-import Vue from 'vue'
-import store from 'vuex';
 const state = [] // A list of selected artboards by index
 // I.e. state.selectedArtboards = [ 0, 3 ]
 
@@ -16,11 +14,11 @@ const mutations = {
   },
 
   remove: (state, payload) => {
-    let index = state.findIndex(obj => obj === payload)
-    Vue.delete(state, index)
+    const index = state.findIndex(obj => obj === payload)
+    state.splice(index, 1)
   },
 
-  empty (state, payload) {
+  empty(state, payload) {
     // TODO Make this less specific
     this.state.selectedArtboards = []
   }

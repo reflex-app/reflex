@@ -1,10 +1,12 @@
+import {
+  clipboard,
+  nativeImage
+} from 'electron'
+
 const {
   dialog
 } = require('electron').remote
-const {
-  clipboard,
-  nativeImage
-} = require('electron')
+
 const path = require('path')
 const fs = require('fs')
 const moment = require('moment')
@@ -47,7 +49,7 @@ export async function capture(id, title, screenshotPath) {
       err => {
         if (err) throw err
         // Alert the user that the screenshot was saved
-        let notification = new Notification('Screenshot saved', {
+        const notification = new Notification('Screenshot saved', {
           body: filePath
         })
       }
@@ -78,7 +80,7 @@ export function captureMultiple(ids) {
     try {
       // Capture each & save it
       const captureEach = async (array) => {
-        for (let item of array) {
+        for (const item of array) {
           await capture(
             item,
             `${item}`,
@@ -118,25 +120,34 @@ export async function captureAll(vm) {
 }
 
 // Take a screenshot
+// Return the image (NativeImage)
 export async function screenshot(id) {
-  const webview = document.querySelector('webview')[id]
+  // Select by unique artboard-id data attribute value
+  const webview = document.querySelector(`[artboard-id="${id}"] webview`)
 
   try {
-    webview.getWebContents().capturePage(image => {
-      // Output the image as a NativeImage in PNG format
-      // https://electronjs.org/docs/api/native-image
-      // via https://github.com/electron/electron/issues/8151#issuecomment-265288291
-      const output = nativeImage.createFromBuffer(image.toPNG())
-      return output
+    return webview.getWebContents().capturePage(image => {
+      return image
     })
   } catch (error) {
     throw new Error(error)
   }
 }
 
-// Save an image to the user's clipboard
-// https://electronjs.org/docs/api/clipboard#clipboardwriteimageimage-type
+/**
+ * Save an image to the user's clipboard
+ * https://electronjs.org/docs/api/clipboard#clipboardwriteimageimage-type
+ * @param {*} id This is the unique id of an artboard, not the HTML DOM index
+ */
 export async function copyToClipboard(id) {
-  const image = await screenshot(id)
-  clipboard.writeImage(image)
+  try {
+    const image = await screenshot(id)
+    // Convert again to the proper format
+    // NativeImage in PNG format
+    // https://electronjs.org/docs/api/native-image
+    // via https://github.com/electron/electron/issues/8151#issuecomment-265288291
+    clipboard.writeImage(nativeImage.createFromBuffer(image.toPNG()))
+  } catch (err) {
+    throw new Error('Error writing to clipboard')
+  }
 }
