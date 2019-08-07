@@ -4,11 +4,10 @@
     <transition name="slide-fade">
     <div v-if="selectedArtboards.length > 0" class="modal">
       <div>
-        <a
-          href="#"
+        <div class="button"
           @click="screenshotSelected()"
-        >Save {{ selectedArtboards.length > 1 ? selectedArtboards.length + ' screens...' : selectedArtboards.length + ' screen...' }}</a>
-        <a href="#" v-if="selectedArtboards.length===1" @click="copyToClipboard()">Copy to Clipboard</a>
+        >Save {{ selectedArtboards.length > 1 ? selectedArtboards.length + ' screens...' : selectedArtboards.length + ' screen...' }}</div>
+        <div v-if="selectedArtboards.length===1" class="button" @click="copyToClipboard()">Copy to Clipboard</div>
       </div>
       <div @click="clearAllSelected()" class="modal__close button">Clear Selection</div>
     </div>
