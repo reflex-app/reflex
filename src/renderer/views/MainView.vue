@@ -46,9 +46,19 @@ export default {
 
       // Listen for changes
       // Commit them to the Vuex store
-      // instance.on('panzoom:change', () => {
-      //   vm.$store.commit('updatePanzoom', instance)
-      // })
+      instance.on('panzoom:zoom', () => {
+        console.log('zoom');
+        // TODO change store on zoom start
+        // TODO change store on zoom end
+        // vm.$store.commit('updatePanzoom', instance)
+      })
+      
+      instance.on('panzoom:pan', () => {
+        console.log('pan');
+         // TODO change store on pan start
+        // TODO change store on pan end
+        // vm.$store.commit('updatePanzoom', instance)
+      })
     });
   }
 };

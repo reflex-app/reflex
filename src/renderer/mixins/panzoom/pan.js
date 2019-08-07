@@ -13,7 +13,7 @@ let yOffset = 0
 export function start(e, context) {
   // Set the current position of element based on the context
   // just in case something has moved outside of this file
-  let matrix = context.transformMatrix
+  const matrix = context.transformMatrix
 
   xOffset = (xOffset != matrix[4]) ? matrix[4] : xOffset
   yOffset = (yOffset != matrix[5]) ? matrix[5] : yOffset
@@ -43,6 +43,9 @@ export function start(e, context) {
 
 export function pan(e, context) {
   if (context.state.isPanning) {
+    // Emit event
+    context.emit('panzoom:pan')
+
     // e.preventDefault();
 
     if (e.type === 'touchmove') {

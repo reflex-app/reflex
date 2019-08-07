@@ -133,7 +133,7 @@ export class Panzoom {
    * @param {Function} event 
    */
   _eventEmitterHandler(event) {
-    // console.log('event fired: ', event);
+    console.log('event fired: ', event);
     this.on(event); // Trigger any public .on() listeners
     return true;
   }
@@ -144,14 +144,14 @@ export class Panzoom {
   _eventEmitterInit() {
     // Push out events to listeners
     // @TODO: This is currently binding too many times
-    // Object.values(this.events).forEach((event) => {
-    //   this.emitter.on(event, this._eventEmitterHandler.bind(this, event));
-    // });
+    Object.values(this.events).forEach((event) => {
+      this.emitter.on(event, this._eventEmitterHandler.bind(this, event));
+    });
 
     // // Watch for errors
-    // this.emitter.on('error', (err) => {
-    //   console.error('Error delivering message.');
-    // });
+    this.emitter.on('error', (err) => {
+      console.error('Error delivering message.');
+    });
   }
 
   /** Remove existing event emitter */

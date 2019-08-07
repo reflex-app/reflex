@@ -8,6 +8,9 @@ export function zoom(context, event, options) {
 
   zoomStart(context, event)
 
+  // Emit event
+  context.emit('panzoom:zoom')
+
   // Zoom relative to the click/tap x, y
   if (options.relative) {
     if (!event) throw new Error('No event received')
@@ -90,10 +93,10 @@ export function zoomEnd(context, e) {
 
 function normalZoom(context, args) {
   const matrix = context.transformMatrix // Current transform matrix [0,0,0,0,0,0]
-  let currentScale = matrix[0] // Current zoom
+  const currentScale = matrix[0] // Current zoom
   let nextScale // Next zoom
-  let transformX = matrix[4]
-  let transformY = matrix[5]
+  const transformX = matrix[4]
+  const transformY = matrix[5]
 
   switch (args) {
     case 'in':
@@ -111,7 +114,7 @@ function normalZoom(context, args) {
   matrix[0] = nextScale
   matrix[3] = nextScale
 
-  let output = [
+  const output = [
     nextScale, // scale
     matrix[1], // get existing rotation
     matrix[2], // get existing rotation
@@ -132,10 +135,10 @@ function normalZoom(context, args) {
  */
 function relZoom(context, event, options) {
   const matrix = context.transformMatrix // Current transform matrix [0,0,0,0,0,0]
-  let currentScale = matrix[0] // Current zoom
+  const currentScale = matrix[0] // Current zoom
   let nextScale // Next zoom
-  let transformX = matrix[4]
-  let transformY = matrix[5]
+  const transformX = matrix[4]
+  const transformY = matrix[5]
 
   if (!event || event === 'undefined') return false
 
@@ -147,7 +150,7 @@ function relZoom(context, event, options) {
   // CASE 1: Mouse wheel
   // Move towards mouse position
   if (event.type === 'wheel') {
-    let data = {
+    const data = {
       delta: event.deltaY / 120,
       factor: currentScale * context.zoomIncrement,
       currentScale: currentScale,
@@ -179,7 +182,7 @@ function relZoom(context, event, options) {
 
   if (event.type === 'dblclick') {
     // Case 2: Double Click
-    let data = {
+    const data = {
       delta: event.deltaY / 120,
       factor: currentScale * context.zoomIncrement,
       currentScale: currentScale,
@@ -203,7 +206,7 @@ function relZoom(context, event, options) {
   matrix[0] = nextScale
   matrix[3] = nextScale
 
-  let output = [
+  const output = [
     nextScale, // scale
     matrix[1], // get existing rotation
     matrix[2], // get existing rotation
