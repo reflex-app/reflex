@@ -55,89 +55,57 @@ export default {
   mounted() {
     const vm = this;
 
-    vm.selectionInstance = Selection.create({
+    vm.selectionInstance = new Selection({
       class: "selection-area", // Class for the selection-area
       selectedClass: "is-selected",
       selectables: ["#artboards > .artboard"], // All elements in this container can be selected
       boundaries: ["#canvas"], // The boundary
-      singleClick: true, // Enable single-click selection
+      singleClick: true // Enable single-click selection
+    });
 
-      // Actions to perform before starting
-      // validateStart(evt) {
-      //   // TODO Check if panning or zooming
-      //   return true; // Return true to start the selection, false to cancel it.
-      // },
-
-      //------------------------------------------
-      // START
-      //------------------------------------------
-
-      // this event is triggered on drag start
-      onStart({ originalEvent }) {
+    vm.selectionInstance
+      .on("beforestart", evt => {
+        // TODO Check if panning or zooming
+        return true; // Return true to start the selection, false to cancel it.
+      })
+      .on("start", evt => {
         // Every non-ctrlKey causes a selection reset
-        if (!originalEvent.ctrlKey) {
+        if (!evt.ctrlKey) {
+          store.dispatch("selectedArtboardsEmpty");
         }
-
-        store.dispatch("selectedArtboardsEmpty");
-        this.clearSelection();
-      },
-
-      //------------------------------------------
-      // MOVE
-      //------------------------------------------
-
-      // this event is triggered on mouse drag, not move
-      onMove({ changedElements }) {
+      })
+      .on("move", evt => {
         /**
          * Only add / remove selected class to increase selection performance.
          */
 
         // Add
-        changedElements.added.forEach(item => {
+        evt.changed.added.forEach(item => {
           const id = item.getAttribute("artboard-id");
           store.dispatch("selectedArtboardsAdd", id);
         });
 
         // Remove
-        changedElements.removed.forEach(item => {
+        evt.changed.removed.forEach(item => {
           const id = item.getAttribute("artboard-id");
           store.dispatch("selectedArtboardsRemove", id);
         });
-      },
-
-      //------------------------------------------
-      // SELECT (click)
-      //------------------------------------------
-      onSelect({ selectedElements }) {
-        // Push the new IDs
-        selectedElements.forEach(item => {
-          const id = item.getAttribute("artboard-id");
-          store.dispatch("selectedArtboardsAdd", id); // Add these items to the Store
-        });
-      },
-
-      //------------------------------------------
-      // STOP
-      //------------------------------------------
-
-      // this event is triggered on dragend
-      onStop({ selectedElements }) {
+      })
+      .on("stop", evt => {
         /**
          * Every element has a artboard-id property which is used
          * to find the selected nodes. Find these and append they
          * to the current selection.
          */
-
         // Remove all in case temporarily added
         store.dispatch("selectedArtboardsEmpty");
 
         // Push the new IDs
-        selectedElements.forEach(item => {
+        evt.selected.forEach(item => {
           const id = item.getAttribute("artboard-id");
           store.dispatch("selectedArtboardsAdd", id); // Add these items to the Store
         });
-      }
-    });
+      });
   },
   watch: {
     artboards: function() {
