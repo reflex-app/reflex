@@ -5,7 +5,7 @@ const exec = require('child_process').exec
 const chalk = require('chalk')
 const release = require('gulp-github-release')
 const notify = require('gulp-notify')
-const opn = require('opn')
+const open = require('open')
 
 // PROCESS
 // Ask about the version
@@ -18,7 +18,7 @@ const opn = require('opn')
 require('dotenv').config()
 
 // Import configuration settings
-const CONFIG = require('../config.js')
+// const CONFIG = require('../config.js')
 
 // Get current app version
 const CURRENT_APP_VERSION = require('../../package.json').version
@@ -145,7 +145,7 @@ gulp.task('deploy-app:draft-release', function () {
 
 // Opens the Github Releases page
 gulp.task('deploy-app:open-release-in-browser', function (done) {
-  opn('https://github.com/nwittwer/shift/releases')
+  open('https://github.com/nwittwer/shift/releases')
   done()
 })
 
