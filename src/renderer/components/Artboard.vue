@@ -3,8 +3,7 @@
     class="artboard"
     ref="artboard"
     :style="{ height: this.height+'px', width: this.width+'px' }"
-    :class="{ 'is-selected': state.isSelected }"
-    @click="toggleSelectedState()"
+    :class="{ 'is-selected': isSelected }"
   >
     <div class="artboard__top">
       <div>
@@ -15,8 +14,8 @@
       <div v-show="state.isLoading" class="artboard__loader is-loading">
         <div class="content">
           <div class="lds-ripple">
-            <div />
-            <div />
+            <div></div>
+            <div></div>
           </div>
         </div>
       </div>
@@ -25,7 +24,7 @@
     <div class="artboard__content">
       <WebPage
         ref="frame"
-        :preventInteractions="state.isSelected"
+        :preventInteractions="isSelected"
         @loadstart="state.isLoading = true"
         @loadend="state.isLoading = false"
       />
@@ -50,12 +49,12 @@ export default {
     id: Number,
     title: String,
     height: Number,
-    width: Number
+    width: Number,
+    selectedItems: Array
   },
   data() {
     return {
       state: {
-        isSelected: false,
         isLoading: false
       }
     };
@@ -64,6 +63,14 @@ export default {
     // Bind to our Vuex Store's URL value
     url() {
       return this.$store.state.history.currentPage.url;
+    },
+    isSelected() {
+      const isSelected = store.state.selectedArtboards.filter(item => item == this.id)
+      if (isSelected.length) {
+        return true
+      } else {
+        return false
+      }
     }
   },
   mounted() {

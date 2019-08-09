@@ -2,7 +2,7 @@ const state = {
   pages: [],
   currentPage: {
     index: 0,
-    url: null,
+    url: '',
     title: null,
     favicon: null
   }

@@ -38,6 +38,7 @@ body {
 	user-select: none;
 	box-shadow: 0 1px 2px 0px rgba(#6a6a6a, 0.2);
 	cursor: pointer;
+	display: inline-block;
 
 	&:hover {
 		background: #f5f5f5;

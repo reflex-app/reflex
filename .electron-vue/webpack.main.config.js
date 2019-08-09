@@ -8,14 +8,17 @@ const {
 } = require('../package.json')
 const webpack = require('webpack')
 
-const BabiliWebpackPlugin = require('babili-webpack-plugin')
+const MinifyPlugin = require('babel-minify-webpack-plugin')
 
 let mainConfig = {
   entry: {
     main: path.join(__dirname, '../src/main/index.js')
   },
   externals: [
-    ...Object.keys(dependencies || {})
+    ...Object.keys(dependencies || {}), {
+      'electron-debug': 'electron-debug'
+    }
+
   ],
   module: {
     rules: [
@@ -75,7 +78,7 @@ if (process.env.NODE_ENV !== 'production') {
  */
 if (process.env.NODE_ENV === 'production') {
   mainConfig.plugins.push(
-    new BabiliWebpackPlugin(),
+    new MinifyPlugin(),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': '"production"'
     })

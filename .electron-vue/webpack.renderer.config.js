@@ -3,14 +3,18 @@
 process.env.BABEL_ENV = 'renderer'
 
 const path = require('path')
-const { dependencies } = require('../package.json')
+const {
+  dependencies
+} = require('../package.json')
 const webpack = require('webpack')
 
-const BabiliWebpackPlugin = require('babili-webpack-plugin')
+const MinifyPlugin = require('babel-minify-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const { VueLoaderPlugin } = require('vue-loader')
+const {
+  VueLoaderPlugin
+} = require('vue-loader')
 
 /**
  * List of node_modules to include in webpack bundle
@@ -47,14 +51,6 @@ let rendererConfig = {
         use: ['vue-style-loader', 'css-loader', 'sass-loader']
       },
       {
-        test: /\.sass$/,
-        use: ['vue-style-loader', 'css-loader', 'sass-loader?indentedSyntax']
-      },
-      {
-        test: /\.less$/,
-        use: ['vue-style-loader', 'css-loader', 'less-loader']
-      },
-      {
         test: /\.css$/,
         use: ['vue-style-loader', 'css-loader']
       },
@@ -78,9 +74,7 @@ let rendererConfig = {
           options: {
             extractCSS: process.env.NODE_ENV === 'production',
             loaders: {
-              sass: 'vue-style-loader!css-loader!sass-loader?indentedSyntax=1',
               scss: 'vue-style-loader!css-loader!sass-loader',
-              less: 'vue-style-loader!css-loader!less-loader'
             }
           }
         }
@@ -121,7 +115,9 @@ let rendererConfig = {
   },
   plugins: [
     new VueLoaderPlugin(),
-    new MiniCssExtractPlugin({filename: 'styles.css'}),
+    new MiniCssExtractPlugin({
+      filename: 'styles.css'
+    }),
     new HtmlWebpackPlugin({
       filename: 'index.html',
       template: path.resolve(__dirname, '../src/index.ejs'),
@@ -130,9 +126,9 @@ let rendererConfig = {
         removeAttributeQuotes: true,
         removeComments: true
       },
-      nodeModules: process.env.NODE_ENV !== 'production'
-        ? path.resolve(__dirname, '../node_modules')
-        : false
+      nodeModules: process.env.NODE_ENV !== 'production' ?
+        path.resolve(__dirname, '../node_modules') :
+        false
     }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin()
@@ -170,14 +166,12 @@ if (process.env.NODE_ENV === 'production') {
   rendererConfig.devtool = ''
 
   rendererConfig.plugins.push(
-    new BabiliWebpackPlugin(),
-    new CopyWebpackPlugin([
-      {
-        from: path.join(__dirname, '../static'),
-        to: path.join(__dirname, '../dist/electron/static'),
-        ignore: ['.*']
-      }
-    ]),
+    new MinifyPlugin(),
+    new CopyWebpackPlugin([{
+      from: path.join(__dirname, '../static'),
+      to: path.join(__dirname, '../dist/electron/static'),
+      ignore: ['.*']
+    }]),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': '"production"'
     }),

@@ -4,10 +4,7 @@
     <div id="canvasContainer">
       <SidePanel />
       <ArtboardControls />
-      <div
-        id="canvas"
-        ref="canvas"
-      >
+      <div id="canvas" ref="canvas">
         <Artboards ref="artboards" />
       </div>
     </div>
@@ -15,15 +12,14 @@
 </template>
 
 <script>
-import ToolBar from '../components/ToolBar'
-import Artboards from '../components/Artboards.vue'
-import SidePanel from '../components/SidePanel'
-import ArtboardControls from '../components/ArtboardControls.vue'
-
-import panzoom from '../mixins/panzoom' // @TODO: package this
+import ToolBar from "../components/ToolBar";
+import Artboards from "../components/Artboards.vue";
+import SidePanel from "../components/SidePanel";
+import ArtboardControls from "../components/ArtboardControls.vue";
+import panzoom from "../mixins/panzoom";
 
 export default {
-  name: 'MainView',
+  name: "MainView",
   components: {
     Artboards,
     ArtboardControls,
@@ -33,29 +29,39 @@ export default {
   computed: {
     // Bind to our Vuex Store's URL value
     artboards: function() {
-      return this.$store.state.artboards
+      return this.$store.state.artboards;
     }
   },
   mounted: function() {
-    let vm = this
+    let vm = this;
 
     vm.$nextTick(() => {
-      const myElement = vm.$refs['artboards'].$el
-      const myControllerEl = vm.$refs['canvas']
+      const contentEl = vm.$refs["artboards"].$el;
+      const controllerEl = vm.$refs["canvas"];
 
       // Initialize Panzoom
-      let instance = panzoom(myElement, myControllerEl, {
+      let instance = panzoom(contentEl, controllerEl, {
         startCentered: true
-      })
+      });
 
       // Listen for changes
       // Commit them to the Vuex store
-      // instance.on('panzoom:change', () => {
-      //   vm.$store.commit('updatePanzoom', instance)
-      // })
-    })
+      instance.on('panzoom:zoom', () => {
+        console.log('zoom');
+        // TODO change store on zoom start
+        // TODO change store on zoom end
+        // vm.$store.commit('updatePanzoom', instance)
+      })
+      
+      instance.on('panzoom:pan', () => {
+        console.log('pan');
+         // TODO change store on pan start
+        // TODO change store on pan end
+        // vm.$store.commit('updatePanzoom', instance)
+      })
+    });
   }
-}
+};
 </script>
 
 <style lang="scss">
@@ -97,7 +103,7 @@ export default {
     }
 
     &:active {
-      cursor: grabbing;
+      // cursor: grabbing;
     }
   }
 }
