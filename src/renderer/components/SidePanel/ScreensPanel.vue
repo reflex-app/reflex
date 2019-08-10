@@ -150,7 +150,7 @@ export default {
 
       // Empty selected value
       this.defaultSizeSelection = "";
-    }
+    },
   }
 };
 </script>
@@ -178,9 +178,6 @@ export default {
   .artboard-tabs__button {
     position: relative;
     margin: 1rem 1rem;
-    box-sizing: border-box;
-    border-radius: 4px;
-    width: auto;
   }
 
   .empty-state {
