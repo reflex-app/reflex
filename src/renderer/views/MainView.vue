@@ -3,7 +3,7 @@
     <ToolBar ref="toolbar" />
     <div id="canvasContainer">
       <SidePanel />
-      <ArtboardControls />
+      <!-- <ArtboardControls /> -->
       <div id="canvas" ref="canvas">
         <Artboards ref="artboards" />
       </div>
@@ -50,30 +50,24 @@ export default {
       // Commit them to the Vuex store
       instance
         .on("zoomStart", () => {
-          console.log("zoom start");
           store.commit("interactionSetState", {
             key: "isZooming",
             value: true
           });
         })
         .on("zoomStop", () => {
-          console.log("zoom stop");
           store.commit("interactionSetState", {
             key: "isZooming",
             value: false
           });
         })
         .on("panStart", () => {
-          console.log("pan start");
-          console.log(store);
-          
           store.commit("interactionSetState", {
             key: "isPanning",
             value: true
           });
         })
         .on("panStop", () => {
-          console.log("pan stop");
           store.commit("interactionSetState", {
             key: "isPanning",
             value: false

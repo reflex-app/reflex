@@ -29,7 +29,7 @@
         @loadend="state.isLoading = false"
       />
       <div class="artboard__handles">
-        <div class="handle__bottom" @mousedown="triggerResize" />
+        <div class="handle__bottom" @mousedown="triggerResize" title="Resize" />
       </div>
     </div>
   </div>
@@ -65,11 +65,13 @@ export default {
       return this.$store.state.history.currentPage.url;
     },
     isSelected() {
-      const isSelected = store.state.selectedArtboards.filter(item => item == this.id)
+      const isSelected = store.state.selectedArtboards.filter(
+        item => item == this.id
+      );
       if (isSelected.length) {
-        return true
+        return true;
       } else {
-        return false
+        return false;
       }
     }
   },
@@ -142,12 +144,21 @@ export default {
         10
       );
 
-      document.documentElement.addEventListener("mousemove", doDrag, false);
-      document.documentElement.addEventListener("mouseup", stopDrag, false);
+      document.documentElement.addEventListener("mousedown", doStart);
+      document.documentElement.addEventListener("mousemove", doDrag);
+      document.documentElement.addEventListener("mouseup", stopDrag);
 
       // Pause the panzoom
       if (document.$panzoom.state.isEnabled === true) {
         document.$panzoom.disable(); // TODO: Cleaner solution that polluting document?
+      }
+
+      function doStart() {
+        // Update global state
+        store.commit("interactionSetState", {
+          key: "isResizingArtboard",
+          value: true
+        });
       }
 
       // Resize objects
@@ -183,6 +194,11 @@ export default {
 
       function stopDrag() {
         document.documentElement.removeEventListener(
+          "mousedown",
+          doStart,
+          false
+        );
+        document.documentElement.removeEventListener(
           "mousemove",
           doDrag,
           false
@@ -202,6 +218,12 @@ export default {
 
         // Re-enable the panzoom
         document.$panzoom.enable(); // TODO: Cleaner solution that polluting document?
+
+        // Update global state
+        store.commit("interactionSetState", {
+          key: "isResizingArtboard",
+          value: false
+        });
       }
     },
 
@@ -230,7 +252,7 @@ $artboard-handle-height: 1rem;
   padding: 1rem;
   padding-right: 1.5rem;
   padding-bottom: $artboard-handle-height * 3;
-  border: 1px solid transparent;
+  border: 3px solid transparent;
   position: relative;
   display: block;
   flex: 1 0 auto;
@@ -247,15 +269,14 @@ $artboard-handle-height: 1rem;
   }
 
   &:hover {
-    background: #e6e6e6;
-    border-radius: 6px;
+    border-color: #929292;
     cursor: pointer;
   }
 
   &.is-selected {
-    background: rgba(165, 197, 247, 0.1);
-    border: 1px solid #a5c5f7;
-    border-radius: 8px;
+    background: rgba(226, 239, 255, 0.63);
+    border-color: #2f82ea;
+    pointer-events: none;
   }
 
   .artboard__top {
@@ -285,7 +306,23 @@ $artboard-handle-height: 1rem;
     border: 1px solid white;
     box-sizing: border-box;
     background: #ffffff;
-    box-shadow: 0 4px 10px rgba(#000, 0.1);
+    transition: all 100ms ease-out;
+    // box-shadow: 0 4px 10px rgba(#000, 0.1);
+
+    .frame {
+      // transition: all 125ms ease-out;
+
+      &:after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: 1px solid #9a9a9a;
+        pointer-events: none; // Required so that events penetrate through
+      }
+    }
 
     // .frame {
     //   height: 100%;
@@ -299,31 +336,39 @@ $artboard-handle-height: 1rem;
     bottom: 0;
     right: 0;
 
-    .handle__right,
     .handle__bottom {
-      background: $accent-color;
-      content: "";
-      height: $artboard-handle-height;
-      width: $artboard-handle-height;
       position: absolute;
-      border-radius: 100%;
-      z-index: 1;
-      border: 3px solid transparent;
-    }
-
-    .handle__bottom {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      left: 0;
+      top: 0;
       bottom: calc(-#{$artboard-handle-height} - 16px);
       right: calc(-#{$artboard-handle-height} - 16px);
+      padding: 40px;
+      cursor: nwse-resize;
 
-      &:hover {
-        cursor: nwse-resize;
+      &:hover:after {
+        background: red;
       }
 
-      &:active {
+      &:active:after {
         cursor: nwse-resize;
         z-index: 1;
         background: none;
         border-color: $accent-color;
+      }
+
+      &:after {
+        content: "";
+        position: relative;
+        background: $accent-color;
+        height: $artboard-handle-height;
+        width: $artboard-handle-height;
+        position: absolute;
+        border-radius: 100%;
+        border: 3px solid transparent;
+        z-index: 1;
       }
     }
   }

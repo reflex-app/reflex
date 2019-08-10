@@ -60,12 +60,14 @@ export default {
       }
     },
     preventInteractions: function(value) {
+      // console.log("prevent interaction:", value);
+
       // Toggle frame pointer-events based on the isSelected artboard state
       const element = this.$refs.frame;
-      if (value == false) {
-        element.style.pointerEvents = "none";
-      } else if (value == true) {
+      if (value == true) {
         element.style.pointerEvents = "auto";
+      } else if (value == false) {
+        element.style.pointerEvents = "none";
       }
     }
   },
@@ -73,8 +75,9 @@ export default {
     reload() {
       // Reload the current page
       // TODO This doesn't trigger the loading indicator
-      const frame = this.$refs.frame;
-      frame.getWebContents().reload();
+      this.loadSite({
+        history: false
+      });
     },
     back() {
       // Load the previous page
@@ -116,7 +119,12 @@ export default {
       // i.e. something like this:
       // store.dispatch("loadNewSite", "site.com")
     },
-    loadSite() {
+    /**
+     * Loads a site
+     * By default, saves the URL to the history
+     * @param {object} options Accepts a history option. When true, will save URL to history.
+     */
+    loadSite(options = { history: true }) {
       const vm = this;
       const frame = this.$refs.frame;
 
@@ -183,7 +191,9 @@ export default {
 
         // Update History
         // TODO Put this in a more obvious place
-        store.commit("updateHistory", frame.getWebContents().history); // Array with URLs
+        if (!options.history && options.history == false) {
+          store.commit("updateHistory", frame.getWebContents().history); // Array with URLs
+        }
 
         // Remove the event listeners related to site loading
         removeListeners();

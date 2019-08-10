@@ -90,6 +90,10 @@ function _releaseTouches() {
 export function onKeyDown(event) {
   if (event.code == 'Space') {
     spacebar = true
+    // TODO Find a better way to handle the pan interaction
+    // Currently starting at this point to prevent other interactions
+    // like drag to select
+    _context._emit('panStart', event) // Emit the event (even though we're waiting)
   } else {
     spacebar = false
   }
@@ -106,6 +110,10 @@ export function onKeyDown(event) {
 
     spacebar = false
     document.removeEventListener('keyup', onKeyUp)
+    // TODO Find a better way to handle the pan interaction
+    // Currently starting at this point to prevent other interactions
+    // like drag to select
+    _context._emit('panStop', event) // Emit the event (even though we're waiting)
   }
 }
 
@@ -115,8 +123,7 @@ export function onKeyDown(event) {
 export function onMouseDown(e) {
   if (e.which !== 1) return false; // Only accept left clicks
 
-  console.log('mouseDown');
-
+  // if (e.target !== "webview.frame")
   e.preventDefault();
 
   if (_context.state.isTouching) {
@@ -131,15 +138,15 @@ export function onMouseDown(e) {
   if (spacebar) {
     // Start panning
     pan.start(e, _context);
-  }
 
-  // Events when mouse is down & moving
-  document.addEventListener('mousemove', onMouseMove);
+    // Events when mouse is down & moving
+    document.addEventListener('mousemove', onMouseMove);
+  }
 
   // Events when mouse lets go
   document.addEventListener('mouseup', onMouseUp);
 
-  return false;
+  return false; // Don't bubble up
 }
 
 function onMouseUp(e) {

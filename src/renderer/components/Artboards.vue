@@ -1,5 +1,5 @@
 <template>
-  <div v-if="artboards.length" id="artboards" @contextmenu="rightClickMenu($event)">
+  <div v-if="artboards.length" id="artboards">
     <Artboard
       v-for="(artboard, index) in artboards"
       v-bind="artboard"
@@ -40,7 +40,10 @@ export default {
   },
   computed: {
     ...mapState({
-      selectedArtboards: state => state.selectedArtboards
+      selectedArtboards: state => state.selectedArtboards,
+      isPanning: state => state.interactions.isPanning,
+      isZooming: state => state.interactions.isZooming,
+      isResizingArtboard: state => state.interactions.isResizingArtboard
     }),
     artboards() {
       // Returns an array of artboards
@@ -55,7 +58,7 @@ export default {
   mounted() {
     const vm = this;
 
-    vm.selectionInstance = new Selection({
+    const selectionInstance = new Selection({
       class: "selection-area", // Class for the selection-area
       selectedClass: "is-selected",
       selectables: ["#artboards > .artboard"], // All elements in this container can be selected
@@ -63,10 +66,21 @@ export default {
       singleClick: true // Enable single-click selection
     });
 
-    vm.selectionInstance
+    selectionInstance
       .on("beforestart", evt => {
-        // TODO Check if panning or zooming
-        return true; // Return true to start the selection, false to cancel it.
+        // Prevent selections if the user is interacting
+        // with an artboard
+        // console.log(vm.isPanning, vm.isResizingArtboard);
+
+        if (
+          vm.isPanning === true ||
+          vm.isZooming === true ||
+          vm.isResizingArtboard === true
+        ) {
+          return false;
+        } else {
+          return true;
+        }
       })
       .on("start", evt => {
         // Every non-ctrlKey causes a selection reset
@@ -116,25 +130,6 @@ export default {
     resize(artboard) {
       this.$store.commit("resizeArtboard", artboard);
     },
-    rightClickMenu(e) {
-      const element = e.target.querySelector(".frame");
-
-      // Only display menu if a <webview> was found near the click
-      if (element) {
-        const menu = new Menu();
-        menu.append(
-          new MenuItem({
-            label: "Open Inspector",
-            click() {
-              console.log(element);
-              element.openDevTools();
-            }
-          })
-        );
-
-        menu.popup(remote.getCurrentWindow());
-      }
-    },
     disableSelection() {
       this.selectionInstance.disable();
     },
@@ -148,9 +143,8 @@ export default {
 
 <style lang="scss">
 .selection-area {
-  background: rgba(0, 0, 255, 0.1);
-  border-radius: 0.1em;
-  border: 0.05em solid rgba(0, 0, 255, 0.2);
+  border: 1px solid #cbcbcb;
+  background: rgba(198, 198, 198, 0.3);
 }
 </style>
 

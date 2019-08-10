@@ -4,9 +4,9 @@
     <transition name="slide-fade">
     <div v-if="selectedArtboards.length > 0" class="modal">
       <div>
-        <div class="button"
+        <div class="button button--primary"
           @click="screenshotSelected()"
-        >Save {{ selectedArtboards.length > 1 ? selectedArtboards.length + ' screens...' : selectedArtboards.length + ' screen...' }}</div>
+        >Save {{ selectedArtboards.length > 1 ? selectedArtboards.length + ' images...' : selectedArtboards.length + ' image...' }}</div>
         <div v-if="selectedArtboards.length===1" class="button" @click="copyToClipboard()">Copy to Clipboard</div>
       </div>
       <div @click="clearAllSelected()" class="modal__close button">Clear Selection</div>
@@ -144,7 +144,6 @@ export default {
   z-index: 100;
   background: #ffffff;
   border: 1px solid #c8c8c8;
-  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.26);
   border-radius: 4px;
 
   .modal__close {

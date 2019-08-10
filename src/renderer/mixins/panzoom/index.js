@@ -112,7 +112,7 @@ export class Panzoom {
     fn(this.parent, 'wheel', panzoomEvents.onWheel)
     fn(this.parent, 'dblclick', panzoomEvents.onDblClick)
     fn(document, 'keydown', panzoomEvents.onKeyDown)
-    fn(document, 'mousedown', panzoomEvents.onMouseDown)
+    fn(this.parent, 'mousedown', panzoomEvents.onMouseDown)
   }
 
   /**

@@ -1,7 +1,8 @@
 const state = {
   isPanning: false,
   isZooming: false,
-  isSelectingArea: false
+  isSelectingArea: false,
+  isResizingArtboard: false
 }
 
 const mutations = {
