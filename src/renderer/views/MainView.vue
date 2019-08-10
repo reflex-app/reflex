@@ -16,7 +16,8 @@ import ToolBar from "../components/ToolBar";
 import Artboards from "../components/Artboards.vue";
 import SidePanel from "../components/SidePanel";
 import ArtboardControls from "../components/ArtboardControls.vue";
-import panzoom from "../mixins/panzoom";
+import { Panzoom } from "../mixins/panzoom";
+import store from "@/store";
 
 export default {
   name: "MainView",
@@ -40,25 +41,44 @@ export default {
       const controllerEl = vm.$refs["canvas"];
 
       // Initialize Panzoom
-      let instance = panzoom(contentEl, controllerEl, {
+      let instance = new Panzoom(contentEl, controllerEl, {
         startCentered: true
       });
+      document.$panzoom = instance; // Attach to document
 
       // Listen for changes
       // Commit them to the Vuex store
-      instance.on('panzoom:zoom', () => {
-        console.log('zoom');
-        // TODO change store on zoom start
-        // TODO change store on zoom end
-        // vm.$store.commit('updatePanzoom', instance)
-      })
-      
-      instance.on('panzoom:pan', () => {
-        console.log('pan');
-         // TODO change store on pan start
-        // TODO change store on pan end
-        // vm.$store.commit('updatePanzoom', instance)
-      })
+      instance
+        .on("zoomStart", () => {
+          console.log("zoom start");
+          store.commit("interactionSetState", {
+            key: "isZooming",
+            value: true
+          });
+        })
+        .on("zoomStop", () => {
+          console.log("zoom stop");
+          store.commit("interactionSetState", {
+            key: "isZooming",
+            value: false
+          });
+        })
+        .on("panStart", () => {
+          console.log("pan start");
+          console.log(store);
+          
+          store.commit("interactionSetState", {
+            key: "isPanning",
+            value: true
+          });
+        })
+        .on("panStop", () => {
+          console.log("pan stop");
+          store.commit("interactionSetState", {
+            key: "isPanning",
+            value: false
+          });
+        });
     });
   }
 };

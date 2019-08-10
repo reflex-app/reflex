@@ -15,8 +15,8 @@ export function start(e, context) {
   // just in case something has moved outside of this file
   const matrix = context.transformMatrix
 
-  xOffset = (xOffset != matrix[4]) ? matrix[4] : xOffset
-  yOffset = (yOffset != matrix[5]) ? matrix[5] : yOffset
+  xOffset = (xOffset !== matrix[4]) ? matrix[4] : xOffset
+  yOffset = (yOffset !== matrix[5]) ? matrix[5] : yOffset
 
   if (e.type === 'touchstart') {
     initialX = e.touches[0].clientX - xOffset
@@ -35,7 +35,7 @@ export function start(e, context) {
 
   // Emit the event
   // TODO: emit an event
-  // context.emit('panzoom:panStart');
+  context._emit('panStart', e)
 
   // Update the state
   context.state.isPanning = true
@@ -43,9 +43,6 @@ export function start(e, context) {
 
 export function pan(e, context) {
   if (context.state.isPanning) {
-    // Emit event
-    context.emit('panzoom:pan')
-
     // e.preventDefault();
 
     if (e.type === 'touchmove') {
@@ -94,7 +91,7 @@ export function end(e, context) {
 
   // Emit the event
   // TODO: emit an event
-  // context.emit('panzoom:panEnd');
+  context._emit('panStop', e)
 
   // Update state
   context.state.isPanning = false

@@ -8,9 +8,6 @@ export function zoom(context, event, options) {
 
   zoomStart(context, event)
 
-  // Emit event
-  context.emit('panzoom:zoom')
-
   // Zoom relative to the click/tap x, y
   if (options.relative) {
     if (!event) throw new Error('No event received')
@@ -62,12 +59,12 @@ export function zoomStart(context, e) {
   }
 
   // if (context.state.isZooming) {
-  //   return false;
+  //   return false
   // }
 
   // Emit the event
   // TODO: emit an event
-  // context.emit('panzoom:zoomStart');
+  context._emit('zoomStart', e)
 
   // Update the state
   context.state.isZooming = true
@@ -85,7 +82,7 @@ export function zoomEnd(context, e) {
 
   // Emit the event
   // TODO: emit an event
-  // context.emit('panzoom:zoomEnd');
+  context._emit('zoomStop', e)
 
   // Update state
   context.state.isZooming = false

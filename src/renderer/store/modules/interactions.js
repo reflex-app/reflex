@@ -5,16 +5,12 @@ const state = {
 }
 
 const mutations = {
-  setState: (state, key, value) => {
+  interactionSetState: (state, { key, value }) => {
     state[key] = value
   }
 }
 
-const actions = {
-}
-
 export default {
   state,
-  mutations,
-  actions
+  mutations
 }

@@ -31,42 +31,42 @@ export function _updateContext(context) {
  * @param {Class} context Inherits the context of the Panzoom Class  
  * Pass the context along to any event that needs access to Panzoom methods/variables
  */
-export function _bind(context) {
-  // Scroll-based events
-  context.parent.addEventListener('wheel', onWheel); // @TODO: This should be debounced
-  context.parent.addEventListener('dblclick', onDblClick);
+// export function _bind(context) {
+//   // Scroll-based events
+//   context.parent.addEventListener('wheel', onWheel); // @TODO: This should be debounced
+//   context.parent.addEventListener('dblclick', onDblClick);
 
-  // Watching for keys
-  document.addEventListener('keydown', onKeyDown);
+//   // Watching for keys
+//   document.addEventListener('keydown', onKeyDown);
 
-  // Bind event listeners
-  context.parent.addEventListener('mousedown', onMouseDown);
-  // context.parent.addEventListener('touchstart', onTouchStart);
+//   // Bind event listeners
+//   context.parent.addEventListener('mousedown', onMouseDown);
+//   // context.parent.addEventListener('touchstart', onTouchStart);
 
-  // Gestures
-  // context.parent.addEventListener('gesturestart', onGestureStart);
-  // context.parent.addEventListener('gesturechange', onGestureChange);
-  // context.parent.addEventListener('gestureend', onGestureEnd);
-}
+//   // Gestures
+//   // context.parent.addEventListener('gesturestart', onGestureStart);
+//   // context.parent.addEventListener('gesturechange', onGestureChange);
+//   // context.parent.addEventListener('gestureend', onGestureEnd);
+// }
 
 /**
  * Unbind all event listeners
  */
-export function _unbind(context) {
-  context.parent.removeEventListener('wheel', onWheel);
-  context.parent.removeEventListener('dblclick', onDblClick);
+// export function _unbind(context) {
+//   context.parent.removeEventListener('wheel', onWheel);
+//   context.parent.removeEventListener('dblclick', onDblClick);
 
 
-  document.removeEventListener('keydown', onKeyDown);
+//   document.removeEventListener('keydown', onKeyDown);
 
-  context.parent.removeEventListener('mousedown', onMouseDown);
-  // context.parent.removeEventListener('touchstart', onTouchStart);
+//   context.parent.removeEventListener('mousedown', onMouseDown);
+//   // context.parent.removeEventListener('touchstart', onTouchStart);
 
-  // Gestures
-  // context.parent.removeEventListener('gesturestart', onGestureStart);
-  // context.parent.removeEventListener('gesturechange', onGestureChange);
-  // context.parent.removeEventListener('gestureend', onGestureEnd);
-}
+//   // Gestures
+//   // context.parent.removeEventListener('gesturestart', onGestureStart);
+//   // context.parent.removeEventListener('gesturechange', onGestureChange);
+//   // context.parent.removeEventListener('gestureend', onGestureEnd);
+// }
 
 /**
  * Release all mouse event listeners
@@ -87,7 +87,7 @@ function _releaseTouches() {
 
 // ==================
 // KEYS
-function onKeyDown(event) {
+export function onKeyDown(event) {
   if (event.code == 'Space') {
     spacebar = true
   } else {
@@ -112,7 +112,7 @@ function onKeyDown(event) {
 
 // ==================
 // MOUSEDOWN
-function onMouseDown(e) {
+export function onMouseDown(e) {
   if (e.which !== 1) return false; // Only accept left clicks
 
   console.log('mouseDown');
@@ -289,20 +289,13 @@ function handleTouchEnd(e) {
 
 // ==================
 // Mouse wheel or touch panning
-function onWheel(event) {
+export function onWheel(event) {
   // Prevent default zoom event
   // With trackpads, this prevents accidental pinch zooming of the whole page
   event.preventDefault();
 
   // If holding 
   if (event.ctrlKey || event.metaKey || event.altKey) {
-    // Mac pinch-to-zoom
-    zoom.zoom(_context, event, {
-      relative: true
-    });
-  }
-
-  if (event.ctrlKey) {
     // Mac pinch-to-zoom
     zoom.zoom(_context, event, {
       relative: true
@@ -331,6 +324,6 @@ function getOffsetXY(e) {
 /**
  * Double Click = Zoom In
  */
-function onDblClick(e) {
+export function onDblClick(e) {
   zoom.zoomIn(_context, e, true);
 }

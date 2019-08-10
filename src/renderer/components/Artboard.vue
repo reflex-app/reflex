@@ -147,7 +147,7 @@ export default {
 
       // Pause the panzoom
       if (document.$panzoom.state.isEnabled === true) {
-        document.$panzoom.pause(); // TODO: Cleaner solution that polluting document?
+        document.$panzoom.disable(); // TODO: Cleaner solution that polluting document?
       }
 
       // Resize objects
@@ -201,7 +201,7 @@ export default {
         }
 
         // Re-enable the panzoom
-        document.$panzoom.resume(); // TODO: Cleaner solution that polluting document?
+        document.$panzoom.enable(); // TODO: Cleaner solution that polluting document?
       }
     },
 
