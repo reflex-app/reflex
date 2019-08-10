@@ -5,6 +5,8 @@ import {
   BrowserWindow
 } from 'electron'
 
+import autoUpdater from './auto-updater'
+
 import {
   setMenu
 } from './menu'
@@ -40,6 +42,9 @@ async function createWindow() {
 
   // Setup the menu
   setMenu(mainWindow)
+
+  // Check for updates
+  autoUpdater(mainWindow)
 
   mainWindow.on('closed', () => {
     mainWindow = null
