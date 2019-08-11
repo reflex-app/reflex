@@ -35,8 +35,8 @@ Please take a look at the [upcoming features](../../projects) and the [open Gith
 
 ## Developing
 
-Please use the following versions: 
-- Node 10.0+, NPM 6+
+Requirements:
+- Node and NPM
 
 1. Clone the project to your computer:
     ```sh
@@ -46,7 +46,7 @@ Please use the following versions:
 
 2. Install dependencies:
     ```sh
-    $ npm install --no-optional
+    $ npm install
     ```
 
 3. Compile and watch for changes:
@@ -55,7 +55,6 @@ Please use the following versions:
     ```
 
 4. To compile for the final app, run the following command: 
-    
     ```sh
     $ npm run build
     ```
@@ -77,15 +76,19 @@ Please use the following versions:
 ## FAQ
 
 1. Help installing for MacOS
-    1. Move the Application to your Applications folder
-    2. Open the application by double-clicking the icon
-    3. If asked if you would like to open the application that was downloaded from the Internet, confirm. This is a standard MacOS security feature.
+    1. Download from the [Releases](../../releases) page 
+    2. Move the Application to your Applications folder
+    3. Open the application by double-clicking the icon
+    4. If asked if you would like to open the application that was downloaded from the Internet, confirm. This is a standard MacOS security feature.
 
 2. Does Shift work on Windows OS?
 At the moment, only the Mac version is being supported/tested, as it requires a large amount of effort to add another OS to support. With more help, most or all of this project could work on the web, MacOS, and Windows.
 
-3. Issues with BrowserSync/Node-GYP? Try removing `node_modules` and `package-lock.json` and re-installing with `npm install --no-optional`.
+3. How can I check for updates?
+The app will automatically check for updates when it is opened. If an update is available, it will be downloaded automatically. The next time you open the app, you'll be using the latest version!
 
+4. Find a bug?
+Please look at the [issues](../../issues), and file a new one if it hasn't already been reported.
 
 ---
 
