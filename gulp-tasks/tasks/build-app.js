@@ -107,16 +107,24 @@ gulp.task('version-app:changelog', function (cb) {
 
 // Clean the `build` folder
 gulp.task('build-app:clean', (done) => {
-  exec(`npm run build:clean`, function (err, stdout, stderr) {
+  const process = exec(`npm run build:clean`, function (err, stdout, stderr) {
     if (err) return false
     done()
+  })
+
+  process.stdout.on('data', function (data) {
+    console.log(data)
   })
 })
 
 gulp.task('build-app:main', (done) => {
-  exec(`npm run build`, function (err, stdout, stderr) {
+  const process = exec(`npm run build`, function (err, stdout, stderr) {
     if (err) return false
     done()
+  })
+
+  process.stdout.on('data', function (data) {
+    console.log(data)
   })
 })
 

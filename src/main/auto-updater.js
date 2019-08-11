@@ -1,31 +1,20 @@
-// This is free and unencumbered software released into the public domain.
-// See LICENSE for details
-
-const {
-  app
-} = require('electron')
 const log = require('electron-log')
 const {
   autoUpdater
 } = require('electron-updater')
 
-export default function init() {
-  console.log('checking for updates')
+autoUpdater.logger = log
+autoUpdater.logger.transports.file.level = 'info'
+
+export default function init(window) {
+  const win = window
+
+  // Check for updates
+  sendStatusToWindow('Checking for updates...')
   autoUpdater.checkForUpdatesAndNotify()
 
-  // -------------------------------------------------------------------
-  // Open a window that displays the version
-  //
-  // THIS SECTION IS NOT REQUIRED
-  //
-  // This isn't required for auto-updates to work, but it's easier
-  // for the app to show a window than to have to click "About" to see
-  // that updates are working.
-  // -------------------------------------------------------------------
-
-  function sendStatusToWindow(window, text) {
-    log.info(text)
-    window.webContents.send('message', text)
+  function sendStatusToWindow(text) {
+    win.webContents.send('message', text)
   }
 
   autoUpdater.on('checking-for-update', () => {
