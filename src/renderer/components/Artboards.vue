@@ -28,9 +28,6 @@ import { mapState } from "vuex";
 import Selection from "@simonwep/selection-js";
 import store from "@/store";
 
-import { remote } from 'electron'
-const { Menu, MenuItem } = remote
-
 export default {
   name: "Artboards",
   components: {
