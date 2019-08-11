@@ -23,7 +23,7 @@ export class Panzoom {
     this.zoomIncrement = options.zoomIncrement || 1.15
 
     // Default Options
-    this.options = {}
+    this.options = options
     this.options.minZoom = options.minZoom || 0.1
     this.options.maxZoom = options.maxZoom || 10
 
