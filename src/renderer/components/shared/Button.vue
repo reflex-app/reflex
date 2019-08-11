@@ -20,6 +20,10 @@ export default {
     rounded: {
       type: Boolean,
       default: false
+    },
+    isPressed: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -48,6 +52,11 @@ export default {
 
       if (slotHasContent && this.icon) {
         classNames.push("button--with-icon");
+      }
+
+      // If isPressed
+      if (this.isPressed) {
+        classNames.push("button--is-pressed");
       }
 
       // If rounded
@@ -128,6 +137,7 @@ export default {
 
   &.button--secondary {
     border-color: #b8b8b8;
+
     // &:hover {
     //   background: #f5f5f5;
     // }
@@ -140,7 +150,7 @@ export default {
 
   &.button--ghost {
     box-shadow: none;
-    border: none;
+    border-color: transparent;
 
     &:hover {
       background: #efefef;
@@ -152,10 +162,22 @@ export default {
     }
   }
 
-  &.button--is-active {
-    box-shadow: 0 0px 0px 1px $accent-color;
+  // MODIFIERS
+
+  &.button--is-pressed {
     color: $accent-color;
-    background: white;
+    border-color: $accent-color;
+    box-shadow: 0 0 3px rgba($accent-color, 0.5);
+    background: rgba($accent-color, 0.1);
+
+    .button__icon {
+      background: $accent-color;
+    }
+  }
+
+  &.button--rounded {
+    border-radius: 50%;
+    padding: 0.5rem; // This is required so that it's a square
   }
 }
 
@@ -166,11 +188,7 @@ export default {
 
   .button__text {
     padding-right: 0.25rem;
+    font-weight: 600;
   }
-}
-
-.button--rounded {
-  border-radius: 50%;
-  padding: 0.5rem; // This is required so that it's a square
 }
 </style>
