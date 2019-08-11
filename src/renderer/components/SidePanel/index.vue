@@ -1,7 +1,7 @@
 <template>
   <transition name="sidebar-transition">
     <div class="side-panel">
-      <div class="side-panel__track">
+      <!-- <div class="side-panel__track">
         <div
           class="station"
           title="Screens"
@@ -20,7 +20,7 @@
             Screens
           </span>
         </div>
-      </div>
+      </div> -->
       <div
         v-if="sidebar===true"
         class="side-panel__content"

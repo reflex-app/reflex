@@ -1,7 +1,7 @@
 <template>
   <div
     class="icon"
-    :style="{ backgroundImage: 'url(' + require('@/assets/icons/'+iconHandler) + ')'  }"
+    :style="{ backgroundImage: `url(${iconHandler}` }"
   ></div>
 </template>
 
@@ -9,11 +9,24 @@
 export default {
   props: {
     name: {
-      type: String
+      type: String,
+      required: true
     }
   },
   computed: {
     iconHandler() {
+      try {
+        console.log(`@/assets/icons/${this.name}.svg`);
+        const iconFile = require(`@/assets/icons/${this.name}.svg`);
+        if (iconFile) {
+          console.log(iconFile);
+          
+          return iconFile
+        }
+      } catch (e) {
+        throw new Error('Icon not found')
+      }
+
       switch (this.name) {
         case "back":
           return "arrow-left.svg";

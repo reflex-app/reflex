@@ -1,7 +1,10 @@
 <template>
   <div id="toolbar">
-    <HistoryControls />
+    <!-- <Button role="primary">Thing</Button> -->
+    <!-- <Button role="secondary">Screens</Button> -->
+    <Button role="ghost" icon="screens" @click="toggleSidebar">Screens</Button>
     <div v-if="artboards.length" id="toolbar__url-container">
+      <HistoryControls />
       <div class="bar">
         <div class="bar__left">
           <div v-show="!inputStateActive" class="sync">
@@ -21,7 +24,6 @@
           />
         </div>
       </div>
-      <!-- <button @click="browserSyncGetProxy()">BS</button> -->
     </div>
     <div id="toolbar__recentURLs"></div>
     <Screenshot />
@@ -33,7 +35,8 @@
 </template>
 
 <script>
-import store from "@/store"
+import store from "@/store";
+import { mapState } from "vuex";
 import URLInput from "./URLInput.vue";
 import SyncButton from "./SyncButton.vue";
 import Screenshot from "./Screenshot";
@@ -55,18 +58,13 @@ export default {
     };
   },
   computed: {
-    title() {
-      return this.$store.state.history.currentPage.title;
-    },
-    url() {
-      return this.$store.state.history.currentPage.url;
-    },
-    favicon() {
-      return this.$store.state.history.currentPage.favicon;
-    },
-    artboards() {
-      return this.$store.state.artboards;
-    }
+    ...mapState({
+      artboards: state => state.artboards,
+      title: state => state.history.currentPage.title,
+      url: state => state.history.currentPage.url,
+      favicon: state => state.history.currentPage.favicon,
+      sidebar: state => state.gui.sidebar
+    })
   },
   methods: {
     changeURL: debounce(function(url) {
@@ -76,14 +74,17 @@ export default {
         url: url
       });
 
-      console.log('change url triggered');
+      console.log("change url triggered");
 
       // Add this new page to the history
-      store.dispatch('addPageToHistory', url)
+      store.dispatch("addPageToHistory", url);
 
       // Off
       this.inputStateActive = false;
-    }, 100)
+    }, 100),
+    toggleSidebar() {
+      store.commit("toggleSidebar");
+    }
   }
 };
 </script>

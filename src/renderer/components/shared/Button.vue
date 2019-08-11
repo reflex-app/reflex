@@ -1,6 +1,6 @@
 <template>
   <div class="button" :class="styles" @click="onClick($event)">
-    <Icon v-if="icon" :name="icon" />
+    <Icon v-if="icon" :name="icon" class="icon"/>
     <slot></slot>
   </div>
 </template>
@@ -121,6 +121,10 @@ export default {
     box-shadow: 0 0px 0px 1px $accent-color;
     color: $accent-color;
     background: white;
+  }
+
+  .icon {
+    margin-right: 0.5rem;
   }
 }
 </style>
