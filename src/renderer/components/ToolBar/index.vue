@@ -1,6 +1,6 @@
 <template>
   <div id="toolbar">
-    <Button role="ghost" icon="screens" @click="toggleSidebar">Screens</Button>
+    <Button role="ghost" icon="screens" @click="toggleSidebar" :isPressed="sidebar">Screens</Button>
     <div v-if="artboards.length" id="toolbar__url-container">
       <HistoryControls />
       <div class="bar">
@@ -24,7 +24,6 @@
       </div>
     </div>
     <div id="toolbar__recentURLs"></div>
-    <Screenshot />
     <!-- <div class="toolbar__right">
       <div class="toolbar__button-group">
       </div>
@@ -37,7 +36,6 @@ import store from "@/store";
 import { mapState } from "vuex";
 import URLInput from "./URLInput.vue";
 import SyncButton from "./SyncButton.vue";
-import Screenshot from "./Screenshot";
 import HistoryControls from "./HistoryControls.vue";
 
 const debounce = require("lodash.debounce");
@@ -47,8 +45,7 @@ export default {
   components: {
     URLInput,
     HistoryControls,
-    SyncButton,
-    Screenshot
+    SyncButton
   },
   data() {
     return {

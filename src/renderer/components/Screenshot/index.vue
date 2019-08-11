@@ -34,7 +34,7 @@ import store from "@/store";
 import { shell } from "electron";
 
 export default {
-  name: "ScreenshotPanel",
+  name: "Screenshots",
 
   data() {
     return {
@@ -164,10 +164,10 @@ export default {
 /* Enter and leave animations can use different */
 /* durations and timing functions.              */
 .slide-fade-enter-active {
-  transition: all 250ms ease;
+  transition: all 300ms ease;
 }
 .slide-fade-leave-active {
-  transition: all 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transition: all 250ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 .slide-fade-enter,
 .slide-fade-leave-to {

@@ -3,6 +3,7 @@
     <ToolBar ref="toolbar" />
     <div id="canvasContainer">
       <SidePanel />
+      <Screenshots />
       <div id="canvas" ref="canvas">
         <Artboards ref="artboards" />
       </div>
@@ -14,8 +15,9 @@
 import ToolBar from "../components/ToolBar";
 import Artboards from "../components/Artboards.vue";
 import SidePanel from "../components/SidePanel";
-import { Panzoom } from "../mixins/panzoom";
+import Screenshots from "../components/Screenshot";
 import store from "@/store";
+import { Panzoom } from "../mixins/panzoom";
 import { ipcRenderer } from "electron";
 
 export default {
@@ -23,7 +25,8 @@ export default {
   components: {
     Artboards,
     SidePanel,
-    ToolBar
+    ToolBar,
+    Screenshots
   },
   computed: {
     // Bind to our Vuex Store's URL value
