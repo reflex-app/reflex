@@ -2,7 +2,7 @@
   "name": "reflex",
   "productName": "Reflex",
   "description": "Make responsive websites without the guesswork.",
-  "version": "0.6.0-alpha.5",
+  "version": "0.6.0",
   "author": "Nick Wittwer",
   "license": "MIT",
   "main": "./dist/electron/main.js",
@@ -19,7 +19,7 @@
     "pack:renderer": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.renderer.config.js",
     "postinstall": "electron-builder install-app-deps",
     "release": "gulp release",
-    "github": "gulp github",
+    "oldRelease": "gulp build",
     "test": "jest"
   },
   "repository": {
