@@ -24,10 +24,8 @@ export default {
       this.loadSite();
 
       // Watch for History actions
+      // TODO Better way to watch for VueX actions?
       store.subscribeAction((action, state) => {
-        console.log(action.type);
-        // console.log(action.payload);
-
         switch (action.type) {
           case "reload":
             this.reload();
