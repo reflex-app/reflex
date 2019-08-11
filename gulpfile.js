@@ -10,8 +10,12 @@ const hub = new HubRegistry([
 gulp.registry(hub)
 
 // Draft a release to Github
-gulp.task('release', gulp.series(
-  'version-app',
-  'build-app',
-  'deploy-app'
-))
+// gulp.task('release', gulp.series(
+//   'version-app'
+// ))
+
+// gulp.task('oldRelease', gulp.series(
+//   'version-app',
+//   'build-app',
+//   'deploy-app'
+// ))
