@@ -40,15 +40,12 @@ export default {
   },
   computed: {
     ...mapState({
+      artboards: state => state.artboards,
       selectedArtboards: state => state.selectedArtboards,
       isPanning: state => state.interactions.isPanning,
       isZooming: state => state.interactions.isZooming,
       isResizingArtboard: state => state.interactions.isResizingArtboard
     }),
-    artboards() {
-      // Returns an array of artboards
-      return this.$store.state.artboards;
-    },
     appName() {
       // Return the name of the Electron app
       // From package.json (name or productName)
@@ -68,8 +65,7 @@ export default {
 
     selectionInstance
       .on("beforestart", evt => {
-        // Prevent selections if the user is interacting
-        // with an artboard
+        // Prevent selections if the user is interacting with an artboard
         // console.log(vm.isPanning, vm.isResizingArtboard);
 
         if (
