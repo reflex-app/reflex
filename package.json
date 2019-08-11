@@ -2,7 +2,7 @@
   "name": "reflex",
   "productName": "Reflex",
   "description": "Make responsive websites without the guesswork.",
-  "version": "0.6.0-alpha.1",
+  "version": "0.6.0-alpha.5",
   "author": "Nick Wittwer",
   "license": "MIT",
   "main": "./dist/electron/main.js",
@@ -19,11 +19,12 @@
     "pack:renderer": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.renderer.config.js",
     "postinstall": "electron-builder install-app-deps",
     "release": "gulp release",
+    "github": "gulp github",
     "test": "jest"
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:nwittwer/reflex.git"
+    "url": "https://github.com/nwittwer/reflex.git"
   },
   "private": true,
   "build": {
@@ -73,6 +74,9 @@
   "dependencies": {
     "@simonwep/selection-js": "^1.2.0",
     "browser-sync": "^2.26.7",
+    "electron-debug": "^3.0.1",
+    "electron-log": "^3.0.7",
+    "electron-updater": "^4.1.2",
     "lodash.debounce": "^4.0.8",
     "vue": "^2.6.10",
     "vue-electron": "^1.0.6",
@@ -102,7 +106,6 @@
     "devtron": "^1.4.0",
     "electron": "^6.0.1",
     "electron-builder": "^21.2.0",
-    "electron-debug": "^3.0.1",
     "electron-devtools-installer": "^2.2.4",
     "eslint": "^6.1.0",
     "eslint-config-standard": "^13.0.1",
