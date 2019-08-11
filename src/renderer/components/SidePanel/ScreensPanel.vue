@@ -3,11 +3,14 @@
     <div id="artboard-tabs">
       <!-- List of Artboards -->
       <div v-if="artboards.length" class="artboard-tabs__scroll">
-        <artboardEditable data="artboards"/>
+        <artboardEditable data="artboards" />
       </div>
 
       <!-- New Artboard -->
-      <div class="artboard-tabs__button button button--primary" @click="add()">New Screen</div>
+      <div>
+        <Button role="primary" icon="plus" @click="add" class="artboard-tabs__button">New Screen</Button>
+      </div>
+      <!-- <div class="artboard-tabs__button button button--primary" @click="add()">New Screen</div> -->
 
       <!-- Show a tip if there's no artboards -->
       <div v-if="!artboards.length" class="empty-state">
@@ -150,7 +153,7 @@ export default {
 
       // Empty selected value
       this.defaultSizeSelection = "";
-    },
+    }
   }
 };
 </script>
@@ -164,10 +167,10 @@ export default {
   width: 100%;
   height: 100%;
   overflow: auto;
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
+  // position: absolute;
+  // top: 0;
+  // left: 0;
+  // bottom: 0;
 
   .artboard-tabs__scroll {
     flex-grow: 1;

@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="icon"
-    :style="{ backgroundImage: `url(${iconHandler}` }"
-  ></div>
+  <div class="icon" :style="{ maskImage: `url(${iconHandler}` }" :class="iconColorHandler"></div>
 </template>
 
 <script>
@@ -11,29 +8,31 @@ export default {
     name: {
       type: String,
       required: true
+    },
+    color: {
+      type: String,
+      default: "dark"
     }
   },
   computed: {
     iconHandler() {
       try {
-        console.log(`@/assets/icons/${this.name}.svg`);
         const iconFile = require(`@/assets/icons/${this.name}.svg`);
         if (iconFile) {
-          console.log(iconFile);
-          
-          return iconFile
+          return iconFile;
         }
       } catch (e) {
-        throw new Error('Icon not found')
+        throw new Error(`Icon not found: ${this.name}`);
       }
-
-      switch (this.name) {
-        case "back":
-          return "arrow-left.svg";
+    },
+    iconColorHandler() {
+      switch (this.color) {
+        case "dark":
+          return "icon--dark";
           break;
 
-        default:
-          // No icon
+        case "light":
+          return "icon--light";
           break;
       }
     }
@@ -44,13 +43,19 @@ export default {
 <style lang="scss" scoped>
 .icon {
   display: inline-block;
-  // background-image: url("~@/assets/icons/arrow-left.svg");
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  // height: 100%;
-  // width: 100%;
   height: 24px;
   width: 24px;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  // TODO The following should be autoprefixed...
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+
+  &.icon--dark {
+    background: black;
+  }
+  &.icon--light {
+    background: white;
+  }
 }
 </style>

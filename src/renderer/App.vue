@@ -5,6 +5,9 @@
 </template>
 
 <script>
+/**
+ * Configure for Electron messages
+ */
 import { ipcRenderer } from "electron";
 ipcRenderer.on("message", function(event, text) {
   console.log(event, text);

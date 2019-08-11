@@ -1,7 +1,9 @@
 <template>
-  <div class="button" :class="styles" @click="onClick($event)">
-    <Icon v-if="icon" :name="icon" class="icon"/>
-    <slot></slot>
+  <div class="button" :class="containerStyles" @click="onClick($event)">
+    <Icon v-if="icon" :name="icon" :color="iconColor" class="button__icon" />
+    <span class="button__text">
+      <slot></slot>
+    </span>
   </div>
 </template>
 
@@ -14,10 +16,14 @@ export default {
     },
     icon: {
       type: String
+    },
+    rounded: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
-    styles() {
+    containerStyles() {
       // Returns a class name based on
       // some logic w/ props
       let classNames = [];
@@ -36,7 +42,36 @@ export default {
           classNames.push("button--ghost");
           break;
       }
+
+      // Check for button content + icon
+      const slotHasContent = !!this.$slots.default;
+
+      if (slotHasContent && this.icon) {
+        classNames.push("button--with-icon");
+      }
+
+      // If rounded
+      if (this.rounded) {
+        classNames.push("button--rounded");
+      }
+
       return classNames;
+    },
+    iconColor() {
+      if (!this.icon) return false;
+
+      switch (this.role) {
+        // Dark BG
+        case "primary":
+          return "light";
+          break;
+
+        // Light BG
+        case "secondary":
+        case "ghost":
+          return "dark";
+          break;
+      }
     }
   },
   methods: {
@@ -57,13 +92,15 @@ export default {
 .button {
   display: inline-flex;
   align-items: center;
-  padding: 0.3rem 0.75rem;
+  padding: 0.5rem 0.75rem;
   background: #ffffff;
-  border: 1px solid #b8b8b8;
+  border: 1px solid transparent;
   border-radius: 4px;
   user-select: none;
-  box-shadow: 0 1px 2px 0px rgba(#6a6a6a, 0.2);
+  // box-shadow: 0 1px 2px 0px rgba(#6a6a6a, 0.2);
   cursor: pointer;
+  line-height: 1;
+  // transition: all 75ms ease-in-out;
 
   // &:hover {
   //   background: #f5f5f5;
@@ -90,6 +127,7 @@ export default {
   }
 
   &.button--secondary {
+    border-color: #b8b8b8;
     // &:hover {
     //   background: #f5f5f5;
     // }
@@ -115,16 +153,24 @@ export default {
   }
 
   &.button--is-active {
-    color: white;
-    border-color: $accent-color;
-    background: $accent-color;
     box-shadow: 0 0px 0px 1px $accent-color;
     color: $accent-color;
     background: white;
   }
+}
 
-  .icon {
-    margin-right: 0.5rem;
+.button--with-icon {
+  .button__icon {
+    margin-right: 0.25rem;
   }
+
+  .button__text {
+    padding-right: 0.25rem;
+  }
+}
+
+.button--rounded {
+  border-radius: 50%;
+  padding: 0.5rem; // This is required so that it's a square
 }
 </style>

@@ -349,7 +349,7 @@ $artboard-handle-height: 1rem;
       cursor: nwse-resize;
 
       &:hover:after {
-        background: red;
+        background: darken($accent-color, 20%);
       }
 
       &:active:after {

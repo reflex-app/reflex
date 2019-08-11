@@ -1,7 +1,5 @@
 <template>
   <div id="toolbar">
-    <!-- <Button role="primary">Thing</Button> -->
-    <!-- <Button role="secondary">Screens</Button> -->
     <Button role="ghost" icon="screens" @click="toggleSidebar">Screens</Button>
     <div v-if="artboards.length" id="toolbar__url-container">
       <HistoryControls />

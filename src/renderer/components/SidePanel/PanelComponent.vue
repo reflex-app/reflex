@@ -41,7 +41,7 @@ export default {
   flex-direction: column;
   height: 100%;
   border-right: 1px solid $border-color;
-  width: 17rem;
+  width: 18rem;
   overflow: auto;
   cursor: default;
   overflow: hidden;

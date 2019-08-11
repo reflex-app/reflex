@@ -40,8 +40,9 @@
           </div>
 
           <div class="buttons">
-            <a href="#" @click="editMode=false">Cancel</a>
-            <a href="#" @click="save(artboard)">Save</a>
+            <!-- TODO Cancel button doesn't really cancel/undo... -->
+            <Button role="secondary" @click="editMode=false">Cancel</Button>
+            <Button role="primary" @click="save(artboard)">Save</Button>
           </div>
         </div>
       </div>
@@ -56,9 +57,13 @@
           <div>{{ artboard.width }} x {{ artboard.height }}</div>
         </div>
         <div class="artboard-tab__container-right">
-          <!-- <a href="#" @click="edit(artboard.id)">Inspect</a> -->
-          <a href="#" @click="edit(artboard.id)">Edit</a>
-          <a href="#" @click="remove(artboard.id)">&times;</a>
+          <Button role="secondary" @click="edit(artboard.id)">Edit</Button>
+          <Button
+            role="ghost"
+            icon="delete"
+            @click="remove(artboard.title, artboard.id)"
+            title="Delete"
+          ></Button>
         </div>
       </div>
     </div>
@@ -117,8 +122,11 @@ export default {
         this.$refs.input[0].select();
       });
     },
-    remove(id) {
-      this.$store.commit("removeArtboard", id);
+    remove(name, id) {
+      // TODO Custom prompts?
+      if (confirm(`You are able to to delete the ${name} screen size. Click "OK" to delete.`)) {
+        this.$store.commit("removeArtboard", id);
+      }
     },
     goToArtboard(id) {
       // Find the artboard (DOM)
@@ -198,10 +206,11 @@ $artboard-tab-side-padding: 1rem;
     }
 
     .artboard-tab__container-right {
+      display: flex;
       margin-left: 20px;
 
       // Add space between Edit & Delete links
-      a:not(:last-child) {
+      & > *:not(:last-child) {
         margin-right: 8px;
       }
     }
