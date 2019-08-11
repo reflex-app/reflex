@@ -5,7 +5,7 @@ const exec = require('child_process').exec
 const chalk = require('chalk')
 const release = require('gulp-github-release')
 const notify = require('gulp-notify')
-const opn = require('opn')
+const open = require('open')
 
 // PROCESS
 // Ask about the version
@@ -18,7 +18,7 @@ const opn = require('opn')
 require('dotenv').config()
 
 // Import configuration settings
-const CONFIG = require('../config.js')
+// const CONFIG = require('../config.js')
 
 // Get current app version
 const CURRENT_APP_VERSION = require('../../package.json').version
@@ -46,7 +46,7 @@ gulp.task('version-app:prompt-version', function (done) {
       }
 
       // Update the final ZIP path with the version
-      PATH_TO_MAC_ZIP = 'build/Reflex-' + NEXT_APP_VERSION + '-mac.zip'
+      PATH_TO_MAC_ZIP = 'build/Reflex-' + NEXT_APP_VERSION + '.dmg'
 
       done()
     })
@@ -107,30 +107,38 @@ gulp.task('version-app:changelog', function (cb) {
 
 // Clean the `build` folder
 gulp.task('build-app:clean', (done) => {
-  exec(`npm run build:clean`, function (err, stdout, stderr) {
+  const process = exec(`npm run build:clean`, function (err, stdout, stderr) {
     if (err) return false
     done()
+  })
+
+  process.stdout.on('data', function (data) {
+    console.log(data)
   })
 })
 
 gulp.task('build-app:main', (done) => {
-  exec(`npm run build`, function (err, stdout, stderr) {
+  const process = exec(`npm run build`, function (err, stdout, stderr) {
     if (err) return false
     done()
+  })
+
+  process.stdout.on('data', function (data) {
+    console.log(data)
   })
 })
 
 // Creates a draft release on Github
 // 1. Open the file: `.env` (root directory of this project)
 // 2. You can create a Github token here: https://github.com/settings/tokens
-// 3. Add: `GITHUB_TOKEN=replace_with_your_token`
+// 3. Add: `GH_TOKEN=replace_with_your_token`
 // 4. Save the file
 gulp.task('deploy-app:draft-release', function () {
-  const GITHUB_TOKEN = process.env.GITHUB_TOKEN || ''
+  const GH_TOKEN = process.env.GH_TOKEN || ''
   return gulp.src(PATH_TO_MAC_ZIP)
     .pipe(release({
       owner: 'nwittwer',
-      token: GITHUB_TOKEN, // Did you set already add your Github token in a .env file?
+      token: GH_TOKEN, // Did you set already add your Github token in a .env file?
       tag: NEXT_APP_VERSION, // format: v0.0.0
       draft: true, // draft or public
       prerelease: false,
@@ -145,7 +153,7 @@ gulp.task('deploy-app:draft-release', function () {
 
 // Opens the Github Releases page
 gulp.task('deploy-app:open-release-in-browser', function (done) {
-  opn('https://github.com/nwittwer/shift/releases')
+  open('https://github.com/nwittwer/shift/releases')
   done()
 })
 

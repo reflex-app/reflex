@@ -3,319 +3,245 @@
     class="artboard"
     ref="artboard"
     :style="{ height: this.height+'px', width: this.width+'px' }"
-    :class="{ 'is-selected': state.isSelected }"
-    @click="state.isSelected = !state.isSelected"
+    :class="{ 'is-selected': isSelected }"
   >
     <div class="artboard__top">
       <div>
-        <span class="title">
-          {{ this.title }}
-        </span>
-        <span class="dimension">
-          {{ this.width }} x {{ this.height }}
-        </span>
+        <span class="title">{{ this.title }}</span>
+        <span class="dimension">{{ this.width }} x {{ this.height }}</span>
       </div>
       <!-- Show a loader when state.isLoading == true -->
-      <div
-        v-show="state.isLoading"
-        class="artboard__loader is-loading"
-      >
+      <div v-show="state.isLoading" class="artboard__loader is-loading">
         <div class="content">
           <div class="lds-ripple">
-            <div />
-            <div />
+            <div></div>
+            <div></div>
           </div>
         </div>
       </div>
     </div>
-    <div class="artboard__keypoints" />
+    <div class="artboard__keypoints"></div>
     <div class="artboard__content">
-      <webview
+      <WebPage
         ref="frame"
-        class="frame"
+        :preventInteractions="isSelected"
+        @loadstart="state.isLoading = true"
+        @loadend="state.isLoading = false"
       />
       <div class="artboard__handles">
-        <div
-          class="handle__bottom"
-          @mousedown="triggerResize"
-        />
+        <div class="handle__bottom" @mousedown="triggerResize" title="Resize" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-const debounce = require('lodash.debounce')
+import store from "@/store";
+import WebPage from "./WebPage.vue";
 
 export default {
-  name: 'Artboard',
-
+  name: "Artboard",
+  components: {
+    WebPage
+  },
   props: {
+    index: Number,
     id: Number,
     title: String,
     height: Number,
-    width: Number
+    width: Number,
+    selectedItems: Array
   },
-
   data() {
     return {
       state: {
-        isSelected: false,
         isLoading: false
       }
-    }
+    };
   },
-
   computed: {
     // Bind to our Vuex Store's URL value
     url() {
-      return this.$store.state.site.url
-    }
-  },
-
-  watch: {
-    'state.isSelected': {
-      // Toggle frame pointer-events based on the isSelected artboard state
-      handler: function() {
-        const element = this.$refs.frame
-        if (this.state.isSelected == true) {
-          element.style.pointerEvents = 'auto'
-          // document.addEventListener("keyup", this.keyHandler);
-        } else if (this.state.isSelected == false) {
-          element.style.pointerEvents = 'none'
-          // document.removeEventListener("keyup", this.keyHandler);
-        }
-      }
+      return this.$store.state.history.currentPage.url;
     },
-    url: {
-      // When the URL is changed, do this:
-      handler: function() {
-        this.loadSite()
+    isSelected() {
+      const isSelected = store.state.selectedArtboards.filter(
+        item => item == this.id
+      );
+      if (isSelected.length) {
+        return true;
+      } else {
+        return false;
       }
     }
   },
-
   mounted() {
     this.$nextTick(() => {
-      // Load the <webview> the initial time
-      this.loadSite()
-    })
+      // Remove any leftover selected artboards
+      // @TODO: This should be done from VueX Store, or wiped before quitting
+      store.dispatch("selectedArtboardsEmpty");
+    });
   },
 
   methods: {
-    loadSite() {
-      const _this = this
-      const frame = _this.$refs.frame
-
-      // When loading of webview starts
-      function loadstart() {
-        _this.state.isLoading = true // Show loading spinner
-
-        _this.$store.commit('changeSiteData', {
-          title: 'Loading...'
-        })
-      }
-
-      // Once webview content is loaded
-      function contentload() {
-        const execCode = `
-          let data = {
-            title: document.title,
-            favicon: "https://www.google.com/s2/favicons?domain=" +
-              window.location.href
-          }
-
-          function respond(event) {
-            event.source.postMessage(data, '*');
-          }
-
-          window.addEventListener("message", respond, false);
-        `
-
-        // Execute
-        frame.executeJavaScript(execCode, function() {
-          // After successfully injecting...
-          // Request the data
-          frame.contentWindow.postMessage('Send me your data!', '*')
-        })
-      }
-
-      function receiveHandshake(event) {
-        // Data is accessible as event.data.*
-        // Refer to the object that's injected during contentload()
-        // for all keys
-        const title = event.data.title
-        const favicon = event.data.favicon
-
-        _this.$store.commit('changeSiteData', {
-          title: title,
-          favicon: favicon
-        })
-
-        window.removeEventListener('message', receiveHandshake)
-      }
-
-      // Loading has finished
-      function loadstop() {
-        _this.state.isLoading = false // Hide loading spinner
-        removeListeners()
-      }
-
-      function loadabort() {
-        // @TODO: Update with Electron API
-        new Notification('Aborted', {
-          body: 'The site stopped loading for some reason.'
-        })
-      }
-
-      // Bind events
-      function addListeners() {
-        frame.addEventListener('did-start-loading', loadstart) // loadstart
-        frame.addEventListener('dom-ready', contentload) // contentload
-        frame.addEventListener('did-stop-loading', loadstop) // loadstop
-        frame.addEventListener('loadabort', loadabort) // loadabort
-        window.addEventListener('message', receiveHandshake, false) // Listen for response
-      }
-
-      // Remove all event listeners
-      function removeListeners() {
-        frame.removeEventListener('did-start-loading', loadstart)
-        frame.removeEventListener('dom-ready', contentload)
-        frame.removeEventListener('did-stop-loading', loadstop)
-        frame.removeEventListener('loadabort', loadabort)
-      }
-
-      // Initialize the event listeners
-      addListeners()
-
-      // Set the URL
-      frame.setAttribute('src', this.url)
-    },
-
     // Limits the size of an artboard
     validateArtboardSizeInput(name, value) {
       // @TODO: Refactor this into the size editor
-      const minSize = 50
-      const maxSize = 9999
+      const minSize = 50;
+      const maxSize = 9999;
 
       // Make sure we're working with a number
       const newValue =
-        typeof value === Number ? value : Number(parseInt(value))
+        typeof value === Number ? value : Number(parseInt(value));
 
       // Change the data based on the name
-      let oldValue = ''
-      if (name == 'height') {
-        oldValue = this.artboard.height
-      } else if (name == 'width') {
-        oldValue = this.artboard.width
+      let oldValue = "";
+      if (name == "height") {
+        oldValue = this.artboard.height;
+      } else if (name == "width") {
+        oldValue = this.artboard.width;
       }
 
       // If no change
       if (oldValue === newValue) {
-        return
+        return;
       }
 
       // Min & Max
       if (newValue > maxSize || newValue < minSize) {
         // eslint-disable-next-line
         // console.log(newValue);
-        return false
+        return false;
       } else {
         // Size is within range!
-        if (name == 'height') {
-          this.artboard.height = newValue
-        } else if (name == 'width') {
-          this.artboard.width = newValue
+        if (name == "height") {
+          this.artboard.height = newValue;
+        } else if (name == "width") {
+          this.artboard.width = newValue;
         }
       }
     },
     triggerResize(e) {
-      const vm = this
+      const vm = this;
 
       let parent = vm.$refs.artboard,
-      resizable = parent,
-      startX,
-      startY,
-      startWidth,
-      startHeight
+        resizable = parent,
+        startX,
+        startY,
+        startWidth,
+        startHeight;
 
       // Allow resizing, attach event handlers
-      startX = e.clientX
-      startY = e.clientY
+      startX = e.clientX;
+      startY = e.clientY;
 
       startWidth = parseInt(
         document.defaultView.getComputedStyle(resizable).width,
         10
-      )
+      );
       startHeight = parseInt(
         document.defaultView.getComputedStyle(resizable).height,
         10
-      )
+      );
 
-      document.documentElement.addEventListener('mousemove', doDrag, false)
-      document.documentElement.addEventListener('mouseup', stopDrag, false)
+      document.documentElement.addEventListener("mousedown", doStart);
+      document.documentElement.addEventListener("mousemove", doDrag);
+      document.documentElement.addEventListener("mouseup", stopDrag);
 
       // Pause the panzoom
       if (document.$panzoom.state.isEnabled === true) {
-        document.$panzoom.pause() // TODO: Cleaner solution that polluting document?
+        document.$panzoom.disable(); // TODO: Cleaner solution that polluting document?
+      }
+
+      function doStart() {
+        // Update global state
+        store.commit("interactionSetState", {
+          key: "isResizingArtboard",
+          value: true
+        });
       }
 
       // Resize objects
-      let isDraggingTracker
+      let isDraggingTracker;
       function doDrag(e) {
         // This event needs to be debounced, as it's called on mousemove
         // Debounce via https://gomakethings.com/debouncing-your-javascript-events/
         if (isDraggingTracker) {
-          window.cancelAnimationFrame(isDraggingTracker)
+          window.cancelAnimationFrame(isDraggingTracker);
         }
 
         // Setup the new requestAnimationFrame()
         isDraggingTracker = window.requestAnimationFrame(function() {
-          // Run our scroll functions 
-          resizable.style.width = startWidth + e.clientX - startX + 'px'
-          resizable.style.height = startHeight + e.clientY - startY + 'px'
+          // Run our scroll functions
+          resizable.style.width = startWidth + e.clientX - startX + "px";
+          resizable.style.height = startHeight + e.clientY - startY + "px";
 
           // Ignore pointer events on frames
-          let frames = document.getElementsByClassName('frame')
+          let frames = document.getElementsByClassName("frame");
 
           for (let frame of frames) {
-            frame.style.pointerEvents = 'none'
+            frame.style.pointerEvents = "none";
           }
 
           // Update the dimensions in the UI
-          vm.$emit('resize', {
+          vm.$emit("resize", {
             id: vm.id,
             width: parseInt(resizable.style.width, 10),
             height: parseInt(resizable.style.height, 10)
-          })
-        })
+          });
+        });
       }
 
       function stopDrag() {
         document.documentElement.removeEventListener(
-          'mousemove',
+          "mousedown",
+          doStart,
+          false
+        );
+        document.documentElement.removeEventListener(
+          "mousemove",
           doDrag,
           false
-        )
+        );
         document.documentElement.removeEventListener(
-          'mouseup',
+          "mouseup",
           stopDrag,
           false
-        )
+        );
 
         // Re-enable pointer events on frames
-        let frames = document.getElementsByClassName('frame')
+        let frames = document.getElementsByClassName("frame");
 
         for (let frame of frames) {
-          frame.style.pointerEvents = 'auto'
+          frame.style.pointerEvents = "auto";
         }
 
         // Re-enable the panzoom
-        document.$panzoom.resume() // TODO: Cleaner solution that polluting document?
+        document.$panzoom.enable(); // TODO: Cleaner solution that polluting document?
+
+        // Update global state
+        store.commit("interactionSetState", {
+          key: "isResizingArtboard",
+          value: false
+        });
+      }
+    },
+
+    toggleSelectedState() {
+      // Change the state
+      this.state.isSelected = !this.state.isSelected;
+
+      // Update the VueX Store
+      if (this.state.isSelected === true) {
+        // Add to Store
+        store.dispatch("selectedArtboardsAdd", this.index);
+      } else {
+        // Remove from Store
+        store.dispatch("selectedArtboardsRemove", this.index);
       }
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -326,7 +252,7 @@ $artboard-handle-height: 1rem;
   padding: 1rem;
   padding-right: 1.5rem;
   padding-bottom: $artboard-handle-height * 3;
-  border: 1px solid transparent;
+  border: 3px solid transparent;
   position: relative;
   display: block;
   flex: 1 0 auto;
@@ -343,15 +269,14 @@ $artboard-handle-height: 1rem;
   }
 
   &:hover {
-    background: #e6e6e6;
-    border-radius: 6px;
+    border-color: #929292;
     cursor: pointer;
   }
 
   &.is-selected {
-    background: rgba(165, 197, 247, 0.1);
-    border: 1px solid #a5c5f7;
-    border-radius: 8px;
+    background: rgba(226, 239, 255, 0.63);
+    border-color: #2f82ea;
+    pointer-events: none;
   }
 
   .artboard__top {
@@ -381,13 +306,29 @@ $artboard-handle-height: 1rem;
     border: 1px solid white;
     box-sizing: border-box;
     background: #ffffff;
-    box-shadow: 0 4px 10px rgba(#000, 0.1);
+    transition: all 100ms ease-out;
+    // box-shadow: 0 4px 10px rgba(#000, 0.1);
 
     .frame {
-      height: 100%;
-      width: 100%;
-      pointer-events: none;
+      // transition: all 125ms ease-out;
+
+      &:after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: 1px solid #9a9a9a;
+        pointer-events: none; // Required so that events penetrate through
+      }
     }
+
+    // .frame {
+    //   height: 100%;
+    //   width: 100%;
+    //   pointer-events: none;
+    // }
   }
 
   .artboard__handles {
@@ -395,31 +336,39 @@ $artboard-handle-height: 1rem;
     bottom: 0;
     right: 0;
 
-    .handle__right,
     .handle__bottom {
-      background: $accent-color;
-      content: "";
-      height: $artboard-handle-height;
-      width: $artboard-handle-height;
       position: absolute;
-      border-radius: 100%;
-      z-index: 1;
-      border: 3px solid transparent;
-    }
-
-    .handle__bottom {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      left: 0;
+      top: 0;
       bottom: calc(-#{$artboard-handle-height} - 16px);
       right: calc(-#{$artboard-handle-height} - 16px);
+      padding: 40px;
+      cursor: nwse-resize;
 
-      &:hover {
-        cursor: nwse-resize;
+      &:hover:after {
+        background: red;
       }
 
-      &:active {
+      &:active:after {
         cursor: nwse-resize;
         z-index: 1;
         background: none;
         border-color: $accent-color;
+      }
+
+      &:after {
+        content: "";
+        position: relative;
+        background: $accent-color;
+        height: $artboard-handle-height;
+        width: $artboard-handle-height;
+        position: absolute;
+        border-radius: 100%;
+        border: 3px solid transparent;
+        z-index: 1;
       }
     }
   }

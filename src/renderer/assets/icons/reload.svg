@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 56.2 (81672) - https://sketch.com -->
+    <title>icon / reload</title>
+    <desc>Created with Sketch.</desc>
+    <g id="icon-/-reload" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M12,15 L12,11 L17,15.5 L12,20 L12,17 C8.13400675,17 5,13.8659932 5,10 C5,6.13400675 8.13400675,3 12,3 C15.8659932,3 19,6.13400675 19,10 C19,11.1872284 18.7044395,12.3054251 18.1828845,13.2850239 L16.619354,11.9169348 C16.8646117,11.3265908 17,10.6791062 17,10 C17,7.23857625 14.7614237,5 12,5 C9.23857625,5 7,7.23857625 7,10 C7,12.7614237 9.23857625,15 12,15 Z" id="Sync" fill="#4F4F4F" fill-rule="nonzero" transform="translate(12.000000, 11.500000) rotate(-180.000000) translate(-12.000000, -11.500000) "></path>
+    </g>
+</svg>

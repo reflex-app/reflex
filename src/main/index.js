@@ -4,10 +4,19 @@ import {
   app,
   BrowserWindow
 } from 'electron'
+import autoUpdater from './auto-updater'
 
 import {
   setMenu
 } from './menu'
+
+import {
+  version
+} from '../../package.json'
+const log = require('electron-log')
+
+// Set the version
+app.getVersion = () => version
 
 /**
  * Set `__static` path to static files in production
@@ -31,14 +40,24 @@ async function createWindow() {
     width: 1200,
     useContentSize: true,
     webPreferences: {
-      webviewTag: true
+      webviewTag: true,
+      nodeIntegration: true // add this
     }
   })
 
+  // Log the version
+  log.info(`Version ${app.getVersion()}`)
+
+  // Load the site
   mainWindow.loadURL(winURL)
 
   // Setup the menu
   setMenu(mainWindow)
+
+  // Check for updates once page is loaded
+  mainWindow.webContents.once('did-finish-load', () => {
+    autoUpdater(mainWindow)
+  })
 
   mainWindow.on('closed', () => {
     mainWindow = null

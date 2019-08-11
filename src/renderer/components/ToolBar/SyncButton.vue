@@ -28,7 +28,7 @@ export default {
   computed: {
     url() {
       // Bind to our Vuex Store's URL value
-      return this.$store.state.site.url;
+      return this.$store.state.history.currentPage.url;
     },
     canSyncURL() {
       // Not available when on http
@@ -94,7 +94,7 @@ export default {
       this.syncServer = data.proxy;
 
       // console.log(this.syncServer);
-      // console.log(this.$store.state.site.url);
+      // console.log(this.$store.state.history.currentPage.url);
 
       // Changes the BrowserSync proxy URL
       // if (compareHosts(this.url, this.syncServer) === false) {

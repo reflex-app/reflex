@@ -8,8 +8,6 @@ const del = require('del')
 const { spawn } = require('child_process')
 const webpack = require('webpack')
 const Multispinner = require('multispinner')
-
-
 const mainConfig = require('./webpack.main.config')
 const rendererConfig = require('./webpack.renderer.config')
 const webConfig = require('./webpack.web.config')

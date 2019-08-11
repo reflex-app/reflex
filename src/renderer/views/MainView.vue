@@ -3,11 +3,8 @@
     <ToolBar ref="toolbar" />
     <div id="canvasContainer">
       <SidePanel />
-      <ArtboardControls />
-      <div
-        id="canvas"
-        ref="canvas"
-      >
+      <!-- <ArtboardControls /> -->
+      <div id="canvas" ref="canvas">
         <Artboards ref="artboards" />
       </div>
     </div>
@@ -15,15 +12,15 @@
 </template>
 
 <script>
-import ToolBar from '../components/ToolBar'
-import Artboards from '../components/Artboards.vue'
-import SidePanel from '../components/SidePanel'
-import ArtboardControls from '../components/ArtboardControls.vue'
-
-import panzoom from '../mixins/panzoom' // @TODO: package this
+import ToolBar from "../components/ToolBar";
+import Artboards from "../components/Artboards.vue";
+import SidePanel from "../components/SidePanel";
+import ArtboardControls from "../components/ArtboardControls.vue";
+import { Panzoom } from "../mixins/panzoom";
+import store from "@/store";
 
 export default {
-  name: 'MainView',
+  name: "MainView",
   components: {
     Artboards,
     ArtboardControls,
@@ -33,29 +30,52 @@ export default {
   computed: {
     // Bind to our Vuex Store's URL value
     artboards: function() {
-      return this.$store.state.artboards
+      return this.$store.state.artboards;
     }
   },
   mounted: function() {
-    let vm = this
+    let vm = this;
 
     vm.$nextTick(() => {
-      const myElement = vm.$refs['artboards'].$el
-      const myControllerEl = vm.$refs['canvas']
+      const contentEl = vm.$refs["artboards"].$el;
+      const controllerEl = vm.$refs["canvas"];
 
       // Initialize Panzoom
-      let instance = panzoom(myElement, myControllerEl, {
+      let instance = new Panzoom(contentEl, controllerEl, {
         startCentered: true
-      })
+      });
+      document.$panzoom = instance; // Attach to document
 
       // Listen for changes
       // Commit them to the Vuex store
-      // instance.on('panzoom:change', () => {
-      //   vm.$store.commit('updatePanzoom', instance)
-      // })
-    })
+      instance
+        .on("zoomStart", () => {
+          store.commit("interactionSetState", {
+            key: "isZooming",
+            value: true
+          });
+        })
+        .on("zoomStop", () => {
+          store.commit("interactionSetState", {
+            key: "isZooming",
+            value: false
+          });
+        })
+        .on("panStart", () => {
+          store.commit("interactionSetState", {
+            key: "isPanning",
+            value: true
+          });
+        })
+        .on("panStop", () => {
+          store.commit("interactionSetState", {
+            key: "isPanning",
+            value: false
+          });
+        });
+    });
   }
-}
+};
 </script>
 
 <style lang="scss">
@@ -97,7 +117,7 @@ export default {
     }
 
     &:active {
-      cursor: grabbing;
+      // cursor: grabbing;
     }
   }
 }

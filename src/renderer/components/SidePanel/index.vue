@@ -20,24 +20,6 @@
             Screens
           </span>
         </div>
-        <div
-          class="station"
-          title="Screenshot"
-          @click="setActive('Screenshot')"
-        >
-          <div
-            class="station__button button"
-            :class="{ 'button--is-active' : isActive('Screenshot') }"
-          >
-            <img
-              src="@/assets/icons/screenshot.svg"
-              alt="Screenshot"
-            >
-          </div>
-          <span class="station__title">
-            Screenshot
-          </span>
-        </div>
       </div>
       <div
         v-if="sidebar===true"

@@ -1,89 +1,148 @@
 <template>
-  <div
-    v-if="artboards.length"
-    id="artboards"
-    @contextmenu="rightClickMenu($event)"
-  >
+  <div v-if="artboards.length" id="artboards">
     <Artboard
-      v-for="artboard in artboards"
-      :key="artboard.id"
-      ref="artboard"
+      v-for="(artboard, index) in artboards"
       v-bind="artboard"
+      :key="artboard.id"
+      :index="index"
+      :artboard-id="artboard.id"
+      :selectedItems="selectedArtboards"
+      ref="artboard"
+      class="artboard"
       @resize="resize"
     />
   </div>
   <!-- Show empty state if no artboards exist -->
-  <div
-    v-else
-    class="empty-state"
-  >
-    <img
-      src="@/assets/ftu-vector.svg"
-      class="empty-state__image"
-      alt="Welcome graphic"
-    >
-    <span class="empty-state__title">
-      Welcome to {{ appName }}
-    </span>
-    <p class="empty-state__body">
-      You can create new screens in the Screens panel on the left.
-    </p>
+  <div v-else class="empty-state">
+    <img src="@/assets/ftu-vector.svg" class="empty-state__image" alt="Welcome graphic" />
+    <span class="empty-state__title">Welcome to {{ appName }}</span>
+    <p class="empty-state__body">You can create new screens in the Screens panel on the left.</p>
   </div>
 </template>
 
 <script>
-import Artboard from './Artboard'
-
-import { remote } from 'electron'
-const { Menu, MenuItem } = remote
+import { remote } from "electron";
+const { Menu, MenuItem } = remote;
+import Artboard from "./Artboard";
+import { mapState } from "vuex";
+import Selection from "@simonwep/selection-js";
+import store from "@/store";
 
 export default {
-  name: 'Artboards',
+  name: "Artboards",
   components: {
     Artboard
   },
+  data() {
+    return {
+      selectionInstance: null
+    };
+  },
   computed: {
-    artboards() {
-      // Returns an array of artboards
-      return this.$store.state.artboards
-    },
+    ...mapState({
+      artboards: state => state.artboards,
+      selectedArtboards: state => state.selectedArtboards,
+      isPanning: state => state.interactions.isPanning,
+      isZooming: state => state.interactions.isZooming,
+      isResizingArtboard: state => state.interactions.isResizingArtboard
+    }),
     appName() {
       // Return the name of the Electron app
       // From package.json (name or productName)
-      return remote.app.getName()
+      return remote.app.getName();
     }
+  },
+  mounted() {
+    const vm = this;
+
+    const selectionInstance = new Selection({
+      class: "selection-area", // Class for the selection-area
+      selectedClass: "is-selected",
+      selectables: ["#artboards > .artboard"], // All elements in this container can be selected
+      boundaries: ["#canvas"], // The boundary
+      singleClick: true // Enable single-click selection
+    });
+
+    selectionInstance
+      .on("beforestart", evt => {
+        // Prevent selections if the user is interacting with an artboard
+        // console.log(vm.isPanning, vm.isResizingArtboard);
+
+        if (
+          vm.isPanning === true ||
+          vm.isZooming === true ||
+          vm.isResizingArtboard === true
+        ) {
+          return false;
+        } else {
+          return true;
+        }
+      })
+      .on("start", evt => {
+        // Every non-ctrlKey causes a selection reset
+        if (!evt.ctrlKey) {
+          store.dispatch("selectedArtboardsEmpty");
+        }
+      })
+      .on("move", evt => {
+        /**
+         * Only add / remove selected class to increase selection performance.
+         */
+
+        // Add
+        evt.changed.added.forEach(item => {
+          const id = item.getAttribute("artboard-id");
+          store.dispatch("selectedArtboardsAdd", id);
+        });
+
+        // Remove
+        evt.changed.removed.forEach(item => {
+          const id = item.getAttribute("artboard-id");
+          store.dispatch("selectedArtboardsRemove", id);
+        });
+      })
+      .on("stop", evt => {
+        /**
+         * Every element has a artboard-id property which is used
+         * to find the selected nodes. Find these and append they
+         * to the current selection.
+         */
+        // Remove all in case temporarily added
+        store.dispatch("selectedArtboardsEmpty");
+
+        // Push the new IDs
+        evt.selected.forEach(item => {
+          const id = item.getAttribute("artboard-id");
+          store.dispatch("selectedArtboardsAdd", id); // Add these items to the Store
+        });
+      });
   },
   watch: {
     artboards: function() {
-      document.$panzoom.center()
+      document.$panzoom.center();
     }
   },
   methods: {
     resize(artboard) {
-      this.$store.commit('resizeArtboard', artboard)
+      this.$store.commit("resizeArtboard", artboard);
     },
-    rightClickMenu(e) {
-      const element = e.target.querySelector('.frame')
-
-      // Only display menu if a <webview> was found near the click
-      if (element) {
-        const menu = new Menu()
-        menu.append(
-          new MenuItem({
-            label: 'Open Inspector',
-            click() {
-              console.log(element)
-              element.openDevTools()
-            }
-          })
-        )
-
-        menu.popup(remote.getCurrentWindow())
-      }
+    disableSelection() {
+      this.selectionInstance.disable();
+    },
+    enableSelection() {
+      this.selectionInstance.enable();
     }
   }
-}
+};
 </script>
+
+
+<style lang="scss">
+.selection-area {
+  border: 1px solid #cbcbcb;
+  background: rgba(198, 198, 198, 0.3);
+}
+</style>
 
 <style lang="scss" scoped>
 #artboards {
@@ -94,11 +153,17 @@ export default {
   user-select: none;
   box-sizing: border-box;
   will-change: auto; // Activate GPU rendering
+  z-index: 0;
+  // border: 2px solid green;
 
   &.is-vertical {
     flex-direction: column;
     align-items: center;
   }
+}
+
+.artboard {
+  // border: 1px solid red;
 }
 
 #sidebar {

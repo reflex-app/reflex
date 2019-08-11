@@ -5,9 +5,14 @@
 </template>
 
 <script>
+import { ipcRenderer } from "electron";
+ipcRenderer.on("message", function(event, text) {
+  console.log(event, text);
+});
+
 export default {
-  name: 'Reflex'
-}
+  name: "Reflex"
+};
 </script>
 
 <style lang="scss" scoped>
