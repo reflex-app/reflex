@@ -97,23 +97,25 @@ export function setMenu(window) {
   },
   {
     role: 'help',
-    submenu: [{
-      label: 'Community',
-      click() {
-        shell.openExternal('https://spectrum.chat/reflex-app')
+    submenu: [
+      //   {
+      //   label: 'Community',
+      //   click() {
+      //     shell.openExternal('https://spectrum.chat/reflex-app')
+      //   }
+      // },
+      {
+        label: 'Report a Bug',
+        click() {
+          shell.openExternal('https://github.com/nwittwer/reflex/issues/new')
+        }
+      },
+      {
+        label: 'Follow on Twitter',
+        click() {
+          shell.openExternal('https://twitter.com/reflex_app')
+        }
       }
-    }, {
-      label: 'Report a Bug',
-      click() {
-        shell.openExternal('https://github.com/nwittwer/reflex/issues/new')
-      }
-    },
-    {
-      label: 'Follow on Twitter',
-      click() {
-        shell.openExternal('https://twitter.com/reflex_app')
-      }
-    }
     ]
   }
   ]

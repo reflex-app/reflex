@@ -3,7 +3,6 @@
     <ToolBar ref="toolbar" />
     <div id="canvasContainer">
       <SidePanel />
-      <!-- <ArtboardControls /> -->
       <div id="canvas" ref="canvas">
         <Artboards ref="artboards" />
       </div>
@@ -15,15 +14,14 @@
 import ToolBar from "../components/ToolBar";
 import Artboards from "../components/Artboards.vue";
 import SidePanel from "../components/SidePanel";
-import ArtboardControls from "../components/ArtboardControls.vue";
 import { Panzoom } from "../mixins/panzoom";
 import store from "@/store";
+import { ipcRenderer } from "electron";
 
 export default {
   name: "MainView",
   components: {
     Artboards,
-    ArtboardControls,
     SidePanel,
     ToolBar
   },
@@ -73,6 +71,20 @@ export default {
             value: false
           });
         });
+    });
+
+    // Listen for menu bar events
+    // TODO Add tests for these
+    ipcRenderer.on("menu_zoom-to-fit", () => {
+       document.$panzoom.fitToScreen();
+    });
+
+    ipcRenderer.on("menu_zoom-in", () => {
+       document.$panzoom.zoomIn()
+    });
+
+    ipcRenderer.on("menu_zoom-out", () => {
+      document.$panzoom.zoomOut()
     });
   }
 };
