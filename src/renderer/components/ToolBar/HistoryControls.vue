@@ -38,7 +38,6 @@ export default {
     ]),
     checkHistory(direction) {
       if (!direction || !this.pages) throw new Error("Missing inputs");
-      console.log("computed count is called");
 
       let nextPageIndex;
 
