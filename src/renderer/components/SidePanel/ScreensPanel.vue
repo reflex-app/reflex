@@ -1,5 +1,4 @@
 <template>
-  <transition name="sidebar-transition">
     <div id="artboard-tabs">
       <!-- List of Artboards -->
       <div v-if="artboards.length" class="artboard-tabs__scroll">
@@ -28,7 +27,6 @@
         </select>
       </div>
     </div>
-  </transition>
 </template>
 
 <script>
