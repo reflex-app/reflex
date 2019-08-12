@@ -83,6 +83,12 @@ export default {
         if (!evt.ctrlKey) {
           store.dispatch("selectedArtboardsEmpty");
         }
+
+        // Update state
+        store.commit("interactionSetState", {
+          key: "isSelectingArea",
+          value: true
+        });
       })
       .on("move", evt => {
         /**
@@ -109,6 +115,12 @@ export default {
          */
         // Remove all in case temporarily added
         store.dispatch("selectedArtboardsEmpty");
+
+        // Update state
+        store.commit("interactionSetState", {
+          key: "isSelectingArea",
+          value: false
+        });
 
         // Push the new IDs
         evt.selected.forEach(item => {
