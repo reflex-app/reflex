@@ -21,6 +21,10 @@ export default {
       type: Boolean,
       default: false
     },
+    tight: {
+      type: Boolean,
+      default: false
+    },
     isPressed: {
       type: Boolean,
       default: false
@@ -57,6 +61,11 @@ export default {
       // If isPressed
       if (this.isPressed) {
         classNames.push("button--is-pressed");
+      }
+      
+      // If tight
+      if (this.tight) {
+        classNames.push("button--tight");
       }
 
       // If rounded
@@ -106,9 +115,9 @@ export default {
   border: 1px solid transparent;
   border-radius: 4px;
   user-select: none;
-  // box-shadow: 0 1px 2px 0px rgba(#6a6a6a, 0.2);
   cursor: pointer;
   line-height: 1;
+  // box-shadow: 0 1px 2px 0px rgba(#6a6a6a, 0.2);
   // transition: all 75ms ease-in-out;
 
   // &:hover {
@@ -179,6 +188,10 @@ export default {
     border-radius: 50%;
     padding: 0.5rem; // This is required so that it's a square
   }
+
+  &.button--tight {
+    padding: 0;
+  }
 }
 
 .button--with-icon {
@@ -188,7 +201,6 @@ export default {
 
   .button__text {
     padding-right: 0.25rem;
-    font-weight: 600;
   }
 }
 </style>

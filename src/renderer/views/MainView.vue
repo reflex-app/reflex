@@ -115,7 +115,7 @@ export default {
 
 #canvasContainer {
   background: $body-bg;
-  height: calc(100% - 44px); // hard-coded height of toolbar
+  height: calc(100% - #{$gui-title-bar-height}); // hard-coded height of toolbar
   width: 100%;
   position: relative;
   display: flex;

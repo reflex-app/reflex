@@ -1,6 +1,13 @@
 <template>
-  <div id="toolbar">
-    <Button role="ghost" icon="screens" @click="toggleSidebar" :isPressed="sidebar">Screens</Button>
+  <div id="toolbar" :class="{ 'is-fullscreen' : isFullScreen }">
+    <Button
+      role="ghost"
+      icon="screens"
+      @click="toggleSidebar"
+      :tight="true"
+      :isPressed="sidebar"
+      title="Screens"
+    ></Button>
     <div v-if="artboards.length" id="toolbar__url-container">
       <HistoryControls />
       <div class="bar">
@@ -28,6 +35,7 @@
       <div class="toolbar__button-group">
       </div>
     </div>-->
+    <div id="draggable" @dblclick="toggleWindowMaximize"></div>
   </div>
 </template>
 
@@ -37,6 +45,7 @@ import { mapState } from "vuex";
 import URLInput from "./URLInput.vue";
 import SyncButton from "./SyncButton.vue";
 import HistoryControls from "./HistoryControls.vue";
+import { remote } from "electron";
 
 const debounce = require("lodash.debounce");
 
@@ -49,7 +58,9 @@ export default {
   },
   data() {
     return {
-      inputStateActive: false
+      inputStateActive: false,
+      isFullScreen: false,
+      currentWindow: null
     };
   },
   computed: {
@@ -79,7 +90,35 @@ export default {
     }, 100),
     toggleSidebar() {
       store.commit("toggleSidebar");
+    },
+    toggleWindowMaximize() {
+      const window = remote.getCurrentWindow();
+      const isMaximized = window.isMaximized();
+      // Do the opposite
+      if (isMaximized) {
+        window.unmaximize();
+      } else {
+        window.maximize();
+      }
+    },
+    toggleFullscreen() {
+      // TODO Error about calling a window that has
+      // already been closed
+      // To avoid this problem, ensure you clean up any references to renderer callbacks passed to the main process.
+      // This involves cleaning up event handlers, or ensuring the main process is explicitly told to dereference callbacks that came from a renderer process that is exiting.
+      // See: https://electronjs.org/docs/api/remote#passing-callbacks-to-the-main-process
+      const window = remote.getCurrentWindow();
+      this.isFullScreen = window.isFullScreen() ? true : false;
     }
+  },
+  mounted() {
+    // Check if already in fullscreen
+    this.toggleFullscreen();
+
+    // Listen for fullscreen event
+    const currentWindow = remote.getCurrentWindow();
+    currentWindow.on("enter-full-screen", this.toggleFullscreen);
+    currentWindow.on("leave-full-screen", this.toggleFullscreen);
   }
 };
 </script>
@@ -88,20 +127,43 @@ export default {
 @import "~@/scss/_variables";
 
 #toolbar {
-  height: 44px;
-  z-index: 1;
-  padding: 0.5rem 1rem;
-  color: #434343;
+  // TODO Refactor if supporting Windows in the future
   position: relative;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
+  height: $gui-title-bar-height;
+  padding: 8px 0;
+  z-index: 1;
+  color: #434343;
   background: white;
   border-bottom: $gui-border;
+  user-select: none;
 
-  & > *:not(:first-child) {
-    margin-left: 16px;
+  // Remove spacing reserved for traffic-sign on Mac
+  &.is-fullscreen {
+    & > *:first-child {
+      margin-left: 1rem;
+    }
   }
+
+  // Extra spacing for traffic-sign on Mac
+  & > *:first-child {
+    margin-left: calc(65px + 1rem); // move away from the traffic sign
+  }
+
+  #draggable {
+    -webkit-app-region: drag; // Allow dragging
+    position: absolute;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    height: $gui-title-bar-height;
+  }
+
+  // & > *:not(:first-child) {
+  //   margin-left: 16px;
+  // }
 
   #toolbar__url-container {
     position: relative;
@@ -145,7 +207,7 @@ export default {
       width: 100%;
       background: #eeeeee;
       transition: background 0.15s ease-out;
-      padding: 0.4rem 1rem;
+      padding: 0.2rem 1rem;
 
       &:hover {
         cursor: pointer;

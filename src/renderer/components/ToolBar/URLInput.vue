@@ -28,7 +28,13 @@ import autoCorrectURL from "@/mixins/autoCorrectURL.js";
 
 export default {
   name: "URLInput",
-  props: ["state"],
+  props: {
+    state: {
+      type: Boolean,
+      required: true,
+      default: false
+    }
+  },
   computed: {
     url() {
       return this.$store.state.history.currentPage.url;
@@ -106,7 +112,7 @@ input[type="text"] {
   text-overflow: ellipsis;
   border-radius: 40px;
   border: 1px solid transparent;
-  padding: 0.4rem 1rem;
+  padding: 0.2rem 1rem;
 
   &:hover {
     border-color: $border-color;

@@ -3,6 +3,7 @@
     <Button
       role="ghost"
       :rounded="true"
+      :tight="true"
       v-if="canGoBack"
       @click="back"
       icon="arrow-left"
@@ -11,12 +12,20 @@
     <Button
       role="ghost"
       :rounded="true"
+      :tight="true"
       v-if="canGoForward"
       @click="forward"
       icon="arrow-right"
       title="Forward"
     ></Button>
-    <Button role="ghost" :rounded="true" @click="reload" icon="reload" title="Forward"></Button>
+    <Button
+      role="ghost"
+      :rounded="true"
+      :tight="true"
+      @click="reload"
+      icon="reload"
+      title="Forward"
+    ></Button>
   </div>
 </template>
 
@@ -76,5 +85,4 @@ export default {
   display: flex;
   margin-right: 1rem;
 }
-
 </style>
