@@ -201,16 +201,19 @@ export class Panzoom {
       const zoomAspectRatioY = parentHeight / elHeight
 
       const scale = (value) => {
-        newMatrix[0] = value
-        newMatrix[3] = value
+        newMatrix[0] = value - 0.1 // TODO temporarily set to test zooming out
+        newMatrix[3] = value - 0.1 // TODO temporarily set to test zooming out
         return newMatrix[0], newMatrix[3]
       };
 
       if (zoomAspectRatioX < 1 && zoomAspectRatioY < 1) {
+        console.log('1');
         scale(Math.min(parentWidth / (elWidth / currentScale), parentHeight / (elHeight / currentScale)))
       } else if (zoomAspectRatioX < 1) {
+        console.log('2');
         scale(parentWidth / (elWidth / currentScale))
       } else if (zoomAspectRatioY < 1) {
+        console.log('3');
         scale(parentHeight / (elHeight / currentScale))
       }
     }
