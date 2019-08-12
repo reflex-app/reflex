@@ -41,8 +41,9 @@ async function createWindow() {
     useContentSize: true,
     webPreferences: {
       webviewTag: true,
-      nodeIntegration: true // add this
-    }
+      nodeIntegration: true // Required in new Electron
+    },
+    titleBarStyle: 'hiddenInset' // Hide the bar
   })
 
   // Log the version

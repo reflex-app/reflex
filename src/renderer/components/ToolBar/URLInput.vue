@@ -13,76 +13,76 @@
         @keyup.enter="triggerSiteLoad($event.target.value)"
         @keyup.esc="blur()"
         @blur="$emit('toggle-input')"
-      >
+      />
     </div>
     <!-- State: Initial -->
-    <div v-else>
-      <span @click="$emit('toggle-input')">
-        <span v-if="url">
-          {{ url }}
-        </span>
-        <span v-else>
-          Enter a website URL
-        </span>
-      </span>
-    </div>
+    <span v-else @click="$emit('toggle-input')">
+      <span v-if="url" class="url" :title="url">{{ url }}</span>
+      <span v-else>Enter a website URL</span>
+    </span>
   </div>
 </template>
 
 <script>
-import autoCorrectURL from '@/mixins/autoCorrectURL.js'
+import autoCorrectURL from "@/mixins/autoCorrectURL.js";
 
 export default {
-  name: 'URLInput',
-  props: ['state'],
+  name: "URLInput",
+  props: {
+    state: {
+      type: Boolean,
+      required: true,
+      default: false
+    }
+  },
   computed: {
     url() {
-      return this.$store.state.history.currentPage.url
+      return this.$store.state.history.currentPage.url;
     }
   },
   watch: {
     state: function() {
-      const vm = this
+      const vm = this;
       if (this.state === true) {
         // When clicked, select the text in the input
         vm.$nextTick(() => {
-          vm.$refs.input.focus()
-          vm.$refs.input.select()
-        })
+          vm.$refs.input.focus();
+          vm.$refs.input.select();
+        });
       }
     },
     url: function() {
       // When the URL changes...
       // update notBrowserSyncURL
-      console.log('url changed')
+      console.log("url changed");
     }
   },
   methods: {
     async triggerSiteLoad(url) {
-      if (!url) return false
+      if (!url) return false;
 
       // Validate URL
-      const newURL = await this.validateURL(url)
-      this.$emit('url-changed', newURL)
-      this.blur()
+      const newURL = await this.validateURL(url);
+      this.$emit("url-changed", newURL);
+      this.blur();
     },
     blur() {
       // Blur the input
-      const vm = this
+      const vm = this;
       vm.$nextTick(() => {
-        vm.$refs.input.blur()
-      })
+        vm.$refs.input.blur();
+      });
     },
     async validateURL(url) {
       try {
         // @TODO: Refactor/simplify the URL corrector
-        return autoCorrectURL(url)
+        return autoCorrectURL(url);
       } catch (e) {
-        return false
+        return false;
       }
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -112,7 +112,7 @@ input[type="text"] {
   text-overflow: ellipsis;
   border-radius: 40px;
   border: 1px solid transparent;
-  padding: 0.4rem 1rem;
+  padding: 0.2rem 1rem;
 
   &:hover {
     border-color: $border-color;
@@ -126,5 +126,11 @@ input[type="text"] {
     background: lighten($body-bg, 3%);
     border-color: rgba($accent-color, 1);
   }
+}
+
+.url {
+  max-width: 200px;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 </style>

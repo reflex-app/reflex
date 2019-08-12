@@ -24,7 +24,7 @@
     <div class="artboard__content">
       <WebPage
         ref="frame"
-        :preventInteractions="isSelected"
+        :allowInteractions="canInteractArtboard"
         @loadstart="state.isLoading = true"
         @loadend="state.isLoading = false"
       />
@@ -37,6 +37,7 @@
 
 <script>
 import store from "@/store";
+import { mapState } from "vuex";
 import WebPage from "./WebPage.vue";
 
 export default {
@@ -60,9 +61,12 @@ export default {
     };
   },
   computed: {
+    // ...mapState({
+
+    // }),
     // Bind to our Vuex Store's URL value
     url() {
-      return this.$store.state.history.currentPage.url;
+      return store.state.history.currentPage.url;
     },
     isSelected() {
       const isSelected = store.state.selectedArtboards.filter(
@@ -73,6 +77,22 @@ export default {
       } else {
         return false;
       }
+    },
+    /**
+     * Only allow interacting with the underlying
+     * artboard (WebView) when the artboard is selected
+     * and the user is not dragging a selection area
+     */
+    canInteractArtboard() {
+      if (this.isSelected == false) return false; // Not selected!
+
+      const isInteracting = store.getters.isInteracting;
+
+      if (this.isSelected && isInteracting == false) {
+        return true; // Can interact!
+      }
+
+      return false; // Otherwise, false
     }
   },
   mounted() {
@@ -349,7 +369,7 @@ $artboard-handle-height: 1rem;
       cursor: nwse-resize;
 
       &:hover:after {
-        background: red;
+        background: darken($accent-color, 20%);
       }
 
       &:active:after {

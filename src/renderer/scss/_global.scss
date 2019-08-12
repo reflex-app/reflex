@@ -1,5 +1,15 @@
 @import 'variables';
 
+html {
+	box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+	box-sizing: inherit;
+}
+
 html,
 body {
 	font-size: 15px;
@@ -28,54 +38,6 @@ body {
 	width: 100%;
 	margin: 0;
 	padding: 0;
-}
-
-.button {
-	padding: 0.3rem 0.75rem;
-	background: #FFFFFF;
-	border: 1px solid #b8b8b8;
-	border-radius: 4px;
-	user-select: none;
-	box-shadow: 0 1px 2px 0px rgba(#6a6a6a, 0.2);
-	cursor: pointer;
-	display: inline-block;
-
-	&:hover {
-		background: #f5f5f5;
-	}
-
-	&:active {
-		color: darken(#6f6f6f, 40%);
-		background: darken(white, 20%);
-	}
-
-	&.button--primary {
-		// width: 100%;
-		// padding: 0.75rem 0;
-		// vertical-align: middle;
-		// text-align: center;
-		color: white;
-		background: $accent-color;
-
-		&:hover {
-			cursor: pointer;
-			background: $accent-color;
-		}
-
-		&:active {
-			color: white;
-			background: darken($accent-color, 15%);
-		}
-	}
-
-	&.button--is-active {
-		color: white;
-		border-color: $accent-color;
-		background: $accent-color;
-		box-shadow: 0 0px 0px 1px $accent-color;
-		color: $accent-color;
-		background: white;
-	}
 }
 
 a {
