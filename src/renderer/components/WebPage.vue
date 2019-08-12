@@ -64,8 +64,6 @@ export default {
       }
     },
     allowInteractions: function(value) {
-      console.log('allowInteractions', value);
-      
       // Toggle frame pointer-events
       const element = this.$refs.frame;
       if (value == true) {
