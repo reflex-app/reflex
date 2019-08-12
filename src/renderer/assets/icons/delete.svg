@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 56.3 (81716) - https://sketch.com -->
+    <title>icon / delete</title>
+    <desc>Created with Sketch.</desc>
+    <g id="icon-/-delete" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group" transform="translate(6.000000, 5.000000)">
+            <path d="M4,1.5 L4,0.5 L8,0.5 L8,1.5 L12,1.5 L12,3.5 L0,3.5 L0,1.5 L4,1.5 Z" id="Combined-Shape" fill="#252525"></path>
+            <path d="M1,4 L11,4 L11,11.3079206 C11,12.2440152 10.9025331,12.5834658 10.7195107,12.925688 C10.5364882,13.2679102 10.2679102,13.5364882 9.92568801,13.7195107 C9.58346579,13.9025331 9.24401525,14 8.30792059,14 L3.69207941,14 C2.75598475,14 2.41653421,13.9025331 2.07431199,13.7195107 C1.73208978,13.5364882 1.46351178,13.2679102 1.28048933,12.925688 C1.09746689,12.5834658 1,12.2440152 1,11.3079206 L1,4 Z" id="Rectangle" fill="#333333"></path>
+        </g>
+    </g>
+</svg>

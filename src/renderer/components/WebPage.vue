@@ -5,7 +5,13 @@
 <script>
 import store from "@/store";
 export default {
-  props: ["preventInteractions"],
+  props: {
+    allowInteractions: {
+      type: Boolean,
+      default: false,
+      required: true
+    }
+  },
   computed: {
     url() {
       return store.state.history.currentPage.url; // Bind to our Vuex Store's URL value
@@ -57,15 +63,13 @@ export default {
         this.loadSite();
       }
     },
-    preventInteractions: function(value) {
-      // console.log("prevent interaction:", value);
-
-      // Toggle frame pointer-events based on the isSelected artboard state
+    allowInteractions: function(value) {
+      // Toggle frame pointer-events
       const element = this.$refs.frame;
       if (value == true) {
-        element.style.pointerEvents = "auto";
+        element.style.pointerEvents = "auto"; // Default
       } else if (value == false) {
-        element.style.pointerEvents = "none";
+        element.style.pointerEvents = "none"; // Disable
       }
     }
   },

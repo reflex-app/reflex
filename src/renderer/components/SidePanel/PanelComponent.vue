@@ -1,34 +1,34 @@
 <template>
   <div id="panel-container">
-    <div class="panel__header">
+    <!-- <div class="panel__header">
       {{ title }}
-    </div>
+    </div>-->
     <div class="panel__content">
-      <ScreensPanel v-show="isChildPanel('Screens')" />
+        <ScreensPanel v-show="isChildPanel('Screens')" />
     </div>
   </div>
 </template>
 
 <script>
-import ScreensPanel from './ScreensPanel.vue'
+import ScreensPanel from "./ScreensPanel.vue";
 
 export default {
-  name: 'PanelComponent',
+  name: "PanelComponent",
   components: {
     ScreensPanel
   },
-  props: ['title'],
+  props: ["title"],
   computed: {},
   methods: {
-    isChildPanel: function (val) {
+    isChildPanel: function(val) {
       if (this.title === val) {
-        return true
+        return true;
       } else {
-        return false
+        return false;
       }
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -41,7 +41,7 @@ export default {
   flex-direction: column;
   height: 100%;
   border-right: 1px solid $border-color;
-  width: 17rem;
+  width: 18rem;
   overflow: auto;
   cursor: default;
   overflow: hidden;

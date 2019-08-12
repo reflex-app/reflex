@@ -2,15 +2,24 @@
   <div id="screenshots">
     <!-- One selected -->
     <transition name="slide-fade">
-    <div v-if="selectedArtboards.length > 0" class="modal">
-      <div>
-        <div class="button button--primary"
-          @click="screenshotSelected()"
-        >Save {{ selectedArtboards.length > 1 ? selectedArtboards.length + ' images...' : selectedArtboards.length + ' image...' }}</div>
-        <div v-if="selectedArtboards.length===1" class="button" @click="copyToClipboard()">Copy to Clipboard</div>
+      <div v-if="selectedArtboards.length > 0" class="modal">
+        <div>
+          <Button
+            role="primary"
+            @click="screenshotSelected"
+          >Save {{ selectedArtboards.length > 1 ? selectedArtboards.length + ' images...' : selectedArtboards.length + ' image...' }}</Button>
+          <Button
+            role="secondary"
+            @click="copyToClipboard"
+            v-if="selectedArtboards.length===1"
+          >Copy to Clipboard</Button>
+        </div>
+        <Button
+          role="secondary"
+          @click="clearAllSelected"
+          class="modal__close button"
+        >Clear Selection</Button>
       </div>
-      <div @click="clearAllSelected()" class="modal__close button">Clear Selection</div>
-    </div>
     </transition>
 
     <!-- TODO Show the file path in Finder -->
@@ -25,7 +34,7 @@ import store from "@/store";
 import { shell } from "electron";
 
 export default {
-  name: "ScreenshotPanel",
+  name: "Screenshots",
 
   data() {
     return {
@@ -155,12 +164,13 @@ export default {
 /* Enter and leave animations can use different */
 /* durations and timing functions.              */
 .slide-fade-enter-active {
-  transition: all 250ms ease;
+  transition: all 300ms ease;
 }
 .slide-fade-leave-active {
-  transition: all 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transition: all 250ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
-.slide-fade-enter, .slide-fade-leave-to {
+.slide-fade-enter,
+.slide-fade-leave-to {
   transform: translateY(4rem);
   opacity: 0;
 }

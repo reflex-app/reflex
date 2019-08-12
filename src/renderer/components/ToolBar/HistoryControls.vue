@@ -1,16 +1,31 @@
 <template>
-  <div>
-    <div class="controls">
-      <div class="controls__button" id="history-back" v-if="canGoBack" @click="back" title="Back"></div>
-      <div
-        class="controls__button"
-        id="history-forward"
-        v-if="canGoForward"
-        @click="forward"
-        title="Forward"
-      ></div>
-      <div class="controls__button" id="history-reload" @click="reload" title="Reload"></div>
-    </div>
+  <div class="controls">
+    <Button
+      role="ghost"
+      :rounded="true"
+      :tight="true"
+      v-if="canGoBack"
+      @click="back"
+      icon="arrow-left"
+      title="Back"
+    ></Button>
+    <Button
+      role="ghost"
+      :rounded="true"
+      :tight="true"
+      v-if="canGoForward"
+      @click="forward"
+      icon="arrow-right"
+      title="Forward"
+    ></Button>
+    <Button
+      role="ghost"
+      :rounded="true"
+      :tight="true"
+      @click="reload"
+      icon="reload"
+      title="Forward"
+    ></Button>
   </div>
 </template>
 
@@ -68,44 +83,6 @@ export default {
 <style lang="scss" scoped>
 .controls {
   display: flex;
-
-  & > * {
-    position: relative;
-    height: 1.5rem;
-    width: 1.5rem;
-  }
-
-  & > *:after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    background-size: 90%;
-    background-repeat: no-repeat;
-    background-position: center;
-  }
-}
-
-.controls__button {
-  cursor: pointer;
-  padding: 0.25rem;
-  border-radius: 50%;
-  transition: background 125ms ease-out;
-
-  &:hover {
-    background: rgb(211, 211, 211);
-  }
-}
-
-#history-back:after {
-  background-image: url("~@/assets/icons/arrow-left.svg");
-}
-#history-forward:after {
-  background-image: url("~@/assets/icons/arrow-right.svg");
-}
-#history-reload:after {
-  background-image: url("~@/assets/icons/reload.svg");
+  margin-right: 1rem;
 }
 </style>

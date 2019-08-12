@@ -5,7 +5,7 @@
     :class="{ 'is-active' : isOnSyncURL }"
     @click="syncSite()"
   >
-    <img src="@/assets/icons/sync.svg" alt>
+    <Icon name="sync"/>
   </div>
 </template>
 
@@ -130,15 +130,6 @@ export default {
 
   &.is-active {
     background: #d1cff5;
-  }
-
-  & > div {
-    line-height: normal;
-    vertical-align: baseline;
-
-    img {
-      display: inline-block;
-    }
   }
 }
 </style>

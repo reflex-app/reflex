@@ -1,7 +1,6 @@
 <template>
-  <transition name="sidebar-transition">
-    <div class="side-panel">
-      <div class="side-panel__track">
+  <div class="side-panel">
+    <!-- <div class="side-panel__track">
         <div
           class="station"
           title="Screens"
@@ -20,37 +19,35 @@
             Screens
           </span>
         </div>
-      </div>
-      <div
-        v-if="sidebar===true"
-        class="side-panel__content"
-      >
+    </div>-->
+    <transition name="slide-in">
+      <div v-if="sidebar===true" class="side-panel__content">
         <PanelComponent :title="activeStation" />
       </div>
-    </div>
-  </transition>
+    </transition>
+  </div>
 </template>
 
 <script>
-import PanelComponent from './PanelComponent.vue'
+import PanelComponent from "./PanelComponent.vue";
 
 export default {
-  name: 'SidePanel',
+  name: "SidePanel",
   components: {
     PanelComponent
   },
   data() {
     return {
-      activeStation: 'Screens'
-    }
+      activeStation: "Screens"
+    };
   },
   computed: {
     // Bind to our Vuex Store's URL value
     artboards: function() {
-      return this.$store.state.artboards
+      return this.$store.state.artboards;
     },
     sidebar() {
-      return this.$store.state.gui.sidebar
+      return this.$store.state.gui.sidebar;
     }
   },
 
@@ -60,18 +57,18 @@ export default {
       if (this.sidebar && this.activeStation !== val) {
         // Normal State
         // Simply set the clicked station to active
-        this.activeStation = val
+        this.activeStation = val;
       } else if (this.sidebar && this.activeStation === val) {
         // Close State
         // When clicking on the same station,
         // it should close the sidebar
-        this.toggleSidebar(false)
-        this.activeStation = ''
+        this.toggleSidebar(false);
+        this.activeStation = "";
       } else if (this.sidebar === false) {
         // Closed State
         // Sidebar is closed, re-open
-        this.toggleSidebar(true)
-        this.activeStation = val
+        this.toggleSidebar(true);
+        this.activeStation = val;
       }
     },
     isActive: function(val) {
@@ -79,16 +76,16 @@ export default {
       // if it was open in last session
       // Otherwise, don't set an active state
       if (this.sidebar === true) {
-        return this.activeStation === val
+        return this.activeStation === val;
       } else {
-        return ''
+        return "";
       }
     },
     toggleSidebar() {
-      this.$store.commit('toggleSidebar')
+      this.$store.commit("toggleSidebar");
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -98,6 +95,7 @@ export default {
   display: grid;
   grid-template-columns: auto 1fr;
   grid-template-rows: 1fr;
+  z-index: 100;
 
   .side-panel__track {
     position: relative;
@@ -144,5 +142,20 @@ export default {
       position: relative;
     }
   }
+}
+
+/* Enter and leave animations can use different */
+/* durations and timing functions.              */
+.slide-in-enter-active {
+  transition: all 300ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.slide-in-leave-active {
+  transition: all 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.slide-in-enter,
+.slide-in-leave-to {
+  transform: translateX(-20rem);
+  background: red;
+  // opacity: 0;
 }
 </style>
