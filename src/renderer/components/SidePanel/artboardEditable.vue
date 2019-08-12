@@ -18,25 +18,27 @@
             @keyup.enter="save(artboard), editMode=false"
           />
         </div>
-        <div class="group">
+        <div class="group group--two-up">
           <label>Dimensions</label>
-          <div class="group__input-with-right-label">
-            <input
-              v-model.number.lazy="artboard.width"
-              type="number"
-              placeholder="Width"
-              @keyup.enter="save(artboard), editMode=false"
-            />
-            <label>W</label>
-          </div>
-          <div class="group__input-with-right-label">
-            <input
-              v-model.number.lazy="artboard.height"
-              type="number"
-              placeholder="Height"
-              @keyup.enter="save(artboard), editMode=false"
-            />
-            <label>H</label>
+          <div class="group__two-up">
+            <div class="group__input-with-right-label">
+              <input
+                v-model.number.lazy="artboard.width"
+                type="number"
+                placeholder="Width"
+                @keyup.enter="save(artboard), editMode=false"
+              />
+              <label>W</label>
+            </div>
+            <div class="group__input-with-right-label">
+              <input
+                v-model.number.lazy="artboard.height"
+                type="number"
+                placeholder="Height"
+                @keyup.enter="save(artboard), editMode=false"
+              />
+              <label>H</label>
+            </div>
           </div>
 
           <div class="buttons">
@@ -124,7 +126,11 @@ export default {
     },
     remove(name, id) {
       // TODO Custom prompts?
-      if (confirm(`You are able to to delete the ${name} screen size. Click "OK" to delete.`)) {
+      if (
+        confirm(
+          `You are able to to delete the ${name} screen size. Click "OK" to delete.`
+        )
+      ) {
         this.$store.commit("removeArtboard", id);
       }
     },
@@ -223,8 +229,11 @@ $artboard-tab-side-padding: 1rem;
 
     .buttons {
       display: flex;
-      justify-content: space-between;
-      margin: 0.5rem 0 0;
+      margin: 1rem 0 0;
+
+      & > *:not(:last-child) {
+        margin-right: 0.5rem;
+      }
     }
 
     .group {
@@ -233,6 +242,17 @@ $artboard-tab-side-padding: 1rem;
 
       &:not(:first-child) {
         margin-top: 1rem;
+      }
+    }
+
+    .group__two-up {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-column-gap: 0.5rem;
+
+      & > * {
+        display: block;
+        width: 100%;
       }
     }
 

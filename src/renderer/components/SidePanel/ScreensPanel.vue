@@ -164,7 +164,7 @@ export default {
   flex-direction: column;
   width: 100%;
   height: 100%;
-  overflow: auto;
+  // overflow: auto;
   // position: absolute;
   // top: 0;
   // left: 0;
