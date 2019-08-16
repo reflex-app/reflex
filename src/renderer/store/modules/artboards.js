@@ -1,6 +1,7 @@
 import Vue from 'vue'
 
-const state = [] // All artboards on the screen
+// All artboards on the screen
+const state = []
 
 const mutations = {
   /**
@@ -9,8 +10,8 @@ const mutations = {
    * @param  {} artboard
    */
   addArtboard(state, artboard) {
-    let artboards = this.state.artboards
-    let artboardsCounter = this.state.artboards.length || 0
+    const artboards = state
+    const artboardsCounter = state.length || 0
 
     const uniqueID = () => {
       function check(val) {
@@ -23,22 +24,19 @@ const mutations = {
 
       let increment = artboardsCounter // 0+
 
-      // let flag = false
-      // if (flag === false) {
-      let val = increment++
+      const val = increment++
       const flag = check(val) // True or False
 
       if (flag === true) {
         return val
       }
-      // }
     }
 
     // Append a unique ID
     artboard.id = uniqueID()
 
     // Add to the array
-    this.state.artboards.push(artboard)
+    state.push(artboard)
   },
 
   /**
@@ -47,8 +45,8 @@ const mutations = {
    * @param  {} id
    */
   removeArtboard(state, id) {
-    let index = this.state.artboards.findIndex(obj => obj.id === id)
-    Vue.delete(this.state.artboards, index)
+    const index = state.findIndex(obj => obj.id === id)
+    Vue.delete(state, index)
   },
 
   /** Modify an Artboard by Index
@@ -57,11 +55,11 @@ const mutations = {
    */
   updateArtboardAtIndex(state, artboard) {
     // 1. Get the artboard.id
-    let id = artboard.id
-    let index = this.state.artboards.findIndex(obj => obj.id === id)
+    const id = artboard.id
+    const index = state.findIndex(obj => obj.id === id)
 
     // 2. Change just that artboard's content
-    Vue.set(this.state.artboards, index, artboard)
+    Vue.set(state, index, artboard)
   },
 
   /** Resize an Artboard
@@ -69,7 +67,7 @@ const mutations = {
    * @param  {Object} payload {id, height, width}
    */
   resizeArtboard(state, payload) {
-    const artboards = this.state.artboards
+    const artboards = state
 
     for (var i = 0; i < artboards.length; i++) {
       if (payload.id === artboards[i].id) { // look for match by id
@@ -81,18 +79,22 @@ const mutations = {
   },
 
   setArtboardList(state, payload) {
-    this.state.artboards = payload
+    state = payload
   }
 }
 
 const actions = {
-  addArtboard({commit}, artboard) {
+  addArtboard({
+    commit
+  }, artboard) {
     commit('addArtboard', artboard)
   },
-  async addMultipleArtboards({commit}, payload) {
+  async addMultipleArtboards({
+    commit
+  }, payload) {
     const artboards = payload.data
 
-    for (let i in artboards) {
+    for (const i in artboards) {
       commit('addArtboard', artboards[i])
     }
   }
