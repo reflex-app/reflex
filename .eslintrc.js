@@ -6,7 +6,8 @@ module.exports = {
   },
   env: {
     browser: true,
-    node: true
+    node: true,
+    jest: true
   },
   extends: [
     'standard',
@@ -26,6 +27,8 @@ module.exports = {
     'space-before-function-paren': 0,
     // allow async-await
     'generator-star-spacing': 0,
+    // allow new()
+    'no-new': 0,
     // allow debugger during development
     'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0
   }
