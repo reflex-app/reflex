@@ -23,7 +23,7 @@
 <script>
 import { remote } from "electron";
 const { Menu, MenuItem } = remote;
-import Artboard from "./Artboard";
+import Artboard from "@/components/Artboard";
 import { mapState } from "vuex";
 import Selection from "@simonwep/selection-js";
 import store from "@/store";
@@ -136,7 +136,7 @@ export default {
   },
   methods: {
     resize(artboard) {
-      this.$store.commit("resizeArtboard", artboard);
+      store.commit("resizeArtboard", artboard);
     },
     disableSelection() {
       this.selectionInstance.disable();
