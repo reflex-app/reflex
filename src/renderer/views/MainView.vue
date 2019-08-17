@@ -12,11 +12,11 @@
 </template>
 
 <script>
-import ToolBar from "../components/ToolBar";
-import Artboards from "../components/Artboards.vue";
-import SidePanel from "../components/SidePanel";
-import Screenshots from "../components/Screenshot";
-import store from "@/store";
+import ToolBar from "@/components/ToolBar";
+import Artboards from "@/components/Screens/Artboards";
+import SidePanel from "@/components/SidePanel";
+import Screenshots from "@/components/Screenshot";
+import { mapState } from "vuex";
 import { Panzoom } from "../mixins/panzoom";
 import { ipcRenderer } from "electron";
 
@@ -29,10 +29,9 @@ export default {
     Screenshots
   },
   computed: {
-    // Bind to our Vuex Store's URL value
-    artboards: function() {
-      return this.$store.state.artboards;
-    }
+    ...mapState({
+      artboards: state => state.artboards
+    })
   },
   mounted: function() {
     let vm = this;
@@ -51,25 +50,25 @@ export default {
       // Commit them to the Vuex store
       instance
         .on("zoomStart", () => {
-          store.commit("interactionSetState", {
+          this.$store.commit("interactionSetState", {
             key: "isZooming",
             value: true
           });
         })
         .on("zoomStop", () => {
-          store.commit("interactionSetState", {
+          this.$store.commit("interactionSetState", {
             key: "isZooming",
             value: false
           });
         })
         .on("panStart", () => {
-          store.commit("interactionSetState", {
+          this.$store.commit("interactionSetState", {
             key: "isPanning",
             value: true
           });
         })
         .on("panStop", () => {
-          store.commit("interactionSetState", {
+          this.$store.commit("interactionSetState", {
             key: "isPanning",
             value: false
           });
@@ -95,11 +94,11 @@ export default {
 
 <style lang="scss">
 // Make global styles available
-@import "../scss/_global";
+@import "@/scss/_global";
 </style>
 
 <style lang="scss" scoped>
-@import "../scss/_variables";
+@import "@/scss/_variables";
 
 #main-view {
   display: flex;
