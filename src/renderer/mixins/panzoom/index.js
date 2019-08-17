@@ -54,6 +54,7 @@ export class Panzoom {
   _init() {
     const _this = this
 
+    // TODO temporary using null to avoid in tests
     const parent_styles = {
       position: 'relative',
       display: 'flex',

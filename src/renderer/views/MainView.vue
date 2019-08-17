@@ -19,6 +19,7 @@ import Screenshots from "@/components/Screenshot";
 import { mapState } from "vuex";
 import { Panzoom } from "../mixins/panzoom";
 import { ipcRenderer } from "electron";
+import isElectron from "is-electron";
 
 export default {
   name: "MainView",
@@ -77,17 +78,19 @@ export default {
 
     // Listen for menu bar events
     // TODO Add tests for these
-    ipcRenderer.on("menu_zoom-to-fit", () => {
-       document.$panzoom.fitToScreen();
-    });
+    if (isElectron()) {
+      ipcRenderer.on("menu_zoom-to-fit", () => {
+        document.$panzoom.fitToScreen();
+      });
 
-    ipcRenderer.on("menu_zoom-in", () => {
-       document.$panzoom.zoomIn()
-    });
+      ipcRenderer.on("menu_zoom-in", () => {
+        document.$panzoom.zoomIn();
+      });
 
-    ipcRenderer.on("menu_zoom-out", () => {
-      document.$panzoom.zoomOut()
-    });
+      ipcRenderer.on("menu_zoom-out", () => {
+        document.$panzoom.zoomOut();
+      });
+    }
   }
 };
 </script>
