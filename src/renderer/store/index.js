@@ -1,15 +1,18 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import VuexPersistence from 'vuex-persist'
 
-// Load all Store modules
 import modules from './modules'
 
 Vue.use(Vuex)
 
-// Create the Store
-const store = new Vuex.Store({
-  modules,
-  strict: process.env.NODE_ENV !== 'production'
+// Persisted State
+const vuexLocal = new VuexPersistence({
+  storage: window.localStorage
 })
 
-export default store
+export default new Vuex.Store({
+  modules,
+  plugins: [vuexLocal.plugin],
+  strict: process.env.NODE_ENV !== 'production'
+})
