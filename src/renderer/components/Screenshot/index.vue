@@ -30,7 +30,6 @@
 <script>
 import * as capture from "./capture.js";
 import { mapState } from "vuex";
-import store from "@/store";
 import { shell } from "electron";
 
 export default {
@@ -89,7 +88,7 @@ export default {
     },
 
     clearAllSelected() {
-      store.dispatch("selectedArtboardsEmpty");
+      this.$store.dispatch("selectedArtboardsEmpty");
     },
 
     async screenshotAll() {
