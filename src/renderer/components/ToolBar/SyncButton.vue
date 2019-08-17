@@ -5,16 +5,14 @@
     :class="{ 'is-active' : isOnSyncURL }"
     @click="syncSite()"
   >
-    <Icon name="sync"/>
+    <Icon name="sync" />
   </div>
 </template>
 
 <script>
 // Synchronization server
-import * as electron from "electron";
-import * as sync from "../../mixins/sync.js";
-
-const currentWindow = electron.remote.getCurrentWindow();
+import { remote } from "electron";
+import * as sync from "../../mixins/sync";
 
 export default {
   name: "SyncButton",

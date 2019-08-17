@@ -74,8 +74,12 @@
 
 <script>
 import { remote } from "electron";
-const { Menu, MenuItem } = remote;
 import draggable from "vuedraggable";
+import isElectron from "is-electron";
+
+if (isElectron()) {
+  const { Menu, MenuItem } = remote;
+}
 
 export default {
   name: "artboardEditable",
@@ -147,17 +151,19 @@ export default {
       const artboardFrame = artboard.querySelector(".frame");
 
       if (artboardFrame) {
-        const menu = new Menu();
-        menu.append(
-          new MenuItem({
-            label: "Open DevTools",
-            click() {
-              // console.log(element);
-              artboardFrame.openDevTools();
-            }
-          })
-        );
-        menu.popup(remote.getCurrentWindow());
+        if (isElectron()) {
+          const menu = new Menu();
+          menu.append(
+            new MenuItem({
+              label: "Open DevTools",
+              click() {
+                // console.log(element);
+                artboardFrame.openDevTools();
+              }
+            })
+          );
+          menu.popup(remote.getCurrentWindow());
+        }
       } else {
         throw new Error("No frame near artboard");
       }

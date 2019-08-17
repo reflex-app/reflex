@@ -1,11 +1,14 @@
 import {
   clipboard,
-  nativeImage
+  nativeImage,
+  remote
 } from 'electron'
+
+import isElectron from 'is-electron'
 
 const {
   dialog
-} = require('electron').remote
+} = isElectron() ? remote : {}
 
 const path = require('path')
 const fs = require('fs')
@@ -16,17 +19,19 @@ export async function capture(id, title, screenshotPath) {
     if (!screenshotPath) {
       // Case: no path set yet (single screenshot save)
       // Prompt location to save screenshot
-      dialog.showOpenDialog({
-        properties: ['openFile', 'openDirectory', 'createDirectory']
-      },
-      function (filePaths) {
-        try {
-          makeFile(filePaths[0], screenshot)
-        } catch (e) {
-          // Nothing was selected
+      if (isElectron()) {
+        dialog.showOpenDialog({
+          properties: ['openFile', 'openDirectory', 'createDirectory']
+        },
+        function (filePaths) {
+          try {
+            makeFile(filePaths[0], screenshot)
+          } catch (e) {
+            // Nothing was selected
+          }
         }
+        )
       }
-      )
     } else {
       // Case: already has a path (multi-save)
       makeFile(screenshotPath, screenshot)
@@ -49,7 +54,7 @@ export async function capture(id, title, screenshotPath) {
       err => {
         if (err) throw err
         // Alert the user that the screenshot was saved
-        const notification = new Notification('Screenshot saved', {
+        new Notification('Screenshot saved', {
           body: filePath
         })
       }
@@ -76,23 +81,27 @@ export function captureMultiple(ids) {
   dialog.showOpenDialog({
     properties: ['openFile', 'openDirectory', 'createDirectory']
   },
-  async function (filePaths) {
+  function (filePaths) {
     try {
-      // Capture each & save it
-      const captureEach = async (array) => {
-        for (const item of array) {
-          await capture(
-            item,
-            `${item}`,
-            filePaths[0]
-          )
+      if (filePaths.length > 0) {
+        // Capture each & save it
+        const captureEach = (array) => {
+          for (const item of array) {
+            capture(
+              item,
+              `${item}`,
+              filePaths[0]
+            )
+          }
         }
-      }
 
-      await captureEach(ids)
-      return filePaths[0]
+        captureEach(ids)
+        return filePaths[0]
+      } else {
+        // None selected
+      }
     } catch (err) {
-      // Nothing was selected
+      console.log(err)
     }
   }
   )

@@ -12,13 +12,14 @@
 </template>
 
 <script>
-import ToolBar from "../components/ToolBar";
-import Artboards from "../components/Artboards.vue";
-import SidePanel from "../components/SidePanel";
-import Screenshots from "../components/Screenshot";
-import store from "@/store";
+import ToolBar from "@/components/ToolBar";
+import Artboards from "@/components/Screens/Artboards";
+import SidePanel from "@/components/SidePanel";
+import Screenshots from "@/components/Screenshot";
+import { mapState } from "vuex";
 import { Panzoom } from "../mixins/panzoom";
 import { ipcRenderer } from "electron";
+import isElectron from "is-electron";
 
 export default {
   name: "MainView",
@@ -29,10 +30,9 @@ export default {
     Screenshots
   },
   computed: {
-    // Bind to our Vuex Store's URL value
-    artboards: function() {
-      return this.$store.state.artboards;
-    }
+    ...mapState({
+      artboards: state => state.artboards
+    })
   },
   mounted: function() {
     let vm = this;
@@ -51,25 +51,25 @@ export default {
       // Commit them to the Vuex store
       instance
         .on("zoomStart", () => {
-          store.commit("interactionSetState", {
+          this.$store.commit("interactionSetState", {
             key: "isZooming",
             value: true
           });
         })
         .on("zoomStop", () => {
-          store.commit("interactionSetState", {
+          this.$store.commit("interactionSetState", {
             key: "isZooming",
             value: false
           });
         })
         .on("panStart", () => {
-          store.commit("interactionSetState", {
+          this.$store.commit("interactionSetState", {
             key: "isPanning",
             value: true
           });
         })
         .on("panStop", () => {
-          store.commit("interactionSetState", {
+          this.$store.commit("interactionSetState", {
             key: "isPanning",
             value: false
           });
@@ -78,28 +78,30 @@ export default {
 
     // Listen for menu bar events
     // TODO Add tests for these
-    ipcRenderer.on("menu_zoom-to-fit", () => {
-       document.$panzoom.fitToScreen();
-    });
+    if (isElectron()) {
+      ipcRenderer.on("menu_zoom-to-fit", () => {
+        document.$panzoom.fitToScreen();
+      });
 
-    ipcRenderer.on("menu_zoom-in", () => {
-       document.$panzoom.zoomIn()
-    });
+      ipcRenderer.on("menu_zoom-in", () => {
+        document.$panzoom.zoomIn();
+      });
 
-    ipcRenderer.on("menu_zoom-out", () => {
-      document.$panzoom.zoomOut()
-    });
+      ipcRenderer.on("menu_zoom-out", () => {
+        document.$panzoom.zoomOut();
+      });
+    }
   }
 };
 </script>
 
 <style lang="scss">
 // Make global styles available
-@import "../scss/_global";
+@import "@/scss/_global";
 </style>
 
 <style lang="scss" scoped>
-@import "../scss/_variables";
+@import "@/scss/_variables";
 
 #main-view {
   display: flex;
@@ -128,7 +130,7 @@ export default {
     outline: none;
 
     &:hover {
-      cursor: grab;
+      // cursor: grab;
     }
 
     &:active {

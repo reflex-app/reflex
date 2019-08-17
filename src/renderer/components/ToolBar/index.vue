@@ -46,6 +46,7 @@ import URLInput from "./URLInput.vue";
 import SyncButton from "./SyncButton.vue";
 import HistoryControls from "./HistoryControls.vue";
 import { remote } from "electron";
+import isElectron from "is-electron";
 
 const debounce = require("lodash.debounce");
 
@@ -112,13 +113,15 @@ export default {
     }
   },
   mounted() {
-    // Check if already in fullscreen
-    this.toggleFullscreen();
+    if (isElectron()) {
+      // Check if already in fullscreen
+      this.toggleFullscreen();
 
-    // Listen for fullscreen event
-    const currentWindow = remote.getCurrentWindow();
-    currentWindow.on("enter-full-screen", this.toggleFullscreen);
-    currentWindow.on("leave-full-screen", this.toggleFullscreen);
+      // Listen for fullscreen event
+      const currentWindow = remote.getCurrentWindow();
+      currentWindow.on("enter-full-screen", this.toggleFullscreen);
+      currentWindow.on("leave-full-screen", this.toggleFullscreen);
+    }
   }
 };
 </script>
