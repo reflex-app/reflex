@@ -2,13 +2,13 @@
   <div
     class="artboard"
     ref="artboard"
-    :style="{ height: this.height+'px', width: this.width+'px' }"
+    :style="{ height: height+'px', width: width+'px' }"
     :class="{ 'is-selected': isSelected }"
   >
     <div class="artboard__top">
       <div>
-        <span class="title">{{ this.title }}</span>
-        <span class="dimension">{{ this.width }} x {{ this.height }}</span>
+        <span class="title">{{ title }}</span>
+        <span class="dimension">{{ width }} x {{ height }}</span>
       </div>
       <!-- Show a loader when state.isLoading == true -->
       <div v-show="state.isLoading" class="artboard__loader is-loading">
@@ -69,7 +69,7 @@ export default {
       return store.state.history.currentPage.url;
     },
     isSelected() {
-      const isSelected = store.state.selectedArtboards.filter(
+      const isSelected = this.selectedArtboards.filter(
         item => item == this.id
       );
       if (isSelected.length) {
@@ -99,7 +99,7 @@ export default {
     this.$nextTick(() => {
       // Remove any leftover selected artboards
       // @TODO: This should be done from VueX Store, or wiped before quitting
-      store.dispatch("selectedArtboardsEmpty");
+      this.$store.dispatch("selectedArtboardsEmpty");
     });
   },
 
@@ -129,8 +129,6 @@ export default {
 
       // Min & Max
       if (newValue > maxSize || newValue < minSize) {
-        // eslint-disable-next-line
-        // console.log(newValue);
         return false;
       } else {
         // Size is within range!
@@ -175,7 +173,7 @@ export default {
 
       function doStart() {
         // Update global state
-        store.commit("interactionSetState", {
+        vm.$store.commit("interactionSetState", {
           key: "isResizingArtboard",
           value: true
         });
@@ -240,7 +238,7 @@ export default {
         document.$panzoom.enable(); // TODO: Cleaner solution that polluting document?
 
         // Update global state
-        store.commit("interactionSetState", {
+        vm.$store.commit("interactionSetState", {
           key: "isResizingArtboard",
           value: false
         });
@@ -254,10 +252,10 @@ export default {
       // Update the VueX Store
       if (this.state.isSelected === true) {
         // Add to Store
-        store.dispatch("selectedArtboardsAdd", this.index);
+        this.$store.dispatch("selectedArtboardsAdd", this.index);
       } else {
         // Remove from Store
-        store.dispatch("selectedArtboardsRemove", this.index);
+        this.$store.dispatch("selectedArtboardsRemove", this.index);
       }
     }
   }

@@ -26,7 +26,6 @@ const { Menu, MenuItem } = remote;
 import Artboard from "@/components/Artboard";
 import { mapState } from "vuex";
 import Selection from "@simonwep/selection-js";
-import store from "@/store";
 
 export default {
   name: "Artboards",
@@ -81,11 +80,11 @@ export default {
       .on("start", evt => {
         // Every non-ctrlKey causes a selection reset
         if (!evt.ctrlKey) {
-          store.dispatch("selectedArtboardsEmpty");
+          this.$store.dispatch("selectedArtboardsEmpty");
         }
 
         // Update state
-        store.commit("interactionSetState", {
+        this.$store.commit("interactionSetState", {
           key: "isSelectingArea",
           value: true
         });
@@ -98,13 +97,13 @@ export default {
         // Add
         evt.changed.added.forEach(item => {
           const id = item.getAttribute("artboard-id");
-          store.dispatch("selectedArtboardsAdd", id);
+          this.$store.dispatch("selectedArtboardsAdd", id);
         });
 
         // Remove
         evt.changed.removed.forEach(item => {
           const id = item.getAttribute("artboard-id");
-          store.dispatch("selectedArtboardsRemove", id);
+          this.$store.dispatch("selectedArtboardsRemove", id);
         });
       })
       .on("stop", evt => {
@@ -114,10 +113,10 @@ export default {
          * to the current selection.
          */
         // Remove all in case temporarily added
-        store.dispatch("selectedArtboardsEmpty");
+        this.$store.dispatch("selectedArtboardsEmpty");
 
         // Update state
-        store.commit("interactionSetState", {
+        this.$store.commit("interactionSetState", {
           key: "isSelectingArea",
           value: false
         });
@@ -125,7 +124,7 @@ export default {
         // Push the new IDs
         evt.selected.forEach(item => {
           const id = item.getAttribute("artboard-id");
-          store.dispatch("selectedArtboardsAdd", id); // Add these items to the Store
+          this.$store.dispatch("selectedArtboardsAdd", id); // Add these items to the Store
         });
       });
   },
@@ -136,7 +135,7 @@ export default {
   },
   methods: {
     resize(artboard) {
-      store.commit("resizeArtboard", artboard);
+      this.$store.commit("resizeArtboard", artboard);
     },
     disableSelection() {
       this.selectionInstance.disable();
