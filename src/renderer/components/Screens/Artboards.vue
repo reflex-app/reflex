@@ -22,10 +22,9 @@
 
 <script>
 import { remote } from "electron";
-const { Menu, MenuItem } = remote;
-import Artboard from "@/components/Artboard";
 import { mapState } from "vuex";
 import Selection from "@simonwep/selection-js";
+import Artboard from "./Artboard";
 
 export default {
   name: "Artboards",
@@ -48,13 +47,19 @@ export default {
     appName() {
       // Return the name of the Electron app
       // From package.json (name or productName)
-      return remote.app.getName();
+      // TODO this if check is required in case of tests
+      if (remote) {
+        return remote.app.getName();
+      } else {
+        const pkgJson = require("../../../../package.json");
+        return pkgJson.productName;
+      }
     }
   },
   mounted() {
     const vm = this;
 
-    const selectionInstance = new Selection({
+    this.selectionInstance = new Selection({
       class: "selection-area", // Class for the selection-area
       selectedClass: "is-selected",
       selectables: ["#artboards > .artboard"], // All elements in this container can be selected
@@ -62,7 +67,7 @@ export default {
       singleClick: true // Enable single-click selection
     });
 
-    selectionInstance
+    this.selectionInstance
       .on("beforestart", evt => {
         // Prevent selections if the user is interacting with an artboard
         // console.log(vm.isPanning, vm.isResizingArtboard);

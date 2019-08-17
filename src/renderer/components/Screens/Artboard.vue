@@ -36,7 +36,6 @@
 </template>
 
 <script>
-// import store from "@/store";
 import { mapState, mapGetters } from "vuex";
 import WebPage from "./WebPage.vue";
 
@@ -263,7 +262,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../scss/_variables";
+@import "@/scss/_variables";
 $artboard-handle-height: 1rem;
 
 .artboard {
