@@ -36,8 +36,8 @@
 </template>
 
 <script>
-import store from "@/store";
-import { mapState } from "vuex";
+// import store from "@/store";
+import { mapState, mapGetters } from "vuex";
 import WebPage from "./WebPage.vue";
 
 export default {
@@ -61,13 +61,13 @@ export default {
     };
   },
   computed: {
-    // ...mapState({
-
-    // }),
-    // Bind to our Vuex Store's URL value
-    url() {
-      return store.state.history.currentPage.url;
-    },
+    ...mapState({
+      url: state => state.history.currentPage.url,
+      selectedArtboards: state => state.selectedArtboards
+    }),
+    ...mapGetters(
+      ['isInteracting']
+    ),
     isSelected() {
       const isSelected = this.selectedArtboards.filter(
         item => item == this.id
@@ -86,7 +86,7 @@ export default {
     canInteractArtboard() {
       if (this.isSelected == false) return false; // Not selected!
 
-      const isInteracting = store.getters.isInteracting;
+      const isInteracting = this.isInteracting;
 
       if (this.isSelected && isInteracting == false) {
         return true; // Can interact!
