@@ -64,7 +64,7 @@
       "vue"
     ],
     "transform": {
-      ".*\\.(vue)$": "<rootDir>/node_modules/jest-vue-preprocessor",
+      ".*\\.(vue)$": "<rootDir>/node_modules/vue-jest",
       "^.+\\.js$": "<rootDir>/node_modules/babel-jest"
     },
     "moduleNameMapper": {
@@ -137,6 +137,7 @@
     "url-loader": "^2.1.0",
     "vue-eslint-parser": "^6.0.4",
     "vue-html-loader": "^1.2.4",
+    "vue-jest": "^3.0.4",
     "vue-loader": "^15.7.1",
     "vue-style-loader": "^4.1.0",
     "vue-template-compiler": "^2.6.10",
