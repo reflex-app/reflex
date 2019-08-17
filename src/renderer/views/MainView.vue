@@ -128,7 +128,7 @@ export default {
     outline: none;
 
     &:hover {
-      cursor: grab;
+      // cursor: grab;
     }
 
     &:active {
