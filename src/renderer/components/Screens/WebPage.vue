@@ -3,7 +3,6 @@
 </template>
 
 <script>
-import store from "@/store";
 export default {
   props: {
     allowInteractions: {
@@ -14,7 +13,7 @@ export default {
   },
   computed: {
     url() {
-      return store.state.history.currentPage.url; // Bind to our Vuex Store's URL value
+      return this.$store.state.history.currentPage.url; // Bind to our Vuex Store's URL value
     }
   },
   mounted() {
@@ -31,7 +30,7 @@ export default {
 
       // Watch for History actions
       // TODO Better way to watch for VueX actions?
-      store.subscribeAction((action, state) => {
+      this.$store.subscribeAction((action, state) => {
         switch (action.type) {
           case "reload":
             this.reload();
@@ -86,13 +85,13 @@ export default {
       const frame = this.$refs.frame;
 
       // VueX
-      const pages = store.state.history.pages;
-      const currentPage = store.state.history.currentPage.index;
-      const nextPage = store.state.history.currentPage.index - 1;
+      const pages = this.$store.state.history.pages;
+      const currentPage = this.$store.state.history.currentPage.index;
+      const nextPage = this.$store.state.history.currentPage.index - 1;
       // frame.loadURL(pages[nextPage]);
 
       // Update the URL in the store
-      store.commit("changeSiteData", {
+      this.$store.commit("changeSiteData", {
         url: pages[nextPage]
       });
 
@@ -106,13 +105,13 @@ export default {
       const frame = this.$refs.frame;
 
       // VueX
-      const pages = store.state.history.pages;
-      const currentPage = store.state.history.currentPage.index;
-      const nextPage = store.state.history.currentPage.index + 1;
+      const pages = this.$store.state.history.pages;
+      const currentPage = this.$store.state.history.currentPage.index;
+      const nextPage = this.$store.state.history.currentPage.index + 1;
       // frame.loadURL(pages[nextPage]);
 
       // Update the URL in the store
-      store.commit("changeSiteData", {
+      this.$store.commit("changeSiteData", {
         url: pages[nextPage]
       });
 
@@ -136,7 +135,7 @@ export default {
 
         // Change the title to Loading...
         // TODO Add a VueX action for this?
-        store.commit("changeSiteData", {
+        vm.$store.commit("changeSiteData", {
           title: "Loading..."
         });
       }
@@ -179,7 +178,7 @@ export default {
         const favicon = event.data.favicon;
 
         // TODO Add to VueX Action
-        store.commit("changeSiteData", {
+        vm.$store.commit("changeSiteData", {
           title: title,
           favicon: favicon
         });
@@ -194,7 +193,7 @@ export default {
         // Update History
         // TODO Put this in a more obvious place
         if (!options.history && options.history == false) {
-          store.commit("updateHistory", frame.getWebContents().history); // Array with URLs
+          vm.$store.commit("updateHistory", frame.getWebContents().history); // Array with URLs
         }
 
         // Remove the event listeners related to site loading
@@ -229,7 +228,7 @@ export default {
       // Handle user clicking on a link inside of the webview
       // TODO This should add a new page to the History
       // TODO Add to VueX Action
-      store.commit("changeSiteData", {
+      this.$store.commit("changeSiteData", {
         url: event.url
       });
     }

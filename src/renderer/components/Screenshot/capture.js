@@ -1,11 +1,14 @@
 import {
   clipboard,
-  nativeImage
+  nativeImage,
+  remote
 } from 'electron'
+
+import isElectron from 'is-electron'
 
 const {
   dialog
-} = require('electron').remote
+} = isElectron() ? remote : {}
 
 const path = require('path')
 const fs = require('fs')
@@ -16,17 +19,19 @@ export async function capture(id, title, screenshotPath) {
     if (!screenshotPath) {
       // Case: no path set yet (single screenshot save)
       // Prompt location to save screenshot
-      dialog.showOpenDialog({
-        properties: ['openFile', 'openDirectory', 'createDirectory']
-      },
-      function (filePaths) {
-        try {
-          makeFile(filePaths[0], screenshot)
-        } catch (e) {
-          // Nothing was selected
+      if (isElectron()) {
+        dialog.showOpenDialog({
+          properties: ['openFile', 'openDirectory', 'createDirectory']
+        },
+        function (filePaths) {
+          try {
+            makeFile(filePaths[0], screenshot)
+          } catch (e) {
+            // Nothing was selected
+          }
         }
+        )
       }
-      )
     } else {
       // Case: already has a path (multi-save)
       makeFile(screenshotPath, screenshot)

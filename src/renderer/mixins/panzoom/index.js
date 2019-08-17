@@ -54,6 +54,7 @@ export class Panzoom {
   _init() {
     const _this = this
 
+    // TODO temporary using null to avoid in tests
     const parent_styles = {
       position: 'relative',
       display: 'flex',
@@ -207,13 +208,13 @@ export class Panzoom {
       };
 
       if (zoomAspectRatioX < 1 && zoomAspectRatioY < 1) {
-        console.log('1');
+        // console.log('1');
         scale(Math.min(parentWidth / (elWidth / currentScale), parentHeight / (elHeight / currentScale)))
       } else if (zoomAspectRatioX < 1) {
-        console.log('2');
+        // console.log('2');
         scale(parentWidth / (elWidth / currentScale))
       } else if (zoomAspectRatioY < 1) {
-        console.log('3');
+        // console.log('3');
         scale(parentHeight / (elHeight / currentScale))
       }
     }

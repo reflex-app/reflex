@@ -93,13 +93,16 @@ export function onKeyDown(event) {
     // TODO Find a better way to handle the pan interaction
     // Currently starting at this point to prevent other interactions
     // like drag to select
+
+    // Change the cursor
+    document.body.style.cursor = "grab"
+
     _context._emit('panStart', event) // Emit the event (even though we're waiting)
   } else {
     spacebar = false
   }
 
-  // Change the cursor
-  document.body.style.cursor = "grab"
+
 
   // Listen for key up
   document.addEventListener('keyup', onKeyUp)

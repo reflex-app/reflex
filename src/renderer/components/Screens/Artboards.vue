@@ -22,11 +22,9 @@
 
 <script>
 import { remote } from "electron";
-const { Menu, MenuItem } = remote;
-import Artboard from "./Artboard";
 import { mapState } from "vuex";
 import Selection from "@simonwep/selection-js";
-import store from "@/store";
+import Artboard from "./Artboard";
 
 export default {
   name: "Artboards",
@@ -49,13 +47,19 @@ export default {
     appName() {
       // Return the name of the Electron app
       // From package.json (name or productName)
-      return remote.app.getName();
+      // TODO this if check is required in case of tests
+      if (remote) {
+        return remote.app.getName();
+      } else {
+        const pkgJson = require("../../../../package.json");
+        return pkgJson.productName;
+      }
     }
   },
   mounted() {
     const vm = this;
 
-    const selectionInstance = new Selection({
+    this.selectionInstance = new Selection({
       class: "selection-area", // Class for the selection-area
       selectedClass: "is-selected",
       selectables: ["#artboards > .artboard"], // All elements in this container can be selected
@@ -63,7 +67,7 @@ export default {
       singleClick: true // Enable single-click selection
     });
 
-    selectionInstance
+    this.selectionInstance
       .on("beforestart", evt => {
         // Prevent selections if the user is interacting with an artboard
         // console.log(vm.isPanning, vm.isResizingArtboard);
@@ -81,11 +85,11 @@ export default {
       .on("start", evt => {
         // Every non-ctrlKey causes a selection reset
         if (!evt.ctrlKey) {
-          store.dispatch("selectedArtboardsEmpty");
+          this.$store.dispatch("selectedArtboardsEmpty");
         }
 
         // Update state
-        store.commit("interactionSetState", {
+        this.$store.commit("interactionSetState", {
           key: "isSelectingArea",
           value: true
         });
@@ -98,13 +102,13 @@ export default {
         // Add
         evt.changed.added.forEach(item => {
           const id = item.getAttribute("artboard-id");
-          store.dispatch("selectedArtboardsAdd", id);
+          this.$store.dispatch("selectedArtboardsAdd", id);
         });
 
         // Remove
         evt.changed.removed.forEach(item => {
           const id = item.getAttribute("artboard-id");
-          store.dispatch("selectedArtboardsRemove", id);
+          this.$store.dispatch("selectedArtboardsRemove", id);
         });
       })
       .on("stop", evt => {
@@ -114,10 +118,10 @@ export default {
          * to the current selection.
          */
         // Remove all in case temporarily added
-        store.dispatch("selectedArtboardsEmpty");
+        this.$store.dispatch("selectedArtboardsEmpty");
 
         // Update state
-        store.commit("interactionSetState", {
+        this.$store.commit("interactionSetState", {
           key: "isSelectingArea",
           value: false
         });
@@ -125,7 +129,7 @@ export default {
         // Push the new IDs
         evt.selected.forEach(item => {
           const id = item.getAttribute("artboard-id");
-          store.dispatch("selectedArtboardsAdd", id); // Add these items to the Store
+          this.$store.dispatch("selectedArtboardsAdd", id); // Add these items to the Store
         });
       });
   },

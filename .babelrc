@@ -41,10 +41,16 @@
             "targets": {
               "node": "current"
             }
+            // "modules": false
           }
         ]
+      ],
+      "plugins": [
+        "require-context-hook"
       ]
     }
   },
-  "plugins": ["@babel/plugin-transform-runtime"]
+  "plugins": [
+    "@babel/plugin-transform-runtime"
+  ]
 }
