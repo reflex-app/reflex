@@ -6,6 +6,8 @@ import {
 
 import isElectron from 'is-electron'
 
+
+
 const {
   dialog
 } = isElectron() ? remote : {}
@@ -13,6 +15,11 @@ const {
 const path = require('path')
 const fs = require('fs')
 const moment = require('moment')
+
+function getWebview(id) {
+  // TODO add test here, selectors are brittle
+  return document.querySelector(`[artboard-id="${id}"] webview`)
+}
 
 export async function capture(id, title, screenshotPath) {
   async function saveScreenshot(screenshot) {
@@ -63,7 +70,8 @@ export async function capture(id, title, screenshotPath) {
 
   try {
     // Capture the <webview>
-    const webview = document.querySelectorAll('webview')[id]
+    // Loop through the selected Webviews
+    const webview = getWebview(id)
     webview.getWebContents().capturePage(image => {
       const PNG = image.toPNG()
       saveScreenshot(PNG)
@@ -101,7 +109,7 @@ export function captureMultiple(ids) {
         // None selected
       }
     } catch (err) {
-      console.log(err)
+      throw new Error(err)
     }
   }
   )
@@ -131,10 +139,8 @@ export async function captureAll(vm) {
 // Take a screenshot
 // Return the image (NativeImage)
 export async function screenshot(id) {
-  // Select by unique artboard-id data attribute value
-  const webview = document.querySelector(`[artboard-id="${id}"] webview`)
-
   try {
+    const webview = getWebview(id)
     return webview.getWebContents().capturePage(image => {
       return image
     })

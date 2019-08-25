@@ -30,7 +30,6 @@
 <script>
 import * as capture from "./capture.js";
 import { mapState } from "vuex";
-import { shell } from "electron";
 
 export default {
   name: "Screenshots",
@@ -38,7 +37,6 @@ export default {
   data() {
     return {
       isScreenshotMode: false,
-      currentModal: 1,
       filePath: ""
     };
   },
@@ -57,36 +55,6 @@ export default {
   },
 
   methods: {
-    startScreenshot() {
-      const vm = this;
-
-      // Enable mode
-      this.isScreenshotMode = !this.isScreenshotMode;
-      this.currentModal = 1;
-
-      // Add event listener
-      const el = document.getElementsByClassName("artboard");
-      for (var i = 0; i < el.length; i++) {
-        el[i].addEventListener("click", vm.artboardSelected);
-      }
-
-      // Show modal 2 if any artboards were already selected
-      if (this.selectedArtboards.length > 0) {
-        this.currentModal = 2;
-      }
-    },
-
-    artboardSelected() {
-      // Show modal 2
-      this.currentModal = 2;
-
-      // Watch for user to unselect all artboards...
-      // if so, show the first modal again
-      if (this.selectedArtboards.length < 1) {
-        this.currentModal = 1;
-      }
-    },
-
     clearAllSelected() {
       this.$store.dispatch("selectedArtboardsEmpty");
     },
@@ -94,9 +62,6 @@ export default {
     async screenshotAll() {
       try {
         await capture.captureAll(this);
-
-        // Show the success modal
-        this.currentModal = 3;
       } catch (err) {
         throw new Error(err);
       }
@@ -105,9 +70,6 @@ export default {
     async screenshotSelected() {
       try {
         await capture.captureMultiple(this.selectedArtboards);
-
-        // Show the success modal
-        this.currentModal = 3;
       } catch (err) {
         throw new Error(err);
       }
@@ -116,14 +78,6 @@ export default {
     async copyToClipboard() {
       capture.copyToClipboard(this.selectedArtboards);
       // TODO Notify the user when the image has been saved to clipboard
-    },
-
-    showInFinder() {
-      try {
-        shell.showItemInFolder(this.filePath);
-      } catch (err) {
-        throw new Error(err);
-      }
     }
   }
 };
