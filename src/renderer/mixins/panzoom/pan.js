@@ -1,13 +1,8 @@
 let initialX
-
 let initialY
-
 let currentX
-
 let currentY
-
 let xOffset = 0
-
 let yOffset = 0
 
 export function start(e, context) {

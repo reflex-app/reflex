@@ -53,3 +53,19 @@ export const off = eventListener.bind(null, 'removeEventListener')
 //     target: tap.target
 //   }
 // }
+
+/**
+ * Return the x/y offset of the DOM element
+ * @param {*} e
+ */
+export function getOffsetXY(e, context) {
+  const element = context.element.getBoundingClientRect()
+  // const element = context.parent.getBoundingClientRect()
+  const offsetX = e.clientX - element.left
+  const offsetY = e.clientY - element.top
+
+  return {
+    x: offsetX,
+    y: offsetY
+  }
+}
