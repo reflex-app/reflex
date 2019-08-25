@@ -38,11 +38,11 @@ export default {
     let vm = this;
 
     vm.$nextTick(() => {
-      const contentEl = vm.$refs["artboards"].$el;
-      const controllerEl = vm.$refs["canvas"];
+      const parentEl = vm.$refs["canvas"];
+      const childEl = vm.$refs["artboards"].$el;
 
       // Initialize Panzoom
-      let instance = new Panzoom(contentEl, controllerEl, {
+      let instance = new Panzoom(parentEl, childEl, {
         startCentered: true
       });
       document.$panzoom = instance; // Attach to document
