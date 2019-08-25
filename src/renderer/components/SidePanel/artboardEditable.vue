@@ -155,6 +155,14 @@ export default {
           const menu = new Menu();
           menu.append(
             new MenuItem({
+              label: "Duplicate",
+              click() {
+                vm.$store.dispatch("duplicateArtboard", artboard);
+              }
+            })
+          );
+          menu.append(
+            new MenuItem({
               label: "Open DevTools",
               click() {
                 // console.log(element);

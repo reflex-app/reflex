@@ -1,7 +1,19 @@
 import Vue from 'vue'
+const uuid = require('uuid/v1')
 
 // All artboards on the screen
-const state = []
+// const state = []
+const state = () => {
+  return []
+}
+
+/**
+ * Mock:
+ * state = [
+ *    { id: 0, title: 'Mobile', height: 300, width: 400 }
+ *    { id: 0, title: 'Desktop', height: 900, width: 1440 }
+ * ]
+ */
 
 const mutations = {
   /**
@@ -10,33 +22,29 @@ const mutations = {
    * @param  {} artboard
    */
   addArtboard(state, artboard) {
-    const artboards = state
-    const artboardsCounter = state.length || 0
-
-    const uniqueID = () => {
-      function check(val) {
-        if (artboards.find(artboard => artboard.id === val)) {
-          return false // not unique
-        } else {
-          return true // it's unique
-        }
-      }
-
-      let increment = artboardsCounter // 0+
-
-      const val = increment++
-      const flag = check(val) // True or False
-
-      if (flag === true) {
-        return val
-      }
-    }
-
-    // Append a unique ID
-    artboard.id = uniqueID()
-
-    // Add to the array
+    artboard.id = uuid()
     state.push(artboard)
+  },
+
+  /**
+   * Add an Artboard
+   * @param  {} state
+   * @param  {} artboard
+   */
+  duplicateArtboard(state, payload) {
+    const {
+      oldArtboard,
+      newArtboard
+    } = payload
+
+    // Copy the input artboard
+    // Insert a new one at the next index
+    const index = state.findIndex(obj => obj.id === oldArtboard.id)
+    const newIndex = index + 1
+
+    // Push into array at index,
+    // don't remove any, just insert this artboard
+    state.splice(newIndex, 0, newArtboard)
   },
 
   /**
@@ -59,7 +67,7 @@ const mutations = {
     const index = state.findIndex(obj => obj.id === id)
 
     // 2. Change just that artboard's content
-    Vue.set(state, index, artboard)
+    state[index] = artboard
   },
 
   /** Resize an Artboard
@@ -78,8 +86,11 @@ const mutations = {
     }
   },
 
-  setArtboardList(state, payload) {
-    state = payload
+  setArtboardList: (state, payload) => {
+    // TODO this is not reactive currently
+    if (state !== payload) {
+      state = payload
+    }
   }
 }
 
@@ -97,6 +108,22 @@ const actions = {
     for (const i in artboards) {
       commit('addArtboard', artboards[i])
     }
+  },
+  async duplicateArtboard({
+    commit
+  }, payload) {
+    const newId = uuid()
+
+    if (newId === payload.id) throw new Error('Failed to generate new ID')
+
+    // New object from payload
+    const newArtboard = JSON.parse(JSON.stringify(payload))
+    newArtboard.id = newId
+
+    commit('duplicateArtboard', {
+      oldArtboard: payload,
+      newArtboard: newArtboard
+    })
   }
 }
 

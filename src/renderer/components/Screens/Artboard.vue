@@ -46,7 +46,7 @@ export default {
   },
   props: {
     index: Number,
-    id: Number,
+    id: String,
     title: String,
     height: Number,
     width: Number,
