@@ -2,6 +2,8 @@ import {
   clipboard,
   nativeImage,
   remote
+,
+  shell
 } from 'electron'
 
 import isElectron from 'is-electron'
@@ -64,6 +66,9 @@ export async function capture(id, title, screenshotPath) {
         new Notification('Screenshot saved', {
           body: filePath
         })
+
+        // Open in Finder
+        shell.openItem(filePath)
       }
     )
   }
