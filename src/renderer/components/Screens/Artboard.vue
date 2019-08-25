@@ -45,9 +45,8 @@ export default {
     WebPage
   },
   props: {
-    index: Number,
-    id: String,
     title: String,
+    id: String,
     height: Number,
     width: Number,
     selectedItems: Array
@@ -94,12 +93,13 @@ export default {
       return false; // Otherwise, false
     }
   },
+
   mounted() {
     this.$nextTick(() => {
       // Remove any leftover selected artboards
       // @TODO: This should be done from VueX Store, or wiped before quitting
       this.$store.dispatch("selectedArtboardsEmpty");
-    });
+    });    
   },
 
   methods: {
@@ -241,20 +241,6 @@ export default {
           key: "isResizingArtboard",
           value: false
         });
-      }
-    },
-
-    toggleSelectedState() {
-      // Change the state
-      this.state.isSelected = !this.state.isSelected;
-
-      // Update the VueX Store
-      if (this.state.isSelected === true) {
-        // Add to Store
-        this.$store.dispatch("selectedArtboardsAdd", this.index);
-      } else {
-        // Remove from Store
-        this.$store.dispatch("selectedArtboardsRemove", this.index);
       }
     }
   }

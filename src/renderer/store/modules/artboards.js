@@ -15,6 +15,14 @@ const state = () => {
  * ]
  */
 
+/**
+ * Mock:
+ * state = [
+ *    { id: 0, title: 'Mobile', height: 300, width: 400 }
+ *    { id: 0, title: 'Desktop', height: 900, width: 1440 }
+ * ]
+ */
+
 const mutations = {
   /**
    * Add an Artboard
@@ -54,7 +62,7 @@ const mutations = {
    */
   removeArtboard(state, id) {
     const index = state.findIndex(obj => obj.id === id)
-    Vue.delete(state, index)
+    state.splice(index, 1)
   },
 
   /** Modify an Artboard by Index

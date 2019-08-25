@@ -9,7 +9,6 @@
       <div>
         <Button role="primary" icon="plus" @click="add" class="artboard-tabs__button">New Screen</Button>
       </div>
-      <!-- <div class="artboard-tabs__button button button--primary" @click="add()">New Screen</div> -->
 
       <!-- Show a tip if there's no artboards -->
       <div v-if="!artboards.length" class="empty-state">
@@ -164,11 +163,6 @@ export default {
   flex-direction: column;
   width: 100%;
   height: 100%;
-  // overflow: auto;
-  // position: absolute;
-  // top: 0;
-  // left: 0;
-  // bottom: 0;
 
   .artboard-tabs__scroll {
     flex-grow: 1;
@@ -211,9 +205,7 @@ export default {
       height: 0;
       border-style: solid;
       border-width: 0px 6px 6px 6px;
-      // border-width: 6px 6px 0 6px;
       border-color: transparent transparent #535353 transparent;
-      // border-color: #535353 transparent transparent transparent;
     }
 
     .empty-state__text {
