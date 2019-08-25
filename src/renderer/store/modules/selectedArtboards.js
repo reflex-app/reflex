@@ -3,9 +3,6 @@ const state = [] // A list of selected artboards by index
 
 const mutations = {
   add: (state, payload) => {
-    // Make sure it's a number
-    payload = parseInt(payload, 10)
-
     // Only add new numbers
     if (state.includes(payload)) return false
 

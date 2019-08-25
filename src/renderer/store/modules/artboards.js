@@ -1,7 +1,16 @@
 import Vue from 'vue'
+const uuid = require('uuid/v1')
 
 // All artboards on the screen
 const state = []
+
+/**
+ * Mock:
+ * state = [
+ *    { id: 0, title: 'Mobile', height: 300, width: 400 }
+ *    { id: 0, title: 'Desktop', height: 900, width: 1440 }
+ * ]
+ */
 
 const mutations = {
   /**
@@ -10,32 +19,7 @@ const mutations = {
    * @param  {} artboard
    */
   addArtboard(state, artboard) {
-    const artboards = state
-    const artboardsCounter = state.length || 0
-
-    const uniqueID = () => {
-      function check(val) {
-        if (artboards.find(artboard => artboard.id === val)) {
-          return false // not unique
-        } else {
-          return true // it's unique
-        }
-      }
-
-      let increment = artboardsCounter // 0+
-
-      const val = increment++
-      const flag = check(val) // True or False
-
-      if (flag === true) {
-        return val
-      }
-    }
-
-    // Append a unique ID
-    artboard.id = uniqueID()
-
-    // Add to the array
+    artboard.id = uuid()
     state.push(artboard)
   },
 
@@ -46,7 +30,7 @@ const mutations = {
    */
   removeArtboard(state, id) {
     const index = state.findIndex(obj => obj.id === id)
-    Vue.delete(state, index)
+    state.splice(index, 1)
   },
 
   /** Modify an Artboard by Index
