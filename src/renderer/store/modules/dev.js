@@ -1,5 +1,5 @@
 const state = {
-  showCanvasDebugger: true
+  showCanvasDebugger: false
 }
 
 const mutations = {
@@ -7,8 +7,9 @@ const mutations = {
    * @param  {} state
    * @param  {Boolean} bool
    */
-  showCanvasDebugger(state) {
+  toggleCanvasDebugger(state) {
     state.showCanvasDebugger = !state.showCanvasDebugger
+    console.log('called')
   }
 }
 

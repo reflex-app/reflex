@@ -4,8 +4,8 @@
     <div id="canvasContainer">
       <SidePanel />
       <Screenshots />
-      <div id="canvas" ref="canvas" :class="{ 'dev-visual-debugger': isDev }">
-        <Artboards ref="artboards" :class="{ 'dev-visual-debugger': isDev }" />
+      <div id="canvas" ref="canvas" :class="{ 'dev-visual-debugger': showCanvasDebugger }">
+        <Artboards ref="artboards" :class="{ 'dev-visual-debugger': showCanvasDebugger }" />
       </div>
     </div>
   </div>
@@ -103,6 +103,10 @@ export default {
       ipcRenderer.on("menu_zoom-out", () => {
         document.$panzoom.zoomOut();
       });
+      
+      ipcRenderer.on("menu_show-developer-canvas-debugger", () => {
+        this.$store.commit("toggleCanvasDebugger");
+      });
     }
   }
 };
@@ -160,7 +164,7 @@ export default {
     width: 100%;
     content: "";
     z-index: 1;
-    pointer-events: none
+    pointer-events: none;
   }
 
   // Vertical line
