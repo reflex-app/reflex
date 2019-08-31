@@ -183,7 +183,6 @@ export function setMenu(window) {
     role: 'front'
   }
   ]
-  // }
 
   // If in Dev mode, add menu
   if (isDev) {
