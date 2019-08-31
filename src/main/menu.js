@@ -3,6 +3,7 @@ const {
   Menu,
   shell
 } = require('electron')
+const isDev = require('electron-is-dev')
 
 export function setMenu(window) {
   const template = [{
