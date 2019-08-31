@@ -176,18 +176,25 @@ export function panToElement(el) {
      * The parent center point
      */
     const viewportCenterX = (parent.offsetWidth / 2) * scale
+    const viewportCenterY = (parent.offsetHeight / 2) * scale
 
     /**
      * The width of the element's container
      */
     const containerWidth = (container.offsetWidth / 2) * scale
+    const containerHeight = (container.offsetHeight / 2) * scale
 
     /**
      * The element center point
      */
     const offsetLeft = element.offsetLeft
+    const offsetTop = element.offsetTop
+
     const width = element.offsetWidth / 2
+    const height = element.offsetHeight / 2
+
     const elementCenterX = (offsetLeft + width) * scale
+    const elementCenterY = (offsetTop + height) * scale
 
     /**
      * We've now calculated our two center points
@@ -200,9 +207,9 @@ export function panToElement(el) {
     // Update the matrix
     const matrix = context.transformMatrix
 
-    // This is pure magic
+    // This part is pure magic
     matrix[4] = ((viewportCenterX - containerWidth) - (viewportCenterX - elementCenterX)) * -1
-    matrix[5] = 0 // Always set Y back to 0
+    matrix[5] = ((viewportCenterY - containerHeight) - (viewportCenterY - elementCenterY)) * -1
 
     // Update context's matrix
     // This sets the position
