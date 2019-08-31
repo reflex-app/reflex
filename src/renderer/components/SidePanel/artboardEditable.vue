@@ -1,11 +1,6 @@
 <template>
-  <draggable v-model="artboards">
-    <div
-      v-for="(artboard, index) in artboards"
-      :key="artboard.id"
-      v-bind="artboard"
-      class="artboard-tab"
-    >
+  <draggable v-model="artboards" :animation="150">
+    <div v-for="artboard in artboards" v-bind="artboard" :key="artboard.id" class="artboard-tab">
       <!-- Editing state -->
       <div v-if="editMode==true&&editID==artboard.id" class="editing">
         <div class="group">
@@ -52,9 +47,9 @@
       <div
         v-else
         class="artboard-tab__container"
-        @contextmenu="rightClickMenu($event, artboard.id)"
+        @contextmenu="rightClickMenu($event, artboard)"
       >
-        <div class="artboard-tab__container-left" @click="goToArtboard(index)">
+        <div class="artboard-tab__container-left" @click="goToArtboard(artboard.id)">
           <div>{{ artboard.title }}</div>
           <div>{{ artboard.width }} x {{ artboard.height }}</div>
         </div>
@@ -76,10 +71,7 @@
 import { remote } from "electron";
 import draggable from "vuedraggable";
 import isElectron from "is-electron";
-
-if (isElectron()) {
-  const { Menu, MenuItem } = remote;
-}
+const { Menu, MenuItem } = remote;
 
 export default {
   name: "artboardEditable",
@@ -140,24 +132,32 @@ export default {
     },
     goToArtboard(id) {
       // Find the artboard (DOM)
-      const artboard = document.getElementsByClassName("artboard")[id];
-
+      const artboard = this.getArtboard(id);
       // Move the panzoom container
-      document.$panzoom.scaleToFitEl(artboard);
+      document.$panzoom.panToElement(artboard);
     },
-    rightClickMenu(e, id) {
+    rightClickMenu(e, artboard) {
       // Open the DevTools for x screen ID
-      const artboard = document.getElementsByClassName("artboard")[id];
-      const artboardFrame = artboard.querySelector(".frame");
+      // TODO using brittle selectors
+      // const artboard = this.getArtboard(artboard.id);
+      const vm = this
+      const artboardFrame = this.getArtboard(artboard.id).querySelector("webview");
 
       if (artboardFrame) {
         if (isElectron()) {
           const menu = new Menu();
           menu.append(
             new MenuItem({
+              label: "Duplicate",
+              click() {
+                vm.$store.dispatch("duplicateArtboard", artboard);
+              }
+            })
+          );
+          menu.append(
+            new MenuItem({
               label: "Open DevTools",
               click() {
-                // console.log(element);
                 artboardFrame.openDevTools();
               }
             })
@@ -167,8 +167,11 @@ export default {
       } else {
         throw new Error("No frame near artboard");
       }
-
-      // const element = e.target.querySelector(".frame");
+    },
+    getArtboard(id) {
+      // TODO add test here, selectors are brittle
+      // This could probably be a Store action
+      return document.querySelector(`[artboard-id="${id}"]`);
     }
   }
 };
@@ -207,6 +210,8 @@ $artboard-tab-side-padding: 1rem;
       min-width: 5rem;
       white-space: nowrap;
       overflow: hidden;
+      cursor: pointer;
+
       & > * {
         text-overflow: ellipsis;
         overflow: hidden;

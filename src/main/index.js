@@ -14,6 +14,7 @@ import {
   version
 } from '../../package.json'
 const log = require('electron-log')
+const isDev = require('electron-is-dev')
 
 // Set the version
 app.getVersion = () => version
@@ -27,7 +28,7 @@ if (process.env.NODE_ENV !== 'development') {
 }
 
 let mainWindow
-const winURL = process.env.NODE_ENV === 'development'
+const winURL = isDev
   ? `http://localhost:9080`
   : `file://${__dirname}/index.html`
 

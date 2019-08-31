@@ -2,6 +2,7 @@
 // 'use strict';
 
 // import EventEmitter from 'events';
+import * as pan from "./pan"
 import {
   on,
   off
@@ -11,8 +12,8 @@ import kinetic from './kinetic'
 
 export class Panzoom {
   constructor(element, parent, options = {}) {
-    this.element = element
     this.parent = parent
+    this.element = element
     this.state = {
       isEnabled: false,
       isPanning: false,
@@ -352,8 +353,6 @@ export class Panzoom {
     return this.transformMatrix
   }
 
-
-
   /**
    * Emits an event
    * @param {String} event
@@ -477,5 +476,15 @@ export class Panzoom {
     const event = new CustomEvent('zoomOut');
     this._emit('zoomOut', event)
     this._zoom('out')
+  }
+
+
+  /**
+   * Set the canvas to x, y
+   * @param {*} x px value
+   * @param {*} y px value
+   */
+  panToElement(el) {
+    pan.panToElement(el)
   }
 }

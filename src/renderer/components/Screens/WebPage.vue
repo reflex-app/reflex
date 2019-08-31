@@ -23,14 +23,16 @@ export default {
     this.$nextTick(() => {
       // Permament events
       const frame = vm.$refs.frame;
-      frame.addEventListener("will-navigate", this.willNavigate); // NOTE This listener is not removed upon loading! Needs to be removed if component is destroyed
+
+      // Bind event listeners
+      this.bindEventListers();
 
       // Load the <webview> the initial time
       this.loadSite();
 
       // Watch for History actions
       // TODO Better way to watch for VueX actions?
-      this.$store.subscribeAction((action, state) => {
+      this.unsubscribeAction = this.$store.subscribeAction((action, state) => {
         switch (action.type) {
           case "reload":
             this.reload();
@@ -50,10 +52,12 @@ export default {
       });
     });
   },
-  beforeDestroy() {
-    // Remove navigation event
-    const frame = this.$refs.frame;
-    frame.removeEventListener("will-navigate", this.willNavigate);
+  beforeDestroy() { 
+    // Unbind any listeners
+    this.unbindEventListeners();
+
+    // Unsubscribe from Store
+    this.unsubscribeAction()
   },
   watch: {
     url: {
@@ -73,9 +77,18 @@ export default {
     }
   },
   methods: {
+    bindEventListers() {
+      // Remove navigation event
+      const frame = this.$refs.frame;
+      frame.addEventListener("will-navigate", this.willNavigate);
+    },
+    unbindEventListeners() {
+      // Remove navigation event
+      const frame = this.$refs.frame;
+      frame.removeEventListener("will-navigate", this.willNavigate);
+    },
     reload() {
       // Reload the current page
-      // TODO This doesn't trigger the loading indicator
       this.loadSite({
         history: false
       });
@@ -128,6 +141,13 @@ export default {
     loadSite(options = { history: true }) {
       const vm = this;
       const frame = this.$refs.frame;
+
+      if (!frame) {
+        // The frame has been destroyed
+        // Remove event listeners
+        throw new Error("Frame listeners still active after component destroy.")
+        return false;
+      }
 
       // When loading of webview starts
       function loadstart() {

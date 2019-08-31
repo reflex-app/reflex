@@ -11,7 +11,7 @@ const {
 } = require('child_process')
 const webpack = require('webpack')
 const WebpackDevServer = require('webpack-dev-server')
-const webpackHotMiddleware = require('webpack-hot-middleware')
+// const webpackHotMiddleware = require('webpack-hot-middleware')
 
 const mainConfig = require('./webpack.main.config')
 const rendererConfig = require('./webpack.renderer.config')
@@ -46,15 +46,16 @@ function startRenderer() {
   return new Promise((resolve, reject) => {
     rendererConfig.entry.renderer = [path.join(__dirname, 'dev-client')].concat(rendererConfig.entry.renderer)
     rendererConfig.mode = 'development'
+    
     const compiler = webpack(rendererConfig)
-    hotMiddleware = webpackHotMiddleware(compiler, {
-      log: false,
-      heartbeat: 2500,
-      // logLevel: 'debug'
-    })
+
+    // hotMiddleware = webpackHotMiddleware(compiler, {
+    //   heartbeat: 2500,
+    //   logLevel: 'debug',
+    //   quiet: true
+    // })
 
     // Original
-    // Webpack 3
     // compiler.hooks.compilation.tap('compilation', compilation => {
     //   compilation.hooks.htmlWebpackPluginAfterEmit.tapAsync('html-webpack-plugin-after-emit', (data, cb) => {
     //     hotMiddleware.publish({
@@ -64,27 +65,34 @@ function startRenderer() {
     //   })
     // })
 
-    // Webpack 4
-    compiler.hooks.compilation.tap('html-webpack-plugin-after-emit', () => {
-      hotMiddleware.publish({
-        action: 'reload'
-      });
-    });
+    // compiler.hooks.compilation.tap('compilation', (compilation) => {
+    //   HtmlWebpackPlugin.getHooks(compilation).beforeEmit.tapAsync(
+    //     'html-webpack-plugin',
+    //     (data, cb) => {
+    //       hotMiddleware.publish({
+    //         action: 'reload'
+    //       });
+
+    //       // Tell webpack to move on
+    //       cb()
+    //     }
+    //   )
+    // })
 
     compiler.hooks.done.tap('done', stats => {
       logStats('Renderer', stats)
     })
 
+    // Create a Webpack Dev Server
     const server = new WebpackDevServer(
       compiler, {
         contentBase: path.join(__dirname, '../'),
         quiet: true,
-        // logLevel: 'debug',
+        logLevel: 'debug',
+        hot: true,
+        port: 9080,
         before(app, ctx) {
-          app.use(hotMiddleware)
-          ctx.middleware.waitUntilValid(() => {
-            resolve()
-          })
+          resolve()
         }
       }
     )
@@ -101,9 +109,9 @@ function startMain() {
 
     compiler.hooks.watchRun.tapAsync('watch-run', (compilation, done) => {
       logStats('Main', chalk.white.bold('compiling...'))
-      hotMiddleware.publish({
-        action: 'compiling'
-      })
+      // hotMiddleware.publish({
+      //   action: 'compiling'
+      // })
       done()
     })
 
