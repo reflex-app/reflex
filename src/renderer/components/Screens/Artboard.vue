@@ -58,18 +58,23 @@ export default {
       }
     };
   },
+
+  mounted() {
+    this.$nextTick(() => {
+      // Remove any leftover selected artboards
+      // @TODO: This should be done from VueX Store, or wiped before quitting
+      this.$store.dispatch("selectedArtboardsEmpty");
+    });
+  },
+
   computed: {
     ...mapState({
       url: state => state.history.currentPage.url,
       selectedArtboards: state => state.selectedArtboards
     }),
-    ...mapGetters(
-      ['isInteracting']
-    ),
+    ...mapGetters(["isInteracting"]),
     isSelected() {
-      const isSelected = this.selectedArtboards.filter(
-        item => item == this.id
-      );
+      const isSelected = this.selectedArtboards.filter(item => item == this.id);
       if (isSelected.length) {
         return true;
       } else {
@@ -92,14 +97,6 @@ export default {
 
       return false; // Otherwise, false
     }
-  },
-
-  mounted() {
-    this.$nextTick(() => {
-      // Remove any leftover selected artboards
-      // @TODO: This should be done from VueX Store, or wiped before quitting
-      this.$store.dispatch("selectedArtboardsEmpty");
-    });    
   },
 
   methods: {
