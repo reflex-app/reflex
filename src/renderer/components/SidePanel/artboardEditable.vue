@@ -210,6 +210,8 @@ $artboard-tab-side-padding: 1rem;
       min-width: 5rem;
       white-space: nowrap;
       overflow: hidden;
+      cursor: pointer;
+
       & > * {
         text-overflow: ellipsis;
         overflow: hidden;
