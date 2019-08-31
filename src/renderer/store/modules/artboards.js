@@ -1,4 +1,3 @@
-import Vue from 'vue'
 const uuid = require('uuid/v1')
 
 // All artboards on the screen
@@ -10,16 +9,13 @@ const state = () => {
 /**
  * Mock:
  * state = [
- *    { id: 0, title: 'Mobile', height: 300, width: 400 }
- *    { id: 0, title: 'Desktop', height: 900, width: 1440 }
- * ]
- */
-
-/**
- * Mock:
- * state = [
- *    { id: 0, title: 'Mobile', height: 300, width: 400 }
- *    { id: 0, title: 'Desktop', height: 900, width: 1440 }
+ *    { id: ~uuid~,
+ *      title: 'Mobile',
+ *      height: 300,
+ *      width: 400,
+ *      x: 0,
+ *      y: 0
+ *    }
  * ]
  */
 

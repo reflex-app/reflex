@@ -49,7 +49,7 @@
         class="artboard-tab__container"
         @contextmenu="rightClickMenu($event, artboard)"
       >
-        <div class="artboard-tab__container-left" @click="goToArtboard(index)">
+        <div class="artboard-tab__container-left" @click="goToArtboard(artboard.id)">
           <div>{{ artboard.title }}</div>
           <div>{{ artboard.width }} x {{ artboard.height }}</div>
         </div>
@@ -131,11 +131,10 @@ export default {
       }
     },
     goToArtboard(id) {
-      // TODO get this working in Panzoom
-      // // Find the artboard (DOM)
-      // const artboard = this.getArtboard(id);
-      // // Move the panzoom container
-      // document.$panzoom.scaleToFitEl(artboard);
+      // Find the artboard (DOM)
+      const artboard = this.getArtboard(id);
+      // Move the panzoom container
+      document.$panzoom.panToElement(artboard);
     },
     rightClickMenu(e, artboard) {
       // Open the DevTools for x screen ID
@@ -211,6 +210,8 @@ $artboard-tab-side-padding: 1rem;
       min-width: 5rem;
       white-space: nowrap;
       overflow: hidden;
+      cursor: pointer;
+
       & > * {
         text-overflow: ellipsis;
         overflow: hidden;

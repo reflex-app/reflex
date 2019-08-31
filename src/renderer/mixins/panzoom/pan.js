@@ -123,3 +123,102 @@ export function panXY(context, event) {
     end(event, context)
   }
 }
+
+export function panToElement(el) {
+  const context = document.$panzoom // The global Panzoom context
+  if (!context.state.isPanning) {
+    // Start
+    // start(event, context)
+
+    // DOM element references
+    const parent = context.parent // This is the total available height & width
+    const container = context.element // This is the total available height & width
+    const element = el // This is the element we want to center on
+
+    /**
+     * We need to move our translate() coordinates
+     * so that the element's center point aligns
+     * with the parent container's center point.
+     * And then set the scale so that we can see
+     * the element in the viewport.
+     *
+     * NOTE: All of this relies on the current scale
+     * applied to the element that has the
+     * CSS tranform on it (context.parent)
+     *
+     * NOTE: We're working with CSS transforms
+     * with the assumption that the x and y
+     * center is 0, 0 (transform-origin 50% 50%)
+     *
+     * We can do so by getting the current width of the
+     * parent element (considering current scale).
+     *
+     * We calculate the child element's placement by
+     * first getting the distance from the left of the
+     * parent container. This is the amount it will need
+     * to travel to line up with our X axis.
+     *
+     * Then we add on the width of the element itself.
+     *
+     * As well as the computed margin of the element.
+     *
+     * Then we subtract the two middlepoints, and that
+     * value becomes the new X coordinate.
+     */
+
+    /**
+     * Get the scale
+     * This is required
+     */
+    const scale = context.transformMatrix[0]
+
+    /**
+     * The parent center point
+     */
+    const viewportCenterX = (parent.offsetWidth / 2) * scale
+    const viewportCenterY = (parent.offsetHeight / 2) * scale
+
+    /**
+     * The width of the element's container
+     */
+    const containerWidth = (container.offsetWidth / 2) * scale
+    const containerHeight = (container.offsetHeight / 2) * scale
+
+    /**
+     * The element center point
+     */
+    const offsetLeft = element.offsetLeft
+    const offsetTop = element.offsetTop
+
+    const width = element.offsetWidth / 2
+    const height = element.offsetHeight / 2
+
+    const elementCenterX = (offsetLeft + width) * scale
+    const elementCenterY = (offsetTop + height) * scale
+
+    /**
+     * We've now calculated our two center points
+     * and can subtract to calculate the new
+     * X-axis position
+     *
+     * We'll get the difference between the viewport and the container,
+     * and then move to our artboard
+     */
+    // Update the matrix
+    const matrix = context.transformMatrix
+
+    // This part is pure magic
+    matrix[4] = ((viewportCenterX - containerWidth) - (viewportCenterX - elementCenterX)) * -1
+    matrix[5] = ((viewportCenterY - containerHeight) - (viewportCenterY - elementCenterY)) * -1
+
+    // Update context's matrix
+    // This sets the position
+    context.setTransform(matrix)
+
+    // Scale to fit the screen
+    context.scaleToFit()
+
+    // End
+    // end(event, context)
+  }
+}

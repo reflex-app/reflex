@@ -3,6 +3,7 @@ const {
   Menu,
   shell
 } = require('electron')
+const isDev = require('electron-is-dev')
 
 export function setMenu(window) {
   const template = [{
@@ -120,38 +121,39 @@ export function setMenu(window) {
   }
   ]
 
-  // if (process.platform === 'darwin') {
-  template.unshift({
-    label: app.getName(),
-    submenu: [{
-      role: 'about'
-    },
-    {
-      type: 'separator'
-    },
-    {
-      role: 'services'
-    },
-    {
-      type: 'separator'
-    },
-    {
-      role: 'hide'
-    },
-    {
-      role: 'hideothers'
-    },
-    {
-      role: 'unhide'
-    },
-    {
-      type: 'separator'
-    },
-    {
-      role: 'quit'
-    }
-    ]
-  })
+  if (process.platform === 'darwin') {
+    template.unshift({
+      label: app.getName(),
+      submenu: [{
+        role: 'about'
+      },
+      {
+        type: 'separator'
+      },
+      {
+        role: 'services'
+      },
+      {
+        type: 'separator'
+      },
+      {
+        role: 'hide'
+      },
+      {
+        role: 'hideothers'
+      },
+      {
+        role: 'unhide'
+      },
+      {
+        type: 'separator'
+      },
+      {
+        role: 'quit'
+      }
+      ]
+    })
+  }
 
   // Edit menu
   template[1].submenu.push({
@@ -181,7 +183,19 @@ export function setMenu(window) {
     role: 'front'
   }
   ]
-  // }
+
+  // If in Dev mode, add menu
+  if (isDev) {
+    template.splice(4, 0, {
+      label: 'Developer',
+      submenu: [{
+        label: 'Show Canvas Debugger',
+        click() {
+          window.webContents.send('menu_show-developer-canvas-debugger')
+        }
+      }]
+    })
+  }
 
   const menu = Menu.buildFromTemplate(template)
   Menu.setApplicationMenu(menu)

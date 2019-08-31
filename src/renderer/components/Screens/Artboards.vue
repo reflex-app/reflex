@@ -154,6 +154,7 @@ export default {
 
 
 <style lang="scss">
+// WARNING: UNSCOPED!
 .selection-area {
   border: 1px solid #cbcbcb;
   background: rgba(198, 198, 198, 0.3);
