@@ -12,21 +12,6 @@ const isDev = require('electron-is-dev')
 autoUpdater.logger = log
 autoUpdater.logger.transports.file.level = 'info'
 
-/**
- * ensureSafeQuitAndInstall
- * https://github.com/electron-userland/electron-builder/issues/1604#issuecomment-372091881
- *
- * @access  public
- * @return  void
- */
-function ensureSafeQuitAndInstall() {
-  app.removeAllListeners('window-all-closed')
-  var browserWindows = BrowserWindow.getAllWindows()
-  browserWindows.forEach(function (browserWindow) {
-    browserWindow.removeAllListeners('close')
-  })
-}
-
 export default function init(window) {
   let UPDATE_AVAILABLE = null
   const win = window.webContents
@@ -88,9 +73,7 @@ export default function init(window) {
     logMessage = logMessage + ' (' + progressObj.transferred + '/' + progressObj.total + ')'
     sendStatusToWindow(logMessage)
 
-    /**
-     * Send the current progress to our IPC window
-     */
+    // Send the current progress to our IPC window
     window.webContents.send('DOWNLOAD_PROGRESS', progressObj.percent)
   })
 
@@ -117,8 +100,24 @@ export default function init(window) {
     }
   })
 
+  /**
+   * Handle errors
+   */
   autoUpdater.on('error', (err) => {
     log.info('error in auto-updater')
     sendStatusToWindow('Error in auto-updater. ' + err)
+  })
+}
+
+/**
+ * ensureSafeQuitAndInstall
+ * Make sure Electron quits properly
+ * https://github.com/electron-userland/electron-builder/issues/1604#issuecomment-372091881
+ */
+function ensureSafeQuitAndInstall() {
+  app.removeAllListeners('window-all-closed')
+  var browserWindows = BrowserWindow.getAllWindows()
+  browserWindows.forEach(function (browserWindow) {
+    browserWindow.removeAllListeners('close')
   })
 }
