@@ -3,6 +3,8 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
   props: {
     allowInteractions: {
@@ -12,9 +14,9 @@ export default {
     }
   },
   computed: {
-    url() {
-      return this.$store.state.history.currentPage.url; // Bind to our Vuex Store's URL value
-    }
+    ...mapState({
+      url: state => state.history.currentPage.url
+    })
   },
   mounted() {
     const vm = this;
@@ -52,12 +54,12 @@ export default {
       });
     });
   },
-  beforeDestroy() { 
+  beforeDestroy() {
     // Unbind any listeners
     this.unbindEventListeners();
 
     // Unsubscribe from Store
-    this.unsubscribeAction()
+    this.unsubscribeAction();
   },
   watch: {
     url: {
@@ -69,10 +71,10 @@ export default {
     allowInteractions: function(value) {
       // Toggle frame pointer-events
       const element = this.$refs.frame;
-      if (value == true) {
-        element.style.pointerEvents = "auto"; // Default
-      } else if (value == false) {
-        element.style.pointerEvents = "none"; // Disable
+      if (value === true) {
+        element.style.pointerEvents = "auto"; // Allow interacting with webpage
+      } else if (value === false) {
+        element.style.pointerEvents = "none"; // Disable interactions with webpage
       }
     }
   },
@@ -145,7 +147,9 @@ export default {
       if (!frame) {
         // The frame has been destroyed
         // Remove event listeners
-        throw new Error("Frame listeners still active after component destroy.")
+        throw new Error(
+          "Frame listeners still active after component destroy."
+        );
         return false;
       }
 
@@ -260,6 +264,6 @@ export default {
 .frame {
   height: 100%;
   width: 100%;
-  pointer-events: none;
+  pointer-events: none; // Don't allow by default
 }
 </style>

@@ -24,7 +24,7 @@
     <div class="artboard__content">
       <WebPage
         ref="frame"
-        :allowInteractions="canInteractArtboard"
+        :allowInteractions="canInteractWithArtboard"
         @loadstart="state.isLoading = true"
         @loadend="state.isLoading = false"
       />
@@ -86,12 +86,10 @@ export default {
      * artboard (WebView) when the artboard is selected
      * and the user is not dragging a selection area
      */
-    canInteractArtboard() {
+    canInteractWithArtboard() {
       if (this.isSelected == false) return false; // Not selected!
 
-      const isInteracting = this.isInteracting;
-
-      if (this.isSelected && isInteracting == false) {
+      if (this.isSelected && this.isInteracting == false) {
         return true; // Can interact!
       }
 
@@ -193,10 +191,6 @@ export default {
           // Ignore pointer events on frames
           let frames = document.getElementsByClassName("frame");
 
-          for (let frame of frames) {
-            frame.style.pointerEvents = "none";
-          }
-
           // Update the dimensions in the UI
           vm.$emit("resize", {
             id: vm.id,
@@ -225,10 +219,6 @@ export default {
 
         // Re-enable pointer events on frames
         let frames = document.getElementsByClassName("frame");
-
-        for (let frame of frames) {
-          frame.style.pointerEvents = "auto";
-        }
 
         // Re-enable the panzoom
         document.$panzoom.enable(); // TODO: Cleaner solution that polluting document?
@@ -276,7 +266,6 @@ $artboard-handle-height: 1rem;
   &.is-selected {
     background: rgba(226, 239, 255, 0.63);
     border-color: #2f82ea;
-    pointer-events: none;
   }
 
   .artboard__top {
@@ -308,27 +297,6 @@ $artboard-handle-height: 1rem;
     background: #ffffff;
     transition: all 100ms ease-out;
     // box-shadow: 0 4px 10px rgba(#000, 0.1);
-
-    .frame {
-      // transition: all 125ms ease-out;
-
-      &:after {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        border: 1px solid #9a9a9a;
-        pointer-events: none; // Required so that events penetrate through
-      }
-    }
-
-    // .frame {
-    //   height: 100%;
-    //   width: 100%;
-    //   pointer-events: none;
-    // }
   }
 
   .artboard__handles {
