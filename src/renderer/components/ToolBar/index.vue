@@ -35,6 +35,7 @@
       <div class="toolbar__button-group">
       </div>
     </div>-->
+    <InstallUpdateButton/>
     <div id="draggable" @dblclick="toggleWindowMaximize"></div>
   </div>
 </template>
@@ -42,9 +43,10 @@
 <script>
 import store from "@/store";
 import { mapState } from "vuex";
-import URLInput from "./URLInput.vue";
-import SyncButton from "./SyncButton.vue";
-import HistoryControls from "./HistoryControls.vue";
+import URLInput from "@/components/ToolBar/URLInput.vue";
+import SyncButton from "@/components/ToolBar/SyncButton.vue";
+import HistoryControls from "@/components/ToolBar/HistoryControls.vue";
+import InstallUpdateButton from "@/components/ToolBar/InstallUpdateButton.vue";
 import { remote } from "electron";
 import isElectron from "is-electron";
 
@@ -55,7 +57,8 @@ export default {
   components: {
     URLInput,
     HistoryControls,
-    SyncButton
+    SyncButton,
+    InstallUpdateButton
   },
   data() {
     return {
