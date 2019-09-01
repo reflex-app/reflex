@@ -1,6 +1,8 @@
 const log = require('electron-log')
 const {
-  ipcMain
+  ipcMain,
+  app,
+  BrowserWindow
 } = require('electron')
 const {
   autoUpdater
@@ -9,6 +11,21 @@ const isDev = require('electron-is-dev')
 
 autoUpdater.logger = log
 autoUpdater.logger.transports.file.level = 'info'
+
+/**
+ * ensureSafeQuitAndInstall
+ * https://github.com/electron-userland/electron-builder/issues/1604#issuecomment-372091881
+ *
+ * @access  public
+ * @return  void
+ */
+function ensureSafeQuitAndInstall() {
+  app.removeAllListeners('window-all-closed')
+  var browserWindows = BrowserWindow.getAllWindows()
+  browserWindows.forEach(function (browserWindow) {
+    browserWindow.removeAllListeners('close')
+  })
+}
 
 export default function init(window) {
   let UPDATE_AVAILABLE = null
@@ -40,7 +57,6 @@ export default function init(window) {
 
     // Check for updates
     if (!isDev) {
-      sendStatusToWindow('Checking for updates...')
       autoUpdater.checkForUpdates()
       // autoUpdater.checkForUpdatesAndNotify()
     }
@@ -86,20 +102,23 @@ export default function init(window) {
     sendStatusToWindow('Update downloaded')
   })
 
-  autoUpdater.on('error', (err) => {
-    log.info('error in auto-updater')
-    sendStatusToWindow('Error in auto-updater. ' + err)
-  })
-
   /**
    * Listen for user to click on the
    * install button --> install & restart
    */
   ipcMain.on('TRIGGER_INSTALL', () => {
     if (UPDATE_AVAILABLE === true) {
-      autoUpdater.quitAndInstall()
+      setImmediate(() => {
+        ensureSafeQuitAndInstall()
+        autoUpdater.quitAndInstall(false)
+      })
     } else {
       console.log('No update available')
     }
+  })
+
+  autoUpdater.on('error', (err) => {
+    log.info('error in auto-updater')
+    sendStatusToWindow('Error in auto-updater. ' + err)
   })
 }
