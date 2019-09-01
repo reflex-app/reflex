@@ -22,7 +22,7 @@
 
 <script>
 import { remote } from "electron";
-import { mapState } from "vuex";
+import { mapState, mapGetters } from "vuex";
 import Selection from "@simonwep/selection-js";
 import Artboard from "./Artboard";
 
@@ -39,11 +39,9 @@ export default {
   computed: {
     ...mapState({
       artboards: state => state.artboards,
-      selectedArtboards: state => state.selectedArtboards,
-      isPanning: state => state.interactions.isPanning,
-      isZooming: state => state.interactions.isZooming,
-      isResizingArtboard: state => state.interactions.isResizingArtboard
+      selectedArtboards: state => state.selectedArtboards
     }),
+    ...mapGetters(["isInteracting"]),
     appName() {
       // Return the name of the Electron app
       // From package.json (name or productName)
@@ -70,17 +68,7 @@ export default {
     this.selectionInstance
       .on("beforestart", evt => {
         // Prevent selections if the user is interacting with an artboard
-        // console.log(vm.isPanning, vm.isResizingArtboard);
-
-        if (
-          vm.isPanning === true ||
-          vm.isZooming === true ||
-          vm.isResizingArtboard === true
-        ) {
-          return false;
-        } else {
-          return true;
-        }
+        if (this.isInteracting) return false
       })
       .on("start", evt => {
         // Every non-ctrlKey causes a selection reset
