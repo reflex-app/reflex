@@ -2,7 +2,7 @@
   "name": "reflex",
   "productName": "Reflex",
   "description": "Make responsive websites without the guesswork.",
-  "version": "0.6.5",
+  "version": "0.6.6-beta.1",
   "author": "Nick Wittwer",
   "license": "MIT",
   "main": "./dist/electron/main.js",
