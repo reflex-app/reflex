@@ -193,10 +193,6 @@ export default {
           // Ignore pointer events on frames
           let frames = document.getElementsByClassName("frame");
 
-          for (let frame of frames) {
-            frame.style.pointerEvents = "none";
-          }
-
           // Update the dimensions in the UI
           vm.$emit("resize", {
             id: vm.id,
@@ -225,10 +221,6 @@ export default {
 
         // Re-enable pointer events on frames
         let frames = document.getElementsByClassName("frame");
-
-        for (let frame of frames) {
-          frame.style.pointerEvents = "auto";
-        }
 
         // Re-enable the panzoom
         document.$panzoom.enable(); // TODO: Cleaner solution that polluting document?
