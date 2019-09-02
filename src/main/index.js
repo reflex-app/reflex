@@ -29,7 +29,7 @@ if (process.env.NODE_ENV !== 'development') {
 
 let mainWindow
 const winURL = isDev
-  ? `http://localhost:9080`
+  ? 'http://localhost:9080'
   : `file://${__dirname}/index.html`
 
 async function createWindow() {
@@ -40,9 +40,11 @@ async function createWindow() {
     height: 750,
     width: 1200,
     useContentSize: true,
+    backgroundColor: '#F5F5F5',
+    show: false, // Shown when ready-to-show event fires
     webPreferences: {
-      webviewTag: true,
-      nodeIntegration: true // Required in new Electron
+      webviewTag: true, // Required
+      nodeIntegration: true // Required
     },
     titleBarStyle: 'hiddenInset' // Hide the bar
   })
@@ -59,6 +61,11 @@ async function createWindow() {
   // Check for updates once page is loaded
   mainWindow.webContents.once('did-finish-load', () => {
     autoUpdater(mainWindow)
+  })
+
+  // Show the app once it's ready
+  mainWindow.once('ready-to-show', () => {
+    mainWindow.show()
   })
 
   mainWindow.on('closed', () => {
@@ -90,7 +97,7 @@ app.on('web-contents-created', (event, contents) => {
   })
 })
 
-// Workarounds to allow accessing self-signed HTTPS sites
+// Workarounds to allow accessing self-signed HTTPS sites (w/ BrowserSync)
 // @TODO: Can this be solved w/ BrowserSync's self-signed?
 app.on('certificate-error', (event, webContents, url, error, certificate, callback) => {
   // On certificate error we disable default behaviour (stop loading the page)
@@ -101,23 +108,3 @@ app.on('certificate-error', (event, webContents, url, error, certificate, callba
   event.preventDefault()
   callback(list[0])
 })
-
-/**
- * Auto Updater
- *
- * Uncomment the following code below and install `electron-updater` to
- * support auto updating. Code Signing with a valid certificate is required.
- * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-electron-builder.html#auto-updating
- */
-
-/*
- import { autoUpdater } from 'electron-updater'
-
- autoUpdater.on('update-downloaded', () => {
-   autoUpdater.quitAndInstall()
- })
-
- app.on('ready', () => {
-   if (process.env.NODE_ENV === 'production') autoUpdater.checkForUpdates()
- })
-*/
