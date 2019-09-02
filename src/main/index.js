@@ -40,9 +40,11 @@ async function createWindow() {
     height: 750,
     width: 1200,
     useContentSize: true,
+    backgroundColor: '#F5F5F5',
+    show: false, // Shown when ready-to-show event fires
     webPreferences: {
-      webviewTag: true,
-      nodeIntegration: true // Required in new Electron
+      webviewTag: true, // Required
+      nodeIntegration: true // Required
     },
     titleBarStyle: 'hiddenInset' // Hide the bar
   })
@@ -61,6 +63,11 @@ async function createWindow() {
 
   // Setup the menu
   setMenu(mainWindow)
+
+  // Show the app once it's ready
+  mainWindow.once('ready-to-show', () => {
+    mainWindow.show()
+  })
 
   mainWindow.on('closed', () => {
     mainWindow = null
@@ -91,7 +98,7 @@ app.on('web-contents-created', (event, contents) => {
   })
 })
 
-// Workarounds to allow accessing self-signed HTTPS sites
+// Workarounds to allow accessing self-signed HTTPS sites (w/ BrowserSync)
 // @TODO: Can this be solved w/ BrowserSync's self-signed?
 app.on('certificate-error', (event, webContents, url, error, certificate, callback) => {
   // On certificate error we disable default behaviour (stop loading the page)
