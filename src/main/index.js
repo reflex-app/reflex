@@ -49,6 +49,12 @@ async function createWindow() {
     titleBarStyle: 'hiddenInset' // Hide the bar
   })
 
+  // Check for updates...
+  // Important to not wait for page to load
+  // just in case there was a fatal bug
+  // with their current release
+  autoUpdater(mainWindow)
+
   // Log the version
   log.info(`Version ${app.getVersion()}`)
 
@@ -57,11 +63,6 @@ async function createWindow() {
 
   // Setup the menu
   setMenu(mainWindow)
-
-  // Check for updates once page is loaded
-  mainWindow.webContents.once('did-finish-load', () => {
-    autoUpdater(mainWindow)
-  })
 
   // Show the app once it's ready
   mainWindow.once('ready-to-show', () => {
