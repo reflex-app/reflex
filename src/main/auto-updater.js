@@ -22,9 +22,7 @@ export default function init(window) {
 
   win.on('did-finish-load', () => {
     if (isDev) {
-      sendStatusToWindow('Not checking for updates in dev mode')
-      sendStatusToWindow('Creating example update')
-
+      sendStatusToWindow('Not checking for updates in dev mode, triggering example instead.')
       win.send('DOWNLOAD_PROGRESS', '10')
 
       setTimeout(() => {
