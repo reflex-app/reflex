@@ -19,7 +19,7 @@ export default {
   name: "Reflex",
   components: {
     ToolBar,
-  },
+  }
 };
 </script>
 

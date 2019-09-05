@@ -1,5 +1,6 @@
 const state = {
-  sidebar: true
+  sidebar: true,
+  focusMode: false
 }
 
 const mutations = {
@@ -11,12 +12,15 @@ const mutations = {
     if (!bool) bool = ''
 
     if (bool === true) {
-      this.state.gui.sidebar = true
+      state.sidebar = true
     } else if (bool === false) {
-      this.state.gui.sidebar = false
+      state.sidebar = false
     } else {
-      this.state.gui.sidebar = !this.state.gui.sidebar
+      state.sidebar = !state.sidebar
     }
+  },
+  toggleFocusMode(state) {
+    state.focusMode = !state.focusMode
   }
 }
 

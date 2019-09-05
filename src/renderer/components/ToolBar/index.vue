@@ -31,10 +31,12 @@
       </div>
     </div>
     <div id="toolbar__recentURLs"></div>
-    <!-- <div class="toolbar__right">
+    <div class="toolbar__right">
       <div class="toolbar__button-group">
+        <SwitchMode/>
+        <router-link to="focus">Focus Mode</router-link>
       </div>
-    </div>-->
+    </div>
     <InstallUpdateButton/>
     <div id="draggable" @dblclick="toggleWindowMaximize"></div>
   </div>
@@ -47,6 +49,7 @@ import URLInput from "@/components/ToolBar/URLInput.vue";
 import SyncButton from "@/components/ToolBar/SyncButton.vue";
 import HistoryControls from "@/components/ToolBar/HistoryControls.vue";
 import InstallUpdateButton from "@/components/ToolBar/InstallUpdateButton.vue";
+import SwitchMode from "@/components/ToolBar/SwitchMode";
 import { remote } from "electron";
 import isElectron from "is-electron";
 
@@ -58,7 +61,8 @@ export default {
     URLInput,
     HistoryControls,
     SyncButton,
-    InstallUpdateButton
+    InstallUpdateButton,
+    SwitchMode
   },
   data() {
     return {
