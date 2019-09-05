@@ -11,6 +11,11 @@ export default new Router({
       component: require('@/views/MainView').default
     },
     {
+      path: '/focus',
+      name: 'focus-view',
+      component: require('@/views/FocusView').default
+    },
+    {
       path: '*',
       redirect: '/'
     }
