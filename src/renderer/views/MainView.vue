@@ -1,6 +1,5 @@
 <template>
   <div id="main-view">
-    <ToolBar ref="toolbar" />
     <div id="canvasContainer">
       <SidePanel />
       <Screenshots />
@@ -16,7 +15,6 @@ import { mapState } from "vuex";
 import { Panzoom } from "../mixins/panzoom";
 import { ipcRenderer } from "electron";
 import isElectron from "is-electron";
-import ToolBar from "@/components/ToolBar";
 import Artboards from "@/components/Screens/Artboards";
 import SidePanel from "@/components/SidePanel";
 import Screenshots from "@/components/Screenshot";
@@ -27,7 +25,6 @@ export default {
   components: {
     Artboards,
     SidePanel,
-    ToolBar,
     Screenshots
   },
   data() {
@@ -120,17 +117,6 @@ export default {
 <style lang="scss" scoped>
 @import "@/scss/_variables";
 
-#main-view {
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
-  height: 100%;
-  width: 100%;
-  overflow: hidden;
-  overscroll-behavior: auto;
-  border-radius: 8px;
-  background: $body-bg;
-}
 
 #canvasContainer {
   background: $body-bg;
