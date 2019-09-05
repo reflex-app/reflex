@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="switch-mode-container">
     <input type="checkbox" id="switch" :checked="toggleState" />
     <label for="switch" @click="toggle" :class="{ 'is-active' : toggleState }">Toggle</label>
   </div>
@@ -22,6 +22,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.switch-mode-container {
+  display: flex;
+}
+
 input[type="checkbox"] {
   height: 0;
   width: 0;

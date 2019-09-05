@@ -32,12 +32,9 @@
     </div>
     <div id="toolbar__recentURLs"></div>
     <div class="toolbar__right">
-      <div class="toolbar__button-group">
-        <SwitchMode/>
-        <router-link to="focus">Focus Mode</router-link>
-      </div>
+      <SwitchMode />
     </div>
-    <InstallUpdateButton/>
+    <InstallUpdateButton />
     <div id="draggable" @dblclick="toggleWindowMaximize"></div>
   </div>
 </template>
@@ -276,12 +273,10 @@ export default {
     }
   }
 
-  // .toolbar__right {
-  //   display: flex;
-
-  //   .toolbar__button-group:not(:last-child) {
-  //     margin-right: 24px;
-  //   }
-  // }
+  .toolbar__right {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
 </style>
