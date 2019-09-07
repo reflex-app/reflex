@@ -249,7 +249,6 @@ $artboard-handle-height: 1rem;
   height: 1200px;
   width: 300px;
   margin: 0 3.5rem;
-  transition: width ease-in-out 500ms, height ease-in-out 500ms;
 
   &:first-child {
     margin-left: 3.5rem;
