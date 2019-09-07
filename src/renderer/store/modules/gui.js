@@ -1,6 +1,7 @@
 const state = {
   sidebar: true,
-  focusMode: false
+  focusMode: false,
+  discoMode: false
 }
 
 const mutations = {
@@ -19,8 +20,8 @@ const mutations = {
       state.sidebar = !state.sidebar
     }
   },
-  toggleFocusMode(state) {
-    state.focusMode = !state.focusMode
+  toggleGui(state, key) {
+    state[key] = !state[key]
   }
 }
 

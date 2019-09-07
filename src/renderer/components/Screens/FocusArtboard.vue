@@ -26,16 +26,18 @@ export default {
     return {
       selectionInstance: null,
       artboardData: {
-        title: 'Test',
+        title: "Test",
         height: 600,
         width: 360
-      }
+      },
+      discoModeInterval: null
     };
   },
   computed: {
     ...mapState({
       artboards: state => state.artboards,
-      selectedArtboards: state => state.selectedArtboards
+      selectedArtboards: state => state.selectedArtboards,
+      discoMode: state => state.gui.discoMode
     }),
     ...mapGetters(["isInteracting"]),
     appName() {
@@ -51,7 +53,8 @@ export default {
     }
   },
   mounted() {
-    const vm = this;
+    // Start automatically if saved in localStorage
+    if (this.discoMode === true) this.startDisco();
 
     this.selectionInstance = new Selection({
       class: "selection-area", // Class for the selection-area
@@ -126,6 +129,42 @@ export default {
     },
     enableSelection() {
       this.selectionInstance.enable();
+    },
+    startDisco() {
+      /**
+       * getRandomInt(min, max)
+       * https://stackoverflow.com/a/1527820/1114901
+       */
+      function getRandomInt(min, max) {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+
+      this.discoModeInterval = setInterval(() => {
+        this.artboardData.width = getRandomInt(200, 1920);
+        this.artboardData.height = getRandomInt(200, 1080);
+      }, 3000);
+
+      console.log('disco start');
+    },
+    stopDisco() {
+      clearInterval(this.discoModeInterval);
+      console.log('disco stop');
+    }
+  },
+  watch: {
+    /**
+     * Watch the VueX discoMode Store
+     */
+    discoMode(newValue, oldValue) {
+      const vm = this;
+
+      if (newValue === true) {
+        this.startDisco();
+      } else {
+        this.stopDisco();
+      }
     }
   }
 };

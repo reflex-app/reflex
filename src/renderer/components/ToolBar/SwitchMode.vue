@@ -15,7 +15,7 @@ export default {
   },
   methods: {
     toggle() {
-      this.$store.commit("toggleFocusMode");
+      this.$store.commit("toggleGui", "focusMode");
     }
   }
 };

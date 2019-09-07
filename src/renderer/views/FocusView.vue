@@ -1,10 +1,11 @@
 <template>
   <div id="focus-view">
     <div class="canvasContainer">
-      <!-- <SidePanel /> -->
+      <SidePanel />
       <Screenshots />
       <div class="focus-view__content">
         <SizeShifter />
+        <DiscoSwitch />
         <div id="canvas" ref="canvas">
           <FocusArtboard ref="artboards" />
         </div>
@@ -22,6 +23,7 @@ import FocusArtboard from "@/components/Screens/FocusArtboard";
 import SidePanel from "@/components/SidePanel";
 import Screenshots from "@/components/Screenshot";
 import SizeShifter from "@/components/FocusMode/SizeShifter";
+import DiscoSwitch from "@/components/FocusMode/DiscoSwitch";
 const isDev = require("electron-is-dev");
 
 export default {
@@ -30,7 +32,8 @@ export default {
     FocusArtboard,
     SidePanel,
     Screenshots,
-    SizeShifter
+    SizeShifter,
+    DiscoSwitch
   },
   data() {
     return {
