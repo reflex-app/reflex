@@ -6,6 +6,7 @@
       :selectedItems="selectedArtboards"
       ref="artboard"
       class="artboard"
+      :class="{ 'disco-mode' : discoMode }"
       @resize="resize"
     />
   </div>
@@ -180,12 +181,17 @@ export default {
   box-sizing: border-box;
   will-change: auto; // Activate GPU rendering
   z-index: 0;
-  // border: 2px solid green;
 
   &.is-vertical {
     flex-direction: column;
     align-items: center;
   }
+}
+
+// Transition the changes to the height and width 
+// of the artboard when disco mode is active
+.artboard.disco-mode {
+  transition: width ease-in-out 500ms, height ease-in-out 500ms;
 }
 
 #sidebar {

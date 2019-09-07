@@ -1,5 +1,5 @@
 <template>
-  <div @click="toggleDisco">🕺</div>
+  <div class="toggle-disco" @click="toggleDisco">🕺</div>
 </template>
 
 <script>
@@ -13,4 +13,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.toggle-disco {
+  cursor: pointer;
+}
 </style>
