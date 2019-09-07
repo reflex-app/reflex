@@ -136,22 +136,30 @@ export default {
        * getRandomInt(min, max)
        * https://stackoverflow.com/a/1527820/1114901
        */
-      function getRandomInt(min, max) {
+      const getRandomInt = (min, max) => {
         min = Math.ceil(min);
         max = Math.floor(max);
         return Math.floor(Math.random() * (max - min + 1)) + min;
-      }
+      };
 
-      this.discoModeInterval = setInterval(() => {
+      const setRandomSize = () => {
         this.artboardData.width = getRandomInt(200, 1920);
         this.artboardData.height = getRandomInt(200, 1080);
+      };
+
+      // Immediately set a new size
+      setRandomSize();
+
+      // Set up the timer
+      this.discoModeInterval = setInterval(() => {
+        setRandomSize();
       }, 3000);
 
-      console.log('disco start');
+      console.log("disco start");
     },
     stopDisco() {
       clearInterval(this.discoModeInterval);
-      console.log('disco stop');
+      console.log("disco stop");
     }
   },
   watch: {
