@@ -38,12 +38,10 @@ export default {
       showCanvasDebugger: state => state.dev.showCanvasDebugger
     })
   },
-  mounted: function() {
-    let vm = this;
-
-    this.$nextTick(() => {
-      const controllerEl = vm.$refs["canvas"];
-      const contentEl = vm.$refs["artboards"].$el;
+  methods: {
+    enableEventListeners() {
+      const controllerEl = this.$refs["canvas"];
+      const contentEl = this.$refs["artboards"].$el;
 
       // Initialize Panzoom
       let instance = new Panzoom(contentEl, controllerEl, {
@@ -52,9 +50,7 @@ export default {
       document.$panzoom = instance; // Attach to document
 
       // Listen for changes
-      // Commit them to the Vuex store
       instance
-        // Start
         .on("zoomStart", () => {
           this.$store.commit("interactionSetState", {
             key: "isZooming",
@@ -67,11 +63,6 @@ export default {
             value: true
           });
         })
-        // Stop
-        /* Trigger a recalculation() event
-         ** This will tell Artboards to update their
-         ** x/y coordinates
-         */
         .on("zoomStop", () => {
           this.$store.commit("interactionSetState", {
             key: "isZooming",
@@ -84,27 +75,27 @@ export default {
             value: false
           });
         });
-    });
 
-    // Listen for menu bar events
-    // TODO Add tests for these
-    if (isElectron()) {
-      ipcRenderer.on("menu_zoom-to-fit", () => {
-        document.$panzoom.fitToScreen();
-      });
+      // Listen for menu bar events
+      // TODO Add tests for these
+      if (isElectron()) {
+        ipcRenderer.on("menu_zoom-to-fit", document.$panzoom.fitToScreen);
+        ipcRenderer.on("menu_zoom-in", document.$panzoom.zoomIn);
+        ipcRenderer.on("menu_zoom-out", document.$panzoom.zoomOut);
+        ipcRenderer.on("menu_show-developer-canvas-debugger", () => {
+          this.$store.commit("toggleCanvasDebugger");
+        });
+      }
 
-      ipcRenderer.on("menu_zoom-in", () => {
-        document.$panzoom.zoomIn();
-      });
-
-      ipcRenderer.on("menu_zoom-out", () => {
-        document.$panzoom.zoomOut();
-      });
-      
-      ipcRenderer.on("menu_show-developer-canvas-debugger", () => {
-        this.$store.commit("toggleCanvasDebugger");
+      // Listen for View to be destroyed
+      this.$once("hook:beforeDestroy", () => {
+        // TODO remove listeners
       });
     }
+  },
+  mounted: function() {
+    // Add event listeners
+    this.$nextTick(this.enableEventListeners);
   }
 };
 </script>
@@ -117,6 +108,9 @@ export default {
 <style lang="scss" scoped>
 @import "@/scss/_variables";
 
+#main-view {
+  min-height: 100vh;
+}
 
 #canvasContainer {
   background: $body-bg;

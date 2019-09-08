@@ -5,10 +5,11 @@
       <Screenshots />
       <div class="focus-view__content">
         <SizeShifter />
-        <DiscoSwitch />
+        <!-- <DiscoSwitch /> -->
         <div id="canvas" ref="canvas">
-          <FocusArtboard ref="artboards" />
+          <FocusArtboard ref="artboards"/>
         </div>
+        <!-- <DevToolsView /> -->
       </div>
     </div>
   </div>
@@ -23,6 +24,7 @@ import Screenshots from "@/components/Screenshot";
 import FocusArtboard from "@/components/FocusMode/FocusArtboard";
 import SizeShifter from "@/components/FocusMode/SizeShifter";
 import DiscoSwitch from "@/components/FocusMode/DiscoSwitch";
+import DevToolsView from "@/components/DevToolsView";
 const isDev = require("electron-is-dev");
 
 export default {
@@ -32,7 +34,8 @@ export default {
     SidePanel,
     Screenshots,
     SizeShifter,
-    DiscoSwitch
+    DiscoSwitch,
+    DevToolsView
   },
   data() {
     return {
@@ -80,9 +83,9 @@ export default {
       // Listen for menu bar events
       // TODO Add tests for these
       if (isElectron()) {
-        ipcRenderer.on("menu_zoom-to-fit", document.$panzoom.fitToScreen);
-        ipcRenderer.on("menu_zoom-in", document.$panzoom.zoomIn);
-        ipcRenderer.on("menu_zoom-out", document.$panzoom.zoomOut);
+        ipcRenderer.on("menu_zoom-to-fit", document.$panzoom.fitToScreen());
+        ipcRenderer.on("menu_zoom-in", document.$panzoom.zoomIn());
+        ipcRenderer.on("menu_zoom-out", document.$panzoom.zoomOut());
         ipcRenderer.on("menu_show-developer-canvas-debugger", () => {
           this.$store.commit("toggleCanvasDebugger");
         });
