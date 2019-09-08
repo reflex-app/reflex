@@ -7,7 +7,7 @@ const uuid = require('uuid/v1')
 const state = {
   activeScreen: {
     id: uuid(),
-    title: 'Test',
+    title: 'Reflex',
     height: 300,
     width: 400
     /**
@@ -16,67 +16,34 @@ const state = {
      * height: 300,
      * width: 400
      */
-  },
-  screens: [{
-    id: uuid(),
-    title: 'Test',
-    height: 300,
-    width: 400
-  }, {
-    id: uuid(),
-    title: 'Test',
-    width: 1280,
-    height: 720
-  }, {
-    id: uuid(),
-    title: 'Test',
-    width: 1920,
-    height: 1080
   }
-    /**
-     *    { id: ~uuid~,
-     *      title: 'Mobile',
-     *      height: 300,
-     *      width: 400,
-     *    }
-     */
-  ]
+  // screens: [{
+  //   id: uuid(),
+  //   title: 'Test',
+  //   height: 300,
+  //   width: 400
+  // }, {
+  //   id: uuid(),
+  //   title: 'Test',
+  //   width: 1280,
+  //   height: 720
+  // }, {
+  //   id: uuid(),
+  //   title: 'Test',
+  //   width: 1920,
+  //   height: 1080
+  // }
+  //   /**
+  //    *    { id: ~uuid~,
+  //    *      title: 'Mobile',
+  //    *      height: 300,
+  //    *      width: 400,
+  //    *    }
+  //    */
+  // ]
 }
 
 const mutations = {
-  /**
-   * Add an Artboard
-   * @param  {} state
-   * @param  {} artboard
-   */
-  addArtboard(state, artboard) {
-    artboard.id = uuid()
-    state.screens.push(artboard)
-  },
-
-  /**
-   * Remove an Artboard
-   * @param  {} state
-   * @param  {} id
-   */
-  removeArtboard(state, id) {
-    const index = state.screens.findIndex(obj => obj.id === id)
-    state.screens.splice(index, 1)
-  },
-
-  /** Modify an Artboard by Index
-   * @param  {} state
-   * @param  {Object} artboard {id}
-   */
-  updateArtboardAtIndex(state, artboard) {
-    // 1. Get the artboard.id
-    const id = artboard.id
-    const index = state.screens.findIndex(obj => obj.id === id)
-
-    // 2. Change just that artboard's content
-    state.screens[index] = artboard
-  },
-
   /** Resize an Artboard
    * @param  {} state
    * @param  {Object} payload {id, height, width}
@@ -110,25 +77,59 @@ const mutations = {
    * @param {*} state
    * @param {*} id
    */
-  focusChangeActiveScreen(state, id) {
-    const index = state.screens.findIndex(obj => obj.id === id)
-    state.activeScreen = Object.assign(state.activeScreen, state.screens[index])
-  },
-
-  setArtboardList: (state, payload) => {
-    // TODO this is not reactive currently
-    if (state.screens !== payload) {
-      state.screens = payload
-    }
+  focusChangeActiveScreen(state, id, context) {
+    const artboards = this.state.artboards
+    const index = artboards.findIndex(obj => obj.id === id)
+    state.activeScreen = Object.assign(state.activeScreen, artboards[index])
   }
+
+  // /**
+  //  * Add an Artboard
+  //  * @param  {} state
+  //  * @param  {} artboard
+  //  */
+  // addArtboard(state, artboard) {
+  //   artboard.id = uuid()
+  //   state.screens.push(artboard)
+  // },
+
+  // /**
+  //  * Remove an Artboard
+  //  * @param  {} state
+  //  * @param  {} id
+  //  */
+  // removeArtboard(state, id) {
+  //   const index = state.screens.findIndex(obj => obj.id === id)
+  //   state.screens.splice(index, 1)
+  // },
+
+  // /** Modify an Artboard by Index
+  //  * @param  {} state
+  //  * @param  {Object} artboard {id}
+  //  */
+  // updateArtboardAtIndex(state, artboard) {
+  //   // 1. Get the artboard.id
+  //   const id = artboard.id
+  //   const index = state.screens.findIndex(obj => obj.id === id)
+
+  //   // 2. Change just that artboard's content
+  //   state.screens[index] = artboard
+  // },
+
+  // setArtboardList: (state, payload) => {
+  //   // TODO this is not reactive currently
+  //   if (state.screens !== payload) {
+  //     state.screens = payload
+  //   }
+  // }
 }
 
 const actions = {
-  addArtboard({
-    commit
-  }, artboard) {
-    commit('addArtboard', artboard)
-  }
+  // addArtboard({
+  //   commit
+  // }, artboard) {
+  //   commit('addArtboard', artboard)
+  // }
 }
 
 export default {
