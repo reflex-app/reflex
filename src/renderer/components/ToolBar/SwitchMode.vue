@@ -1,7 +1,30 @@
 <template>
   <div class="switch-mode-container">
-    <input type="checkbox" id="switch" :checked="toggleState" />
-    <label for="switch" @click="toggle" :class="{ 'is-active' : toggleState }">Toggle</label>
+    <router-link to="/focus" v-slot="{ href, navigate, isExactActive }">
+      <a :href="href" @click="navigate">
+        <Button
+          role="ghost"
+          icon="mode-focus"
+          :tight="true"
+          :isPressed="isExactActive"
+          title="Single Screen"
+        ></Button>
+      </a>
+    </router-link>
+    <router-link to="/" v-slot="{ href, navigate, isExactActive }">
+      <a :href="href" @click="navigate">
+        <Button
+          role="ghost"
+          icon="mode-all"
+          :tight="true"
+          :isPressed="isExactActive"
+          title="All Screens"
+        ></Button>
+      </a>
+    </router-link>
+
+    <!-- <input type="checkbox" id="switch" :checked="toggleState" /> -->
+    <!-- <label for="switch" @click="toggle" :class="{ 'is-active' : toggleState }">Toggle</label> -->
   </div>
 </template>
 
@@ -24,6 +47,15 @@ export default {
 <style lang="scss" scoped>
 .switch-mode-container {
   display: flex;
+  align-items: center;
+}
+
+a {
+  display: flex;
+
+  &:not(:first-child) {
+    margin-left: 0.25rem;
+  }
 }
 
 input[type="checkbox"] {
