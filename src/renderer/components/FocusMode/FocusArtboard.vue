@@ -155,7 +155,20 @@ export default {
       } else {
         this.stopDisco();
       }
-    }
+    },
+    /**
+     * Watch the VueX discoMode Store
+     * TODO: Resize 
+     */
+    // focusModeActiveScreen: {
+    //   deep: true,
+    //   handler: (newValue, oldValue) => {
+    //     console.log(oldValue.height, newValue.height);
+
+    //     // Zoom to fit the content
+    //     document.$panzoom.fitToScreen();
+    //   }
+    // }
   }
 };
 </script>
