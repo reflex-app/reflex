@@ -2,6 +2,7 @@
   <div
     class="artboard"
     ref="artboard"
+    :artboard-id="id"
     :style="{ height: height+'px', width: width+'px' }"
     :class="{ 'is-selected': isSelected }"
   >

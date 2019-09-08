@@ -1,8 +1,7 @@
 <template>
   <div id="artboards">
     <Artboard
-      v-bind="artboardData"
-      :artboard-id="1"
+      v-bind="focusModeActiveScreen"
       :selectedItems="selectedArtboards"
       ref="artboard"
       class="artboard"
@@ -16,7 +15,7 @@
 import { remote } from "electron";
 import { mapState, mapGetters } from "vuex";
 import Selection from "@simonwep/selection-js";
-import Artboard from "./Artboard";
+import Artboard from "@/components/Screens/Artboard";
 
 export default {
   name: "Artboards",
@@ -26,11 +25,6 @@ export default {
   data() {
     return {
       selectionInstance: null,
-      artboardData: {
-        title: "Test",
-        height: 600,
-        width: 360
-      },
       discoModeInterval: null
     };
   },
@@ -38,20 +32,11 @@ export default {
     ...mapState({
       artboards: state => state.artboards,
       selectedArtboards: state => state.selectedArtboards,
+      focusModeScreens: state => state.focusMode.screens,
+      focusModeActiveScreen: state => state.focusMode.activeScreen,
       discoMode: state => state.gui.discoMode
     }),
-    ...mapGetters(["isInteracting"]),
-    appName() {
-      // Return the name of the Electron app
-      // From package.json (name or productName)
-      // TODO this if check is required in case of tests
-      if (remote) {
-        return remote.app.getName();
-      } else {
-        const pkgJson = require("../../../../package.json");
-        return pkgJson.productName;
-      }
-    }
+    ...mapGetters(["isInteracting"])
   },
   mounted() {
     // Start automatically if saved in localStorage
@@ -123,13 +108,7 @@ export default {
   },
   methods: {
     resize(artboard) {
-      this.$store.commit("resizeArtboard", artboard);
-    },
-    disableSelection() {
-      this.selectionInstance.disable();
-    },
-    enableSelection() {
-      this.selectionInstance.enable();
+      this.$store.commit("focusResizeArtboard", artboard);
     },
     startDisco() {
       /**
@@ -143,8 +122,10 @@ export default {
       };
 
       const setRandomSize = () => {
-        this.artboardData.width = getRandomInt(200, 1920);
-        this.artboardData.height = getRandomInt(200, 1080);
+        this.$store.commit("focusSetRandomSize", {
+          width: getRandomInt(200, 1920),
+          height: getRandomInt(200, 1080)
+        });
       };
 
       // Immediately set a new size
@@ -196,7 +177,7 @@ export default {
   }
 }
 
-// Transition the changes to the height and width 
+// Transition the changes to the height and width
 // of the artboard when disco mode is active
 .artboard.disco-mode {
   transition: width ease-in-out 500ms, height ease-in-out 500ms;

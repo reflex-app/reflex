@@ -15,13 +15,12 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
 import { Panzoom } from "../mixins/panzoom";
 import { ipcRenderer } from "electron";
 import isElectron from "is-electron";
-import FocusArtboard from "@/components/Screens/FocusArtboard";
 import SidePanel from "@/components/SidePanel";
 import Screenshots from "@/components/Screenshot";
+import FocusArtboard from "@/components/FocusMode/FocusArtboard";
 import SizeShifter from "@/components/FocusMode/SizeShifter";
 import DiscoSwitch from "@/components/FocusMode/DiscoSwitch";
 const isDev = require("electron-is-dev");
@@ -40,8 +39,65 @@ export default {
       isDev: isDev
     };
   },
-  computed: {},
-  mounted: function() {}
+  methods: {
+    enableEventListeners() {
+      const controllerEl = this.$refs["canvas"];
+      const contentEl = this.$refs["artboards"].$el;
+
+      // Initialize Panzoom
+      let instance = new Panzoom(contentEl, controllerEl, {
+        startCentered: true
+      });
+      document.$panzoom = instance; // Attach to document
+
+      // Listen for changes
+      instance
+        .on("zoomStart", () => {
+          this.$store.commit("interactionSetState", {
+            key: "isZooming",
+            value: true
+          });
+        })
+        .on("panStart", () => {
+          this.$store.commit("interactionSetState", {
+            key: "isPanning",
+            value: true
+          });
+        })
+        .on("zoomStop", () => {
+          this.$store.commit("interactionSetState", {
+            key: "isZooming",
+            value: false
+          });
+        })
+        .on("panStop", () => {
+          this.$store.commit("interactionSetState", {
+            key: "isPanning",
+            value: false
+          });
+        });
+
+      // Listen for menu bar events
+      // TODO Add tests for these
+      if (isElectron()) {
+        ipcRenderer.on("menu_zoom-to-fit", document.$panzoom.fitToScreen);
+        ipcRenderer.on("menu_zoom-in", document.$panzoom.zoomIn);
+        ipcRenderer.on("menu_zoom-out", document.$panzoom.zoomOut);
+        ipcRenderer.on("menu_show-developer-canvas-debugger", () => {
+          this.$store.commit("toggleCanvasDebugger");
+        });
+      }
+
+      // Listen for View to be destroyed
+      this.$once("hook:beforeDestroy", () => {
+        // TODO remove listeners
+      });
+    }
+  },
+  mounted: function() {
+    // Add event listeners
+    this.$nextTick(this.enableEventListeners);
+  }
 };
 </script>
 
