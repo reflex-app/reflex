@@ -47,6 +47,5 @@ export default {
 <style lang="scss" scoped>
 .install-button-container {
   position: relative;
-  margin-left: 1rem;
 }
 </style>
