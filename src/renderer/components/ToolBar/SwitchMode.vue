@@ -56,6 +56,10 @@ a {
   &:not(:first-child) {
     margin-left: 0.25rem;
   }
+
+  &:last-child {
+    margin-right: 1rem;
+  }
 }
 
 input[type="checkbox"] {
