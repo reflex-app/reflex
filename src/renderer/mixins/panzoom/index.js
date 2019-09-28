@@ -57,12 +57,11 @@ export class Panzoom {
 
     // TODO temporary using null to avoid in tests
     const parent_styles = {
-      position: 'relative',
+      // position: 'relative',
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
       overflow: 'hidden',
-      position: 'relative'
       // cursor: 'grab'
     }
 
