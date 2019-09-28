@@ -13,23 +13,20 @@
     />
   </div>
   <!-- Show empty state if no artboards exist -->
-  <div v-else class="empty-state">
-    <img src="@/assets/ftu-vector.svg" class="empty-state__image" alt="Welcome graphic" />
-    <span class="empty-state__title">Welcome to {{ appName }}</span>
-    <p class="empty-state__body">You can create new screens in the Screens panel on the left.</p>
-  </div>
+  <WelcomeScreen v-else />
 </template>
 
 <script>
-import { remote } from "electron";
 import { mapState, mapGetters } from "vuex";
 import Selection from "@simonwep/selection-js";
 import Artboard from "./Artboard";
+import WelcomeScreen from "./WelcomeScreen";
 
 export default {
   name: "Artboards",
   components: {
-    Artboard
+    Artboard,
+    WelcomeScreen
   },
   data() {
     return {
@@ -41,18 +38,7 @@ export default {
       artboards: state => state.artboards,
       selectedArtboards: state => state.selectedArtboards
     }),
-    ...mapGetters(["isInteracting"]),
-    appName() {
-      // Return the name of the Electron app
-      // From package.json (name or productName)
-      // TODO this if check is required in case of tests
-      if (remote) {
-        return remote.app.getName();
-      } else {
-        const pkgJson = require("../../../../package.json");
-        return pkgJson.productName;
-      }
-    }
+    ...mapGetters(["isInteracting"])
   },
   mounted() {
     const vm = this;
@@ -68,7 +54,7 @@ export default {
     this.selectionInstance
       .on("beforestart", evt => {
         // Prevent selections if the user is interacting with an artboard
-        if (this.isInteracting) return false
+        if (this.isInteracting) return false;
       })
       .on("start", evt => {
         // Every non-ctrlKey causes a selection reset
@@ -174,28 +160,5 @@ export default {
 #sidebar {
   position: fixed;
   top: 100;
-}
-
-.empty-state {
-  height: 100%;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-
-  .empty-state__image {
-    margin-bottom: 2rem;
-  }
-
-  .empty-state__title {
-    font-size: 1.6rem;
-  }
-
-  .empty-state__body {
-    line-height: 1.5;
-    max-width: 250px;
-  }
 }
 </style>
