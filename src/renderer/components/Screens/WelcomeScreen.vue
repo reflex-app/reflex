@@ -6,19 +6,21 @@
     <div>New to {{appName}}? Scroll down.</div>
     <section class="text-section-centered">
       <p>This is a canvas, which is great for showing lots of screens. You can pan around, and zoom in/out.</p>
-      <p>Try panning and zooming now:</p>
-      <div>
-        <strong>Pan</strong>
+      <br />
+      <h4>Try panning and zooming now:</h4>
+      <div class="keyboard-command">
+        <strong>Pan:</strong>
         <div class="keyboard-key">Space</div>
         <span>+</span>
-        <div class="keyboard-key">Left Mouse</div>
+        <span>Left Mouse</span>
       </div>
-      <div>
-        <strong>Zoom</strong>
+      <div class="keyboard-command">
+        <strong>Zoom:</strong>
         <div class="keyboard-key">{{systemMetaKeyName}}</div>
         <span>+</span>
-        <div class="keyboard-key">Scroll</div>
+        <span>Scroll</span>
       </div>
+      <br />
       <p>Using a trackpad?</p>
       <p>Pinch to zoom in/out, and use two fingers to pan.</p>
     </section>
@@ -35,8 +37,8 @@
       <div>
         <h3>Synchronizing Screens</h3>
         <p>Enable the Sync toggle to synchronize clicks, scrolling, and other events across all of your Screens.</p>
-        <p>There’s no better way to see how your site will work at different sizes.*</p>
-        <p>*Currently only supports HTTPS websites.</p>
+        <p>There’s no better way to see how your site will work at different sizes.</p>
+        <p>NOTE: Currently only supports HTTPS websites.</p>
       </div>
       <!-- <div>IMAGE HERE</div> -->
     </section>
@@ -80,10 +82,10 @@ export default {
     },
     systemMetaKeyName() {
       // Show "CMD" or "CTRL" based on the user's OS
-      if (process.platform === 'darwin') {
-        return 'CMD'
+      if (process.platform === "darwin") {
+        return "CMD";
       } else {
-        return 'CTRL'
+        return "CTRL";
       }
     }
   }
@@ -119,8 +121,12 @@ section {
   margin-top: 20vh;
 }
 
+.keyboard-command {
+  margin-bottom: 1rem;
+}
+
 .keyboard-key {
-  padding: 1rem 2rem 0.5rem 0.5rem;
+  padding: 1rem 1.5rem 0.3rem 0.5rem;
   background: white;
   border: 1px solid #b3b3b3;
   display: inline-block;
