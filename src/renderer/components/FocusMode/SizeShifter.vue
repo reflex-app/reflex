@@ -132,9 +132,17 @@ export default {
   align-items: center;
   position: relative;
   margin: 1rem;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 1;
 
+  // Small screens
   @media screen and (max-width: 1000px) {
     flex-direction: column;
+    width: auto;
+    display: inline-flex;
+    border-radius: 20px;
   }
 }
 
@@ -146,15 +154,15 @@ export default {
   cursor: pointer;
   text-align: center;
   z-index: 1;
+  opacity: 0.4;
+  transition: opacity ease-in-out 125ms;
 
   .number {
     color: gray;
   }
 
   &.is-active {
-    // background: white;
-    // border: 1px solid #858585;
-    // color: red;
+    opacity: 1;
   }
 }
 
@@ -167,7 +175,7 @@ export default {
   border: 1px solid #858585;
   width: 10px;
   height: 100%;
-  transition: all 200ms ease-in-out;
+  transition: all 150ms ease-in-out;
   pointer-events: none;
   border-radius: 30px;
   z-index: 0;
