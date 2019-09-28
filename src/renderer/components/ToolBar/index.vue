@@ -31,7 +31,7 @@
       </div>
     </div>
     <div id="toolbar__recentURLs"></div>
-    <div class="toolbar__right">
+    <div class="toolbar__right" v-if="artboards.length">
       <SwitchMode />
     </div>
     <InstallUpdateButton />
