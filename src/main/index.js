@@ -2,6 +2,7 @@
 
 import {
   app,
+  shell,
   BrowserWindow
 } from 'electron'
 import autoUpdater from './auto-updater'
@@ -58,7 +59,7 @@ async function createWindow() {
   // Log the version
   log.info(`Version ${app.getVersion()}`)
 
-  // Load the site
+  // Load the web app
   mainWindow.loadURL(winURL)
 
   // Setup the menu
@@ -69,6 +70,15 @@ async function createWindow() {
     mainWindow.show()
   })
 
+  // Listen for outbound links and
+  // open in user's default web browser
+  // instead of inside Electron app
+  mainWindow.webContents.on('will-navigate', (event, url) => {
+    event.preventDefault()
+    shell.openExternal(url)
+  })
+
+  // Listen for window to be closed
   mainWindow.on('closed', () => {
     mainWindow = null
   })
