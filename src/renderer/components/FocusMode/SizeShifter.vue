@@ -122,20 +122,17 @@ export default {
 <style lang="scss" scoped>
 .size-shifter-container {
   display: flex;
-  overflow: hidden;
-  overflow-x: auto;
-  // width: 100%;
-  background: #e0e0e0;
+  position: relative;
+  overflow: auto;
+  background: rgba(#e0e0e0, 0.5);
   border-radius: 30px;
   user-select: none;
   font-size: 80%;
   align-items: center;
   position: relative;
   margin: 1rem;
-  position: absolute;
-  left: 0;
-  top: 0;
   z-index: 1;
+  backdrop-filter: blur(5px);
 
   // Small screens
   @media screen and (max-width: 1000px) {

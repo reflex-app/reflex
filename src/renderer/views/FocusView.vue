@@ -4,11 +4,11 @@
       <SidePanel />
       <Screenshots />
       <div class="focus-view__content">
-        <SizeShifter />
         <!-- <DiscoSwitch /> -->
         <div id="canvas" ref="canvas">
           <FocusArtboard ref="artboards"/>
         </div>
+        <SizeShifter />
         <!-- <DevToolsView /> -->
       </div>
     </div>
@@ -126,10 +126,14 @@ export default {
 
   #canvas {
     display: flex;
-    width: 100%;
-    height: 100%;
+    position: absolute;
     align-items: center;
     justify-content: center;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 0;
   }
 }
 </style>

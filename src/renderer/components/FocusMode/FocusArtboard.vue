@@ -196,31 +196,4 @@ export default {
   transition: width ease-in-out 500ms, height ease-in-out 500ms;
 }
 
-#sidebar {
-  position: fixed;
-  top: 100;
-}
-
-.empty-state {
-  height: 100%;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-
-  .empty-state__image {
-    margin-bottom: 2rem;
-  }
-
-  .empty-state__title {
-    font-size: 1.6rem;
-  }
-
-  .empty-state__body {
-    line-height: 1.5;
-    max-width: 250px;
-  }
-}
 </style>
