@@ -5,6 +5,7 @@
     :artboard-id="id"
     :style="{ height: height+'px', width: width+'px' }"
     :class="{ 'is-selected': isSelected }"
+    @click.right="rightClickHandler()"
   >
     <div class="artboard__top">
       <div>
@@ -37,6 +38,9 @@
 </template>
 
 <script>
+import { remote } from "electron";
+const { Menu, MenuItem } = remote;
+import isElectron from "is-electron";
 import { mapState, mapGetters } from "vuex";
 import WebPage from "./WebPage.vue";
 
@@ -99,6 +103,27 @@ export default {
   },
 
   methods: {
+    rightClickHandler() {
+      // Display Electron context menu
+      const vm = this;
+
+      if (isElectron()) {
+        const menu = new Menu();
+        menu.append(
+          new MenuItem({
+            label: "Rotate",
+            click() {
+              vm.$store.commit("resizeArtboard", {
+                id: vm.id,
+                width: vm.height,
+                height: vm.width
+              });
+            }
+          })
+        );
+        menu.popup(remote.getCurrentWindow());
+      }
+    },
     // Limits the size of an artboard
     validateArtboardSizeInput(name, value) {
       // @TODO: Refactor this into the size editor
