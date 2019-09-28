@@ -74,8 +74,10 @@ async function createWindow() {
   // open in user's default web browser
   // instead of inside Electron app
   mainWindow.webContents.on('will-navigate', (event, url) => {
-    event.preventDefault()
-    shell.openExternal(url)
+    if (url !== winURL) {
+      event.preventDefault()
+      shell.openExternal(url)
+    }
   })
 
   // Listen for window to be closed
