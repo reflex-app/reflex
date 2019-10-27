@@ -1,5 +1,5 @@
 <template>
-  <webview ref="frame" class="frame" />
+  <webview ref="frame" class="frame" allowpopups />
 </template>
 
 <script>
