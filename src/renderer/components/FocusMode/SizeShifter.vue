@@ -6,6 +6,7 @@
         :key="item.id"
         :screen-id="item.id"
         class="size-shifter-item"
+        ref="size-shifter-item"
         :class="{ 'is-active' : item.id === focusModeActiveScreen.id }"
         @click="changeSize(item.id)"
         :title="`Shortcut: ⌘${index + 1}`"
@@ -13,7 +14,7 @@
         <div class="number">{{index + 1}}</div>
         <div class="size">{{item.width}}x{{item.height}}</div>
       </div>
-      <div class="background-sliding-object"></div>
+      <div class="background-sliding-object" ref="background-sliding-object"></div>
     </div>
   </div>
 </template>
@@ -52,12 +53,8 @@ export default {
 
       const index = this.getIndexFromId(this.focusModeActiveScreen.id);
 
-      const slidingObject = document.querySelector(
-        ".background-sliding-object"
-      );
-      const targetElement = document.querySelectorAll(".size-shifter-item")[
-        index
-      ];
+      const slidingObject = this.$refs["background-sliding-object"];
+      const targetElement = this.$refs["size-shifter-item"][index];
 
       const currentOffsetLeft = slidingObject.offsetLeft;
       const targetOffsetLeft = targetElement.offsetLeft;
