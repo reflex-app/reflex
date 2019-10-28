@@ -1,20 +1,20 @@
-// import artboardEditable from '@/components/SidePanel/artboardEditable.vue'
+import TextInput from '@/components/shared/TextInput'
+import {
+  action
+} from '@storybook/addon-actions'
 
 export default {
-  title: 'Artboard Input'
+  title: 'Text Input'
 }
 
-export const darkColor = () => '<TextInput placeholder="Title">Icon</TextInput>'
-
-// export const asAComponent = () => ({
-//   components: {
-//     // artboardEditable
-//   },
-//   data: {
-//     artboards: [{
-//       index: 1,
-//       title: 'Hi'
-//     }]
-//   },
-//   template: '<artboardEditable :data="artboards"></artboardEditable>'
-// })
+export const normal = () => ({
+  components: {
+    TextInput
+  },
+  methods: {
+    triggerKeyup() {
+      action('keyup')()
+    }
+  },
+  template: '<TextInput placeholder="Title" @keyup="triggerKeyup">Some text</TextInput>'
+})
