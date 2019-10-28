@@ -27,7 +27,9 @@ const mutations = {
     key,
     value
   }) => {
-    state[key] = value
+    if (state[key] !== value) {
+      state[key] = value
+    }
   }
 }
 
