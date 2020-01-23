@@ -13,22 +13,27 @@
 // Synchronization server
 import { remote } from "electron";
 import * as sync from "../../mixins/sync";
+import { mapState } from "vuex";
 
 export default {
   name: "SyncButton",
-
   data() {
     return {
       syncServer: ""
     };
   },
-
   computed: {
-    url() {
-      // Bind to our Vuex Store's URL value
-      return this.$store.state.history.currentPage.url;
-    },
+    ...mapState({
+      url: state => state.history.currentPage.url
+    }),
     canSyncURL() {
+      if (this.compareHosts(this.url, this.syncServer) === true) {
+        console.log(
+          `You're currently viewing the synced server URL. ${this.url}, ${this.syncServer}. Visit the original site URL and re-sync if needed.`
+        );
+        return false;
+      }
+
       // Not available when on http
       if (this.url.includes("http://")) {
         return false;
@@ -49,7 +54,6 @@ export default {
       }
     }
   },
-
   mounted() {
     const vm = this;
 
@@ -61,23 +65,8 @@ export default {
       vm.syncServer = setup.proxy;
     });
   },
-
   methods: {
     async syncSite() {
-      // Avoid cyclical server
-      function compareHosts(url1, url2) {
-        const host1 = this.returnHost(url1);
-        const host2 = this.returnHost(url2);
-
-        console.log(host1, host2);
-
-        if (host1 === host2) {
-          return true;
-        } else {
-          return false;
-        }
-      }
-
       // Trigger the NodeJS change
       // Send request to change the URL being proxied
       const data = await sync.changeURL(this.url);
@@ -89,18 +78,19 @@ export default {
       });
 
       // Update the sync server url locally
-      this.syncServer = data.proxy;
-
-      // console.log(this.syncServer);
+      // this.syncServer = data.proxy;
+      // console.log(this.syncServer, data.proxy);
       // console.log(this.$store.state.history.currentPage.url);
+    },
+    compareHosts(url1, url2) {
+      const host1 = this.returnHost(url1);
+      const host2 = this.returnHost(url2);
 
-      // Changes the BrowserSync proxy URL
-      // if (compareHosts(this.url, this.syncServer) === false) {
-      //   return true;
-      // } else {
-      //   console.log("Contains sync server", this.url, this.syncServer);
-      //   return false;
-      // }
+      if (host1 === host2) {
+        return true;
+      } else {
+        return false;
+      }
     },
     returnHost(url) {
       var pathArray = url.split("/");
