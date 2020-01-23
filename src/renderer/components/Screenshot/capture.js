@@ -1,14 +1,11 @@
 import {
   clipboard,
   nativeImage,
-  remote
-,
+  remote,
   shell
 } from 'electron'
 
 import isElectron from 'is-electron'
-
-
 
 const {
   dialog
@@ -29,17 +26,22 @@ export async function capture(id, title, screenshotPath) {
       // Case: no path set yet (single screenshot save)
       // Prompt location to save screenshot
       if (isElectron()) {
-        dialog.showOpenDialog({
+        const fileSelection = dialog.showOpenDialog({
           properties: ['openFile', 'openDirectory', 'createDirectory']
-        },
-        function (filePaths) {
+        })
+
+        await fileSelection.then((result) => {
+          console.log(result);
+
+          if (result.canceled || !result.filePaths.length) return false
+
           try {
-            makeFile(filePaths[0], screenshot)
+            makeFile(result.filePaths[0], screenshot)
           } catch (e) {
             // Nothing was selected
+            console.log('No file or directory selected');
           }
-        }
-        )
+        })
       }
     } else {
       // Case: already has a path (multi-save)
@@ -51,17 +53,14 @@ export async function capture(id, title, screenshotPath) {
   function makeFile(filePath, screenshot) {
     const timestamp = moment().format('YYYY-MM-D_h-mm-ssa')
 
-    if (title) {
-      title = `_${title}_`
-    } else {
-      title = ''
-    }
+    title ? title = `_${title}_` : title = ''
 
     fs.writeFile(
       path.join(filePath, `reflex${title}${timestamp}.png`),
       screenshot,
-      err => {
+      (err) => {
         if (err) throw err
+
         // Alert the user that the screenshot was saved
         new Notification('Screenshot saved', {
           body: filePath
@@ -77,47 +76,40 @@ export async function capture(id, title, screenshotPath) {
     // Capture the <webview>
     // Loop through the selected Webviews
     const webview = getWebview(id)
-    webview.getWebContents().capturePage(image => {
-      const PNG = image.toPNG()
-      saveScreenshot(PNG)
-    })
+    const image = await webview.getWebContents().capturePage()
+    saveScreenshot(image.toPNG())
   } catch (error) {
     throw new Error(error)
   }
 }
 
-export function captureMultiple(ids) {
+export async function captureMultiple(ids) {
   // Accepts an array of ids to capture [ 0, 1 ]
   if (!ids) return false
 
   // 1. Capture the path to save all
-  dialog.showOpenDialog({
+  const fileSelection = dialog.showOpenDialog({
     properties: ['openFile', 'openDirectory', 'createDirectory']
-  },
-  function (filePaths) {
-    try {
-      if (filePaths.length > 0) {
-        // Capture each & save it
-        const captureEach = (array) => {
-          for (const item of array) {
-            capture(
-              item,
-              `${item}`,
-              filePaths[0]
-            )
-          }
-        }
+  })
 
-        captureEach(ids)
-        return filePaths[0]
-      } else {
-        // None selected
+  await fileSelection.then((result) => {
+    if (result.canceled || !result.filePaths.length) return false
+
+    try {
+      // Capture each & save it
+      for (const item of ids) {
+        capture(
+          item,
+          `${item}`,
+          result.filePaths[0]
+        )
       }
+
+      return result.filePaths[0]
     } catch (err) {
       throw new Error(err)
     }
-  }
-  )
+  })
 }
 
 // Capture ALL the screens
@@ -126,18 +118,18 @@ export async function captureAll(vm) {
   dialog.showOpenDialog({
     properties: ['openFile', 'openDirectory', 'createDirectory']
   },
-  async function (filePaths) {
-    // 2. Capture each & save it
-    for (let i = 0; i < vm.artboards.length; i++) {
-      await capture(
-        i,
-        `${vm.artboards[i].title}_${i}`,
-        filePaths[0]
-      )
-    }
+    async function (filePaths) {
+      // 2. Capture each & save it
+      for (let i = 0; i < vm.artboards.length; i++) {
+        await capture(
+          i,
+          `${vm.artboards[i].title}_${i}`,
+          filePaths[0]
+        )
+      }
 
-    return filePaths[0]
-  }
+      return filePaths[0]
+    }
   )
 }
 
