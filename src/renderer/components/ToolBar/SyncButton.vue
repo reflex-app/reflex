@@ -27,19 +27,13 @@ export default {
       url: state => state.history.currentPage.url
     }),
     canSyncURL() {
-      if (this.compareHosts(this.url, this.syncServer) === true) {
-        console.log(
-          `You're currently viewing the synced server URL. ${this.url}, ${this.syncServer}. Visit the original site URL and re-sync if needed.`
-        );
-        return false;
-      }
-
       // Not available when on http
-      if (this.url.includes("http://")) {
-        return false;
-      } else {
-        return true;
-      }
+      // if (this.url.includes("http://")) {
+      //   return false;
+      // } else {
+      //   return true;
+      // }
+      return true
     },
     isOnSyncURL() {
       // Show "active" state of button
@@ -67,20 +61,23 @@ export default {
   },
   methods: {
     async syncSite() {
-      // Trigger the NodeJS change
-      // Send request to change the URL being proxied
-      const data = await sync.changeURL(this.url);
+      if (this.compareHosts(this.url, this.syncServer) === true) {
+        alert(`You're currently viewing the synced server URL. If your screens are out of sync, visit the original URL and sync it again.`);
+        return false;
+      } else {
+        // Trigger the NodeJS change
+        // Send request to change the URL being proxied
+        const data = await sync.changeURL(this.url);
 
-      // Update the global URL to the proxy URL
-      // This will navigate to synced site via the proxy url
-      this.$store.commit("changeSiteData", {
-        url: data.proxy
-      });
+        // Update the global URL to the proxy URL
+        // This will navigate to synced site via the proxy url
+        this.$store.commit("changeSiteData", {
+          url: data.proxy
+        });
 
-      // Update the sync server url locally
-      // this.syncServer = data.proxy;
-      // console.log(this.syncServer, data.proxy);
-      // console.log(this.$store.state.history.currentPage.url);
+        // Update the sync server url locally
+        this.syncServer = data.proxy;
+      }
     },
     compareHosts(url1, url2) {
       const host1 = this.returnHost(url1);
