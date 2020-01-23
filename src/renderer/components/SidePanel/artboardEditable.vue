@@ -123,9 +123,7 @@ export default {
     remove(name, id) {
       // TODO Custom prompts?
       if (
-        confirm(
-          `You are able to to delete the ${name} screen size. Click "OK" to delete.`
-        )
+        confirm(`Are you sure you want to delete the ${name} screen size? Click "OK" to delete.`)
       ) {
         this.$store.commit("removeArtboard", id);
       }
