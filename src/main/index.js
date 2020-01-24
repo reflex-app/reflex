@@ -1,102 +1,26 @@
-'use strict'
-
+/* globals INCLUDE_RESOURCES_PATH */
 import {
-  app,
-  shell,
-  BrowserWindow
+  app
 } from 'electron'
-import autoUpdater from './auto-updater'
-
-import {
-  setMenu
-} from './menu'
 
 import {
   version
 } from '../../package.json'
-const log = require('electron-log')
-const isDev = require('electron-is-dev')
 
 // Set the version
 app.getVersion = () => version
 
 /**
- * Set `__static` path to static files in production
- * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
+ * Set `__resources` path to resources files in renderer process
  */
-if (process.env.NODE_ENV !== 'development') {
-  global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
-}
+global.__resources = undefined // eslint-disable-line no-underscore-dangle
+// noinspection BadExpressionStatementJS
+INCLUDE_RESOURCES_PATH // eslint-disable-line no-unused-expressions
+if (__resources === undefined) console.error('[Main-process]: Resources path is undefined')
 
-let mainWindow
-const winURL = isDev
-  ? 'http://localhost:9080'
-  : `file://${__dirname}/index.html`
-
-async function createWindow() {
-  /**
-   * Initial window options
-   */
-  mainWindow = new BrowserWindow({
-    height: 750,
-    width: 1200,
-    useContentSize: true,
-    backgroundColor: '#F5F5F5',
-    show: false, // Shown when ready-to-show event fires
-    webPreferences: {
-      webviewTag: true, // Required
-      nodeIntegration: true // Required
-    },
-    titleBarStyle: 'hiddenInset' // Hide the bar
-  })
-
-  // Check for updates...
-  // Important to not wait for page to load
-  // just in case there was a fatal bug
-  // with their current release
-  autoUpdater(mainWindow)
-
-  // Log the version
-  log.info(`Version ${app.getVersion()}`)
-
-  // Load the web app
-  mainWindow.loadURL(winURL)
-
-  // Setup the menu
-  setMenu(mainWindow)
-
-  // Show the app once it's ready
-  mainWindow.once('ready-to-show', () => {
-    mainWindow.show()
-  })
-
-  // Listen for outbound links and
-  // open in user's default web browser
-  // instead of inside Electron app
-  mainWindow.webContents.on('will-navigate', (event, url) => {
-    event.preventDefault()
-    shell.openExternal(url)
-  })
-
-  // Listen for window to be closed
-  mainWindow.on('closed', () => {
-    mainWindow = null
-  })
-}
-
-app.on('ready', createWindow)
-
-app.on('window-all-closed', () => {
-  app.quit()
-})
-
-app.on('activate', () => {
-  if (mainWindow === null) {
-    createWindow()
-  }
-})
-
-// Webview Settings
+/**
+ * Webview Settings
+ */
 app.on('web-contents-created', (event, contents) => {
   contents.on('will-attach-webview', (event, webPreferences, params) => {
     webPreferences.nodeIntegration = false // Disable Node.js integration inside <webview>
@@ -108,10 +32,12 @@ app.on('web-contents-created', (event, contents) => {
   })
 })
 
-// Workarounds to allow accessing self-signed HTTPS sites (w/ BrowserSync)
-// @TODO: Can this be solved w/ BrowserSync's self-signed?
+/** 
+ * Workarounds for accessing HTTP/HTTPS sites with Browsersync & Chromium
+ */
 app.commandLine.appendSwitch('ignore-certificate-errors', 'true');
 app.commandLine.appendSwitch('allow-insecure-localhost', 'true');
+
 // app.on('certificate-error', (event, webContents, url, error, certificate, callback) => {
 //   // On certificate error we disable default behaviour (stop loading the page)
 //   // and we then say "it is all fine - true" to the callback
@@ -121,3 +47,13 @@ app.commandLine.appendSwitch('allow-insecure-localhost', 'true');
 //   event.preventDefault()
 //   callback(list[0])
 // })
+
+// Quit when all windows are closed.
+app.on('window-all-closed', function () {
+  // On macOS it is common for applications and their menu bar
+  // to stay active until the user quits explicitly with Cmd + Q
+  if (process.platform !== 'darwin') app.quit()
+})
+
+// Load here all startup windows
+require('./mainWindow')

@@ -82,7 +82,7 @@ export default {
       }
     },
     toggleSidebar() {
-      this.$store.commit("toggleSidebar");
+      this.$store.commit("gui/toggleSidebar");
     }
   }
 };

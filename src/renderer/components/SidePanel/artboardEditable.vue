@@ -61,7 +61,7 @@
           <Button
             role="ghost"
             icon="delete"
-            @click="remove(artboard.title, artboard.id)"
+            @click.stop="remove(artboard.title, artboard.id)"
             title="Delete"
           ></Button>
         </div>
@@ -95,7 +95,7 @@ export default {
         return this.$store.state.artboards;
       },
       set(value) {
-        this.$store.commit("setArtboardList", value);
+        this.$store.commit("artboards/setArtboardList", value);
       }
     }
   },
@@ -106,7 +106,7 @@ export default {
       this.editID = null;
 
       // Update the values so that VueJS pays attention
-      this.$store.commit("updateArtboardAtIndex", {
+      this.$store.commit("artboards/updateArtboardAtIndex", {
         id: artboard.id,
         height: artboard.height || 0,
         width: artboard.width || 0,
@@ -128,7 +128,7 @@ export default {
       if (
         confirm(`Are you sure you want to delete the ${name} screen size? Click "OK" to delete.`)
       ) {
-        this.$store.commit("removeArtboard", id);
+        this.$store.commit("artboards/removeArtboard", id);
       }
     },
     goToArtboard(id) {
@@ -153,7 +153,7 @@ export default {
             new MenuItem({
               label: "Duplicate",
               click() {
-                vm.$store.dispatch("duplicateArtboard", artboard);
+                vm.$store.dispatch("artboards/duplicateArtboard", artboard);
               }
             })
           );
@@ -172,18 +172,18 @@ export default {
       }
     },
     hoverStart(id) {
-      this.$store.dispatch("hoverArtboardsAdd", id);
+      this.$store.dispatch("hoverArtboards/hoverArtboardsAdd", id);
     },
     hoverEnd(id) {
-      this.$store.dispatch("hoverArtboardsRemove", id);
+      this.$store.dispatch("hoverArtboards/hoverArtboardsRemove", id);
     },
     selectArtboard(id) {
       // Move screen to the selected artboard
       this.goToArtboard(id)
       // Remove all previous selections
-      this.$store.dispatch("selectedArtboardsEmpty", id);
+      this.$store.dispatch("selectedArtboards/selectedArtboardsEmpty", id);
       // Add the new artboard to selection
-      this.$store.dispatch("selectedArtboardsAdd", id);
+      this.$store.dispatch("selectedArtboards/selectedArtboardsAdd", id);
     },
     getArtboard(id) {
       // TODO add test here, selectors are brittle
