@@ -2,9 +2,9 @@ const uuid = require('uuid/v1')
 
 // All artboards on the screen
 // const state = []
-const state = () => {
-  return []
-}
+export const state = () => (
+  []
+)
 
 /**
  * Mock:
@@ -19,7 +19,7 @@ const state = () => {
  * ]
  */
 
-const mutations = {
+export const mutations = {
   /**
    * Add an Artboard
    * @param  {} state
@@ -98,7 +98,7 @@ const mutations = {
   }
 }
 
-const actions = {
+export const actions = {
   addArtboard({
     commit
   }, artboard) {
@@ -129,10 +129,4 @@ const actions = {
       newArtboard: newArtboard
     })
   }
-}
-
-export default {
-  state,
-  mutations,
-  actions
 }

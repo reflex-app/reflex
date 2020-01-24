@@ -1,4 +1,4 @@
-const state = {
+export const state = () => ({
   pages: [],
   currentPage: {
     index: 0,
@@ -6,9 +6,9 @@ const state = {
     title: null,
     favicon: null
   }
-}
+})
 
-const mutations = {
+export const mutations = {
   updateHistory: (state, payload) => {
     Object.assign(state.pages, payload)
   },
@@ -60,7 +60,7 @@ const mutations = {
   }
 }
 
-const actions = {
+export const actions = {
   reload() {},
   back({
     commit
@@ -78,10 +78,4 @@ const actions = {
     commit('addPage', payload) // Add to the array
     commit('setCurrentPageIndex', 'new') // Update the current page
   }
-}
-
-export default {
-  state,
-  mutations,
-  actions
 }

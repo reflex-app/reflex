@@ -71,7 +71,7 @@ export default {
 
         // Update the global URL to the proxy URL
         // This will navigate to synced site via the proxy url
-        this.$store.commit("changeSiteData", {
+        this.$store.commit("history/changeSiteData", {
           url: data.proxy
         });
 

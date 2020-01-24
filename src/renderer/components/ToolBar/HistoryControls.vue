@@ -46,11 +46,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions([
-      "reload", // map `this.reload()` to `this.$store.dispatch('reload')`
-      "forward",
-      "back"
-    ]),
+    ...mapActions("history", ["reload", "forward", "back"]),
     checkHistory(direction) {
       if (!direction || !this.pages) throw new Error("Missing inputs");
 

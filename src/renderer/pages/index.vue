@@ -59,13 +59,13 @@ export default {
       instance
         // Start
         .on("zoomStart", () => {
-          this.$store.commit("interactionSetState", {
+          this.$store.commit("interactions/interactionSetState", {
             key: "isZooming",
             value: true
           });
         })
         .on("panStart", () => {
-          this.$store.commit("interactionSetState", {
+          this.$store.commit("interactions/interactionSetState", {
             key: "isPanning",
             value: true
           });
@@ -76,13 +76,13 @@ export default {
          ** x/y coordinates
          */
         .on("zoomStop", () => {
-          this.$store.commit("interactionSetState", {
+          this.$store.commit("interactions/interactionSetState", {
             key: "isZooming",
             value: false
           });
         })
         .on("panStop", () => {
-          this.$store.commit("interactionSetState", {
+          this.$store.commit("interactions/interactionSetState", {
             key: "isPanning",
             value: false
           });
@@ -105,7 +105,7 @@ export default {
       });
       
       ipcRenderer.on("menu_show-developer-canvas-debugger", () => {
-        this.$store.commit("toggleCanvasDebugger");
+        this.$store.commit("dev/toggleCanvasDebugger");
       });
     }
   }

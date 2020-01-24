@@ -63,7 +63,7 @@ export default {
     this.$nextTick(() => {
       // Remove any leftover selected artboards
       // @TODO: This should be done from VueX Store, or wiped before quitting
-      this.$store.dispatch("selectedArtboardsEmpty");
+      this.$store.dispatch("selectedArtboards/selectedArtboardsEmpty");
     });
   },
 
@@ -73,7 +73,7 @@ export default {
       selectedArtboards: state => state.selectedArtboards,
       hoverArtboards: state => state.hoverArtboards
     }),
-    ...mapGetters(["isInteracting"]),
+    ...mapGetters(["interactionsisInteracting"]),
     isHover() {
       const isHover = this.hoverArtboards.filter(item => item == this.id);
       if (isHover.length) {
@@ -176,7 +176,7 @@ export default {
 
       function doStart() {
         // Update global state
-        vm.$store.commit("interactionSetState", {
+        vm.$store.commit("interactions/interactionSetState", {
           key: "isResizingArtboard",
           value: true
         });
@@ -233,7 +233,7 @@ export default {
         document.$panzoom.enable(); // TODO: Cleaner solution that polluting document?
 
         // Update global state
-        vm.$store.commit("interactionSetState", {
+        vm.$store.commit("interactions/interactionSetState", {
           key: "isResizingArtboard",
           value: false
         });

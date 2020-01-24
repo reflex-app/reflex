@@ -1,7 +1,8 @@
-const state = [] // A list of selected artboards by index
+// A list of selected artboards by index
 // I.e. state.selectedArtboards = [ 0, 3 ]
+export const state = () => ([]) 
 
-const mutations = {
+export const mutations = {
   add: (state, payload) => {
     // Only add new numbers
     if (state.includes(payload)) return false
@@ -21,7 +22,7 @@ const mutations = {
   }
 }
 
-const actions = {
+export const actions = {
   selectedArtboardsAdd({
     commit
   }, payload) {
@@ -39,10 +40,4 @@ const actions = {
   }) {
     commit('empty')
   }
-}
-
-export default {
-  state,
-  mutations,
-  actions
 }

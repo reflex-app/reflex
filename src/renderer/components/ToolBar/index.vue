@@ -79,20 +79,20 @@ export default {
     changeURL: debounce(function(url) {
       // Change the URL
       // TODO Check if it's a valid URL
-      this.$store.commit("changeSiteData", {
+      this.$store.commit("history/changeSiteData", {
         url: url
       });
 
       console.log("change url triggered");
 
       // Add this new page to the history
-      this.$store.dispatch("addPageToHistory", url);
+      this.$store.dispatch("history/addPageToHistory", url);
 
       // Off
       this.inputStateActive = false;
     }, 100),
     toggleSidebar() {
-      this.$store.commit("toggleSidebar");
+      this.$store.commit("gui/toggleSidebar");
     },
     toggleWindowMaximize() {
       const window = remote.getCurrentWindow();

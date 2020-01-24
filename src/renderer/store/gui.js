@@ -1,8 +1,8 @@
-const state = {
+export const state = () => ({
   sidebar: true
-}
+})
 
-const mutations = {
+export const mutations = {
   /** Toggle the Sidebar on/off
    * @param  {} state
    * @param  {Boolean} bool
@@ -18,9 +18,4 @@ const mutations = {
       this.state.gui.sidebar = !this.state.gui.sidebar
     }
   }
-}
-
-export default {
-  state,
-  mutations
 }

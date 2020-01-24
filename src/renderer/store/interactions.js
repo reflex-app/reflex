@@ -1,11 +1,11 @@
-const state = {
+export const state = () => ({
   isPanning: false,
   isZooming: false,
   isSelectingArea: false,
   isResizingArtboard: false
-}
+})
 
-const getters = {
+export const getters = {
   /**
    * Getter to check if any states are true
    */
@@ -22,7 +22,7 @@ const getters = {
   }
 }
 
-const mutations = {
+export const mutations = {
   interactionSetState: (state, {
     key,
     value
@@ -31,10 +31,4 @@ const mutations = {
       state[key] = value
     }
   }
-}
-
-export default {
-  state,
-  getters,
-  mutations
 }

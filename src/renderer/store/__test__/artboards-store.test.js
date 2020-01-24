@@ -43,7 +43,7 @@ describe('artboards: add, remove', () => {
 
   test('removes an artboard at index', () => {
     // Dispatch to VueX
-    store.commit('removeArtboard', 0)
+    store.commit('artboards/removeArtboard', 0)
 
     // Check the result
     expect(store.state.artboards.length).toBe(0)
