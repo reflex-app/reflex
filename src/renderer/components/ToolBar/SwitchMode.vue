@@ -1,27 +1,23 @@
 <template>
   <div class="switch-mode-container">
-    <router-link to="/focus" v-slot="{ href, navigate, isExactActive }">
-      <a :href="href" @click="navigate">
-        <Button
-          role="ghost"
-          icon="mode-focus"
-          :tight="true"
-          :isPressed="isExactActive"
-          title="Single Screen"
-        ></Button>
-      </a>
-    </router-link>
-    <router-link to="/" v-slot="{ href, navigate, isExactActive }">
-      <a :href="href" @click="navigate">
-        <Button
-          role="ghost"
-          icon="mode-all"
-          :tight="true"
-          :isPressed="isExactActive"
-          title="All Screens"
-        ></Button>
-      </a>
-    </router-link>
+    <nuxt-link to="/">
+      <Button
+        role="ghost"
+        icon="mode-all"
+        :tight="true"
+        title="All Screens"
+        :isPressed="isRouteActive('/')"
+      ></Button>
+    </nuxt-link>
+    <nuxt-link to="/focus">
+      <Button
+        role="ghost"
+        icon="mode-focus"
+        :tight="true"
+        title="Single Screen"
+        :isPressed="isRouteActive('/focus')"
+      ></Button>
+    </nuxt-link>
 
     <!-- <input type="checkbox" id="switch" :checked="toggleState" /> -->
     <!-- <label for="switch" @click="toggle" :class="{ 'is-active' : toggleState }">Toggle</label> -->
@@ -39,6 +35,13 @@ export default {
   methods: {
     toggle() {
       this.$store.commit("toggleGui", "focusMode");
+    },
+    isRouteActive(id) {
+      if (this.$route.path === id) {
+        return true;
+      } else {
+        return false;
+      }
     }
   }
 };

@@ -34,7 +34,6 @@ export default {
       artboards: state => state.artboards
     })
   },
-
   mounted() {
     this.enableListeners();
 
@@ -44,12 +43,14 @@ export default {
     const targetElement = document.querySelector(
       `[screen-id='${activeScreen.id}']`
     );
-    this.changeSize(activeScreen.id);
+
+    // TODO Bug when running this; component not loaded yet?
+    // this.changeSize(activeScreen.id);
   },
   methods: {
     changeSize(id) {
       // Update size in Store
-      this.$store.commit("focusChangeActiveScreen", id);
+      this.$store.commit("focusMode/focusChangeActiveScreen", id);
 
       const index = this.getIndexFromId(this.focusModeActiveScreen.id);
 

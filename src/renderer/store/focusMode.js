@@ -4,7 +4,7 @@ const uuid = require('uuid/v1')
 
 // All artboards on the screen
 // const state = []
-const state = {
+export const state = () => ({
   activeScreen: {
     id: uuid(),
     title: 'Reflex',
@@ -41,16 +41,18 @@ const state = {
   //    *    }
   //    */
   // ]
-}
+})
 
-const mutations = {
+export const mutations = {
   /** Resize an Artboard
    * @param  {} state
    * @param  {Object} payload {id, height, width}
    */
   focusResizeArtboard(state, payload) {
-    const artboards = state.screens
-    const resizable = artboards.find(artboard => artboard.id === payload.id)
+    const artboards = state.activeScreen
+    const resizable = artboards
+    // TODO Consider updating to allow resizing other artboards
+    // const resizable = artboards.find(artboard => artboard.id === payload.id)
 
     // Update both the activeScreen and the specified screen
     resizable.height = payload.height
@@ -124,16 +126,10 @@ const mutations = {
   // }
 }
 
-const actions = {
+export const actions = {
   // addArtboard({
   //   commit
   // }, artboard) {
   //   commit('addArtboard', artboard)
   // }
-}
-
-export default {
-  state,
-  mutations,
-  actions
 }

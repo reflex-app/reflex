@@ -78,7 +78,7 @@ export default {
       selectedArtboards: state => state.selectedArtboards,
       hoverArtboards: state => state.hoverArtboards
     }),
-    ...mapGetters(["interactionsisInteracting"]),
+    ...mapGetters("interactions", ["isInteracting"]),
     isHover() {
       const isHover = this.hoverArtboards.filter(item => item == this.id);
       if (isHover.length) {
@@ -122,7 +122,7 @@ export default {
           new MenuItem({
             label: "Rotate",
             click() {
-              vm.$store.commit("resizeArtboard", {
+              vm.$store.commit("artboards/resizeArtboard", {
                 id: vm.id,
                 width: vm.height,
                 height: vm.width

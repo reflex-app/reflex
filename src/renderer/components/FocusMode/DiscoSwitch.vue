@@ -6,7 +6,7 @@
 export default {
   methods: {
     toggleDisco() {
-      this.$store.commit("toggleGui", "discoMode");
+      this.$store.commit("gui/toggleGui", "discoMode");
     }
   }
 };
@@ -15,5 +15,8 @@ export default {
 <style lang="scss" scoped>
 .toggle-disco {
   cursor: pointer;
+  background: red;
+  z-index: 1;
+  position: relative;
 }
 </style>

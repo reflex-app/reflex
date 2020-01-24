@@ -36,7 +36,7 @@ export default {
       focusModeActiveScreen: state => state.focusMode.activeScreen,
       discoMode: state => state.gui.discoMode
     }),
-    ...mapGetters(["isInteracting"])
+    ...mapGetters("interactions", ["isInteracting"])
   },
   mounted() {
     // Start automatically if saved in localStorage
@@ -58,11 +58,11 @@ export default {
       .on("start", evt => {
         // Every non-ctrlKey causes a selection reset
         if (!evt.ctrlKey) {
-          this.$store.dispatch("selectedArtboardsEmpty");
+          this.$store.dispatch("selectedArtboards/selectedArtboardsEmpty");
         }
 
         // Update state
-        this.$store.commit("interactionSetState", {
+        this.$store.commit("interactions/interactionSetState", {
           key: "isSelectingArea",
           value: true
         });
@@ -75,13 +75,13 @@ export default {
         // Add
         evt.changed.added.forEach(item => {
           const id = item.getAttribute("artboard-id");
-          this.$store.dispatch("selectedArtboardsAdd", id);
+          this.$store.dispatch("selectedArtboards/selectedArtboardsAdd", id);
         });
 
         // Remove
         evt.changed.removed.forEach(item => {
           const id = item.getAttribute("artboard-id");
-          this.$store.dispatch("selectedArtboardsRemove", id);
+          this.$store.dispatch("selectedArtboards/selectedArtboardsRemove", id);
         });
       })
       .on("stop", evt => {
@@ -91,10 +91,10 @@ export default {
          * to the current selection.
          */
         // Remove all in case temporarily added
-        this.$store.dispatch("selectedArtboardsEmpty");
+        this.$store.dispatch("selectedArtboards/selectedArtboardsEmpty");
 
         // Update state
-        this.$store.commit("interactionSetState", {
+        this.$store.commit("interactions/interactionSetState", {
           key: "isSelectingArea",
           value: false
         });
@@ -102,13 +102,13 @@ export default {
         // Push the new IDs
         evt.selected.forEach(item => {
           const id = item.getAttribute("artboard-id");
-          this.$store.dispatch("selectedArtboardsAdd", id); // Add these items to the Store
+          this.$store.dispatch("selectedArtboards/selectedArtboardsAdd", id); // Add these items to the Store
         });
       });
   },
   methods: {
     resize(artboard) {
-      this.$store.commit("focusResizeArtboard", artboard);
+      this.$store.commit("focusMode/focusResizeArtboard", artboard);
     },
     startDisco() {
       /**
@@ -122,7 +122,7 @@ export default {
       };
 
       const setRandomSize = () => {
-        this.$store.commit("focusSetRandomSize", {
+        this.$store.commit("focusMode/focusSetRandomSize", {
           width: getRandomInt(200, 1920),
           height: getRandomInt(200, 1080)
         });
@@ -140,6 +140,7 @@ export default {
     },
     stopDisco() {
       clearInterval(this.discoModeInterval);
+      this.discoModeInterval = null;
       console.log("disco stop");
     }
   },
@@ -155,10 +156,10 @@ export default {
       } else {
         this.stopDisco();
       }
-    },
+    }
     /**
      * Watch the VueX discoMode Store
-     * TODO: Resize 
+     * TODO: Resize
      */
     // focusModeActiveScreen: {
     //   deep: true,
@@ -195,5 +196,4 @@ export default {
 .artboard.disco-mode {
   transition: width ease-in-out 500ms, height ease-in-out 500ms;
 }
-
 </style>

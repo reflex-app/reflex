@@ -4,10 +4,10 @@
       <SidePanel />
       <Screenshots />
       <div class="focus-view__content">
-        <!-- <DiscoSwitch /> -->
         <div id="canvas" ref="canvas">
           <FocusArtboard ref="artboards"/>
         </div>
+        <DiscoSwitch />
         <SizeShifter />
         <!-- <DevToolsView /> -->
       </div>
@@ -56,25 +56,25 @@ export default {
       // Listen for changes
       instance
         .on("zoomStart", () => {
-          this.$store.commit("interactionSetState", {
+          this.$store.commit("interactions/interactionSetState", {
             key: "isZooming",
             value: true
           });
         })
         .on("panStart", () => {
-          this.$store.commit("interactionSetState", {
+          this.$store.commit("interactions/interactionSetState", {
             key: "isPanning",
             value: true
           });
         })
         .on("zoomStop", () => {
-          this.$store.commit("interactionSetState", {
+          this.$store.commit("interactions/interactionSetState", {
             key: "isZooming",
             value: false
           });
         })
         .on("panStop", () => {
-          this.$store.commit("interactionSetState", {
+          this.$store.commit("interactions/interactionSetState", {
             key: "isPanning",
             value: false
           });
@@ -83,11 +83,11 @@ export default {
       // Listen for menu bar events
       // TODO Add tests for these
       if (isElectron()) {
-        ipcRenderer.on("menu_zoom-to-fit", document.$panzoom.fitToScreen());
-        ipcRenderer.on("menu_zoom-in", document.$panzoom.zoomIn());
-        ipcRenderer.on("menu_zoom-out", document.$panzoom.zoomOut());
+        ipcRenderer.on("menu_zoom-to-fit", document.$panzoom.fitToScreen);
+        ipcRenderer.on("menu_zoom-in", document.$panzoom.zoomIn);
+        ipcRenderer.on("menu_zoom-out", document.$panzoom.zoomOut);
         ipcRenderer.on("menu_show-developer-canvas-debugger", () => {
-          this.$store.commit("toggleCanvasDebugger");
+          this.$store.commit("dev/toggleCanvasDebugger");
         });
       }
 
