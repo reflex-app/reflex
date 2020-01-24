@@ -1,5 +1,5 @@
 <template>
-  <webview ref="frame" class="frame" allowpopups />
+  <webview ref="frame" class="frame" :preload="injectScript" allowpopups />
 </template>
 
 <script>
@@ -16,7 +16,14 @@ export default {
   computed: {
     ...mapState({
       url: state => state.history.currentPage.url
-    })
+    }),
+    injectScript() {
+      const appPath = require("electron").remote.app.getAppPath();
+      return `file://${require("path").resolve(
+        __dirname,
+        "../../mixins/injectWebPageScript.js"
+      )}`;
+    }
   },
   mounted() {
     const vm = this;
@@ -27,7 +34,7 @@ export default {
       const frame = vm.$refs.frame;
 
       // Bind event listeners
-      this.bindEventListers();
+      this.bindEventListeners();
 
       // Load the <webview> the initial time
       this.loadSite();
@@ -79,7 +86,7 @@ export default {
     }
   },
   methods: {
-    bindEventListers() {
+    bindEventListeners() {
       // Remove navigation event
       const frame = this.$refs.frame;
       frame.addEventListener("will-navigate", this.willNavigate);
@@ -144,13 +151,44 @@ export default {
       const vm = this;
       const frame = this.$refs.frame;
 
+      // The frame has been destroyed
+      // Remove event listeners
       if (!frame) {
-        // The frame has been destroyed
-        // Remove event listeners
         throw new Error(
           "Frame listeners still active after component destroy."
         );
+        removeListeners();
         return false;
+      }
+
+      // Initialize the event listeners
+      addListeners();
+
+      // Set the URL, start loading
+      frame.setAttribute("src", this.url);
+
+      // Bind events
+      function addListeners() {
+        frame.addEventListener("did-start-loading", loadstart); // loadstart
+        frame.addEventListener("dom-ready", contentloaded); // contentload
+        frame.addEventListener("did-stop-loading", loadstop); // loadstop
+        frame.addEventListener("ipc-message", receiveHandshake); // Listen for response
+
+        // The following will trigger a removal of the IPC listener
+        // frame.addEventListener("will-navigate", loadabort); // loadabort
+        frame.addEventListener("loadabort", loadabort); // loadabort
+      }
+
+      // Remove all event listeners
+      function removeListeners() {
+        frame.removeEventListener("did-start-loading", loadstart);
+        frame.removeEventListener("dom-ready", contentloaded);
+        frame.removeEventListener("did-stop-loading", loadstop);
+        frame.removeEventListener("ipc-message", receiveHandshake);
+
+        // IPC-related listeners
+        // frame.removeEventListener("will-navigate", loadabort);
+        frame.removeEventListener("loadabort", loadabort);
       }
 
       // When loading of webview starts
@@ -164,45 +202,23 @@ export default {
         });
       }
 
-      // Initialize the event listeners
-      addListeners();
-
-      // Set the URL, start loading
-      frame.setAttribute("src", this.url);
-
       // Once webview content is loaded
+      // Request its data
       function contentloaded() {
-        const execCode = `
-          // Define the content from inside the page to return
-          let data = {
-            title: document.title,
-            favicon: "https://www.google.com/s2/favicons?domain=" +
-              window.location.href
-          }
-
-          // Listen for the incoming message & respond with data object
-          window.addEventListener("message", () => {
-            event.source.postMessage(data, '*');
-          }, false);
-        `;
-
-        // Execute
-        frame.getWebContents().executeJavaScript(execCode).then(() => {
-          frame.contentWindow.postMessage("Send me your data!", "*");
-        })
-        // frame.getWebContents().executeJavaScript(execCode, function() {
-        //   // After successfully injecting...
-        //   // Request the data
-        //   frame.contentWindow.postMessage("Send me your data!", "*");
-        // });
+        frame.send("requestData");
       }
 
       function receiveHandshake(event) {
         // Data is accessible as event.data.*
         // Refer to the object that's injected during contentload()
         // for all keys
-        const title = event.data.title;
-        const favicon = event.data.favicon;
+        if (event.channel !== "replyData") return false;
+
+        const returnedData = event.args[0];
+        const title = returnedData.title;
+        const favicon = returnedData.favicon;
+
+        console.log(returnedData);
 
         // TODO Add to VueX Action
         vm.$store.commit("history/changeSiteData", {
@@ -210,7 +226,9 @@ export default {
           favicon: favicon
         });
 
-        window.removeEventListener("message", receiveHandshake);
+        // Remove listeners once data has been received
+        // TODO Allow streaming until page is changed/reloaded
+        removeListeners();
       }
 
       // Loading has finished
@@ -220,11 +238,11 @@ export default {
         // Update History
         // TODO Put this in a more obvious place
         if (!options.history && options.history == false) {
-          vm.$store.commit("history/updateHistory", frame.getWebContents().history); // Array with URLs
+          vm.$store.commit(
+            "history/updateHistory",
+            frame.getWebContents().history
+          ); // Array with URLs
         }
-
-        // Remove the event listeners related to site loading
-        removeListeners();
       }
 
       function loadabort() {
@@ -232,23 +250,9 @@ export default {
         new Notification("Aborted", {
           body: "The site stopped loading for some reason."
         });
-      }
 
-      // Bind events
-      function addListeners() {
-        frame.addEventListener("did-start-loading", loadstart); // loadstart
-        frame.addEventListener("dom-ready", contentloaded); // contentload
-        frame.addEventListener("did-stop-loading", loadstop); // loadstop
-        frame.addEventListener("loadabort", loadabort); // loadabort
-        window.addEventListener("message", receiveHandshake, false); // Listen for response
-      }
-
-      // Remove all event listeners
-      function removeListeners() {
-        frame.removeEventListener("did-start-loading", loadstart);
-        frame.removeEventListener("dom-ready", contentloaded);
-        frame.removeEventListener("did-stop-loading", loadstop);
-        frame.removeEventListener("loadabort", loadabort);
+        // Remove the event listeners related to site loading
+        removeListeners();
       }
     },
     willNavigate(event) {
