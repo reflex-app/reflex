@@ -61,7 +61,7 @@
           <Button
             role="ghost"
             icon="delete"
-            @click="remove(artboard.title, artboard.id)"
+            @click.stop="remove(artboard.title, artboard.id)"
             title="Delete"
           ></Button>
         </div>
