@@ -36,15 +36,15 @@ export default {
       // TODO Better way to watch for VueX actions?
       this.unsubscribeAction = this.$store.subscribeAction((action, state) => {
         switch (action.type) {
-          case "reload":
+          case "history/reload":
             this.reload();
             break;
 
-          case "back":
+          case "history/back":
             this.back();
             break;
 
-          case "forward":
+          case "history/forward":
             this.forward();
             break;
 
@@ -187,11 +187,14 @@ export default {
         `;
 
         // Execute
-        frame.executeJavaScript(execCode, function() {
-          // After successfully injecting...
-          // Request the data
+        frame.getWebContents().executeJavaScript(execCode).then(() => {
           frame.contentWindow.postMessage("Send me your data!", "*");
-        });
+        })
+        // frame.getWebContents().executeJavaScript(execCode, function() {
+        //   // After successfully injecting...
+        //   // Request the data
+        //   frame.contentWindow.postMessage("Send me your data!", "*");
+        // });
       }
 
       function receiveHandshake(event) {
