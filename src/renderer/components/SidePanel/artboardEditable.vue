@@ -47,9 +47,12 @@
       <div
         v-else
         class="artboard-tab__container"
+        @click="selectArtboard(artboard.id)"
+        @mouseover="hoverStart(artboard.id)"
+        @mouseout="hoverEnd(artboard.id)"
         @contextmenu="rightClickMenu($event, artboard)"
       >
-        <div class="artboard-tab__container-left" @click="goToArtboard(artboard.id)">
+        <div class="artboard-tab__container-left">
           <div>{{ artboard.title }}</div>
           <div>{{ artboard.width }} x {{ artboard.height }}</div>
         </div>
@@ -138,8 +141,10 @@ export default {
       // Open the DevTools for x screen ID
       // TODO using brittle selectors
       // const artboard = this.getArtboard(artboard.id);
-      const vm = this
-      const artboardFrame = this.getArtboard(artboard.id).querySelector("webview");
+      const vm = this;
+      const artboardFrame = this.getArtboard(artboard.id).querySelector(
+        "webview"
+      );
 
       if (artboardFrame) {
         if (isElectron()) {
@@ -166,6 +171,20 @@ export default {
         throw new Error("No frame near artboard");
       }
     },
+    hoverStart(id) {
+      this.$store.dispatch("hoverArtboardsAdd", id);
+    },
+    hoverEnd(id) {
+      this.$store.dispatch("hoverArtboardsRemove", id);
+    },
+    selectArtboard(id) {
+      // Move screen to the selected artboard
+      this.goToArtboard(id)
+      // Remove all previous selections
+      this.$store.dispatch("selectedArtboardsEmpty", id);
+      // Add the new artboard to selection
+      this.$store.dispatch("selectedArtboardsAdd", id);
+    },
     getArtboard(id) {
       // TODO add test here, selectors are brittle
       // This could probably be a Store action
@@ -189,11 +208,11 @@ $artboard-tab-side-padding: 1rem;
   border-bottom: 1px solid $border-color;
 
   &:hover {
-    // background: #f1f1f1;
+    background: #f1f1f1;
   }
 
   &:active {
-    // background: #e2e2e2;
+    background: #e2e2e2;
   }
 
   .artboard-tab__container {
@@ -202,13 +221,13 @@ $artboard-tab-side-padding: 1rem;
     align-items: center;
     padding: 0.5rem $artboard-tab-side-padding;
     overflow: auto;
+    cursor: pointer;
 
     .artboard-tab__container-left {
       max-width: 9rem;
       min-width: 5rem;
       white-space: nowrap;
       overflow: hidden;
-      cursor: pointer;
 
       & > * {
         text-overflow: ellipsis;
