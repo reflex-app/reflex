@@ -110,12 +110,14 @@ app.on('web-contents-created', (event, contents) => {
 
 // Workarounds to allow accessing self-signed HTTPS sites (w/ BrowserSync)
 // @TODO: Can this be solved w/ BrowserSync's self-signed?
-app.on('certificate-error', (event, webContents, url, error, certificate, callback) => {
-  // On certificate error we disable default behaviour (stop loading the page)
-  // and we then say "it is all fine - true" to the callback
-  event.preventDefault()
-  callback(true)
-}).on('select-client-certificate', (event, webContents, url, list, callback) => {
-  event.preventDefault()
-  callback(list[0])
-})
+app.commandLine.appendSwitch('ignore-certificate-errors', 'true');
+app.commandLine.appendSwitch('allow-insecure-localhost', 'true');
+// app.on('certificate-error', (event, webContents, url, error, certificate, callback) => {
+//   // On certificate error we disable default behaviour (stop loading the page)
+//   // and we then say "it is all fine - true" to the callback
+//   event.preventDefault()
+//   callback(true)
+// }).on('select-client-certificate', (event, webContents, url, list, callback) => {
+//   event.preventDefault()
+//   callback(list[0])
+// })

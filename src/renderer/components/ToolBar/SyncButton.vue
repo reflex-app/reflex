@@ -13,28 +13,27 @@
 // Synchronization server
 import { remote } from "electron";
 import * as sync from "../../mixins/sync";
+import { mapState } from "vuex";
 
 export default {
   name: "SyncButton",
-
   data() {
     return {
       syncServer: ""
     };
   },
-
   computed: {
-    url() {
-      // Bind to our Vuex Store's URL value
-      return this.$store.state.history.currentPage.url;
-    },
+    ...mapState({
+      url: state => state.history.currentPage.url
+    }),
     canSyncURL() {
       // Not available when on http
-      if (this.url.includes("http://")) {
-        return false;
-      } else {
-        return true;
-      }
+      // if (this.url.includes("http://")) {
+      //   return false;
+      // } else {
+      //   return true;
+      // }
+      return true
     },
     isOnSyncURL() {
       // Show "active" state of button
@@ -49,7 +48,6 @@ export default {
       }
     }
   },
-
   mounted() {
     const vm = this;
 
@@ -61,46 +59,35 @@ export default {
       vm.syncServer = setup.proxy;
     });
   },
-
   methods: {
     async syncSite() {
-      // Avoid cyclical server
-      function compareHosts(url1, url2) {
-        const host1 = this.returnHost(url1);
-        const host2 = this.returnHost(url2);
+      if (this.compareHosts(this.url, this.syncServer) === true) {
+        alert(`You're currently viewing the synced server URL. If your screens are out of sync, visit the original URL and sync it again.`);
+        return false;
+      } else {
+        // Trigger the NodeJS change
+        // Send request to change the URL being proxied
+        const data = await sync.changeURL(this.url);
 
-        console.log(host1, host2);
+        // Update the global URL to the proxy URL
+        // This will navigate to synced site via the proxy url
+        this.$store.commit("changeSiteData", {
+          url: data.proxy
+        });
 
-        if (host1 === host2) {
-          return true;
-        } else {
-          return false;
-        }
+        // Update the sync server url locally
+        this.syncServer = data.proxy;
       }
+    },
+    compareHosts(url1, url2) {
+      const host1 = this.returnHost(url1);
+      const host2 = this.returnHost(url2);
 
-      // Trigger the NodeJS change
-      // Send request to change the URL being proxied
-      const data = await sync.changeURL(this.url);
-
-      // Update the global URL to the proxy URL
-      // This will navigate to synced site via the proxy url
-      this.$store.commit("changeSiteData", {
-        url: data.proxy
-      });
-
-      // Update the sync server url locally
-      this.syncServer = data.proxy;
-
-      // console.log(this.syncServer);
-      // console.log(this.$store.state.history.currentPage.url);
-
-      // Changes the BrowserSync proxy URL
-      // if (compareHosts(this.url, this.syncServer) === false) {
-      //   return true;
-      // } else {
-      //   console.log("Contains sync server", this.url, this.syncServer);
-      //   return false;
-      // }
+      if (host1 === host2) {
+        return true;
+      } else {
+        return false;
+      }
     },
     returnHost(url) {
       var pathArray = url.split("/");
