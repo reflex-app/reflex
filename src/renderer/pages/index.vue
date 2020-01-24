@@ -1,13 +1,11 @@
 <template>
   <div id="main-view">
-    <div id="canvasContainer">
       <SidePanel />
       <Screenshots />
       <div id="canvas" ref="canvas" :class="{ 'dev-visual-debugger': showCanvasDebugger }">
         <Artboards ref="artboards" :class="{ 'dev-visual-debugger': showCanvasDebugger }" />
       </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -33,7 +31,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["artboards"]),
+    ...mapState("artboards", []),
     ...mapState({
       showCanvasDebugger: state => state.dev.showCanvasDebugger
     })
@@ -83,14 +81,14 @@ export default {
         ipcRenderer.on("menu_zoom-in", document.$panzoom.zoomIn);
         ipcRenderer.on("menu_zoom-out", document.$panzoom.zoomOut);
         ipcRenderer.on("menu_show-developer-canvas-debugger", () => {
-          this.$store.commit("toggleCanvasDebugger");
+          this.$store.commit("dev/toggleCanvasDebugger");
         });
       }
 
       ipcRenderer.on("menu_zoom-out", () => {
         document.$panzoom.zoomOut();
       });
-      
+
       ipcRenderer.on("menu_show-developer-canvas-debugger", () => {
         this.$store.commit("dev/toggleCanvasDebugger");
       });
@@ -112,12 +110,8 @@ export default {
 @import "@/scss/_variables";
 
 #main-view {
-  min-height: 100vh;
-}
-
-#canvasContainer {
   background: $body-bg;
-  height: calc(100% - #{$gui-title-bar-height}); // hard-coded height of toolbar
+  min-height: calc(100vh - #{$gui-title-bar-height}); // hard-coded height of toolbar
   width: 100%;
   position: relative;
   display: flex;
