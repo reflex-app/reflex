@@ -3,7 +3,7 @@
     class="artboard"
     ref="artboard"
     :style="{ height: height+'px', width: width+'px' }"
-    :class="{ 'is-selected': isSelected }"
+    :class="{ 'is-hover': isHover, 'is-selected': isSelected }"
   >
     <div class="artboard__top">
       <div>
@@ -70,9 +70,18 @@ export default {
   computed: {
     ...mapState({
       url: state => state.history.currentPage.url,
-      selectedArtboards: state => state.selectedArtboards
+      selectedArtboards: state => state.selectedArtboards,
+      hoverArtboards: state => state.hoverArtboards
     }),
     ...mapGetters(["isInteracting"]),
+    isHover() {
+      const isHover = this.hoverArtboards.filter(item => item == this.id);
+      if (isHover.length) {
+        return true;
+      } else {
+        return false;
+      }
+    },
     isSelected() {
       const isSelected = this.selectedArtboards.filter(item => item == this.id);
       if (isSelected.length) {
@@ -258,7 +267,8 @@ $artboard-handle-height: 1rem;
     margin-right: 3.5rem;
   }
 
-  &:hover {
+  &:hover,
+  &.is-hover {
     border-color: #929292;
     cursor: pointer;
   }
