@@ -12,9 +12,7 @@ module.exports = {
   },
   loading: false,
   plugins: [
-    
-    
-    
+    '~/plugins/globalComponents.js'
   ],
   buildModules: [
     

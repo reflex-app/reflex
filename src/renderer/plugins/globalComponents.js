@@ -4,8 +4,8 @@
 import Vue from 'vue'
 
 // Component files
-import Button from '@/components/shared/Button.vue'
-import Icon from '@/components/shared/Icon.vue'
+import Button from '@/components/Shared/Button.vue'
+import Icon from '@/components/Shared/Icon.vue'
 
 // Register as components
 Vue.component('Button', Button)
