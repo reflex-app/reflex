@@ -8,14 +8,3 @@ const hub = new HubRegistry([
 
 // Load tasks
 gulp.registry(hub)
-
-// Draft a release to Github
-// gulp.task('release', gulp.series(
-//   'version-app'
-// ))
-
-// gulp.task('oldRelease', gulp.series(
-//   'version-app',
-//   'build-app',
-//   'deploy-app'
-// ))

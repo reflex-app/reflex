@@ -74,7 +74,7 @@ export default {
       // From package.json (name or productName)
       // TODO this if check is required in case of tests
       if (remote) {
-        return remote.app.getName();
+        return remote.app.name;
       } else {
         const pkgJson = require("../../../../package.json");
         return pkgJson.productName;

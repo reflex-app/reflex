@@ -1,13 +1,14 @@
 # Build
-/dist
-/build
+.nuxt
+dist
+build/*
 !build/icons
 
 # Git & NPM
 .env
 !.gitkeep
 .DS_Store
-node_modules/
+node_modules
 package-lock.json
 
 # local env files

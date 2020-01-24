@@ -1,5 +1,5 @@
 <template>
-  <webview ref="frame" class="frame" />
+  <webview ref="frame" class="frame" allowpopups />
 </template>
 
 <script>
@@ -36,15 +36,15 @@ export default {
       // TODO Better way to watch for VueX actions?
       this.unsubscribeAction = this.$store.subscribeAction((action, state) => {
         switch (action.type) {
-          case "reload":
+          case "history/reload":
             this.reload();
             break;
 
-          case "back":
+          case "history/back":
             this.back();
             break;
 
-          case "forward":
+          case "history/forward":
             this.forward();
             break;
 
@@ -106,7 +106,7 @@ export default {
       // frame.loadURL(pages[nextPage]);
 
       // Update the URL in the store
-      this.$store.commit("changeSiteData", {
+      this.$store.commit("history/changeSiteData", {
         url: pages[nextPage]
       });
 
@@ -126,7 +126,7 @@ export default {
       // frame.loadURL(pages[nextPage]);
 
       // Update the URL in the store
-      this.$store.commit("changeSiteData", {
+      this.$store.commit("history/historychangeSiteData", {
         url: pages[nextPage]
       });
 
@@ -159,7 +159,7 @@ export default {
 
         // Change the title to Loading...
         // TODO Add a VueX action for this?
-        vm.$store.commit("changeSiteData", {
+        vm.$store.commit("history/changeSiteData", {
           title: "Loading..."
         });
       }
@@ -187,11 +187,14 @@ export default {
         `;
 
         // Execute
-        frame.executeJavaScript(execCode, function() {
-          // After successfully injecting...
-          // Request the data
+        frame.getWebContents().executeJavaScript(execCode).then(() => {
           frame.contentWindow.postMessage("Send me your data!", "*");
-        });
+        })
+        // frame.getWebContents().executeJavaScript(execCode, function() {
+        //   // After successfully injecting...
+        //   // Request the data
+        //   frame.contentWindow.postMessage("Send me your data!", "*");
+        // });
       }
 
       function receiveHandshake(event) {
@@ -202,7 +205,7 @@ export default {
         const favicon = event.data.favicon;
 
         // TODO Add to VueX Action
-        vm.$store.commit("changeSiteData", {
+        vm.$store.commit("history/changeSiteData", {
           title: title,
           favicon: favicon
         });
@@ -217,7 +220,7 @@ export default {
         // Update History
         // TODO Put this in a more obvious place
         if (!options.history && options.history == false) {
-          vm.$store.commit("updateHistory", frame.getWebContents().history); // Array with URLs
+          vm.$store.commit("history/updateHistory", frame.getWebContents().history); // Array with URLs
         }
 
         // Remove the event listeners related to site loading
@@ -252,7 +255,7 @@ export default {
       // Handle user clicking on a link inside of the webview
       // TODO This should add a new page to the History
       // TODO Add to VueX Action
-      this.$store.commit("changeSiteData", {
+      this.$store.commit("history/changeSiteData", {
         url: event.url
       });
     }
