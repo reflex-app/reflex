@@ -8,16 +8,11 @@
 module.exports = {
   mode: 'spa', // or 'universal'
   head: {
-    title: 'test'
+    title: 'Reflex'
   },
   loading: false,
   plugins: [
+    { src: '~/plugins/vuex-persist', ssr: false },
     '~/plugins/globalComponents.js'
-  ],
-  buildModules: [
-    
-  ],
-  modules: [
-    
-  ],
+  ]
 };
