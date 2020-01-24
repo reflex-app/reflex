@@ -41,7 +41,6 @@
 </template>
 
 <script>
-import store from "@/store";
 import { mapState } from "vuex";
 import URLInput from "@/components/ToolBar/URLInput.vue";
 import SyncButton from "@/components/ToolBar/SyncButton.vue";
@@ -87,13 +86,13 @@ export default {
       console.log("change url triggered");
 
       // Add this new page to the history
-      store.dispatch("addPageToHistory", url);
+      this.$store.dispatch("addPageToHistory", url);
 
       // Off
       this.inputStateActive = false;
     }, 100),
     toggleSidebar() {
-      store.commit("toggleSidebar");
+      this.$store.commit("toggleSidebar");
     },
     toggleWindowMaximize() {
       const window = remote.getCurrentWindow();
