@@ -1,6 +1,6 @@
 <template>
-  <draggable v-model="artboards" :animation="150">
-    <div v-for="artboard in artboards" v-bind="artboard" :key="artboard.id" class="artboard-tab">
+  <draggable v-model="artboardsBinding" :options="{group:{name:'pages',pull:true,put:true},animation: 150}">
+    <div v-for="artboard in artboards" :key="artboard.id" class="artboard-tab">
       <!-- Editing state -->
       <div v-if="editMode==true&&editID==artboard.id" class="editing">
         <div class="group">
@@ -75,6 +75,7 @@ import { remote } from "electron";
 import draggable from "vuedraggable";
 import isElectron from "is-electron";
 const { Menu, MenuItem } = remote;
+import { mapState } from "vuex";
 
 export default {
   name: "artboardEditable",
@@ -89,13 +90,15 @@ export default {
     };
   },
   computed: {
-    // Bind to our Vuex Store's URL value
-    artboards: {
+    ...mapState({
+      artboards: state => state.artboards.list
+    }),
+    artboardsBinding: {
       get() {
-        return this.$store.state.artboards;
+        return this.$store.state.artboards.list;
       },
       set(value) {
-        this.$store.commit("artboards/setArtboardList", value);
+        this.$store.dispatch("artboards/setArtboards", value);
       }
     }
   },
