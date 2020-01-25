@@ -68,7 +68,7 @@ export default {
   },
   computed: {
     ...mapState({
-      artboards: state => state.artboards,
+      artboards: state => state.artboards.list,
       title: state => state.history.currentPage.title,
       url: state => state.history.currentPage.url,
       favicon: state => state.history.currentPage.favicon,

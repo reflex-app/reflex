@@ -2,9 +2,9 @@ const uuid = require('uuid/v1')
 
 // All artboards on the screen
 // const state = []
-export const state = () => (
-  []
-)
+export const state = () => ({
+  list: []
+})
 
 /**
  * Mock:
@@ -27,7 +27,7 @@ export const mutations = {
    */
   addArtboard(state, artboard) {
     artboard.id = uuid()
-    state.push(artboard)
+    state.list.push(artboard)
   },
 
   /**
@@ -43,12 +43,12 @@ export const mutations = {
 
     // Copy the input artboard
     // Insert a new one at the next index
-    const index = state.findIndex(obj => obj.id === oldArtboard.id)
+    const index = state.list.findIndex(obj => obj.id === oldArtboard.id)
     const newIndex = index + 1
 
     // Push into array at index,
     // don't remove any, just insert this artboard
-    state.splice(newIndex, 0, newArtboard)
+    state.list.splice(newIndex, 0, newArtboard)
   },
 
   /**
@@ -57,8 +57,8 @@ export const mutations = {
    * @param  {} id
    */
   removeArtboard(state, id) {
-    const index = state.findIndex(obj => obj.id === id)
-    state.splice(index, 1)
+    const index = state.list.findIndex(obj => obj.id === id)
+    state.list.splice(index, 1)
   },
 
   /** Modify an Artboard by Index
@@ -68,10 +68,10 @@ export const mutations = {
   updateArtboardAtIndex(state, artboard) {
     // 1. Get the artboard.id
     const id = artboard.id
-    const index = state.findIndex(obj => obj.id === id)
+    const index = state.list.findIndex(obj => obj.id === id)
 
     // 2. Change just that artboard's content
-    state[index] = artboard
+    state.list[index] = artboard
   },
 
   /** Resize an Artboard
@@ -79,7 +79,7 @@ export const mutations = {
    * @param  {Object} payload {id, height, width}
    */
   resizeArtboard(state, payload) {
-    const artboards = state
+    const artboards = state.list
 
     for (var i = 0; i < artboards.length; i++) {
       if (payload.id === artboards[i].id) { // look for match by id
@@ -90,10 +90,10 @@ export const mutations = {
     }
   },
 
-  setArtboardList: (state, payload) => {
+  set(state, payload) {
     // TODO this is not reactive currently
     if (state !== payload) {
-      state = payload
+      state.list = payload
     }
   }
 }
@@ -128,5 +128,8 @@ export const actions = {
       oldArtboard: payload,
       newArtboard: newArtboard
     })
+  },
+  setArtboards({ commit }, payload) {
+    commit('set', payload)
   }
 }
