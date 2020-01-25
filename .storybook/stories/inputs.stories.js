@@ -1,4 +1,4 @@
-import TextInput from '@/components/shared/TextInput'
+import TextInput from '@/components/Shared/TextInput'
 import {
   action
 } from '@storybook/addon-actions'

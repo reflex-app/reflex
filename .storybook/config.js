@@ -6,7 +6,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 
 // Import & register global components.
-import sharedComponents from '../src/renderer/components/shared'
+import sharedComponents from '../src/renderer/plugins/globalComponents.js'
 
 // Import global SCSS
 import '../src/renderer/scss/_global.scss'
@@ -14,4 +14,4 @@ import '../src/renderer/scss/_global.scss'
 // Install Vue plugins.
 Vue.use(Vuex);
 
-configure(require.context('../src/renderer/stories', true, /\.stories\.js$/), module);
+configure(require.context('./stories', true, /\.stories\.js$/), module);

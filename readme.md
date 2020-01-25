@@ -46,12 +46,12 @@ Requirements:
 
 2. Install dependencies:
     ```sh
-    $ npm install --no-optional
+    $ npm install
     ```
 
 3. Compile and watch for changes:
     ```sh
-    $ npm run start
+    $ npm run dev
     ```
 
 4. To compile for the final app, run the following command: 
@@ -59,15 +59,15 @@ Requirements:
     $ npm run build
     ```
 
-    This will output several files inside of the `build/` folder. You can directly run the `.app` file inside of `build/mac/`.
+    This will output several files inside of the `build/` folder. You can directly run the `.app` file inside of `build/`.
 
 ### Debugging
 
-`CMD + Shift + I` will open the Chrome DevTools.
+`CMD/CTRL + Shift + I` will open the Chrome DevTools.
 
 ### Technologies used
 
-- [VueJS](https://vuejs.org/)
+- [Vue (2)](https://vuejs.org/)
 - [Electron](https://electronjs.org/)
 - [BrowserSync](https://www.browsersync.io/)
 
