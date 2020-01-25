@@ -75,7 +75,8 @@ export class Panzoom {
 
     const child_styles = {
       transform: `matrix(${this.transformMatrix})`, // Set the matrix
-      transformOrigin: '50% 50%' // Enforce the default
+      transformOrigin: '50% 50%', // Enforce the default
+      willChange: 'transform'
       // transformOrigin: '0 0'
     }
 
@@ -87,10 +88,10 @@ export class Panzoom {
     )
 
     // Enable Kinetic (inertia)
-    this.kinetic = kinetic({
-      x: this.transformMatrix[4],
-      y: this.transformMatrix[5]
-    }, scroll, this, this.options.kinetic)
+    // this.kinetic = kinetic({
+    //   x: this.transformMatrix[4],
+    //   y: this.transformMatrix[5]
+    // }, scroll, this, this.options.kinetic)
 
     // Options
     if (this.options.startCentered) {

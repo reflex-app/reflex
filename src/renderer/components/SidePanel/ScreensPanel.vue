@@ -50,14 +50,14 @@ export default {
         return this.$store.state.artboards;
       },
       set(value) {
-        this.$store.commit("setArtboardList", value);
+        this.$store.commit("artboards/setArtboardList", value);
       }
     }
   },
 
   methods: {
     add() {
-      this.$store.dispatch("addArtboard", {
+      this.$store.dispatch("artboards/addArtboard", {
         title: "Untitled",
         width: 375,
         height: 667
@@ -144,7 +144,7 @@ export default {
           break;
       }
 
-      this.$store.dispatch("addMultipleArtboards", {
+      this.$store.dispatch("artboards/addMultipleArtboards", {
         data: sizes
       });
 

@@ -1,19 +1,21 @@
 <template>
-  <div v-if="artboards.length" id="artboards">
-    <Artboard
-      v-for="(artboard, index) in artboards"
-      v-bind="artboard"
-      :key="artboard.id"
-      :index="index"
-      :artboard-id="artboard.id"
-      :selectedItems="selectedArtboards"
-      ref="artboard"
-      class="artboard"
-      @resize="resize"
-    />
+  <div>
+    <div v-if="artboards.length" id="artboards">
+      <Artboard
+        v-for="(artboard, index) in artboards"
+        v-bind="artboard"
+        :key="artboard.id"
+        :index="index"
+        :artboard-id="artboard.id"
+        :selectedItems="selectedArtboards"
+        ref="artboard"
+        class="artboard"
+        @resize="resize"
+      />
+    </div>
+    <!-- Show empty state if no artboards exist -->
+    <WelcomeScreen v-else />
   </div>
-  <!-- Show empty state if no artboards exist -->
-  <WelcomeScreen v-else />
 </template>
 
 <script>
@@ -38,7 +40,7 @@ export default {
       artboards: state => state.artboards,
       selectedArtboards: state => state.selectedArtboards
     }),
-    ...mapGetters(["isInteracting"])
+    ...mapGetters("interactions", ["isInteracting"])
   },
   mounted() {
     const vm = this;
@@ -59,11 +61,11 @@ export default {
       .on("start", evt => {
         // Every non-ctrlKey causes a selection reset
         if (!evt.ctrlKey) {
-          this.$store.dispatch("selectedArtboardsEmpty");
+          this.$store.dispatch("selectedArtboards/selectedArtboardsEmpty");
         }
 
         // Update state
-        this.$store.commit("interactionSetState", {
+        this.$store.commit("interactions/interactionSetState", {
           key: "isSelectingArea",
           value: true
         });
@@ -76,13 +78,13 @@ export default {
         // Add
         evt.changed.added.forEach(item => {
           const id = item.getAttribute("artboard-id");
-          this.$store.dispatch("selectedArtboardsAdd", id);
+          this.$store.dispatch("selectedArtboards/selectedArtboardsAdd", id);
         });
 
         // Remove
         evt.changed.removed.forEach(item => {
           const id = item.getAttribute("artboard-id");
-          this.$store.dispatch("selectedArtboardsRemove", id);
+          this.$store.dispatch("selectedArtboards/selectedArtboardsRemove", id);
         });
       })
       .on("stop", evt => {
@@ -92,10 +94,10 @@ export default {
          * to the current selection.
          */
         // Remove all in case temporarily added
-        this.$store.dispatch("selectedArtboardsEmpty");
+        this.$store.dispatch("selectedArtboards/selectedArtboardsEmpty");
 
         // Update state
-        this.$store.commit("interactionSetState", {
+        this.$store.commit("interactions/interactionSetState", {
           key: "isSelectingArea",
           value: false
         });
@@ -103,7 +105,7 @@ export default {
         // Push the new IDs
         evt.selected.forEach(item => {
           const id = item.getAttribute("artboard-id");
-          this.$store.dispatch("selectedArtboardsAdd", id); // Add these items to the Store
+          this.$store.dispatch("selectedArtboards/selectedArtboardsAdd", id); // Add these items to the Store
         });
       });
   },
@@ -114,7 +116,7 @@ export default {
   },
   methods: {
     resize(artboard) {
-      this.$store.commit("resizeArtboard", artboard);
+      this.$store.commit("artboards/resizeArtboard", artboard);
     },
     disableSelection() {
       this.selectionInstance.disable();

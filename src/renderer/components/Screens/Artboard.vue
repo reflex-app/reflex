@@ -3,7 +3,7 @@
     class="artboard"
     ref="artboard"
     :style="{ height: height+'px', width: width+'px' }"
-    :class="{ 'is-selected': isSelected }"
+    :class="{ 'is-hover': isHover, 'is-selected': isSelected }"
   >
     <div class="artboard__top">
       <div>
@@ -63,16 +63,25 @@ export default {
     this.$nextTick(() => {
       // Remove any leftover selected artboards
       // @TODO: This should be done from VueX Store, or wiped before quitting
-      this.$store.dispatch("selectedArtboardsEmpty");
+      this.$store.dispatch("selectedArtboards/selectedArtboardsEmpty");
     });
   },
 
   computed: {
     ...mapState({
       url: state => state.history.currentPage.url,
-      selectedArtboards: state => state.selectedArtboards
+      selectedArtboards: state => state.selectedArtboards,
+      hoverArtboards: state => state.hoverArtboards
     }),
-    ...mapGetters(["isInteracting"]),
+    ...mapGetters(["interactionsisInteracting"]),
+    isHover() {
+      const isHover = this.hoverArtboards.filter(item => item == this.id);
+      if (isHover.length) {
+        return true;
+      } else {
+        return false;
+      }
+    },
     isSelected() {
       const isSelected = this.selectedArtboards.filter(item => item == this.id);
       if (isSelected.length) {
@@ -167,7 +176,7 @@ export default {
 
       function doStart() {
         // Update global state
-        vm.$store.commit("interactionSetState", {
+        vm.$store.commit("interactions/interactionSetState", {
           key: "isResizingArtboard",
           value: true
         });
@@ -224,7 +233,7 @@ export default {
         document.$panzoom.enable(); // TODO: Cleaner solution that polluting document?
 
         // Update global state
-        vm.$store.commit("interactionSetState", {
+        vm.$store.commit("interactions/interactionSetState", {
           key: "isResizingArtboard",
           value: false
         });
@@ -258,7 +267,8 @@ $artboard-handle-height: 1rem;
     margin-right: 3.5rem;
   }
 
-  &:hover {
+  &:hover,
+  &.is-hover {
     border-color: #929292;
     cursor: pointer;
   }
