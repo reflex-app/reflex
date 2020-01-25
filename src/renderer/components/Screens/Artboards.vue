@@ -37,7 +37,7 @@ export default {
   },
   computed: {
     ...mapState({
-      artboards: state => state.artboards,
+      artboards: state => state.artboards.list,
       selectedArtboards: state => state.selectedArtboards
     }),
     ...mapGetters("interactions", ["isInteracting"])
