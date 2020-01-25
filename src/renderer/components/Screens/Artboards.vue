@@ -109,11 +109,11 @@ export default {
         });
       });
   },
-  watch: {
-    artboards: function() {
-      document.$panzoom.center();
-    }
-  },
+  // watch: {
+  //   artboards: function() {
+  //     document.$panzoom.center();
+  //   }
+  // },
   methods: {
     resize(artboard) {
       this.$store.commit("artboards/resizeArtboard", artboard);
