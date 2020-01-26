@@ -2,13 +2,9 @@ const ICONS_DIR = 'build/icons/'
 
 const windowsOS = {
   win: {
-    icon: ICONS_DIR + 'win-icon.ico',
-    publisherName: 'michal',
+    icon: ICONS_DIR + 'icon.ico',
+    publisherName: 'Nick Wittwer',
     target: 'nsis'
-  },
-
-  nsis: {
-    differentialPackage: true
   }
 }
 
@@ -22,11 +18,10 @@ const linuxOS = {
 const macOS = {
   mac: {
     target: 'dmg',
-    icon: ICONS_DIR + 'con.icns'
+    icon: ICONS_DIR + 'icon.icns'
   },
   dmg: {
-    contents: [
-      {
+    contents: [{
         x: 410,
         y: 150,
         type: 'link',
@@ -42,10 +37,10 @@ const macOS = {
 }
 
 module.exports = {
-  asar: false,
-  productName: 'My browser',
-  appId: 'org.michalzarach.my-browser',
-  artifactName: 'my-browser-${version}.${ext}',
+  asar: true,
+  productName: require('./package.json').productName,
+  appId: 'com.reflex.app',
+  artifactName: 'Reflex-${version}.${ext}',
   directories: {
     output: 'build'
   },
@@ -59,10 +54,6 @@ module.exports = {
     {
       from: 'dist/renderer',
       to: 'dist/renderer/'
-    },
-    {
-      from: 'src/resources/',
-      to: 'dist/resources/'
     }
   ],
   ...windowsOS,

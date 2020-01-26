@@ -10,7 +10,6 @@ const { Webpack } = require('@xpda-dev/webpack-step')
 const resourcesPath = require('./resources-path-provider')
 const { DIST_DIR, MAIN_PROCESS_DIR, SERVER_HOST, SERVER_PORT } = require('./config')
 const NuxtApp = require('./renderer/NuxtApp')
-
 const isDev = process.env.NODE_ENV === 'development'
 
 const launcher = new ElectronLauncher({
