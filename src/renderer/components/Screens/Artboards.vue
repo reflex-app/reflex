@@ -43,17 +43,13 @@ export default {
     ...mapGetters("interactions", ["isInteracting"])
   },
   mounted() {
-    const vm = this;
-
     this.selectionInstance = new Selection({
       class: "selection-area", // Class for the selection-area
       selectedClass: "is-selected",
       selectables: ["#artboards > .artboard"], // All elements in this container can be selected
       boundaries: ["#canvas"], // The boundary
       singleClick: true // Enable single-click selection
-    });
-
-    this.selectionInstance
+    })
       .on("beforestart", evt => {
         // Prevent selections if the user is interacting with an artboard
         if (this.isInteracting) return false;
@@ -117,13 +113,10 @@ export default {
   methods: {
     resize(artboard) {
       this.$store.commit("artboards/resizeArtboard", artboard);
-    },
-    disableSelection() {
-      this.selectionInstance.disable();
-    },
-    enableSelection() {
-      this.selectionInstance.enable();
     }
+  },
+  beforeDestroy() {
+    this.selectionInstance.destroy();
   }
 };
 </script>

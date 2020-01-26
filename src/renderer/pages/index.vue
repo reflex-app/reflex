@@ -84,10 +84,6 @@ export default {
         });
       }
 
-      ipcRenderer.on("menu_zoom-out", () => {
-        document.$panzoom.zoomOut();
-      });
-
       ipcRenderer.on("menu_show-developer-canvas-debugger", () => {
         this.$store.commit("dev/toggleCanvasDebugger");
       });

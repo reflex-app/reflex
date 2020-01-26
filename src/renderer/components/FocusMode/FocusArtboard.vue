@@ -170,6 +170,9 @@ export default {
     //     document.$panzoom.fitToScreen();
     //   }
     // }
+  },
+  beforeDestroy() {
+    this.selectionInstance.destroy();
   }
 };
 </script>

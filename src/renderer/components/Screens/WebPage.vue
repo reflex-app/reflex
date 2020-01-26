@@ -184,7 +184,6 @@ export default {
       }
 
       // Initialize the event listeners
-      console.log("Adding listeners");
       this.addListeners();
 
       // Set the URL, start loading
@@ -228,7 +227,7 @@ export default {
         const title = returnedData.title;
         const favicon = returnedData.favicon;
 
-        console.log(title);
+        // console.log(title);
 
         // TODO Add to VueX Action
         this.$store.commit("history/changeSiteData", {
