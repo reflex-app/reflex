@@ -1,14 +1,18 @@
 <template>
-  <draggable v-model="artboards" :animation="150">
-    <div v-for="artboard in artboards" v-bind="artboard" :key="artboard.id" class="artboard-tab">
+  <draggable
+    v-model="artboardsGetSet"
+    :group="{name:'artboards',pull:true,put:true}"
+    :animation="150"
+  >
+    <div v-for="artboard in artboards" :key="artboard.id" class="artboard-tab">
       <!-- Editing state -->
       <div v-if="editMode==true&&editID==artboard.id" class="editing">
         <div class="group">
           <label>Title</label>
           <input
-            ref="input"
-            v-model.lazy="artboard.title"
             type="text"
+            ref="input"
+            v-model="localFormData.title"
             placeholder="Title"
             @keyup.enter="save(artboard), editMode=false"
           />
@@ -18,8 +22,8 @@
           <div class="group__two-up">
             <div class="group__input-with-right-label">
               <input
-                v-model.number.lazy="artboard.width"
                 type="number"
+                v-model="localFormData.width"
                 placeholder="Width"
                 @keyup.enter="save(artboard), editMode=false"
               />
@@ -27,8 +31,8 @@
             </div>
             <div class="group__input-with-right-label">
               <input
-                v-model.number.lazy="artboard.height"
                 type="number"
+                v-model="localFormData.height"
                 placeholder="Height"
                 @keyup.enter="save(artboard), editMode=false"
               />
@@ -38,7 +42,7 @@
 
           <div class="buttons">
             <!-- TODO Cancel button doesn't really cancel/undo... -->
-            <Button role="secondary" @click="editMode=false">Cancel</Button>
+            <Button role="secondary" @click="cancelEdit(), editMode=false">Cancel</Button>
             <Button role="primary" @click="save(artboard)">Save</Button>
           </div>
         </div>
@@ -75,6 +79,7 @@ import { remote } from "electron";
 import draggable from "vuedraggable";
 import isElectron from "is-electron";
 const { Menu, MenuItem } = remote;
+import { mapState } from "vuex";
 
 export default {
   name: "artboardEditable",
@@ -85,17 +90,24 @@ export default {
   data() {
     return {
       editMode: false,
-      editID: null
+      editID: null,
+      localFormData: {
+        title: "",
+        width: 0,
+        height: 0
+      }
     };
   },
   computed: {
-    // Bind to our Vuex Store's URL value
-    artboards: {
+    ...mapState({
+      artboards: state => state.artboards.list
+    }),
+    artboardsGetSet: {
       get() {
-        return this.$store.state.artboards;
+        return this.$store.state.artboards.list;
       },
       set(value) {
-        this.$store.commit("artboards/setArtboardList", value);
+        this.$store.dispatch("artboards/setArtboards", value);
       }
     }
   },
@@ -105,17 +117,28 @@ export default {
       this.editMode = false;
       this.editID = null;
 
-      // Update the values so that VueJS pays attention
+      // Save to Store
       this.$store.commit("artboards/updateArtboardAtIndex", {
-        id: artboard.id,
-        height: artboard.height || 0,
-        width: artboard.width || 0,
-        title: artboard.title || "Untitled"
+        id: this.localFormData.id,
+        height: this.localFormData.height || 0,
+        width: this.localFormData.width || 0,
+        title: this.localFormData.title || "Untitled"
       });
     },
     edit(id) {
+      // Udpate the state
       this.editMode = true;
       this.editID = id;
+
+      // Fill in the latest data
+      const currentArtboard = () => {
+        const obj = this.artboards.find(artboard => artboard.id === id);
+        // Return a clone of the Store object
+        return JSON.parse(JSON.stringify(obj));
+      };
+
+      // Update the local form data
+      this.localFormData = currentArtboard();
 
       // Auto-focus on the first field
       this.$nextTick(() => {
@@ -123,10 +146,16 @@ export default {
         this.$refs.input[0].select();
       });
     },
+    cancelEdit() {
+      // Reset to Vuex store state
+      this.localFormData = this.artboards;
+    },
     remove(name, id) {
       // TODO Custom prompts?
       if (
-        confirm(`Are you sure you want to delete the ${name} screen size? Click "OK" to delete.`)
+        confirm(
+          `Are you sure you want to delete the ${name} screen size? Click "OK" to delete.`
+        )
       ) {
         this.$store.commit("artboards/removeArtboard", id);
       }
@@ -145,7 +174,6 @@ export default {
       const artboardFrame = this.getArtboard(artboard.id).querySelector(
         "webview"
       );
-
       if (artboardFrame) {
         if (isElectron()) {
           const menu = new Menu();
@@ -179,7 +207,7 @@ export default {
     },
     selectArtboard(id) {
       // Move screen to the selected artboard
-      this.goToArtboard(id)
+      this.goToArtboard(id);
       // Remove all previous selections
       this.$store.dispatch("selectedArtboards/selectedArtboardsEmpty", id);
       // Add the new artboard to selection

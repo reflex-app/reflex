@@ -47,10 +47,10 @@ export default {
     // Bind to our Vuex Store's URL value
     artboards: {
       get() {
-        return this.$store.state.artboards;
+        return this.$store.state.artboards.list;
       },
       set(value) {
-        this.$store.commit("artboards/setArtboardList", value);
+        this.$store.dispatch("artboards/setArtboards", value);
       }
     }
   },

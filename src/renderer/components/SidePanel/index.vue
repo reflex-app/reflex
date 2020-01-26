@@ -44,7 +44,7 @@ export default {
   computed: {
     // Bind to our Vuex Store's URL value
     artboards: function() {
-      return this.$store.state.artboards;
+      return this.$store.state.artboards.list;
     },
     sidebar() {
       return this.$store.state.gui.sidebar;
