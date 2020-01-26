@@ -30,7 +30,7 @@ export default {
   },
   computed: {
     ...mapState({
-      artboards: state => state.artboards,
+      artboards: state => state.artboards.list,
       selectedArtboards: state => state.selectedArtboards,
       focusModeScreens: state => state.focusMode.screens,
       focusModeActiveScreen: state => state.focusMode.activeScreen,

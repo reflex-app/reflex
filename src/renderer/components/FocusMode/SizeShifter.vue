@@ -31,7 +31,7 @@ export default {
     ...mapState({
       focusModeActiveScreen: state => state.focusMode.activeScreen,
       focusModeScreens: state => state.focusMode.screens,
-      artboards: state => state.artboards
+      artboards: state => state.artboards.list
     })
   },
   mounted() {

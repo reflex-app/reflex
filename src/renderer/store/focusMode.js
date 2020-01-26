@@ -80,7 +80,7 @@ export const mutations = {
    * @param {*} id
    */
   focusChangeActiveScreen(state, id, context) {
-    const artboards = this.state.artboards
+    const artboards = this.state.artboards.list
     const index = artboards.findIndex(obj => obj.id === id)
     state.activeScreen = Object.assign(state.activeScreen, artboards[index])
   }
