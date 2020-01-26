@@ -34,16 +34,16 @@
     }
   },
   "dependencies": {
-    "browser-sync": "^2.26.7",
+    "browser-sync": "^2.26.7"
+  },
+  "devDependencies": {
     "electron-debug": "3.0.1",
     "electron-is-dev": "^1.1.0",
     "electron-updater": "^4.1.2",
     "lodash.debounce": "^4.0.8",
     "uuid": "^3.3.3",
     "vuedraggable": "^2.23.2",
-    "vuex-persist": "^2.1.1"
-  },
-  "devDependencies": {
+    "vuex-persist": "^2.1.1",
     "@babel/runtime-corejs2": "^7.8.3",
     "@simonwep/selection-js": "^1.5.0",
     "@storybook/addon-actions": "^5.3.9",
