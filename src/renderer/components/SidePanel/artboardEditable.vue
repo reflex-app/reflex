@@ -187,6 +187,18 @@ export default {
           );
           menu.append(
             new MenuItem({
+              label: "Rotate",
+              click() {
+                vm.$store.commit("artboards/resizeArtboard", {
+                  id: artboard.id,
+                  width: artboard.height,
+                  height: artboard.width
+                });
+              }
+            })
+          );
+          menu.append(
+            new MenuItem({
               label: "Open DevTools",
               click() {
                 artboardFrame.openDevTools();
