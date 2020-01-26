@@ -6,6 +6,13 @@
 import { mapState } from "vuex";
 
 export default {
+  data() {
+    return {
+      options: {
+        history: true
+      }
+    };
+  },
   props: {
     allowInteractions: {
       type: Boolean,
@@ -133,7 +140,7 @@ export default {
       // frame.loadURL(pages[nextPage]);
 
       // Update the URL in the store
-      this.$store.commit("history/historychangeSiteData", {
+      this.$store.commit("history/changeSiteData", {
         url: pages[nextPage]
       });
 
@@ -144,6 +151,7 @@ export default {
     },
     /**
      * Loads a site
+     * Data and listeners should clear after each call
      * By default, saves the URL to the history
      * @param {object} options Accepts a history option. When true, will save URL to history.
      */
@@ -157,103 +165,105 @@ export default {
         throw new Error(
           "Frame listeners still active after component destroy."
         );
-        removeListeners();
+        this.removeListeners();
         return false;
       }
 
+      // Turn history saving on/off
+      switch (options.history) {
+        case true:
+          this.options.history = true;
+          break;
+
+        case false:
+          this.options.history = false;
+          break;
+
+        default:
+          break;
+      }
+
       // Initialize the event listeners
-      addListeners();
+      console.log("Adding listeners");
+      this.addListeners();
 
       // Set the URL, start loading
       frame.setAttribute("src", this.url);
+    },
+    addListeners() {
+      const frame = this.$refs.frame;
+      frame.addEventListener("did-start-loading", this.loadstart); // loadstart
+      frame.addEventListener("dom-ready", this.contentloaded); // contentload
+      frame.addEventListener("did-stop-loading", this.loadstop); // loadstop
+      frame.addEventListener("ipc-message", this.receiveHandshake); // Listen for response
+      frame.addEventListener("loadabort", this.loadabort); // loadabort
+    },
+    removeListeners() {
+      const frame = this.$refs.frame;
+      frame.removeEventListener("did-start-loading", this.loadstart);
+      frame.removeEventListener("dom-ready", this.contentloaded);
+      frame.removeEventListener("did-stop-loading", this.loadstop);
+      frame.removeEventListener("ipc-message", this.receiveHandshake);
+      frame.removeEventListener("loadabort", this.loadabort);
+    },
+    loadstart() {
+      this.$emit("loadstart"); // Show loading spinner
 
-      // Bind events
-      function addListeners() {
-        frame.addEventListener("did-start-loading", loadstart); // loadstart
-        frame.addEventListener("dom-ready", contentloaded); // contentload
-        frame.addEventListener("did-stop-loading", loadstop); // loadstop
-        frame.addEventListener("ipc-message", receiveHandshake); // Listen for response
-
-        // The following will trigger a removal of the IPC listener
-        // frame.addEventListener("will-navigate", loadabort); // loadabort
-        frame.addEventListener("loadabort", loadabort); // loadabort
-      }
-
-      // Remove all event listeners
-      function removeListeners() {
-        frame.removeEventListener("did-start-loading", loadstart);
-        frame.removeEventListener("dom-ready", contentloaded);
-        frame.removeEventListener("did-stop-loading", loadstop);
-        frame.removeEventListener("ipc-message", receiveHandshake);
-
-        // IPC-related listeners
-        // frame.removeEventListener("will-navigate", loadabort);
-        frame.removeEventListener("loadabort", loadabort);
-      }
-
-      // When loading of webview starts
-      function loadstart() {
-        vm.$emit("loadstart"); // Show loading spinner
-
-        // Change the title to Loading...
-        // TODO Add a VueX action for this?
-        vm.$store.commit("history/changeSiteData", {
-          title: "Loading..."
-        });
-      }
-
-      // Once webview content is loaded
-      // Request its data
-      function contentloaded() {
-        frame.send("requestData");
-      }
-
-      function receiveHandshake(event) {
-        // Data is accessible as event.data.*
-        // Refer to the object that's injected during contentload()
-        // for all keys
-        if (event.channel !== "replyData") return false;
-
+      // Change the title to Loading...
+      // TODO Add a VueX action for this?
+      this.$store.commit("history/changeSiteData", {
+        title: "Loading..."
+      });
+    },
+    contentloaded() {
+      const frame = this.$refs.frame;
+      frame.send("requestData");
+    },
+    receiveHandshake(event) {
+      // Data is accessible as event.data.*
+      // Refer to the object that's injected during contentload()
+      // for all keys
+      if (event.channel === "replyData") {
         const returnedData = event.args[0];
         const title = returnedData.title;
         const favicon = returnedData.favicon;
 
-        console.log(returnedData);
+        console.log(title);
 
         // TODO Add to VueX Action
-        vm.$store.commit("history/changeSiteData", {
+        this.$store.commit("history/changeSiteData", {
           title: title,
           favicon: favicon
         });
-
-        // Remove listeners once data has been received
-        // TODO Allow streaming until page is changed/reloaded
-        removeListeners();
+      } else if (event.channel === "unload") {
+        // console.log("Unloading...");
+        // this.removeListeners();
+      } else {
+        console.log("Unrecognized channel", event.args[0]);
       }
+    },
+    loadstop() {
+      const frame = this.$refs.frame;
+      this.$emit("loadend"); // Hide loading spinner
 
-      // Loading has finished
-      function loadstop() {
-        vm.$emit("loadend"); // Hide loading spinner
-
-        // Update History
-        // TODO Put this in a more obvious place
-        if (!options.history && options.history == false) {
-          vm.$store.commit(
-            "history/updateHistory",
-            frame.getWebContents().history
-          ); // Array with URLs
-        }
+      // History
+      // If the call said history:false, then we need to update history
+      // TODO Shouldn't this only update when history:true?
+      if (this.options.history === false) {
+        this.$store.commit(
+          "history/updateHistory",
+          frame.getWebContents().history
+        );
       }
+    },
+    loadabort() {
+      // @TODO: Update with Electron API
+      new Notification("Aborted", {
+        body: "The site stopped loading for some reason."
+      });
 
-      function loadabort() {
-        // @TODO: Update with Electron API
-        new Notification("Aborted", {
-          body: "The site stopped loading for some reason."
-        });
-
-        // Remove the event listeners related to site loading
-        removeListeners();
-      }
+      // Remove the event listeners related to site loading
+      this.removeListeners();
     },
     willNavigate(event) {
       // Handle user clicking on a link inside of the webview

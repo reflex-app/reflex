@@ -1,12 +1,27 @@
 const { ipcRenderer } = require('electron')
 
-// document.addEventListener("mouseover", function (e) {
-//     let hoveredEl = e.target;
-//     if (hoveredEl.tagName !== "A") {
-//         return;
-//     }
-//     ipcRenderer.sendToHost("mouseover-href", e);
-// });
+/**
+ * Collect and send back information from the document context
+ */
+document.addEventListener("DOMContentLoaded", dataCollector);
+
+/**
+ * Stream back information inside the document
+ */
+document.addEventListener("mouseover", function (e) {
+    // let hoveredEl = e.target;
+    // if (hoveredEl.tagName !== "A" || hoveredEl.tagName !== "A") return
+    ipcRenderer.sendToHost("mouseover-href", e.target);
+});
+
+/**
+ * Cleanup before page unloads
+ */
+window.addEventListener('beforeunload', unload);
+
+///////////////////////////////
+///////////////////////////////
+///////////////////////////////
 
 function dataCollector() {
     let data = {
@@ -15,22 +30,31 @@ function dataCollector() {
             window.location.href
     }
 
-    ipcRenderer.on('requestData', () => {
+    ipcRenderer.once('requestData', () => {
         ipcRenderer.sendToHost('replyData', data)
+        document.removeEventListener('DOMContentLoaded', dataCollector)
     })
 }
 
-// Define the content from inside the page to return
-document.addEventListener("DOMContentLoaded", dataCollector);
-
-// Wait for page to be unloaded
-window.addEventListener('beforeunload', function (e) {
+function unload(e) {
     // Cancel the event
     e.preventDefault();
 
+    // Remove IPC event listener
+    ipcRenderer.removeAllListeners('requestData')
+
     // Remove listener
-    window.removeEventListener('DOMContentLoaded', dataCollector)
+    document.removeEventListener('DOMContentLoaded', dataCollector)
+
+    // Remove eventlistener
+    window.removeEventListener('beforeunload', unload)
+
+    // Alert the parent!
+    ipcRenderer.sendToHost('unload', 'Unload complete')
+
+    // Chrome requires returnValue to be set
+    // e.returnValue = '';
 
     // the absence of a returnValue property on the event will guarantee the browser unload happens
     delete e['returnValue'];
-});
+}
