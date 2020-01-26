@@ -7,7 +7,7 @@
         <div id="canvas" ref="canvas">
           <FocusArtboard ref="artboards"/>
         </div>
-        <DiscoSwitch />
+        <!-- <DiscoSwitch /> -->
         <SizeShifter />
         <!-- <DevToolsView /> -->
       </div>
