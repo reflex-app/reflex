@@ -31,7 +31,6 @@ export default {
     };
   },
   computed: {
-    ...mapState("artboards", []),
     ...mapState({
       showCanvasDebugger: state => state.dev.showCanvasDebugger
     })
