@@ -1,5 +1,5 @@
 <template>
-  <div id="toolbar" :class="{ 'is-fullscreen' : isFullScreen }">
+  <div id="toolbar" :class="{ 'is-fullscreen': isFullScreen, 'is-mac': isMac }">
     <Button
       role="ghost"
       icon="screens"
@@ -74,7 +74,10 @@ export default {
       url: state => state.history.currentPage.url,
       favicon: state => state.history.currentPage.favicon,
       sidebar: state => state.gui.sidebar
-    })
+    }),
+    isMac() {
+      return process.platform === "darwin" ? true : false;
+    }
   },
   methods: {
     changeURL: debounce(function(url) {
@@ -140,22 +143,23 @@ export default {
   justify-content: space-between;
   height: $gui-title-bar-height;
   padding: 8px 0;
+  padding-left: 1rem;
   z-index: 1;
   color: #434343;
   background: white;
   border-bottom: $gui-border;
   user-select: none;
 
+  // Adjust position of sidebar button for Macs
+  &.is-mac {
+    padding-left: calc(65px + 1rem);
+  }
+
   // Remove spacing reserved for traffic-sign on Mac
   &.is-fullscreen {
     & > *:first-child {
       margin-left: 1rem;
     }
-  }
-
-  // Extra spacing for traffic-sign on Mac
-  & > *:first-child {
-    margin-left: calc(65px + 1rem); // move away from the traffic sign
   }
 
   #draggable {
