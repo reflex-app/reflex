@@ -43,6 +43,7 @@ const { Menu, MenuItem } = remote;
 import isElectron from "is-electron";
 import { mapState, mapGetters } from "vuex";
 import WebPage from "./WebPage.vue";
+import rightClickMenu from "@/mixins/rightClickMenu.js";
 
 export default {
   name: "Artboard",
@@ -113,25 +114,12 @@ export default {
 
   methods: {
     rightClickHandler() {
-      // Display Electron context menu
-      const vm = this;
-
-      if (isElectron()) {
-        const menu = new Menu();
-        menu.append(
-          new MenuItem({
-            label: "Rotate",
-            click() {
-              vm.$store.commit("artboards/resizeArtboard", {
-                id: vm.id,
-                width: vm.height,
-                height: vm.width
-              });
-            }
-          })
-        );
-        menu.popup(remote.getCurrentWindow());
-      }
+      rightClickMenu(this.$store, {
+        title: this.title,
+        id: this.id,
+        width: this.width,
+        height: this.height
+      });
     },
     // Limits the size of an artboard
     validateArtboardSizeInput(name, value) {

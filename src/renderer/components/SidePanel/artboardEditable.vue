@@ -62,12 +62,12 @@
         </div>
         <div class="artboard-tab__container-right">
           <Button role="secondary" @click="edit(artboard.id)">Edit</Button>
-          <Button
+          <!-- <Button
             role="ghost"
             icon="delete"
             @click.stop="remove(artboard.title, artboard.id)"
             title="Delete"
-          ></Button>
+          ></Button> -->
         </div>
       </div>
     </div>
@@ -80,6 +80,7 @@ import draggable from "vuedraggable";
 import isElectron from "is-electron";
 const { Menu, MenuItem } = remote;
 import { mapState } from "vuex";
+import rightClickMenu from "@/mixins/rightClickMenu.js";
 
 export default {
   name: "artboardEditable",
@@ -162,54 +163,17 @@ export default {
     },
     goToArtboard(id) {
       // Find the artboard (DOM)
-      const artboard = this.getArtboard(id);
+      const artboard = document.querySelector(`[artboard-id="${id}"]`);
       // Move the panzoom container
       document.$panzoom.panToElement(artboard);
     },
     rightClickMenu(e, artboard) {
-      // Open the DevTools for x screen ID
-      // TODO using brittle selectors
-      // const artboard = this.getArtboard(artboard.id);
-      const vm = this;
-      const artboardFrame = this.getArtboard(artboard.id).querySelector(
-        "webview"
-      );
-      if (artboardFrame) {
-        if (isElectron()) {
-          const menu = new Menu();
-          menu.append(
-            new MenuItem({
-              label: "Duplicate",
-              click() {
-                vm.$store.dispatch("artboards/duplicateArtboard", artboard);
-              }
-            })
-          );
-          menu.append(
-            new MenuItem({
-              label: "Rotate",
-              click() {
-                vm.$store.commit("artboards/resizeArtboard", {
-                  id: artboard.id,
-                  width: artboard.height,
-                  height: artboard.width
-                });
-              }
-            })
-          );
-          menu.append(
-            new MenuItem({
-              label: "Open DevTools",
-              click() {
-                artboardFrame.openDevTools();
-              }
-            })
-          );
-          menu.popup(remote.getCurrentWindow());
-        }
-      } else {
-        throw new Error("No frame near artboard");
-      }
+      rightClickMenu(this.$store, {
+        title: artboard.title,
+        id: artboard.id,
+        width: artboard.width,
+        height: artboard.height
+      });
     },
     hoverStart(id) {
       this.$store.dispatch("hoverArtboards/hoverArtboardsAdd", id);
@@ -224,11 +188,6 @@ export default {
       this.$store.dispatch("selectedArtboards/selectedArtboardsEmpty", id);
       // Add the new artboard to selection
       this.$store.dispatch("selectedArtboards/selectedArtboardsAdd", id);
-    },
-    getArtboard(id) {
-      // TODO add test here, selectors are brittle
-      // This could probably be a Store action
-      return document.querySelector(`[artboard-id="${id}"]`);
     }
   }
 };
