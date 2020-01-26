@@ -31,11 +31,10 @@
       </div>
     </div>
     <div id="toolbar__recentURLs"></div>
-    <!-- <div class="toolbar__right">
-      <div class="toolbar__button-group">
-      </div>
-    </div>-->
-    <InstallUpdateButton/>
+    <div class="toolbar__right" v-if="artboards.length">
+      <SwitchMode />
+    </div>
+    <InstallUpdateButton />
     <div id="draggable" @dblclick="toggleWindowMaximize"></div>
   </div>
 </template>
@@ -46,6 +45,7 @@ import URLInput from "@/components/ToolBar/URLInput.vue";
 import SyncButton from "@/components/ToolBar/SyncButton.vue";
 import HistoryControls from "@/components/ToolBar/HistoryControls.vue";
 import InstallUpdateButton from "@/components/ToolBar/InstallUpdateButton.vue";
+import SwitchMode from "@/components/ToolBar/SwitchMode";
 import { remote } from "electron";
 import isElectron from "is-electron";
 
@@ -57,7 +57,8 @@ export default {
     URLInput,
     HistoryControls,
     SyncButton,
-    InstallUpdateButton
+    InstallUpdateButton,
+    SwitchMode
   },
   data() {
     return {
@@ -271,12 +272,10 @@ export default {
     }
   }
 
-  // .toolbar__right {
-  //   display: flex;
-
-  //   .toolbar__button-group:not(:last-child) {
-  //     margin-right: 24px;
-  //   }
-  // }
+  .toolbar__right {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
 </style>

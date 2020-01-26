@@ -2,8 +2,10 @@
   <div
     class="artboard"
     ref="artboard"
+    :artboard-id="id"
     :style="{ height: height+'px', width: width+'px' }"
     :class="{ 'is-hover': isHover, 'is-selected': isSelected }"
+    @click.right="rightClickHandler()"
   >
     <div class="artboard__top">
       <div>
@@ -36,8 +38,12 @@
 </template>
 
 <script>
+import { remote } from "electron";
+const { Menu, MenuItem } = remote;
+import isElectron from "is-electron";
 import { mapState, mapGetters } from "vuex";
 import WebPage from "./WebPage.vue";
+import rightClickMenu from "@/mixins/rightClickMenu.js";
 
 export default {
   name: "Artboard",
@@ -73,7 +79,7 @@ export default {
       selectedArtboards: state => state.selectedArtboards,
       hoverArtboards: state => state.hoverArtboards
     }),
-    ...mapGetters(["interactionsisInteracting"]),
+    ...mapGetters("interactions", ["isInteracting"]),
     isHover() {
       const isHover = this.hoverArtboards.filter(item => item == this.id);
       if (isHover.length) {
@@ -107,6 +113,14 @@ export default {
   },
 
   methods: {
+    rightClickHandler() {
+      rightClickMenu(this.$store, {
+        title: this.title,
+        id: this.id,
+        width: this.width,
+        height: this.height
+      });
+    },
     // Limits the size of an artboard
     validateArtboardSizeInput(name, value) {
       // @TODO: Refactor this into the size editor

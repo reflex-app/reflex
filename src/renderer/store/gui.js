@@ -1,5 +1,7 @@
 export const state = () => ({
-  sidebar: true
+  sidebar: true,
+  focusMode: false,
+  discoMode: false
 })
 
 export const mutations = {
@@ -11,11 +13,14 @@ export const mutations = {
     if (!bool) bool = ''
 
     if (bool === true) {
-      this.state.gui.sidebar = true
+      state.sidebar = true
     } else if (bool === false) {
-      this.state.gui.sidebar = false
+      state.sidebar = false
     } else {
-      this.state.gui.sidebar = !this.state.gui.sidebar
+      state.sidebar = !state.sidebar
     }
+  },
+  toggleGui(state, key) {
+    state[key] = !state[key]
   }
 }

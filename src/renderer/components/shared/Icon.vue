@@ -34,6 +34,14 @@ export default {
         case "light":
           return "icon--light";
           break;
+        
+        case "accent":
+          return "icon--accent";
+          break;
+
+        default:
+          throw new Error('Color not found')
+          break;
       }
     }
   }
@@ -41,6 +49,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "@/scss/_variables";
+
 .icon {
   display: inline-block;
   height: 24px;
@@ -56,6 +66,9 @@ export default {
   }
   &.icon--light {
     background: white;
+  }
+  &.icon--accent {
+    background: $accent-color;
   }
 }
 </style>

@@ -1,39 +1,46 @@
 <template>
-  <div id="main-view">
+  <div id="focus-view">
+    <div class="canvasContainer">
       <SidePanel />
       <Screenshots />
-      <div id="canvas" ref="canvas" :class="{ 'dev-visual-debugger': showCanvasDebugger }">
-        <Artboards ref="artboards" :class="{ 'dev-visual-debugger': showCanvasDebugger }" />
+      <div class="focus-view__content">
+        <div id="canvas" ref="canvas">
+          <FocusArtboard ref="artboards"/>
+        </div>
+        <DiscoSwitch />
+        <SizeShifter />
+        <!-- <DevToolsView /> -->
       </div>
     </div>
+  </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
 import { Panzoom } from "../mixins/panzoom";
 import { ipcRenderer } from "electron";
 import isElectron from "is-electron";
-import Artboards from "@/components/Screens/Artboards";
 import SidePanel from "@/components/SidePanel";
 import Screenshots from "@/components/Screenshot";
+import FocusArtboard from "@/components/FocusMode/FocusArtboard";
+import SizeShifter from "@/components/FocusMode/SizeShifter";
+import DiscoSwitch from "@/components/FocusMode/DiscoSwitch";
+import DevToolsView from "@/components/DevToolsView";
 const isDev = require("electron-is-dev");
 
 export default {
-  name: "MainView",
+  name: "FocusView",
   components: {
-    Artboards,
+    FocusArtboard,
     SidePanel,
-    Screenshots
+    Screenshots,
+    SizeShifter,
+    DiscoSwitch,
+    DevToolsView
   },
   data() {
     return {
       isDev: isDev
     };
-  },
-  computed: {
-    ...mapState({
-      showCanvasDebugger: state => state.dev.showCanvasDebugger
-    })
   },
   methods: {
     enableEventListeners() {
@@ -84,8 +91,9 @@ export default {
         });
       }
 
-      ipcRenderer.on("menu_show-developer-canvas-debugger", () => {
-        this.$store.commit("dev/toggleCanvasDebugger");
+      // Listen for View to be destroyed
+      this.$once("hook:beforeDestroy", () => {
+        // TODO remove listeners
       });
     }
   },
@@ -104,66 +112,28 @@ export default {
 <style lang="scss" scoped>
 @import "@/scss/_variables";
 
-#main-view {
+.canvasContainer {
   background: $body-bg;
-  min-height: calc(100vh - #{$gui-title-bar-height}); // hard-coded height of toolbar
-  width: 100%;
+  height: calc(
+    100vh - #{$gui-title-bar-height}
+  ); // hard-coded height of toolbar
   position: relative;
   display: flex;
-
-  #canvas {
-    height: 100%;
-    width: 100%;
-    position: absolute;
-    overflow: hidden;
-    outline: none;
-
-    &:hover {
-      // cursor: grab;
-    }
-
-    &:active {
-      // cursor: grabbing;
-    }
-  }
 }
 
-.dev-visual-debugger {
-  &:before,
-  &:after {
+.focus-view__content {
+  width: 100%;
+
+  #canvas {
+    display: flex;
     position: absolute;
-    height: 100%;
+    align-items: center;
+    justify-content: center;
     width: 100%;
-    content: "";
-    z-index: 1;
-    pointer-events: none;
-  }
-
-  // Vertical line
-  &:before {
-    left: 50%;
-    border-left: 1px solid red;
-  }
-
-  // Horizonal line
-  &:after {
-    top: 50%;
-    border-top: 1px solid red;
-  }
-
-  // Nested debugger
-  .dev-visual-debugger {
-    // Vertical line
-    &:before {
-      left: 50%;
-      border-left: 1px solid green;
-    }
-
-    // Horizonal line
-    &:after {
-      top: 50%;
-      border-top: 1px solid green;
-    }
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 0;
   }
 }
 </style>

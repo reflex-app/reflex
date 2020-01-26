@@ -46,6 +46,9 @@ export const mutations = {
     const index = state.list.findIndex(obj => obj.id === oldArtboard.id)
     const newIndex = index + 1
 
+    // Set a new ID
+    newArtboard.id = uuid()
+
     // Push into array at index,
     // don't remove any, just insert this artboard
     state.list.splice(newIndex, 0, newArtboard)
@@ -54,7 +57,7 @@ export const mutations = {
   /**
    * Remove an Artboard
    * @param  {} state
-   * @param  {} id
+   * @param  {} id The ID of the artboard object
    */
   removeArtboard(state, id) {
     const index = state.list.findIndex(obj => obj.id === id)
@@ -76,9 +79,11 @@ export const mutations = {
 
   /** Resize an Artboard
    * @param  {} state
-   * @param  {Object} payload {id, height, width}
+   * @param  {Object} payload Requires id, height, width
    */
   resizeArtboard(state, payload) {
+    if (!payload.id || !payload.height || !payload.width) throw new Error('Payload missing properties');
+
     const artboards = state.list
 
     for (var i = 0; i < artboards.length; i++) {
@@ -99,23 +104,26 @@ export const mutations = {
 }
 
 export const actions = {
-  addArtboard({
-    commit
-  }, artboard) {
+  addArtboard({ commit }, artboard) {
     commit('addArtboard', artboard)
   },
-  async addMultipleArtboards({
-    commit
-  }, payload) {
+  deleteArtboard({ commit }, artboard) {
+    if (
+      confirm(
+        `Are you sure you want to delete the ${artboard.title} screen size? Click "OK" to delete.`
+      )
+    ) {
+      commit("removeArtboard", artboard.id);
+    }
+  },
+  async addMultipleArtboards({ commit }, payload) {
     const artboards = payload.data
 
     for (const i in artboards) {
       commit('addArtboard', artboards[i])
     }
   },
-  async duplicateArtboard({
-    commit
-  }, payload) {
+  async duplicateArtboard({ commit }, payload) {
     const newId = uuid()
 
     if (newId === payload.id) throw new Error('Failed to generate new ID')

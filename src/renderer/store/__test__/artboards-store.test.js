@@ -34,7 +34,7 @@ describe('artboards: add, remove', () => {
     }
 
     // Dispatch to VueX
-    store.dispatch('addArtboard', newArtboard)
+    store.dispatch('artboards/addArtboard', newArtboard)
 
     // Check the result
     expect(store.state.artboards.list.length).toBe(1)

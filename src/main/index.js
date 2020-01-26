@@ -18,6 +18,13 @@ global.__resources = undefined // eslint-disable-line no-underscore-dangle
 INCLUDE_RESOURCES_PATH // eslint-disable-line no-unused-expressions
 if (__resources === undefined) console.error('[Main-process]: Resources path is undefined')
 
+// Quit when all windows are closed.
+app.on('window-all-closed', function () {
+  // On macOS it is common for applications and their menu bar
+  // to stay active until the user quits explicitly with Cmd + Q
+  if (process.platform !== 'darwin') app.quit()
+})
+
 /**
  * Webview Settings
  */
@@ -27,8 +34,8 @@ app.on('web-contents-created', (event, contents) => {
     // webPreferences.webSecurity = false // Disable web security
 
     // Strip away preload scripts if unused or verify their location is legitimate
-    delete webPreferences.preload
-    delete webPreferences.preloadURL
+    // delete webPreferences.preload
+    // delete webPreferences.preloadURL
   })
 })
 
@@ -47,13 +54,6 @@ app.commandLine.appendSwitch('allow-insecure-localhost', 'true');
 //   event.preventDefault()
 //   callback(list[0])
 // })
-
-// Quit when all windows are closed.
-app.on('window-all-closed', function () {
-  // On macOS it is common for applications and their menu bar
-  // to stay active until the user quits explicitly with Cmd + Q
-  if (process.platform !== 'darwin') app.quit()
-})
 
 // Load here all startup windows
 require('./mainWindow')

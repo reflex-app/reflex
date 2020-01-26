@@ -118,9 +118,8 @@ export default {
   height: 80%;
   width: 80%;
   z-index: -1;
-  border-radius: 6px;
+  border-radius: 50%;
   padding: 0.5rem;
-  box-shadow: 0 2px 2px rgba(black, 0.15);
 
   .download-icon {
     transform: scale(0.7)
