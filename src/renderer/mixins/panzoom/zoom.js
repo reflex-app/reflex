@@ -131,91 +131,87 @@ function normalZoom(context, args) {
  * @param  {Object} options
  */
 function relZoom(context, event, options) {
-  const matrix = context.transformMatrix // Current transform matrix [0,0,0,0,0,0]
-  const currentScale = matrix[0] // Current zoom
-  let nextScale // Next zoom
-  const transformX = matrix[4]
-  const transformY = matrix[5]
+  // via: https://jsfiddle.net/f9kctwby/
+  const target = context.element
+  let zoom_point = { x: 0, y: 0 }
+  let zoom_target = { x: 0, y: 0 }
+  let pos = { x: 0, y: 0 }
+  let size = { w: target.offsetWidth, h: target.offsetHeight }
+  let scale = context.transformMatrix[0]
+  const factor = 0.5
 
-  if (!event || event === 'undefined') return false
+  init(event) // Init
 
-  const {
-    clientX,
-    clientY
-  } = event
+  function init(e) {
+    // via: https://stackoverflow.com/a/11396681/1114901
 
-  // CASE 1: Mouse wheel
-  // Move towards mouse position
-  if (event.type === 'wheel') {
-    const data = {
-      delta: event.deltaY / 120,
-      factor: currentScale * context.zoomIncrement,
-      currentScale: currentScale,
-      nextScale: nextScale,
-      transformX: transformX,
-      transformY: transformY,
-      clientX: event.clientX,
-      clientY: event.clientY
+    e.preventDefault();
+
+    //
+    // Set the point to zoom to
+    //
+    const parentOffset = document.body.getBoundingClientRect()
+    const childOffset = context.element.getBoundingClientRect()
+
+    zoom_point.x = e.pageX - (parentOffset.left - childOffset.left)
+    zoom_point.y = e.pageY - (parentOffset.top - childOffset.left)
+
+    //
+    // Set the delta
+    //
+    let delta = e.delta || e.wheelDelta;
+    if (delta === undefined) {
+      //we are on firefox
+      delta = e.originalEvent.detail;
     }
+    delta = Math.max(-1, Math.min(1, delta)) // cap the delta to [-1,1] for cross browser consistency
 
-    if (event.ctrlKey) {
-      data.nextScale = currentScale + data.delta * -data.factor
-      nextScale = currentScale + data.delta * -data.factor
-      moveCanvas(data, 'invert') // Mac Trackpad Pinch-to-zoom
-    } else {
-      data.nextScale = currentScale + data.delta * data.factor
-      nextScale = currentScale + data.delta * data.factor
-      // Else: Normal mouseWheel
-      switch (event.wheelDelta > 0 || event.detail < 0 ? 'up' : 'down') {
-        case 'up':
-          moveCanvas(data)
-          break
-        case 'down':
-          moveCanvas(data)
-          break
-      }
-    }
+    // determine the point on where the slide is zoomed in
+    zoom_target.x = (zoom_point.x - pos.x) / scale
+    zoom_target.y = (zoom_point.y - pos.y) / scale
+
+    // apply zoom
+    scale += delta * factor * scale
+    scale = Math.max(1, Math.min(context.options.maxZoom, scale)) // Maximum scale
+
+    // calculate x and y based on zoom
+    pos.x = -zoom_target.x * scale + zoom_point.x
+    pos.y = -zoom_target.y * scale + zoom_point.y
+
+    // Make sure the slide stays in its container area when zooming out
+    if (pos.x > 0)
+      pos.x = 0
+    if (pos.x + size.w * scale < size.w)
+      pos.x = -size.w * (scale - 1)
+    if (pos.y > 0)
+      pos.y = 0
+    if (pos.y + size.h * scale < size.h)
+      pos.y = -size.h * (scale - 1)
+
+    update()
   }
 
-  if (event.type === 'dblclick') {
-    // Case 2: Double Click
-    const data = {
-      delta: event.deltaY / 120,
-      factor: currentScale * context.zoomIncrement,
-      currentScale: currentScale,
-      nextScale: currentScale * context.zoomIncrement,
-      transformX: transformX,
-      transformY: transformY,
-      clientX: event.clientX,
-      clientY: event.clientY
-    }
+  function update() {
+    const x = pos.x + size.w * (scale - 1) / 2
+    const y = pos.y + size.h * (scale - 1) / 2
 
-    moveCanvas(data)
+    const matrix = context.transformMatrix // Current matrix
+  
+    const output = [
+      scale, // scale
+      matrix[1], // get existing rotation
+      matrix[2], // get existing rotation
+      scale, // scale
+      x, // x
+      y // y
+    ]
+  
+    // Update the Panzoom internal matrix
+    context.setTransform(output)
+  
+    zoomEnd(context, event)
   }
 
-  // =====
-  //
-  // Corrections
-  //
-  nextScale = zoomProtect(context, nextScale)
-
-  // Update the scale
-  matrix[0] = nextScale
-  matrix[3] = nextScale
-
-  const output = [
-    nextScale, // scale
-    matrix[1], // get existing rotation
-    matrix[2], // get existing rotation
-    nextScale, // scale
-    transformX, // x
-    transformY // y
-  ]
-
-  // Update the Panzoom internal matrix
-  context.setTransform(output)
-
-  zoomEnd(context, event)
 }
 
 /**
