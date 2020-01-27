@@ -89,11 +89,9 @@ export function zoomEnd(context, e) {
 }
 
 function normalZoom(context, args) {
-  const matrix = context.transformMatrix // Current transform matrix [0,0,0,0,0,0]
-  const currentScale = matrix[0] // Current zoom
+  const matrix = context.getTransforms() // Current transform matrix [0,0,0,0,0,0]
+  const currentScale = matrix.scale // Current zoom
   let nextScale // Next zoom
-  const transformX = matrix[4]
-  const transformY = matrix[5]
 
   switch (args) {
     case 'in':
@@ -113,15 +111,17 @@ function normalZoom(context, args) {
 
   const output = [
     nextScale, // scale
-    matrix[1], // get existing rotation
-    matrix[2], // get existing rotation
+    0, // get existing rotation
+    0, // get existing rotation
     nextScale, // scale
-    transformX, // x
-    transformY // y
+    matrix.x, // x
+    matrix.y // y
   ]
 
-  // Update the Panzoom internal matrix
-  context.setTransform(output)
+  // NEW API
+  context.update({
+    scale: nextScale
+  })
 }
 
 /**
@@ -132,25 +132,27 @@ function normalZoom(context, args) {
  */
 function relZoom(context, event, options) {
   // via: https://jsfiddle.net/f9kctwby/
+  const currentTransforms = context.getTransforms()
   const target = context.element
-  let zoom_point = { x: 0, y: 0 }
-  let zoom_target = { x: 0, y: 0 }
+  let zoom_point = { x: 0, y: 0 } // Starting point
+  let zoom_target = { x: 0, y: 0 } // The target point
   let pos = { x: 0, y: 0 }
   let size = { w: target.offsetWidth, h: target.offsetHeight }
-  let scale = context.transformMatrix[0]
-  const factor = 0.5
+  let scale = currentTransforms.scale
+  const factor = 0.5 // The amount to zoom by
 
-  init(event) // Init
+  // Init
+  init(event)
 
   function init(e) {
     // via: https://stackoverflow.com/a/11396681/1114901
-
     e.preventDefault();
 
     //
-    // Set the point to zoom to
+    // Set the point to zoom to based on cursor position
+    // NOTE: These values don't contain "px"
     //
-    const parentOffset = document.body.getBoundingClientRect()
+    const parentOffset = context.parent.getBoundingClientRect()
     const childOffset = context.element.getBoundingClientRect()
 
     zoom_point.x = e.pageX - (parentOffset.left - childOffset.left)
@@ -162,7 +164,7 @@ function relZoom(context, event, options) {
     let delta = e.delta || e.wheelDelta;
     if (delta === undefined) {
       //we are on firefox
-      delta = e.originalEvent.detail;
+      delta = e.detail;
     }
     delta = Math.max(-1, Math.min(1, delta)) // cap the delta to [-1,1] for cross browser consistency
 
@@ -195,20 +197,13 @@ function relZoom(context, event, options) {
     const x = pos.x + size.w * (scale - 1) / 2
     const y = pos.y + size.h * (scale - 1) / 2
 
-    const matrix = context.transformMatrix // Current matrix
-  
-    const output = [
-      scale, // scale
-      matrix[1], // get existing rotation
-      matrix[2], // get existing rotation
-      scale, // scale
-      x, // x
-      y // y
-    ]
-  
-    // Update the Panzoom internal matrix
-    context.setTransform(output)
-  
+    // NEW API
+    context.update({
+      x: x,
+      y: y,
+      scale: scale
+    })
+
     zoomEnd(context, event)
   }
 

@@ -33,6 +33,14 @@ export class Panzoom {
     // scaleX, ?, ?, scaleY, x, y
     this.transformMatrix = [1, 0, 0, 1, 0, 0]
 
+    // NEW API
+    // Usage: panzoom.update({x: 1, y: 5, scale: 1})
+    this.transformData = {
+      x: 0,
+      y: 0,
+      scale: 1
+    }
+
     // This will keep track of events
     this._eventListener = {
       change: [],
@@ -74,9 +82,9 @@ export class Panzoom {
 
     const child_styles = {
       transform: `matrix(${this.transformMatrix})`, // Set the matrix
-      transformOrigin: '50% 50%', // Enforce the default
-      willChange: 'transform'
-      // transformOrigin: '0 0'
+      transformOrigin: 'center center', // Enforce the default
+      willChange: 'transform',
+      transition: 'transform 150ms'
     }
 
     // Apply initial styles to child
@@ -118,30 +126,6 @@ export class Panzoom {
   }
 
   /**
-   * Update internal transform matrix + element transform
-   * @param  {Array} transform
-   */
-  _updateTransform(transform) {
-    // Round x, y to the nearest pixel
-    // No sub-pixels
-    transform[4] = Math.round(transform[4])
-    transform[5] = Math.round(transform[5])
-
-    // Update local variable
-    this.transformMatrix = transform
-
-    // Update Events.js context
-    panzoomEvents._updateContext(this)
-
-    // Update the CSS style
-    this.element.style.transform = `matrix(${transform})`
-
-    // Emit an event
-    // TODO: emit an event
-    // this._emit('change', evt)
-  }
-
-  /**
    * Center the child element relative to it's parent
    */
   center() {
@@ -159,7 +143,7 @@ export class Panzoom {
     // console.log(elHeight, parentHeight, elWidth, parentWidth)
 
     // Prepare a new matrix from the current one
-    let newMatrix = this.transformMatrix
+    let newMatrix = this.getTransforms()
 
     // Center the x, y positions
     // (origin: 0, 0)
@@ -170,11 +154,14 @@ export class Panzoom {
     // newMatrix[5] = (parentHeight / 2) - (elHeight / 2);
 
     // (origin: 50, 50)
-    newMatrix[4] = 0
-    newMatrix[5] = 0
+    newMatrix.x = 0
+    newMatrix.y = 0
 
-    // Update the matrix
-    this.setTransform(newMatrix)
+    // NEW API
+    this.update({
+      x: 0,
+      y: 0
+    })
   }
 
   scaleToFit() {
@@ -190,9 +177,10 @@ export class Panzoom {
     const parentHeight = parentEl.height
 
     // Prepare a new matrix from the current one
-    let newMatrix = this.transformMatrix
+    let newMatrix = this.getTransforms()
+
     // Get the current scale
-    const currentScale = newMatrix[0]
+    const currentScale = newMatrix.scale
 
     // If the child is outside of the parent, scale it down
     const childExceedsParent = !!((elWidth > parentWidth || elHeight > parentHeight));
@@ -203,9 +191,8 @@ export class Panzoom {
       const zoomAspectRatioY = parentHeight / elHeight
 
       const scale = (value) => {
-        newMatrix[0] = value - 0.1 // TODO temporarily set to test zooming out
-        newMatrix[3] = value - 0.1 // TODO temporarily set to test zooming out
-        return newMatrix[0], newMatrix[3]
+        newMatrix.scale = value - 0.1 // TODO temporarily set to test zooming out
+        return newMatrix.scale
       };
 
       if (zoomAspectRatioX < 1 && zoomAspectRatioY < 1) {
@@ -220,8 +207,10 @@ export class Panzoom {
       }
     }
 
-    // Update the matrix
-    this.setTransform(newMatrix)
+    // NEW API
+    this.update({
+      scale: newMatrix.scale
+    })
   }
 
   /**
@@ -243,25 +232,26 @@ export class Panzoom {
     const parentHeight = parentEl.height
 
     // Prepare a new matrix from the current one
-    let newMatrix = this.transformMatrix
+    // let newMatrix = this.transformMatrix
+    let newMatrix = this.getTransforms()
 
     // Get the current scale
-    const currentScale = newMatrix[0]
+    const currentScale = newMatrix.scale
 
     // If the child is outside of the parent, scale it down
     const childExceedsParent = !!((elWidth > parentWidth || elHeight > parentHeight));
+
+    // Set the scale
+    const scale = (value) => {
+      newMatrix.scale = value
+      return newMatrix.scale
+    };
 
     // If bigger than the parent container
     if (childExceedsParent) {
       // Scale down the child if it exceeds the parent
       const zoomAspectRatioX = parentWidth / elWidth
       const zoomAspectRatioY = parentHeight / elHeight
-
-      const scale = (value) => {
-        newMatrix[0] = value
-        newMatrix[3] = value
-        return newMatrix[0], newMatrix[3]
-      };
 
       if (zoomAspectRatioX < 1 && zoomAspectRatioY < 1) {
         scale(Math.min(parentWidth / (elWidth / currentScale), parentHeight / (elHeight / currentScale)))
@@ -275,22 +265,20 @@ export class Panzoom {
       // We need to adjust the x, y
       // The x should be the center of the container div -
 
-      newMatrix[4] = parentWidth / elWidth
-      newMatrix[5] = parentHeight / elHeight
+      newMatrix.x = parentWidth / elWidth
+      newMatrix.y = parentHeight / elHeight
 
-      // Also, scale up this DOM element
-      const scale = (value) => {
-        newMatrix[0] = value
-        newMatrix[3] = value
-        return newMatrix[0], newMatrix[3]
-      };
       // scale(Math.min(parentWidth / (elWidth / currentScale), parentHeight / (elHeight / currentScale)));
 
       console.log(this.transformMatrix, newMatrix)
     }
 
-    // Update the matrix
-    this.setTransform(newMatrix)
+    // NEW API
+    this.update({
+      x: newMatrix.x,
+      y: newMatrix.y,
+      scale: newMatrix.scale
+    })
   }
 
   /**
@@ -336,21 +324,50 @@ export class Panzoom {
   }
 
   /**
-   * Set the transform
+   * Changes the transform/translate values
+   * Saves to panzoom.transformData
    */
-  setTransform(transform) {
-    if (transform.length < 6) {
-      throw new Error('Please pass in a correct matrix (example: [1,0,0,1,0,0])')
+  update(newTransformValues) {
+    if (!newTransformValues) throw new Error('No transform values passed in.')
+
+    const ctx = this;
+    const currentTransformValues = this.getTransforms()
+
+    // Update the state
+    for (let key in newTransformValues) {
+      const value = newTransformValues[key]
+      if (isNaN(value)) throw new Error(`Value passed in for ${key} is not a number.`)
+      set(key, value)
     }
 
-    this._updateTransform(transform)
+    // Update the CSS
+    const newMatrix = {
+      x: newTransformValues.x || currentTransformValues.x,
+      y: newTransformValues.y || currentTransformValues.y,
+      scale: newTransformValues.scale || currentTransformValues.scale
+    }
+
+    this.element.style.transform = `translate(${Math.round(newMatrix.x) + 'px'}, ${Math.round(newMatrix.y) + 'px'}) scale(${newMatrix.scale}, ${newMatrix.scale})`
+
+    // Update Events.js context
+    panzoomEvents._updateContext(this)
+
+    // Update the class
+    function set(prop, val) {
+      ctx.transformData[prop] = val
+    }
+
+    // Emit an event
+    // TODO: emit an event
+    // this._emit('change', evt)
   }
 
   /**
-   * Returns the current transform
+   * Returns the current values as an object
+   * { x, y, scale }
    */
-  getTransform() {
-    return this.transformMatrix
+  getTransforms() {
+    return JSON.parse(JSON.stringify(this.transformData))
   }
 
   /**
@@ -406,11 +423,9 @@ export class Panzoom {
 
 
   _zoom(args) {
-    const matrix = this.transformMatrix // Current transform matrix [0,0,0,0,0,0]
-    const currentScale = matrix[0] // Current zoom
+    const matrix = this.getTransforms() // Current transform matrix [0,0,0,0,0,0]
+    const currentScale = matrix.scale // Current zoom
     let nextScale // Next zoom
-    const transformX = matrix[4]
-    const transformY = matrix[5]
 
     switch (args) {
       case 'in':
@@ -444,20 +459,21 @@ export class Panzoom {
     nextScale = protectScale(nextScale)
 
     // Update the scale
-    matrix[0] = nextScale
-    matrix[3] = nextScale
+    matrix.scale = nextScale
 
     const output = [
       nextScale, // scale
       matrix[1], // get existing rotation
       matrix[2], // get existing rotation
       nextScale, // scale
-      transformX, // x
-      transformY // y
+      matrix.x, // x
+      matrix.y // y
     ]
 
-    // Update the Panzoom internal matrix
-    this.setTransform(output)
+    // NEW API
+    this.update({
+      scale: nextScale
+    })
   }
 
   /**
