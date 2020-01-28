@@ -13,7 +13,7 @@ let yOffset = 0
 export function start(e, context) {
   // Set the current position of element based on the context
   // just in case something has moved outside of this file
-  const matrix = context.getTransforms()
+  const matrix = context.getTransform()
 
   xOffset = (xOffset !== matrix.x) ? matrix.x : xOffset
   yOffset = (yOffset !== matrix.y) ? matrix.y : yOffset
@@ -57,7 +57,7 @@ export function pan(e, context) {
     yOffset = currentY
 
     // Update the matrix
-    const matrix = context.getTransforms()
+    const matrix = context.getTransform()
 
     // Update the x, y indexes
     // [0,1,2,3,4,5]
@@ -109,7 +109,7 @@ export function panXY(context, event) {
     start(event, context)
 
     // Update the matrix
-    const matrix = context.getTransforms()
+    const matrix = context.getTransform()
 
     // Update the x, y indexes
     // [0,1,2,3,4,5]
@@ -139,7 +139,7 @@ export function panToElement(el) {
     const parent = context.parent // This is the total available height & width
     const container = context.element // This is the total available height & width
     const element = el // This is the element we want to center on
-    let matrix = context.getTransforms()
+    let matrix = context.getTransform()
 
     /**
      * We need to move our translate() coordinates

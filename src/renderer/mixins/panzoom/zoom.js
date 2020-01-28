@@ -89,7 +89,7 @@ export function zoomEnd(context, e) {
 }
 
 function normalZoom(context, args) {
-  const matrix = context.getTransforms() // Current transform matrix [0,0,0,0,0,0]
+  const matrix = context.getTransform() // Current transform matrix [0,0,0,0,0,0]
   const currentScale = matrix.scale // Current zoom
   let nextScale // Next zoom
 
@@ -132,7 +132,7 @@ function relZoom(context, e) {
     y: childOffset.top - parentOffset.top // Remove any app chrome
   }
 
-  const currentTransforms = context.getTransforms()
+  const currentTransforms = context.getTransform()
   let scale = currentTransforms.scale
 
   // Init

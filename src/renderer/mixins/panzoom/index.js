@@ -110,7 +110,7 @@ export class Panzoom {
       // TODO Remove timer
       setTimeout(async () => {
         this.fitToScreen()
-      }, 1000)
+      }, 500)
     }
 
     // Enable
@@ -148,7 +148,7 @@ export class Panzoom {
     console.log(parentWidth, childWidth);
     console.log(parentHeight, childHeight);
 
-    const scale = this.getTransforms().scale
+    const scale = this.getTransform().scale
 
     // x = containerWidth - (childWidth )
 
@@ -170,7 +170,7 @@ export class Panzoom {
 
     await this.update({
       // x: elPosition.x + size.w * (scale - 1) / 2,
-      // x: childEl.x + childWidth * (this.getTransforms().scale - 1) / 2,
+      // x: childEl.x + childWidth * (this.getTransform().scale - 1) / 2,
       // x: difference(parentWidth, childWidth) + (childWidth / 2),
       // x: difference(parentWidth, childWidth) + (childWidth / 2),
       // y: difference(parentHeight, childHeight) + centerPoint(parentHeight, childHeight)
@@ -248,7 +248,7 @@ export class Panzoom {
 
     // Prepare a new matrix from the current one
     // let newMatrix = this.transformMatrix
-    let newMatrix = this.getTransforms()
+    let newMatrix = this.getTransform()
 
     // Get the current scale
     const currentScale = newMatrix.scale
@@ -348,7 +348,7 @@ export class Panzoom {
     console.error('Updating transforms', newTransformValues);
 
     const ctx = this;
-    const currentTransformValues = this.getTransforms()
+    const currentTransformValues = this.getTransform()
 
     // Update the state
     for (let key in newTransformValues) {
@@ -382,7 +382,7 @@ export class Panzoom {
    * Returns the current values as an object
    * { x, y, scale }
    */
-  getTransforms() {
+  getTransform() {
     return JSON.parse(JSON.stringify(this.transformData))
   }
 
@@ -436,7 +436,7 @@ export class Panzoom {
   }
 
   _zoom(args) {
-    const matrix = this.getTransforms() // Current transform matrix [0,0,0,0,0,0]
+    const matrix = this.getTransform() // Current transform matrix [0,0,0,0,0,0]
     const currentScale = matrix.scale // Current zoom
     let nextScale // Next zoom
 
