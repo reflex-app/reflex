@@ -66,7 +66,7 @@ export function pan(e, context) {
     matrix.y = currentY
 
     // NEW API 
-    context.update({
+    context.setTransform({
       x: matrix.x,
       y: matrix.y
     })
@@ -119,7 +119,7 @@ export function panXY(context, event) {
     matrix.y -= event.deltaY
 
     // NEW API
-    context.update({
+    context.setTransform({
       x: matrix.x,
       y: matrix.y
     })
@@ -216,7 +216,7 @@ export function panToElement(el) {
     matrix.y = ((viewportCenterY - containerHeight) - (viewportCenterY - elementCenterY)) * -1
 
     // NEW API
-    context.update({
+    context.setTransform({
       x: matrix.x,
       y: matrix.y
     })

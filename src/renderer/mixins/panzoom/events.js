@@ -178,7 +178,7 @@ function onMouseMove(e) {
 
   // Check if the canvas needs a new frame
   if (canvasNeedsRender && _context.state.isPanning) {
-    canvasNeedsRender = false; // Disable until we update the frame
+    canvasNeedsRender = false; // Disable until we setTransform the frame
 
     // Request 60fps animation
     requestAnimationFrame(function () { // TODO: Test that this is really working

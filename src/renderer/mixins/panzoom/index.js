@@ -28,13 +28,7 @@ export class Panzoom {
     this.options.minZoom = options.minZoom || 0.5
     this.options.maxZoom = options.maxZoom || 10
 
-    // Set the original matrix
-    // This defaults to scale: 1
-    // scaleX, ?, ?, scaleY, x, y
-    this.transformMatrix = [1, 0, 0, 1, 0, 0]
-
-    // NEW API
-    // Usage: panzoom.update({x: 1, y: 5, scale: 1})
+    // Usage: panzoom.setTransform({x: 1, y: 5, scale: 1})
     this.transformData = {
       x: 0,
       y: 0,
@@ -55,9 +49,6 @@ export class Panzoom {
     // Trigger initial functions
     this._init()
   }
-
-  // ==================
-  // Private
 
   // Set initial
   async _init() {
@@ -85,7 +76,7 @@ export class Panzoom {
     const child_styles = {
       transformOrigin: 'center center', // Enforce the default
       willChange: 'transform',
-      display: 'inline-block'
+      display: 'inline-block',
       // transition: 'transform 150ms',
       // height: '100%',
       // width: '100%'
@@ -132,51 +123,84 @@ export class Panzoom {
   }
 
   /**
+   * Emits an event
+   * @param {String} event
+   */
+  _emit(event, evt) {
+    let ok = true
+
+    for (const listener of this._eventListener[event]) {
+      ok = listener.call(this, {
+        inst: this,
+        oe: evt
+      }) && ok
+    }
+
+    return ok
+  }
+
+  /**
+   * Changes the transform/translate values
+   * Saves to panzoom.transformData
+   */
+  async setTransform(newTransformValues) {
+    if (!newTransformValues) throw new Error('No transform values passed in.')
+
+    console.error('Updating transforms', newTransformValues);
+
+    const ctx = this;
+    const currentTransformValues = this.getTransform()
+
+    // Update the state
+    for (let key in newTransformValues) {
+      const value = newTransformValues[key]
+      if (isNaN(value)) throw new Error(`Value passed in for ${key} is not a number.`)
+      ctx.transformData[key] = value
+    }
+
+    // Update the CSS
+    let newMatrix = {
+      x: newTransformValues.x || currentTransformValues.x,
+      y: newTransformValues.y || currentTransformValues.y,
+      scale: newTransformValues.scale || currentTransformValues.scale
+    }
+
+    // Commit the CSS styles
+    this.element.style.transform = `translate(${newMatrix.x}px, ${newMatrix.y}px) scale(${newMatrix.scale}, ${newMatrix.scale})`
+
+    // Update Events.js context
+    panzoomEvents._updateContext(this)
+
+    // Emit an event
+    // TODO: emit an event
+    // this._emit('change', evt)
+  }
+
+  /**
+   * Returns the current values as an object
+   * { x, y, scale }
+   */
+  getTransform() {
+    return JSON.parse(JSON.stringify(this.transformData))
+  }
+
+  /**
    * Center the child element relative to it's parent
    */
   async center() {
-    // Bounding box
     const parentEl = this.parent.getBoundingClientRect()
     const childEl = this.element.getBoundingClientRect()
-
-    // Set the height, widths
     const parentHeight = parentEl.height
     const parentWidth = parentEl.width
     const childHeight = childEl.height
     const childWidth = childEl.width
 
-    console.log(parentWidth, childWidth);
-    console.log(parentHeight, childHeight);
-
-    const scale = this.getTransform().scale
-
-    // x = containerWidth - (childWidth )
-
     // 1. Get difference between parent and child
     // 2. Calculate what 50% (center) would be, given the size of the element and its current position
     // 3. Done
-
-    const difference = (parent, child) => {
-      return (parent - (child * scale)) / 2
-    }
-
-    const centerPoint = (parent, child) => {
-      // Half of the height of the parent...
-      // And then subtract the child
-      return parent / 2
-    }
-
-    console.log(scale);
-
-    await this.update({
-      // x: elPosition.x + size.w * (scale - 1) / 2,
-      // x: childEl.x + childWidth * (this.getTransform().scale - 1) / 2,
-      // x: difference(parentWidth, childWidth) + (childWidth / 2),
-      // x: difference(parentWidth, childWidth) + (childWidth / 2),
-      // y: difference(parentHeight, childHeight) + centerPoint(parentHeight, childHeight)
-      // x: (parentWidth / 2) * (scale - 1) / 2, // This doesn't center properly
-      // x: difference(parentWidth, childWidth) - centerPoint(childWidth) + (childWidth * scale / 2), // This doesn't center properly
-      x: ((parentWidth - (childWidth * scale)) / 2),
+    const scale = this.getTransform().scale
+    await this.setTransform({
+      x: (parentWidth - (childWidth * scale)) / 2,
       y: (parentHeight / 2) - (childHeight / 2) / scale // This works well
     })
   }
@@ -197,7 +221,7 @@ export class Panzoom {
     const childExceedsParent = (childWidth >= parentWidth || childHeight >= parentHeight);
     if (childExceedsParent) {
 
-      await this.update({
+      await this.setTransform({
         scale: Math.min((parentWidth / childWidth), (parentHeight / childHeight))
       })
 
@@ -223,7 +247,7 @@ export class Panzoom {
     }
 
     // NEW API
-    // await this.update({
+    // await this.setTransform({
     //   scale: newMatrix.scale
     // })
   }
@@ -289,7 +313,7 @@ export class Panzoom {
     }
 
     // NEW API
-    this.update({
+    this.setTransform({
       x: newMatrix.x,
       y: newMatrix.y,
       scale: newMatrix.scale
@@ -303,105 +327,6 @@ export class Panzoom {
   async fitToScreen() {
     await this.scaleToFit()
     await this.center()
-  }
-
-  // ==================
-  // Public
-
-  /**
-   * Resume panzoom event listeners
-   */
-  enable() {
-    // Update event context
-    panzoomEvents._updateContext(this)
-
-    // Event Emitter
-    // Setup an event emitter
-    this._bindStartEvents('on')
-
-    // Set isEnabled state
-    this.state.isEnabled = true
-  }
-
-  /**
-   * Pause panzoom event listeners
-   */
-  disable() {
-    // Unbind event listeners
-    // panzoomEvents._unbind(this);
-
-    // Stop event emitting
-    // TODO: Add tests for this
-    this._bindStartEvents('off')
-
-    // Set isEnabled state
-    this.state.isEnabled = false
-  }
-
-  /**
-   * Changes the transform/translate values
-   * Saves to panzoom.transformData
-   */
-  async update(newTransformValues) {
-    if (!newTransformValues) throw new Error('No transform values passed in.')
-
-    console.error('Updating transforms', newTransformValues);
-
-    const ctx = this;
-    const currentTransformValues = this.getTransform()
-
-    // Update the state
-    for (let key in newTransformValues) {
-      const value = newTransformValues[key]
-      if (isNaN(value)) throw new Error(`Value passed in for ${key} is not a number.`)
-      ctx.transformData[key] = value
-    }
-
-    // Update the CSS
-    let newMatrix = {
-      x: newTransformValues.x || currentTransformValues.x,
-      y: newTransformValues.y || currentTransformValues.y,
-      scale: newTransformValues.scale || currentTransformValues.scale
-    }
-
-    // Round values
-    // for (let key in newMatrix) newMatrix[key] = Math.round(newMatrix[key])
-
-    // Commit the CSS styles
-    this.element.style.transform = `translate(${newMatrix.x}px, ${newMatrix.y}px) scale(${newMatrix.scale}, ${newMatrix.scale})`
-
-    // Update Events.js context
-    panzoomEvents._updateContext(this)
-
-    // Emit an event
-    // TODO: emit an event
-    // this._emit('change', evt)
-  }
-
-  /**
-   * Returns the current values as an object
-   * { x, y, scale }
-   */
-  getTransform() {
-    return JSON.parse(JSON.stringify(this.transformData))
-  }
-
-  /**
-   * Emits an event
-   * @param {String} event
-   */
-  _emit(event, evt) {
-    let ok = true
-
-    for (const listener of this._eventListener[event]) {
-
-      ok = listener.call(this, {
-        inst: this,
-        oe: evt
-      }) && ok
-    }
-
-    return ok
   }
 
   /**
@@ -434,6 +359,37 @@ export class Panzoom {
 
     return this
   }
+
+  /**
+   * Resume panzoom event listeners
+   */
+  enable() {
+    // Update event context
+    panzoomEvents._updateContext(this)
+
+    // Event Emitter
+    // Setup an event emitter
+    this._bindStartEvents('on')
+
+    // Set isEnabled state
+    this.state.isEnabled = true
+  }
+
+  /**
+   * Pause panzoom event listeners
+   */
+  disable() {
+    // Unbind event listeners
+    // panzoomEvents._unbind(this);
+
+    // Stop event emitting
+    // TODO: Add tests for this
+    this._bindStartEvents('off')
+
+    // Set isEnabled state
+    this.state.isEnabled = false
+  }
+
 
   _zoom(args) {
     const matrix = this.getTransform() // Current transform matrix [0,0,0,0,0,0]
@@ -472,7 +428,7 @@ export class Panzoom {
     nextScale = protectScale(nextScale)
 
     // NEW API
-    this.update({
+    this.setTransform({
       scale: nextScale
     })
   }

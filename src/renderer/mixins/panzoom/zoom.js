@@ -105,7 +105,7 @@ function normalZoom(context, args) {
   // Tidy/validate the number
   nextScale = zoomProtect(context, nextScale)
 
-  context.update({
+  context.setTransform({
     scale: nextScale
   })
 }
@@ -211,7 +211,7 @@ function relZoom(context, e) {
   // Don't move the canvas if we're at min/max zoom 
   if (scale <= context.options.minZoom || scale >= context.options.maxZoom) return false
 
-  context.update({
+  context.setTransform({
     x: elPosition.x + size.w * (scale - 1) / 2,
     y: elPosition.y + size.h * (scale - 1) / 2,
     scale: scale
