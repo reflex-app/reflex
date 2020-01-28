@@ -105,108 +105,120 @@ function normalZoom(context, args) {
   // Tidy/validate the number
   nextScale = zoomProtect(context, nextScale)
 
-  // Update the scale
-  matrix[0] = nextScale
-  matrix[3] = nextScale
-
-  const output = [
-    nextScale, // scale
-    0, // get existing rotation
-    0, // get existing rotation
-    nextScale, // scale
-    matrix.x, // x
-    matrix.y // y
-  ]
-
-  // NEW API
   context.update({
     scale: nextScale
   })
 }
 
+
 /**
  * Zoom relative to the mouse
+ * This gets called upon every singe scroll event
  * @param  {Class} context
  * @param  {Event} event
  * @param  {Object} options
  */
-function relZoom(context, event, options) {
+function relZoom(context, e) {
+  // via: https://stackoverflow.com/a/46833254/1114901
   // via: https://jsfiddle.net/f9kctwby/
+
+  const size = { w: context.element.offsetWidth, h: context.element.offsetHeight }
+  const factor = context.zoomIncrement // The amount to zoom by
+
+  const parentOffset = context.parent.getBoundingClientRect()
+  const childOffset = context.element.getBoundingClientRect()
+  let elPosition = {
+    x: childOffset.left - parentOffset.left, // Remove any app chrome 
+    y: childOffset.top - parentOffset.top // Remove any app chrome
+  }
+
   const currentTransforms = context.getTransforms()
-  const target = context.element
-  let zoom_point = { x: 0, y: 0 } // Starting point
-  let zoom_target = { x: 0, y: 0 } // The target point
-  let pos = { x: 0, y: 0 }
-  let size = { w: target.offsetWidth, h: target.offsetHeight }
   let scale = currentTransforms.scale
-  const factor = 0.5 // The amount to zoom by
 
   // Init
-  init(event)
+  // via: https://stackoverflow.com/a/11396681/1114901
+  e.preventDefault();
+  e.stopPropagation();
 
-  function init(e) {
-    // via: https://stackoverflow.com/a/11396681/1114901
-    e.preventDefault();
+  //
+  // Set the delta to decide direction in/out 
+  // 1 or -1
+  //
+  let delta = e.delta || e.wheelDelta;
+  if (delta === undefined) delta = e.detail; // Firefox
+  delta = Math.max(-1, Math.min(1, delta)) // cap the delta to [-1,1] for cross browser consistency
 
-    //
-    // Set the point to zoom to based on cursor position
-    // NOTE: These values don't contain "px"
-    //
-    const parentOffset = context.parent.getBoundingClientRect()
-    const childOffset = context.element.getBoundingClientRect()
+  //
+  // Set the point to zoom to based on cursor position
+  // NOTE: This is a raw input value, doesn't take into account the current
+  // scale or other factors
+  //
+  // const parentOffset = context.parent.getBoundingClientRect()
+  let mouse_point = {
+    x: e.pageX - parentOffset.left, // Remove any app chromes
+    y: e.pageY - parentOffset.top // Remove any app chrome
+  }
+  // let mouse_point
+  // if (delta == 1) {
+  //   mouse_point = {
+  //     x: e.pageX + parentOffset.left,
+  //     y: e.pageY + parentOffset.top
+  //   }
+  // } else if (delta == -1) {
+  //   mouse_point = {
+  //     x: e.pageX - parentOffset.left,
+  //     y: e.pageY - parentOffset.top
+  //   }
+  // }
 
-    zoom_point.x = e.pageX - (parentOffset.left - childOffset.left)
-    zoom_point.y = e.pageY - (parentOffset.top - childOffset.left)
-
-    //
-    // Set the delta
-    //
-    let delta = e.delta || e.wheelDelta;
-    if (delta === undefined) {
-      //we are on firefox
-      delta = e.detail;
-    }
-    delta = Math.max(-1, Math.min(1, delta)) // cap the delta to [-1,1] for cross browser consistency
-
-    // determine the point on where the slide is zoomed in
-    zoom_target.x = (zoom_point.x - pos.x) / scale
-    zoom_target.y = (zoom_point.y - pos.y) / scale
-
-    // apply zoom
-    scale += delta * factor * scale
-    scale = Math.max(1, Math.min(context.options.maxZoom, scale)) // Maximum scale
-
-    // calculate x and y based on zoom
-    pos.x = -zoom_target.x * scale + zoom_point.x
-    pos.y = -zoom_target.y * scale + zoom_point.y
-
-    // Make sure the slide stays in its container area when zooming out
-    if (pos.x > 0)
-      pos.x = 0
-    if (pos.x + size.w * scale < size.w)
-      pos.x = -size.w * (scale - 1)
-    if (pos.y > 0)
-      pos.y = 0
-    if (pos.y + size.h * scale < size.h)
-      pos.y = -size.h * (scale - 1)
-
-    update()
+  // determine the point where to zoom in
+  let zoom_target = {
+    x: (mouse_point.x - elPosition.x) / scale,
+    y: (mouse_point.y - elPosition.y) / scale
   }
 
-  function update() {
-    const x = pos.x + size.w * (scale - 1) / 2
-    const y = pos.y + size.h * (scale - 1) / 2
+  // apply zoom
+  scale += delta * factor * scale
+  scale = Math.max(context.options.minZoom, Math.min(context.options.maxZoom, scale)) // Maximum scale
+  // TODO Handle touchpads and inverted direction zoom
+  // if (event.ctrlKey) {
+  //   // Inverted scrolling
+  //   scale -= delta * factor * scale
+  //   scale = Math.max(1, Math.min(context.options.maxZoom, scale)) // Maximum scale
+  // } else {
+  //   // Normal scroll wheel
+  //   scale += delta * factor * scale
+  //   scale = Math.max(1, Math.min(context.options.maxZoom, scale)) // Maximum scale
+  // }
 
-    // NEW API
-    context.update({
-      x: x,
-      y: y,
-      scale: scale
-    })
+  // Update x and y based on zoom
+  elPosition.x = -zoom_target.x * scale + mouse_point.x
+  elPosition.y = -zoom_target.y * scale + mouse_point.y
 
-    zoomEnd(context, event)
-  }
+  // Make sure the slide stays in its container area when zooming out
+  // if (elPosition.x > 0)
+  //   elPosition.x = 0
+  // if (elPosition.x + size.w * scale < size.w)
+  //   elPosition.x = -size.w * (scale - 1)
+  // if (elPosition.y > 0)
+  //   elPosition.y = 0
+  // if (elPosition.y + size.h * scale < size.h)
+  //   elPosition.y = -size.h * (scale - 1)
 
+  // Update
+  // Adjsut for the `transform-origin: center`
+
+  // Don't move the canvas if we're at min/max zoom 
+  if (scale <= context.options.minZoom || scale >= context.options.maxZoom) return false
+
+  context.update({
+    x: elPosition.x + size.w * (scale - 1) / 2,
+    y: elPosition.y + size.h * (scale - 1) / 2,
+    scale: scale
+  })
+
+
+  zoomEnd(context, event)
 }
 
 /**
@@ -228,21 +240,4 @@ function zoomProtect(context, scale) {
 
   // Return a nice number
   return scale
-}
-
-function moveCanvas(data) {
-  let {
-    currentScale,
-    nextScale,
-    transformX,
-    transformY,
-    clientX,
-    clientY
-  } = data
-
-  const ratio = 1 - nextScale / currentScale
-
-  // Origin: 0, 0
-  transformX += (clientX - transformX) * ratio
-  transformY += (clientY - transformY) * ratio
 }
