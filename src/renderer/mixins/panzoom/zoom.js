@@ -153,23 +153,10 @@ function relZoom(context, e) {
   // NOTE: This is a raw input value, doesn't take into account the current
   // scale or other factors
   //
-  // const parentOffset = context.parent.getBoundingClientRect()
   let mouse_point = {
     x: e.pageX - parentOffset.left, // Remove any app chromes
     y: e.pageY - parentOffset.top // Remove any app chrome
   }
-  // let mouse_point
-  // if (delta == 1) {
-  //   mouse_point = {
-  //     x: e.pageX + parentOffset.left,
-  //     y: e.pageY + parentOffset.top
-  //   }
-  // } else if (delta == -1) {
-  //   mouse_point = {
-  //     x: e.pageX - parentOffset.left,
-  //     y: e.pageY - parentOffset.top
-  //   }
-  // }
 
   // determine the point where to zoom in
   let zoom_target = {
@@ -177,19 +164,19 @@ function relZoom(context, e) {
     y: (mouse_point.y - elPosition.y) / scale
   }
 
+  console.log(event.ctrlKey, event.wheelDelta);
+
   // apply zoom
-  scale += delta * factor * scale
-  scale = Math.max(context.options.minZoom, Math.min(context.options.maxZoom, scale)) // Maximum scale
+  // scale += delta * factor * scale
   // TODO Handle touchpads and inverted direction zoom
-  // if (event.ctrlKey) {
-  //   // Inverted scrolling
-  //   scale -= delta * factor * scale
-  //   scale = Math.max(1, Math.min(context.options.maxZoom, scale)) // Maximum scale
-  // } else {
-  //   // Normal scroll wheel
-  //   scale += delta * factor * scale
-  //   scale = Math.max(1, Math.min(context.options.maxZoom, scale)) // Maximum scale
-  // }
+  if (event.ctrlKey) {
+    scale += delta * factor * scale
+  } else {
+    console.log('inverted');
+    // Normal scroll wheel
+    scale += delta * factor * scale
+  }
+  scale = Math.max(context.options.minZoom, Math.min(context.options.maxZoom, scale)) // Maximum scale
 
   // Update x and y based on zoom
   elPosition.x = -zoom_target.x * scale + mouse_point.x

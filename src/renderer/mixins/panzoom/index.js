@@ -206,8 +206,7 @@ export class Panzoom {
   }
 
   async scaleToFit() {
-    // Bounding box
-    // const el = this.element.getBoundingClientRect();
+    // TODO This can scale beyond the maxZoom point
     const parentEl = this.parent.getBoundingClientRect()
     const childEl = this.element.getBoundingClientRect()
 
@@ -224,32 +223,7 @@ export class Panzoom {
       await this.setTransform({
         scale: Math.min((parentWidth / childWidth), (parentHeight / childHeight))
       })
-
-      // Scale down the child if it exceeds the parent
-      // const zoomAspectRatioX = parentWidth / elWidth
-      // const zoomAspectRatioY = parentHeight / elHeight
-
-      // const scale = (value) => {
-      //   newMatrix.scale = value - 0.1 // TODO temporarily set to test zooming out
-      //   return newMatrix.scale
-      // };
-
-      // if (zoomAspectRatioX < 1 && zoomAspectRatioY < 1) {
-      //   // console.log('1');
-      //   scale(Math.min(parentWidth / (elWidth / currentScale), parentHeight / (elHeight / currentScale)))
-      // } else if (zoomAspectRatioX < 1) {
-      //   // console.log('2');
-      //   scale(parentWidth / (elWidth / currentScale))
-      // } else if (zoomAspectRatioY < 1) {
-      //   // console.log('3');
-      //   scale(parentHeight / (elHeight / currentScale))
-      // }
     }
-
-    // NEW API
-    // await this.setTransform({
-    //   scale: newMatrix.scale
-    // })
   }
 
   /**
@@ -325,8 +299,8 @@ export class Panzoom {
    * then centers the canvas on the screen
    */
   async fitToScreen() {
-    await this.scaleToFit()
     await this.center()
+    await this.scaleToFit()
   }
 
   /**
