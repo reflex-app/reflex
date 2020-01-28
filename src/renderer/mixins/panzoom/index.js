@@ -107,9 +107,9 @@ export class Panzoom {
     // Options
     if (this.options.startCentered) {
       // Center the child inside of the parent
+      // TODO Remove timer
       setTimeout(async () => {
-        await this.center()
-        await this.scaleToFit()
+        this.fitToScreen()
       }, 1000)
     }
 
