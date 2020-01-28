@@ -106,9 +106,11 @@ export default {
       });
   },
   watch: {
-    artboards: function() {
-      document.$panzoom.center();
-    }
+    // TODO Consider enabling this once panzoom is a Vue plugin?
+    // artboards: function() {
+    //   // document.$panzoom.fitToScreen();
+    //   // console.log('calling center');
+    // }
   },
   methods: {
     resize(artboard) {
