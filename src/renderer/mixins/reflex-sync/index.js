@@ -6,18 +6,24 @@ const { ipcRenderer } = require('electron')
 const setDOMEffect = require("./lib/effects");
 const eventTypes = require("./lib/eventTypes")
 
+let state = {
+    isScrolling: false
+}
+
 // Add listener for each event type
 for (let i in eventTypes) {
     console.log('Added listener:', eventTypes[i])
-    document.addEventListener(eventTypes[i], function (e) {
-        ipcRenderer.sendToHost("REFLEX_SYNC", {
-            eventType: eventTypes[i],
-            // DOMElement: '',
-            scrollOffset: {
-                top: window.scrollY,
-                left: window.scrollX
-            }
-        });
+    document.addEventListener(eventTypes[i], () => {
+        if (!state.scrolling) {
+            ipcRenderer.sendToHost("REFLEX_SYNC", {
+                eventType: eventTypes[i],
+                // DOMElement: '',
+                scrollOffset: {
+                    top: window.scrollY,
+                    left: window.scrollX
+                }
+            });
+        }
     });
 }
 

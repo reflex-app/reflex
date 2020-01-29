@@ -46,10 +46,9 @@ export default {
 
       // Listen for incoming events
       this.$bus.$on("REFLEX_SYNC", (event, args) => {
-        console.log("REFLEX EVENT OCCURRED", args);
-
         if (this.id === args.originID) return false;
         // Send event back to the frame
+        console.log("REFLEX EVENT:", args);
         frame.send("REFLEX_SYNC_setDOMEffect", {
           event,
           scrollOffset: {
