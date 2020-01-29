@@ -5,7 +5,7 @@
       <Screenshots />
       <div class="focus-view__content">
         <div id="canvas" ref="canvas">
-          <FocusArtboard ref="artboards"/>
+          <FocusArtboard ref="artboards" />
         </div>
         <!-- <DiscoSwitch /> -->
         <SizeShifter />
@@ -16,7 +16,6 @@
 </template>
 
 <script>
-// import { Panzoom } from "../mixins/panzoom";
 import { ipcRenderer } from "electron";
 import isElectron from "is-electron";
 import SidePanel from "@/components/SidePanel";
@@ -44,41 +43,31 @@ export default {
   },
   methods: {
     enableEventListeners() {
-      const controllerEl = this.$refs["canvas"];
-      const contentEl = this.$refs["artboards"].$el;
-
-      // // Initialize Panzoom
-      // let instance = new Panzoom(contentEl, controllerEl, {
-      //   startCentered: true
-      // });
-      // this.$root.$panzoom = instance; // Attach to document
-
-      // // Listen for changes
-      // instance
-      //   .on("zoomStart", () => {
-      //     this.$store.commit("interactions/interactionSetState", {
-      //       key: "isZooming",
-      //       value: true
-      //     });
-      //   })
-      //   .on("panStart", () => {
-      //     this.$store.commit("interactions/interactionSetState", {
-      //       key: "isPanning",
-      //       value: true
-      //     });
-      //   })
-      //   .on("zoomStop", () => {
-      //     this.$store.commit("interactions/interactionSetState", {
-      //       key: "isZooming",
-      //       value: false
-      //     });
-      //   })
-      //   .on("panStop", () => {
-      //     this.$store.commit("interactions/interactionSetState", {
-      //       key: "isPanning",
-      //       value: false
-      //     });
-      //   });
+      this.panzoomInstance
+        .on("zoomStart", () => {
+          this.$store.commit("interactions/interactionSetState", {
+            key: "isZooming",
+            value: true
+          });
+        })
+        .on("panStart", () => {
+          this.$store.commit("interactions/interactionSetState", {
+            key: "isPanning",
+            value: true
+          });
+        })
+        .on("zoomStop", () => {
+          this.$store.commit("interactions/interactionSetState", {
+            key: "isZooming",
+            value: false
+          });
+        })
+        .on("panStop", () => {
+          this.$store.commit("interactions/interactionSetState", {
+            key: "isPanning",
+            value: false
+          });
+        });
 
       // Listen for menu bar events
       // TODO Add tests for these
@@ -98,6 +87,9 @@ export default {
     }
   },
   mounted: function() {
+    this.panzoomInstance = this.$root.$panzoom;
+    console.log(this.panzoomInstance);
+
     // Add event listeners
     this.$nextTick(this.enableEventListeners);
   }
