@@ -1,5 +1,8 @@
+/**
+ * NOTE: This all happens in the Webview context
+ * Communicate with renderer process (WebPage.vue) via ipcRenderer.sendToHost()
+ */
 const { ipcRenderer } = require('electron')
-
 const setDOMEffect = require("./lib/effects");
 const eventTypes = require("./lib/eventTypes")
 
@@ -10,17 +13,32 @@ for (let i in eventTypes) {
         ipcRenderer.sendToHost("REFLEX_SYNC", {
             eventType: eventTypes[i],
             // DOMElement: '',
-            // scrollOffset: {
-            //     top: 0,
-            //     left: 0
-            // }
+            scrollOffset: {
+                top: window.scrollY,
+                left: window.scrollX
+            }
         });
     });
 }
 
+// Set DOM effects via the renderer
 ipcRenderer.on('REFLEX_SYNC_setDOMEffect', (...args) => {
     setDOMEffect(...args)
 })
+
+
+
+
+
+
+
+
+
+
+
+///////////////////////////////
+///////////////////////////////
+///////////////////////////////
 
 /**
  * Collect and send back information from the document context

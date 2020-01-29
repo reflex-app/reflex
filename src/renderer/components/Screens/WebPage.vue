@@ -52,10 +52,10 @@ export default {
         // Send event back to the frame
         frame.send("REFLEX_SYNC_setDOMEffect", {
           event,
-          ...args,
           scrollOffset: {
             top: 100
-          }
+          },
+          ...args
         });
       });
 
