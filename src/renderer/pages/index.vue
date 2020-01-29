@@ -1,16 +1,19 @@
 <template>
   <div id="main-view">
-      <SidePanel />
-      <Screenshots />
-      <div id="canvas" ref="canvas" :class="{ 'dev-visual-debugger': showCanvasDebugger }">
-        <Artboards ref="artboards" :class="{ 'dev-visual-debugger': showCanvasDebugger }" />
-      </div>
+    <SidePanel />
+    <Screenshots />
+    <div v-panzoom id="canvas" ref="canvas" :class="{ 'dev-visual-debugger': showCanvasDebugger }">
+      <Artboards
+        ref="artboards"
+        :class="{ 'dev-visual-debugger': showCanvasDebugger }"
+        @fitToScreen="fitToScreen"
+      />
     </div>
+  </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
-import { Panzoom } from "../mixins/panzoom";
 import { ipcRenderer } from "electron";
 import isElectron from "is-electron";
 import Artboards from "@/components/Screens/Artboards";
@@ -27,7 +30,8 @@ export default {
   },
   data() {
     return {
-      isDev: isDev
+      isDev: isDev,
+      panzoomInstance: null
     };
   },
   computed: {
@@ -37,17 +41,8 @@ export default {
   },
   methods: {
     enableEventListeners() {
-      const controllerEl = this.$refs["canvas"];
-      const contentEl = this.$refs["artboards"].$el;
-
-      // Initialize Panzoom
-      let instance = new Panzoom(contentEl, controllerEl, {
-        startCentered: true
-      });
-      document.$panzoom = instance; // Attach to document
-
       // Listen for changes
-      instance
+      this.panzoomInstance
         .on("zoomStart", () => {
           this.$store.commit("interactions/interactionSetState", {
             key: "isZooming",
@@ -76,22 +71,27 @@ export default {
       // Listen for menu bar events
       // TODO Add tests for these
       if (isElectron()) {
-        ipcRenderer.on("menu_zoom-to-fit", document.$panzoom.fitToScreen);
-        ipcRenderer.on("menu_zoom-in", document.$panzoom.zoomIn);
-        ipcRenderer.on("menu_zoom-out", document.$panzoom.zoomOut);
+        ipcRenderer.on("menu_zoom-to-fit", this.panzoomInstance.fitToScreen);
+        ipcRenderer.on("menu_zoom-in", this.panzoomInstance.zoomIn);
+        ipcRenderer.on("menu_zoom-out", this.panzoomInstance.zoomOut);
         ipcRenderer.on("menu_show-developer-canvas-debugger", () => {
           this.$store.commit("dev/toggleCanvasDebugger");
         });
       }
-
-      ipcRenderer.on("menu_show-developer-canvas-debugger", () => {
-        this.$store.commit("dev/toggleCanvasDebugger");
-      });
+    },
+    fitToScreen() {
+      this.panzoomInstance.fitToScreen();
     }
   },
-  mounted: function() {
-    // Add event listeners
-    this.$nextTick(this.enableEventListeners);
+  created() {},
+  mounted() {
+    this.panzoomInstance = this.$panzoom;
+    console.log(this.panzoomInstance);
+
+    this.$nextTick(() => {
+      // Enable event listeners
+      this.enableEventListeners();
+    });
   }
 };
 </script>
@@ -106,7 +106,9 @@ export default {
 
 #main-view {
   background: $body-bg;
-  min-height: calc(100vh - #{$gui-title-bar-height}); // hard-coded height of toolbar
+  min-height: calc(
+    100vh - #{$gui-title-bar-height}
+  ); // hard-coded height of toolbar
   width: 100%;
   position: relative;
   display: flex;

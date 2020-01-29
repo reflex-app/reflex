@@ -10,7 +10,38 @@ import {
 import * as panzoomEvents from './events'
 import kinetic from './kinetic'
 
-export class Panzoom {
+export const vuePanzoom = {
+  // Inspired by https://snipcart.com/blog/vue-js-plugin
+  install(Vue, opts) {
+    console.log('Installing panzoom plugin!')
+
+    // Register custom directive
+    Vue.directive('panzoom', {
+      bind(container, binding, vnode) {
+
+        // Get the parent and child DOM elements
+        const parentEl = container
+        const childEl = container.firstElementChild
+
+        // Install to the component using the directive
+        vnode.context.$panzoom = new Panzoom(childEl, parentEl, opts)
+        console.log('Panzoom installed');
+
+        // window.onNuxtReady((app) => {
+        //   // via https://github.com/nuxt/nuxt.js/issues/1113
+        //   // Bind the parent and child to the Vue plugin data
+        //   app.$panzoom = new Panzoom(parentEl, childEl, {
+        //     startCentered: true
+        //   })
+
+        //   console.log('done binding', app.$panzoom);
+        // })
+      }
+    })
+  }
+}
+
+export default class Panzoom {
   constructor(element, parent, options = {}) {
     this.parent = parent
     this.element = element
@@ -51,9 +82,7 @@ export class Panzoom {
   }
 
   // Set initial
-  async _init() {
-    const _this = this
-
+  _init = () => {
     // TODO temporary using null to avoid in tests
     const parent_styles = {
       // position: 'absolute',
@@ -69,7 +98,7 @@ export class Panzoom {
     // Apply initial styles to parent
     Object.entries(parent_styles).forEach(
       ([key, value]) => {
-        return _this.parent.style[key] = value
+        return this.parent.style[key] = value
       }
     )
 
@@ -85,7 +114,7 @@ export class Panzoom {
     // Apply initial styles to child
     Object.entries(child_styles).forEach(
       ([key, value]) => {
-        return _this.element.style[key] = value
+        return this.element.style[key] = value
       }
     )
 
@@ -99,9 +128,9 @@ export class Panzoom {
     if (this.options.startCentered) {
       // Center the child inside of the parent
       // TODO Remove timer
-      setTimeout(async () => {
-        this.fitToScreen()
-      }, 500)
+      // setTimeout(async () => {
+      //   this.fitToScreen()
+      // }, 500)
     }
 
     // Enable
@@ -112,7 +141,7 @@ export class Panzoom {
    * Enable / Disable this plugin
    * @param {*} type
    */
-  _bindStartEvents(type) {
+  _bindStartEvents = (type) => {
     const fn = type === 'on' ? on : off
 
     // On/Off event listeners
@@ -126,7 +155,7 @@ export class Panzoom {
    * Emits an event
    * @param {String} event
    */
-  _emit(event, evt) {
+  _emit = (event, evt) => {
     let ok = true
 
     for (const listener of this._eventListener[event]) {
@@ -143,7 +172,7 @@ export class Panzoom {
    * Changes the transform/translate values
    * Saves to panzoom.transformData
    */
-  async setTransform(newTransformValues) {
+  setTransform = async (newTransformValues) => {
     if (!newTransformValues) throw new Error('No transform values passed in.')
 
     console.error('Updating transforms', newTransformValues);
@@ -180,14 +209,14 @@ export class Panzoom {
    * Returns the current values as an object
    * { x, y, scale }
    */
-  getTransform() {
+  getTransform = () => {
     return JSON.parse(JSON.stringify(this.transformData))
   }
 
   /**
    * Center the child element relative to it's parent
    */
-  async center() {
+  center = async () => {
     const parentEl = this.parent.getBoundingClientRect()
     const childEl = this.element.getBoundingClientRect()
     const parentHeight = parentEl.height
@@ -196,16 +225,16 @@ export class Panzoom {
     const childWidth = childEl.width
 
     // 1. Get difference between parent and child
-    // 2. Calculate what 50% (center) would be, given the size of the element and its current position
+    // 2. Calculate what 50% (center) would be, given the size of the element and its current scale
     // 3. Done
     const scale = this.getTransform().scale
     await this.setTransform({
       x: (parentWidth - (childWidth * scale)) / 2,
-      y: (parentHeight / 2) - (childHeight / 2) / scale // This works well
+      y: (parentHeight - (childHeight * scale)) / 2 // This works well
     })
   }
 
-  async scaleToFit() {
+  scaleToFit = async () => {
     // TODO This can scale beyond the maxZoom point
     const parentEl = this.parent.getBoundingClientRect()
     const childEl = this.element.getBoundingClientRect()
@@ -216,13 +245,21 @@ export class Panzoom {
     const parentWidth = parentEl.width
     const parentHeight = parentEl.height
 
+    const scale = this.getTransform().scale
+
     // If the child is outside of the parent, scale it down
     const childExceedsParent = (childWidth >= parentWidth || childHeight >= parentHeight);
     if (childExceedsParent) {
+      console.log('exceeds parent');
 
       await this.setTransform({
         scale: Math.min((parentWidth / childWidth), (parentHeight / childHeight))
       })
+    } else {
+      // TODO Add logic to scale up to a reasonable size
+      // await this.setTransform({
+      // scale: Math.max((parentWidth / childWidth), (parentHeight / childHeight))
+      // })
     }
   }
 
@@ -230,7 +267,7 @@ export class Panzoom {
    * Scales the panzoom instance to fit a given DOM element
    * @TODO: This feature doesn't properly adjust to the given element
    */
-  scaleToFitEl(domElement) {
+  scaleToFitEl = (domElement) => {
     console.log(domElement)
 
     // Bounding box
@@ -298,7 +335,7 @@ export class Panzoom {
    * Scales the contents to fit,
    * then centers the canvas on the screen
    */
-  async fitToScreen() {
+  fitToScreen = async () => {
     await this.center()
     await this.scaleToFit()
   }
@@ -308,7 +345,7 @@ export class Panzoom {
    * @param event
    * @param cb
    */
-  on(event, cb) {
+  on = (event, cb) => {
     if (!this._eventListener[event]) throw new Error(`Event not setup ${event} ${cb}`)
 
     this._eventListener[event].push(cb)
@@ -320,7 +357,7 @@ export class Panzoom {
    * @param event
    * @param cb
    */
-  off(event, cb) {
+  off = (event, cb) => {
     const callBacks = this._eventListener[event]
 
     if (callBacks) {
@@ -337,7 +374,7 @@ export class Panzoom {
   /**
    * Resume panzoom event listeners
    */
-  enable() {
+  enable = () => {
     // Update event context
     panzoomEvents._updateContext(this)
 
@@ -352,7 +389,7 @@ export class Panzoom {
   /**
    * Pause panzoom event listeners
    */
-  disable() {
+  disable = () => {
     // Unbind event listeners
     // panzoomEvents._unbind(this);
 
@@ -365,43 +402,20 @@ export class Panzoom {
   }
 
 
-  _zoom(args) {
+  _zoom = (args) => {
     const matrix = this.getTransform() // Current transform matrix [0,0,0,0,0,0]
     const currentScale = matrix.scale // Current zoom
     let nextScale // Next zoom
 
     switch (args) {
       case 'in':
-        nextScale = currentScale * this.zoomIncrement
-        break
-      case 'out':
         nextScale = currentScale / this.zoomIncrement
         break
+      case 'out':
+        nextScale = currentScale * this.zoomIncrement
+        break
     }
 
-    // Tidy/validate the number
-    // TODO Fix "this" definition
-    const that = this;
-
-    function protectScale(scale) {
-      // @TODO: Bug: scale gets stuck here
-      // Prevent min/max scale
-      if (scale < that.options.minZoom) {
-        scale = that.options.minZoom
-      } else if (scale > that.options.maxZoom) {
-        scale = that.options.maxZoom
-      }
-
-      // Prettify the number
-      scale = parseFloat(scale.toFixed(10))
-
-      // Return a nice number
-      return scale
-    }
-
-    nextScale = protectScale(nextScale)
-
-    // NEW API
     this.setTransform({
       scale: nextScale
     })
@@ -410,7 +424,7 @@ export class Panzoom {
   /**
    * Zoom In
    */
-  zoomIn() {
+  zoomIn = () => {
     const event = new CustomEvent('zoomIn');
     this._emit('zoomIn', event)
     this._zoom('in')
@@ -419,7 +433,7 @@ export class Panzoom {
   /**
    * Zoom Out
    */
-  zoomOut() {
+  zoomOut = () => {
     const event = new CustomEvent('zoomOut');
     this._emit('zoomOut', event)
     this._zoom('out')
@@ -431,7 +445,7 @@ export class Panzoom {
    * @param {*} x px value
    * @param {*} y px value
    */
-  panToElement(el) {
+  panToElement = (el) => {
     pan.panToElement(el)
   }
 }
