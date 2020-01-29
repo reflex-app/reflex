@@ -161,15 +161,12 @@ function relZoom(context, e) {
     y: (mouse_point.y - elPosition.y) / scale
   }
 
-  console.log(event.ctrlKey, event.wheelDelta);
-
   // apply zoom
   // scale += delta * factor * scale
   // TODO Handle touchpads and inverted direction zoom
   if (event.ctrlKey) {
     scale += delta * factor * scale
   } else {
-    console.log('inverted');
     // Normal scroll wheel
     scale += delta * factor * scale
   }

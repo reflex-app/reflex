@@ -1,70 +1,34 @@
 /* eslint-disable */
-// 'use strict';
+'use strict';
 
-// import EventEmitter from 'events';
 import * as pan from "./pan"
 import {
   on,
   off
 } from './utils'
 import * as panzoomEvents from './events'
-import kinetic from './kinetic'
-
-export const vuePanzoom = {
-  // Inspired by https://snipcart.com/blog/vue-js-plugin
-  install(Vue, opts) {
-    console.log('Installing panzoom plugin!')
-
-    // Register custom directive
-    Vue.directive('panzoom', {
-      bind(container, binding, vnode) {
-
-        // Get the parent and child DOM elements
-        const parentEl = container
-        const childEl = container.firstElementChild
-
-        // Install to the component using the directive
-        vnode.context.$panzoom = new Panzoom(childEl, parentEl, opts)
-        console.log('Panzoom installed');
-
-        // window.onNuxtReady((app) => {
-        //   // via https://github.com/nuxt/nuxt.js/issues/1113
-        //   // Bind the parent and child to the Vue plugin data
-        //   app.$panzoom = new Panzoom(parentEl, childEl, {
-        //     startCentered: true
-        //   })
-
-        //   console.log('done binding', app.$panzoom);
-        // })
-      }
-    })
-  }
-}
 
 export default class Panzoom {
   constructor(element, parent, options = {}) {
     this.parent = parent
     this.element = element
+    this.transformData = {
+      x: 0,
+      y: 0,
+      scale: 1
+    }
     this.state = {
       isEnabled: false,
       isPanning: false,
       isZooming: false,
       isTouching: false
     }
-
     this.zoomIncrement = options.zoomIncrement || 0.5
 
     // Default Options
     this.options = options
-    this.options.minZoom = options.minZoom || 0.5
+    this.options.minZoom = options.minZoom || 0.2
     this.options.maxZoom = options.maxZoom || 10
-
-    // Usage: panzoom.setTransform({x: 1, y: 5, scale: 1})
-    this.transformData = {
-      x: 0,
-      y: 0,
-      scale: 1
-    }
 
     // This will keep track of events
     this._eventListener = {
@@ -117,21 +81,6 @@ export default class Panzoom {
         return this.element.style[key] = value
       }
     )
-
-    // Enable Kinetic (inertia)
-    // this.kinetic = kinetic({
-    //   x: this.transformMatrix[4],
-    //   y: this.transformMatrix[5]
-    // }, scroll, this, this.options.kinetic)
-
-    // Options
-    if (this.options.startCentered) {
-      // Center the child inside of the parent
-      // TODO Remove timer
-      // setTimeout(async () => {
-      //   this.fitToScreen()
-      // }, 500)
-    }
 
     // Enable
     this.enable()
@@ -446,6 +395,40 @@ export default class Panzoom {
    * @param {*} y px value
    */
   panToElement = (el) => {
-    pan.panToElement(el)
+    pan.panToElement(this, el)
+  }
+}
+
+export const vuePanzoom = {
+  // Inspired by https://snipcart.com/blog/vue-js-plugin
+  install(Vue, opts) {
+    console.log('Installing panzoom plugin!')
+
+    // Register custom directive
+    Vue.directive('panzoom', {
+      bind(container, binding, vnode) {
+
+        // Get the parent and child DOM elements
+        const parentEl = container
+        const childEl = container.firstElementChild
+
+        // console.log(vnode.context.$parent.$root);
+
+        // Install to the component using the directive
+        vnode.context.$parent.$root.$panzoom = new Panzoom(childEl, parentEl, opts)
+        // vnode.context.$panzoom = new Panzoom(childEl, parentEl, opts)
+        console.log('Panzoom installed');
+
+        // window.onNuxtReady((app) => {
+        //   // via https://github.com/nuxt/nuxt.js/issues/1113
+        //   // Bind the parent and child to the Vue plugin data
+        //   app.$panzoom = new Panzoom(parentEl, childEl, {
+        //     startCentered: true
+        //   })
+
+        //   console.log('done binding', app.$panzoom);
+        // })
+      }
+    })
   }
 }
