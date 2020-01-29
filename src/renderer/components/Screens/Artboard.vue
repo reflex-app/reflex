@@ -184,8 +184,8 @@ export default {
       document.documentElement.addEventListener("mouseup", stopDrag);
 
       // Pause the panzoom
-      if (document.$panzoom.state.isEnabled === true) {
-        document.$panzoom.disable(); // TODO: Cleaner solution that polluting document?
+      if (this.$root.$panzoom.state.isEnabled === true) {
+        this.$root.$panzoom.disable(); // TODO: Cleaner solution that polluting document?
       }
 
       function doStart() {
@@ -244,7 +244,7 @@ export default {
         let frames = document.getElementsByClassName("frame");
 
         // Re-enable the panzoom
-        document.$panzoom.enable(); // TODO: Cleaner solution that polluting document?
+        vm.$root.$panzoom.enable(); // TODO: Cleaner solution that polluting document?
 
         // Update global state
         vm.$store.commit("interactions/interactionSetState", {

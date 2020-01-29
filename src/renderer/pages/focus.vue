@@ -51,7 +51,7 @@ export default {
       // let instance = new Panzoom(contentEl, controllerEl, {
       //   startCentered: true
       // });
-      // document.$panzoom = instance; // Attach to document
+      // this.$root.$panzoom = instance; // Attach to document
 
       // // Listen for changes
       // instance
@@ -83,9 +83,9 @@ export default {
       // Listen for menu bar events
       // TODO Add tests for these
       if (isElectron()) {
-        ipcRenderer.on("menu_zoom-to-fit", document.$panzoom.fitToScreen);
-        ipcRenderer.on("menu_zoom-in", document.$panzoom.zoomIn);
-        ipcRenderer.on("menu_zoom-out", document.$panzoom.zoomOut);
+        ipcRenderer.on("menu_zoom-to-fit", this.$root.$panzoom.fitToScreen);
+        ipcRenderer.on("menu_zoom-in", this.$root.$panzoom.zoomIn);
+        ipcRenderer.on("menu_zoom-out", this.$root.$panzoom.zoomOut);
         ipcRenderer.on("menu_show-developer-canvas-debugger", () => {
           this.$store.commit("dev/toggleCanvasDebugger");
         });

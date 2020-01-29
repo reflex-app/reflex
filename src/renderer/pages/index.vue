@@ -85,7 +85,7 @@ export default {
   },
   created() {},
   mounted() {
-    this.panzoomInstance = this.$panzoom;
+    this.panzoomInstance = this.$root.$panzoom;
     console.log(this.panzoomInstance);
 
     this.$nextTick(() => {

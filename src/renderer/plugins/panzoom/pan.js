@@ -129,8 +129,7 @@ export function panXY(context, event) {
   }
 }
 
-export function panToElement(el) {
-  const context = document.$panzoom // The global Panzoom context
+export function panToElement(context, el) {
   if (!context.state.isPanning) {
     // Start
     // start(event, context)

@@ -119,7 +119,7 @@ export default {
         this.$emit("fitToScreen");
       });
 
-      // document.$panzoom.fitToScreen();
+      // this.$root.$panzoom.fitToScreen();
       // console.log('calling center');
     }
   },

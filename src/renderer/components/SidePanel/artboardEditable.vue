@@ -165,7 +165,7 @@ export default {
       // Find the artboard (DOM)
       const artboard = document.querySelector(`[artboard-id="${id}"]`);
       // Move the panzoom container
-      document.$panzoom.panToElement(artboard);
+      this.$root.$panzoom.panToElement(artboard);
     },
     rightClickMenu(e, artboard) {
       rightClickMenu(this.$store, {
