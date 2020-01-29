@@ -95,15 +95,12 @@ function normalZoom(context, args) {
 
   switch (args) {
     case 'in':
-      nextScale = currentScale * context.zoomIncrement
-      break
-    case 'out':
       nextScale = currentScale / context.zoomIncrement
       break
+    case 'out':
+      nextScale = currentScale * context.zoomIncrement
+      break
   }
-
-  // Tidy/validate the number
-  nextScale = zoomProtect(context, nextScale)
 
   context.setTransform({
     scale: nextScale
@@ -164,15 +161,12 @@ function relZoom(context, e) {
     y: (mouse_point.y - elPosition.y) / scale
   }
 
-  console.log(event.ctrlKey, event.wheelDelta);
-
   // apply zoom
   // scale += delta * factor * scale
   // TODO Handle touchpads and inverted direction zoom
   if (event.ctrlKey) {
     scale += delta * factor * scale
   } else {
-    console.log('inverted');
     // Normal scroll wheel
     scale += delta * factor * scale
   }
@@ -206,25 +200,4 @@ function relZoom(context, e) {
 
 
   zoomEnd(context, event)
-}
-
-/**
- * Prevents zooming past min/max scale
- * Returns a nice number
- * @param  {} scale
- */
-function zoomProtect(context, scale) {
-  // @TODO: Bug: scale gets stuck here
-  // Prevent min/max scale
-  if (scale < context.options.minZoom) {
-    scale = context.options.minZoom
-  } else if (scale > context.options.maxZoom) {
-    scale = context.options.maxZoom
-  }
-
-  // Prettify the number
-  scale = parseFloat(scale.toFixed(10))
-
-  // Return a nice number
-  return scale
 }

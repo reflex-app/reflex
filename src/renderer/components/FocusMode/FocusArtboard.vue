@@ -167,7 +167,7 @@ export default {
     //     console.log(oldValue.height, newValue.height);
 
     //     // Zoom to fit the content
-    //     document.$panzoom.fitToScreen();
+    //     this.$root.$panzoom.fitToScreen();
     //   }
     // }
   },

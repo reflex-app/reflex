@@ -43,6 +43,13 @@ export default {
     ...mapGetters("interactions", ["isInteracting"])
   },
   mounted() {
+    this.$nextTick(() => {
+      if (this.artboards.length) {
+        console.log(this.artboards);
+        this.$emit("fitToScreen");
+      }
+    });
+
     this.selectionInstance = new Selection({
       class: "selection-area", // Class for the selection-area
       selectedClass: "is-selected",
@@ -107,10 +114,14 @@ export default {
   },
   watch: {
     // TODO Consider enabling this once panzoom is a Vue plugin?
-    // artboards: function() {
-    //   // document.$panzoom.fitToScreen();
-    //   // console.log('calling center');
-    // }
+    artboards: function() {
+      this.$nextTick(() => {
+        this.$emit("fitToScreen");
+      });
+
+      // this.$root.$panzoom.fitToScreen();
+      // console.log('calling center');
+    }
   },
   methods: {
     resize(artboard) {
