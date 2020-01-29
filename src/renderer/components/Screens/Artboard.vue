@@ -26,6 +26,7 @@
     <div class="artboard__content">
       <WebPage
         ref="frame"
+        :id="id"
         :allowInteractions="canInteractWithArtboard"
         @loadstart="state.isLoading = true"
         @loadend="state.isLoading = false"

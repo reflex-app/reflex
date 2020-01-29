@@ -1,27 +1,31 @@
 const { ipcRenderer } = require('electron')
 
+const setDOMEffect = require("./lib/effects");
+const eventTypes = require("./lib/eventTypes")
+
+// Add listener for each event type
+for (let i in eventTypes) {
+    console.log('Added listener:', eventTypes[i])
+    document.addEventListener(eventTypes[i], function (e) {
+        ipcRenderer.sendToHost("REFLEX_SYNC", {
+            eventType: eventTypes[i],
+            // DOMElement: '',
+            // scrollOffset: {
+            //     top: 0,
+            //     left: 0
+            // }
+        });
+    });
+}
+
+ipcRenderer.on('REFLEX_SYNC_setDOMEffect', (...args) => {
+    setDOMEffect(...args)
+})
+
 /**
  * Collect and send back information from the document context
  */
 document.addEventListener("DOMContentLoaded", dataCollector);
-
-/**
- * Stream back information inside the document
- */
-document.addEventListener("mouseover", function (e) {
-    // let hoveredEl = e.target;
-    // if (hoveredEl.tagName !== "A" || hoveredEl.tagName !== "A") return
-    ipcRenderer.sendToHost("mouseover-href", e.target);
-});
-
-/**
- * Cleanup before page unloads
- */
-window.addEventListener('beforeunload', unload);
-
-///////////////////////////////
-///////////////////////////////
-///////////////////////////////
 
 function dataCollector() {
     let data = {
@@ -35,6 +39,15 @@ function dataCollector() {
         document.removeEventListener('DOMContentLoaded', dataCollector)
     })
 }
+
+///////////////////////////////
+///////////////////////////////
+///////////////////////////////
+
+/**
+ * Cleanup before page unloads
+ */
+window.addEventListener('beforeunload', unload);
 
 function unload(e) {
     // Cancel the event
