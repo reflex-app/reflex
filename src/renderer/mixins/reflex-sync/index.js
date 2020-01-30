@@ -3,6 +3,7 @@
  * Communicate with renderer process (WebPage.vue) via ipcRenderer.sendToHost()
  */
 const { ipcRenderer } = require('electron')
+const helpers = require('./lib/helpers')
 const setDOMEffect = require("./lib/effects");
 const eventTypes = require("./lib/eventTypes")
 
@@ -18,20 +19,62 @@ function getState() {
 // Add listener for each event type
 for (let i in eventTypes) {
     console.log('Added listener:', eventTypes[i])
-    document.addEventListener(eventTypes[i], () => {
-        
-        const state = getState()
-        // if (!state.isOrigin) {
-            ipcRenderer.sendToHost("REFLEX_SYNC", {
-                eventType: eventTypes[i],
-                // DOMElement: '',
-                scrollOffset: {
-                    top: window.scrollY,
-                    left: window.scrollX
-                }
-            });
-        // }
+    document.addEventListener(eventTypes[i], responder, false);
+}
+
+let responderTimer
+function responder(event) {
+    event = event || window.event;
+
+    const state = getState()
+
+    if (!state.isOrigin) {
+        console.log('is not origin!');
+    }
+
+    // Unbind event temporarily
+    document.removeEventListener(event.type, responder)
+
+    // Serialize the event target
+    // var el = document.createElement("p");
+    // el.appendChild(document.createTextNode("Test"));
+    // console.log(event.target.outerHTML); // <p>Test</p>
+
+    // var parser = new DOMParser();
+    // var doc = parser.parseFromString(event.target, "text/html");
+    // console.log(doc);
+
+    // console.log(document.querySelector(event.target));
+
+
+
+    const eventObj = {
+        type: event.type,
+        target: event.target || e.srcElement
+    }
+
+    // Send event to event bus
+    ipcRenderer.sendToHost("REFLEX_SYNC", {
+        event: eventObj,
+        // DOMElement: '',
+        origin: {
+            scrollHeight: document.documentElement.scrollHeight,
+            offsetHeight: Math.max(document.documentElement.clientWidth, window.innerWidth || 0),
+            viewportHeight: helpers.documentHeight(),
+            scrollOffset: {
+                top: window.scrollY,
+                left: window.scrollX
+            }
+        },
     });
+
+    // Re-bind the event
+    if (typeof (responderTimer) !== 'undefind')
+        clearTimeout(responderTimer);
+
+    responderTimer = setTimeout(function () {
+        document.addEventListener(event.type, responder)
+    }, 10)
 }
 
 // Set DOM effects via the renderer

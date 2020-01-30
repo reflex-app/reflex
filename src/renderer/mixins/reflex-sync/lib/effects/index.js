@@ -1,5 +1,6 @@
 const eventTypes = require("../eventTypes")
 const scrollHandler = require("./scroll")
+const clickHandler = require("./click")
 
 /**
  * 
@@ -10,12 +11,12 @@ const scrollHandler = require("./scroll")
 function setDOMEffect(event, args) {
     console.log('Setting DOM effect', event, args);
 
-    // if (args.eventType === eventTypes['CLICK']) {
-    //     clickHandler()
-    // }
+    if (args.event.type === eventTypes['CLICK']) {
+        clickHandler(args.event)
+    }
 
-    if (args.eventType === eventTypes['SCROLL']) {
-        scrollHandler(args.scrollOffset.left, args.scrollOffset.top)
+    if (args.event.type === eventTypes['SCROLL']) {
+        scrollHandler(args.origin, args.origin.scrollOffset.left, args.origin.scrollOffset.top)
     }
 }
 

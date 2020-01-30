@@ -45,9 +45,9 @@ export default {
       const frame = vm.$refs.frame;
 
       // Listen for incoming events
-      this.$bus.$on("REFLEX_SYNC", (event, args) => {
+      this.$bus.$on("REFLEX_SYNC", (args) => {
         // Don't trigger on the origin
-        if (this.id === args.originID) {
+        if (this.id == args.originID) {
           // TODO Tell the Webview to change its state to origin = true
           frame.send("REFLEX_SYNC_setState", {
             isOrigin: true
@@ -62,7 +62,7 @@ export default {
 
           // Send event back to the frame
           frame.send("REFLEX_SYNC_setDOMEffect", {
-            event,
+            // event,
             scrollOffset: {
               top: 100
             },
@@ -255,10 +255,15 @@ export default {
         const data = event.args[0];
         console.log(data);
 
-        this.$bus.$emit("REFLEX_SYNC", event, {
-          originID: this.id,
-          ...data
-        }); // Send a test event
+        // TODO This can fail if multiple artboards are selected
+        if (this.allowInteractions) {
+          console.log(data.event);
+          
+          this.$bus.$emit("REFLEX_SYNC", {
+            ...data,
+            originID: this.id
+          }); // Send a test event
+        }
       } else if (event.channel === "replyData") {
         const returnedData = event.args[0];
         const title = returnedData.title;
@@ -272,7 +277,7 @@ export default {
           favicon: favicon
         });
       } else if (event.channel === "unload") {
-        // console.log("Unloading...");
+        console.log("Unloading");
         // this.removeListeners();
       } else {
         console.log("Unrecognized channel", event.args[0]);
