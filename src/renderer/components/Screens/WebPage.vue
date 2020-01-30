@@ -46,16 +46,29 @@ export default {
 
       // Listen for incoming events
       this.$bus.$on("REFLEX_SYNC", (event, args) => {
-        if (this.id === args.originID) return false;
-        // Send event back to the frame
-        console.log("REFLEX EVENT:", args);
-        frame.send("REFLEX_SYNC_setDOMEffect", {
-          event,
-          scrollOffset: {
-            top: 100
-          },
-          ...args
-        });
+        // Don't trigger on the origin
+        if (this.id === args.originID) {
+          // TODO Tell the Webview to change its state to origin = true
+          frame.send("REFLEX_SYNC_setState", {
+            isOrigin: true
+          });
+        } else {
+          console.log("REFLEX EVENT:", args);
+
+          // Update state
+          frame.send("REFLEX_SYNC_setState", {
+            isOrigin: false
+          });
+
+          // Send event back to the frame
+          frame.send("REFLEX_SYNC_setDOMEffect", {
+            event,
+            scrollOffset: {
+              top: 100
+            },
+            ...args
+          });
+        }
       });
 
       // Bind event listeners
