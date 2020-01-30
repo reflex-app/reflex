@@ -45,7 +45,7 @@ export default {
       const frame = vm.$refs.frame;
 
       // Listen for incoming events
-      this.$bus.$on("REFLEX_SYNC", (args) => {
+      this.$bus.$on("REFLEX_SYNC", args => {
         // Don't trigger on the origin
         if (this.id == args.originID) {
           // TODO Tell the Webview to change its state to origin = true
@@ -253,12 +253,10 @@ export default {
       if (event.channel === "REFLEX_SYNC") {
         // BUS: https://binbytes.com/blog/create-global-event-bus-in-nuxtjs
         const data = event.args[0];
-        console.log(data);
+        // console.log(data);
 
         // TODO This can fail if multiple artboards are selected
         if (this.allowInteractions) {
-          console.log(data.event);
-          
           this.$bus.$emit("REFLEX_SYNC", {
             ...data,
             originID: this.id

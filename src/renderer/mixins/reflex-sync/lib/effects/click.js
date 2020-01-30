@@ -1,9 +1,12 @@
 function click(event) {
-    const elems = document.getElementsByTagName(event.tagName);
-    const match = elems[event.index];
-
-    console.log(event.tagName, elems, match);
     console.log('click event');
+
+    // event.target.{element, index}
+    // Query all the DOM elements with the same tag name
+    const elems = document.querySelectorAll(event.target.elementTagName);
+
+    // See if any of the DOM elements match 
+    const match = elems[event.target.index];
 
     if (match) {
         if (document.createEvent) {

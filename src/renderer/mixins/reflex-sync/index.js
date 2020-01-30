@@ -46,17 +46,35 @@ function responder(event) {
 
     // console.log(document.querySelector(event.target));
 
+    const getEventTarget = () => {
+        console.log(window.event);
+        console.log(event.target.outerHTML);
 
+        const nodes = document.getElementsByTagName(event.target.tagName)
+        const index = Array.prototype.indexOf.call(nodes, event.target)
+        const eventElement = nodes[index]
+
+        console.log(eventElement);
+
+        if (eventElement) {
+            return {
+                element: eventElement.outerHTML,
+                elementTagName: eventElement.tagName,
+                index: index
+            }
+        } else {
+            return null
+        }
+    }
 
     const eventObj = {
         type: event.type,
-        target: event.target || e.srcElement
+        target: getEventTarget() // Only set for clicks
     }
 
     // Send event to event bus
     ipcRenderer.sendToHost("REFLEX_SYNC", {
         event: eventObj,
-        // DOMElement: '',
         origin: {
             scrollHeight: document.documentElement.scrollHeight,
             offsetHeight: Math.max(document.documentElement.clientWidth, window.innerWidth || 0),
