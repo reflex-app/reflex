@@ -8,8 +8,15 @@ build/*
 .env
 !.gitkeep
 .DS_Store
+
+# NPM
 node_modules
 package-lock.json
+
+# Yarn
+.yarn
+yarn.lock
+.yarnrc.yml
 
 # local env files
 .env.local

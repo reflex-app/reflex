@@ -29,14 +29,14 @@ Check out our [upcoming features](../../projects) and [feature requests](../../i
 
 ## Contributing
 
-Please take a look at the [upcoming features](../../projects) and the [open Github issues](../../issues). Bug reports and feature requests are welcome!
+Please take a look at the [upcoming features](../../projects) and the [open Github issues](../../issues). Pull requests, bug reports and feature requests are welcome!
 
 ---
 
 ## Developing
 
 Requirements:
-- Node and NPM
+- Node and Yarn (1.x)
 
 1. Clone the project to your computer:
     ```sh
@@ -46,17 +46,17 @@ Requirements:
 
 2. Install dependencies:
     ```sh
-    $ npm install
+    $ yarn install
     ```
 
 3. Compile and watch for changes:
     ```sh
-    $ npm run dev
+    $ yarn run dev
     ```
 
 4. To compile for the final app, run the following command: 
     ```sh
-    $ npm run build
+    $ yarn run build
     ```
 
     This will output several files inside of the `build/` folder. You can directly run the `.app` file inside of `build/`.
