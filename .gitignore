@@ -10,6 +10,9 @@ build/*
 .DS_Store
 node_modules
 package-lock.json
+.yarn
+yarn.lock
+.pnp.js
 
 # local env files
 .env.local
