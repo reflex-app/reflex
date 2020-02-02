@@ -7,10 +7,11 @@
   "license": "MIT",
   "main": "./dist/main/index.js",
   "scripts": {
-    "dev": "cross-env-shell NODE_ENV=development node .electron-nuxt/index.js",
-    "build": "cross-env-shell NODE_ENV=production node .electron-nuxt/index.js",
+    "dev": "node .electron-nuxt/check-engines.js && cross-env-shell NODE_ENV=development node .electron-nuxt/index.js",
+    "build": "node .electron-nuxt/check-engines.js && cross-env-shell NODE_ENV=production node .electron-nuxt/index.js",
     "test": "jest",
     "release": "gulp release",
+    "preinstall": "node .electron-nuxt/check-engines.js",
     "postinstall": "electron-builder install-app-deps",
     "storybook": "start-storybook"
   },
@@ -51,7 +52,7 @@
     "babel-preset-vue": "^2.0.2",
     "browser-env": "3.3.0",
     "core-js": "^2.6.11",
-    "cross-env": "^7.0.0",
+    "cross-env": "7.0.0",
     "deepmerge": "4.2.2",
     "devtron": "^1.4.0",
     "electron": "^7.1.11",
