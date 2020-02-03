@@ -156,6 +156,14 @@ export default {
           );
           menu.append(
             new MenuItem({
+              label: artboard.isVisible ? 'Hide' : 'Show',
+              click() {
+                vm.$store.commit("changeArtboardVisibility", artboard);
+              }
+            })
+          );
+          menu.append(
+            new MenuItem({
               label: "Open DevTools",
               click() {
                 artboardFrame.openDevTools();

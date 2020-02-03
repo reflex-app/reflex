@@ -61,6 +61,19 @@ const mutations = {
     state.splice(index, 1)
   },
 
+  /**
+   * Change artboard visibility
+   * @param  {} state
+   * @param  {Object} artboard {id}
+   */
+  changeArtboardVisibility(state, artboard) {
+    // 1. Get the artboard.id
+    const id = artboard.id
+    const index = state.findIndex(obj => obj.id === id)
+    // 2. Change the visibility of just that artboard's is property
+    state[index].isVisible = !artboard.isVisible
+  },
+
   /** Modify an Artboard by Index
    * @param  {} state
    * @param  {Object} artboard {id}

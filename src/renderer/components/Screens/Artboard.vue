@@ -1,5 +1,6 @@
 <template>
   <div
+    v-show="isVisible"
     class="artboard"
     ref="artboard"
     :style="{ height: height+'px', width: width+'px' }"
@@ -49,7 +50,8 @@ export default {
     id: String,
     height: Number,
     width: Number,
-    selectedItems: Array
+    selectedItems: Array,
+    isVisible: Boolean
   },
   data() {
     return {
