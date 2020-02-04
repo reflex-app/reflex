@@ -40,6 +40,15 @@ export default function (store, artboard) {
         })
     );
     menu.append(
+      new MenuItem({
+        label: artboard.isVisible ? 'Hide' : 'Show',
+        click() {
+          console.log(artboard)
+          store.commit("artboards/changeArtboardVisibility", artboard);
+        }
+      })
+    );
+    menu.append(
         new MenuItem({
             label: "Open DevTools",
             click() {

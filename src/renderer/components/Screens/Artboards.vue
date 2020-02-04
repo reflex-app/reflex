@@ -8,6 +8,7 @@
         :index="index"
         :artboard-id="artboard.id"
         :selectedItems="selectedArtboards"
+        :isVisible="artboard.isVisible"
         ref="artboard"
         class="artboard"
         @resize="resize"

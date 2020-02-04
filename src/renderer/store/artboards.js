@@ -55,6 +55,20 @@ export const mutations = {
   },
 
   /**
+   * Change artboard visibility
+   * @param  {} state
+   * @param  {Object} artboard {id}
+   */
+  changeArtboardVisibility(state, artboard) {
+    // 1. Get the artboard.id
+    const id = artboard.id
+    const index = state.list.findIndex(obj => obj.id === id)
+    // 2. Change the visibility of just that artboard's is property
+    state.list[index].isVisible = !artboard.isVisible
+  },
+
+
+  /**
    * Remove an Artboard
    * @param  {} state
    * @param  {} id The ID of the artboard object

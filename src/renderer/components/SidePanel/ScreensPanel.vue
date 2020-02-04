@@ -60,7 +60,8 @@ export default {
       this.$store.dispatch("artboards/addArtboard", {
         title: "Untitled",
         width: 375,
-        height: 667
+        height: 667,
+        isVisible: true
       });
     },
     addDefaultSizes() {
