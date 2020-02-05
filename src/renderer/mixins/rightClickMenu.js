@@ -43,7 +43,6 @@ export default function (store, artboard) {
       new MenuItem({
         label: artboard.isVisible ? 'Hide' : 'Show',
         click() {
-          console.log(artboard)
           store.commit("artboards/changeArtboardVisibility", artboard);
         }
       })
