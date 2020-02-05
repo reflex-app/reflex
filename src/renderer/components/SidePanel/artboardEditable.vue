@@ -172,7 +172,8 @@ export default {
         title: artboard.title,
         id: artboard.id,
         width: artboard.width,
-        height: artboard.height
+        height: artboard.height,
+        isVisible: artboard.isVisible
       });
     },
     hoverStart(id) {
