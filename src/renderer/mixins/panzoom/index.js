@@ -166,6 +166,8 @@ export default class Panzoom {
    * Center the child element relative to it's parent
    */
   center = async () => {
+    console.log('center');
+
     const parentEl = this.parent.getBoundingClientRect()
     const childEl = this.element.getBoundingClientRect()
     const parentHeight = parentEl.height
@@ -177,13 +179,15 @@ export default class Panzoom {
     // 2. Calculate what 50% (center) would be, given the size of the element and its current scale
     // 3. Done
     const scale = this.getTransform().scale
-    await this.setTransform({
+    return await this.setTransform({
       x: (parentWidth - (childWidth * scale)) / 2,
       y: (parentHeight - (childHeight * scale)) / 2 // This works well
     })
   }
 
   scaleToFit = async () => {
+    console.log('scale');
+
     // TODO This can scale beyond the maxZoom point
     const parentEl = this.parent.getBoundingClientRect()
     const childEl = this.element.getBoundingClientRect()
@@ -201,10 +205,12 @@ export default class Panzoom {
     if (childExceedsParent) {
       console.log('exceeds parent');
 
-      await this.setTransform({
+      return await this.setTransform({
         scale: Math.min((parentWidth / childWidth), (parentHeight / childHeight))
       })
     } else {
+      console.log('scale not needed');
+      return
       // TODO Add logic to scale up to a reasonable size
       // await this.setTransform({
       // scale: Math.max((parentWidth / childWidth), (parentHeight / childHeight))
@@ -285,6 +291,9 @@ export default class Panzoom {
    * then centers the canvas on the screen
    */
   fitToScreen = async () => {
+    // this.scaleToFit()
+    
+    // setTimeout(async () => this.scaleToFit)
     await this.center()
     await this.scaleToFit()
   }
@@ -396,39 +405,5 @@ export default class Panzoom {
    */
   panToElement = (el) => {
     pan.panToElement(this, el)
-  }
-}
-
-export const vuePanzoom = {
-  // Inspired by https://snipcart.com/blog/vue-js-plugin
-  install(Vue, opts) {
-    console.log('Installing panzoom plugin!')
-
-    // Register custom directive
-    Vue.directive('panzoom', {
-      bind(container, binding, vnode) {
-
-        // Get the parent and child DOM elements
-        const parentEl = container
-        const childEl = container.firstElementChild
-
-        // console.log(vnode.context.$parent.$root);
-
-        // Install to the component using the directive
-        vnode.context.$parent.$root.$panzoom = new Panzoom(childEl, parentEl, opts)
-        // vnode.context.$panzoom = new Panzoom(childEl, parentEl, opts)
-        console.log('Panzoom installed');
-
-        // window.onNuxtReady((app) => {
-        //   // via https://github.com/nuxt/nuxt.js/issues/1113
-        //   // Bind the parent and child to the Vue plugin data
-        //   app.$panzoom = new Panzoom(parentEl, childEl, {
-        //     startCentered: true
-        //   })
-
-        //   console.log('done binding', app.$panzoom);
-        // })
-      }
-    })
   }
 }

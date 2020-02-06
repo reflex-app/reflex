@@ -2,96 +2,25 @@
   <div id="main-view">
     <SidePanel />
     <Screenshots />
-    <div v-panzoom id="canvas" ref="canvas" :class="{ 'dev-visual-debugger': showCanvasDebugger }">
-      <Artboards
-        ref="artboards"
-        :class="{ 'dev-visual-debugger': showCanvasDebugger }"
-        @fitToScreen="fitToScreen"
-      />
-    </div>
+    <Panzoom id="canvas">
+      <Artboards />
+    </Panzoom>
   </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
-import { ipcRenderer } from "electron";
-import isElectron from "is-electron";
 import Artboards from "@/components/Screens/Artboards";
 import SidePanel from "@/components/SidePanel";
 import Screenshots from "@/components/Screenshot";
-const isDev = require("electron-is-dev");
+import Panzoom from "@/components/Panzoom";
 
 export default {
   name: "MainView",
   components: {
     Artboards,
     SidePanel,
-    Screenshots
-  },
-  data() {
-    return {
-      isDev: isDev,
-      panzoomInstance: null
-    };
-  },
-  computed: {
-    ...mapState({
-      showCanvasDebugger: state => state.dev.showCanvasDebugger
-    })
-  },
-  methods: {
-    enableEventListeners() {
-      // Listen for changes
-      this.panzoomInstance
-        .on("zoomStart", () => {
-          this.$store.commit("interactions/interactionSetState", {
-            key: "isZooming",
-            value: true
-          });
-        })
-        .on("panStart", () => {
-          this.$store.commit("interactions/interactionSetState", {
-            key: "isPanning",
-            value: true
-          });
-        })
-        .on("zoomStop", () => {
-          this.$store.commit("interactions/interactionSetState", {
-            key: "isZooming",
-            value: false
-          });
-        })
-        .on("panStop", () => {
-          this.$store.commit("interactions/interactionSetState", {
-            key: "isPanning",
-            value: false
-          });
-        });
-
-      // Listen for menu bar events
-      // TODO Add tests for these
-      if (isElectron()) {
-        ipcRenderer.on("menu_zoom-to-fit", this.panzoomInstance.fitToScreen);
-        ipcRenderer.on("menu_zoom-in", this.panzoomInstance.zoomIn);
-        ipcRenderer.on("menu_zoom-out", this.panzoomInstance.zoomOut);
-        ipcRenderer.on("menu_show-developer-canvas-debugger", () => {
-          this.$store.commit("dev/toggleCanvasDebugger");
-        });
-      }
-    },
-    fitToScreen() {
-      this.panzoomInstance.fitToScreen();
-    }
-  },
-  created() {},
-  mounted() {
-    this.panzoomInstance = this.$root.$panzoom;
-    console.log(this.panzoomInstance);
-
-    this.$nextTick(() => {
-      // Enable event listeners
-      this.enableEventListeners();
-    });
+    Screenshots,
+    Panzoom
   }
 };
 </script>
