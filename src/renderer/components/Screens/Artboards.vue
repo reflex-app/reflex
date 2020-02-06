@@ -45,9 +45,7 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-      if (this.artboards.length) {
-        // this.$emit("fitToScreen");
-      }
+      if (this.artboards.length) this.fitToScreen();
     });
 
     this.selectionInstance = new Selection({
@@ -116,15 +114,18 @@ export default {
     // TODO Consider enabling this once panzoom is a Vue plugin?
     artboards: function() {
       this.$nextTick(() => {
-        // TODO De-couple this call to the parent
-        console.log('Artboards loaded', this.$parent);
-        this.$parent.fitToScreen()
+        this.fitToScreen();
       });
     }
   },
   methods: {
     resize(artboard) {
       this.$store.commit("artboards/resizeArtboard", artboard);
+    },
+    fitToScreen() {
+      // TODO De-couple this call to the parent
+      console.log("Artboards loaded", this.$parent);
+      this.$parent.fitToScreen();
     }
   },
   beforeDestroy() {
