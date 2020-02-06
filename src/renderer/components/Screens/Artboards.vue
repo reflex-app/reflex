@@ -46,8 +46,7 @@ export default {
   mounted() {
     this.$nextTick(() => {
       if (this.artboards.length) {
-        console.log(this.artboards);
-        this.$emit("fitToScreen");
+        // this.$emit("fitToScreen");
       }
     });
 
@@ -117,11 +116,10 @@ export default {
     // TODO Consider enabling this once panzoom is a Vue plugin?
     artboards: function() {
       this.$nextTick(() => {
-        this.$emit("fitToScreen");
+        // TODO De-couple this call to the parent
+        console.log('Artboards loaded', this.$parent);
+        this.$parent.fitToScreen()
       });
-
-      // this.$root.$panzoom.fitToScreen();
-      // console.log('calling center');
     }
   },
   methods: {
