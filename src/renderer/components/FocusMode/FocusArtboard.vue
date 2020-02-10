@@ -156,14 +156,14 @@ export default {
       } else {
         this.stopDisco();
       }
-    }
+    },
     /**
-     * Watch the VueX discoMode Store
-     * TODO: Resize
+     * Center canvas upon changing screen size
+     * TODO This is not working
      */
     // focusModeActiveScreen: {
     //   deep: true,
-    //   handler: (newValue, oldValue) => {
+    //   handler(newValue, oldValue) {
     //     console.log(oldValue.height, newValue.height);
 
     //     // Zoom to fit the content
