@@ -1,31 +1,31 @@
 <template>
-    <div id="artboard-tabs">
-      <!-- List of Artboards -->
-      <div v-if="artboards.length" class="artboard-tabs__scroll">
-        <artboardEditable data="artboards" />
-      </div>
-
-      <!-- New Artboard -->
-      <div>
-        <Button role="primary" icon="plus" @click="add" class="artboard-tabs__button">New Screen</Button>
-      </div>
-
-      <!-- Show a tip if there's no artboards -->
-      <div v-if="!artboards.length" class="empty-state">
-        <div class="empty-state__text">Click to create a new screen</div>
-      </div>
-
-      <!-- Templates -->
-      <div class="panel-section">
-        <span>Add from template:</span>
-        <select v-model="defaultSizeSelection" @change="addDefaultSizes">
-          <option disabled value>Select template...</option>
-          <option value="basic">Basic</option>
-          <option value="bootstrap">Bootstrap 4</option>
-          <option value="foundation">Foundation 6</option>
-        </select>
-      </div>
+  <div id="artboard-tabs">
+    <!-- List of Artboards -->
+    <div v-if="artboards.length" class="artboard-tabs__scroll">
+      <artboardEditable data="artboards" />
     </div>
+
+    <!-- New Artboard -->
+    <div>
+      <Button role="primary" icon="plus" @click="add" class="artboard-tabs__button">New Screen</Button>
+    </div>
+
+    <!-- Show a tip if there's no artboards -->
+    <div v-if="!artboards.length" class="empty-state">
+      <div class="empty-state__text">Click to create a new screen</div>
+    </div>
+
+    <!-- Templates -->
+    <div class="panel-section">
+      <span>Add from template:</span>
+      <select v-model="defaultSizeSelection" @change="addDefaultSizes">
+        <option disabled value>Select template...</option>
+        <option value="basic">Basic</option>
+        <option value="bootstrap">Bootstrap 4</option>
+        <option value="foundation">Foundation 6</option>
+      </select>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -60,8 +60,7 @@ export default {
       this.$store.dispatch("artboards/addArtboard", {
         title: "Untitled",
         width: 375,
-        height: 667,
-        isVisible: true
+        height: 667
       });
     },
     addDefaultSizes() {
