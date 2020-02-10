@@ -23,11 +23,11 @@ export default class Panzoom {
       isZooming: false,
       isTouching: false
     }
-    this.zoomIncrement = options.zoomIncrement || 0.5
+    this.zoomIncrement = options.zoomIncrement || 0.2
 
     // Default Options
     this.options = options
-    this.options.minZoom = options.minZoom || 0.2
+    this.options.minZoom = options.minZoom || 0.125
     this.options.maxZoom = options.maxZoom || 10
 
     // This will keep track of events
@@ -49,14 +49,8 @@ export default class Panzoom {
   _init = () => {
     // TODO temporary using null to avoid in tests
     const parent_styles = {
-      // position: 'absolute',
       height: '100%',
-      // width: '100%',
-      // display: 'flex',
-      // justifyContent: 'center',
-      // alignItems: 'center',
-      overflow: 'hidden',
-      // cursor: 'grab'
+      overflow: 'hidden'
     }
 
     // Apply initial styles to parent
@@ -71,8 +65,6 @@ export default class Panzoom {
       willChange: 'transform',
       display: 'inline-block',
       // transition: 'transform 150ms',
-      // height: '100%',
-      // width: '100%'
     }
 
     // Apply initial styles to child
@@ -292,7 +284,7 @@ export default class Panzoom {
    */
   fitToScreen = async () => {
     // this.scaleToFit()
-    
+
     // setTimeout(async () => this.scaleToFit)
     await this.center()
     await this.scaleToFit()
