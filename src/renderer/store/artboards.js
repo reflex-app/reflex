@@ -1,23 +1,9 @@
 const uuid = require('uuid/v1')
 
 // All artboards on the screen
-// const state = []
 export const state = () => ({
   list: []
 })
-
-/**
- * Mock:
- * state = [
- *    { id: ~uuid~,
- *      title: 'Mobile',
- *      height: 300,
- *      width: 400,
- *      x: 0,
- *      y: 0
- *    }
- * ]
- */
 
 export const mutations = {
   /**
@@ -26,8 +12,13 @@ export const mutations = {
    * @param  {} artboard
    */
   addArtboard(state, artboard) {
-    artboard.id = uuid()
-    state.list.push(artboard)
+    state.list.push({
+      title: artboard.title || "Undefined",
+      width: artboard.width || 375,
+      height: artboard.height || 667,
+      isVisible: artboard.isVisible || true,
+      id: uuid()
+    })
   },
 
   /**
@@ -118,10 +109,14 @@ export const mutations = {
 }
 
 export const actions = {
-  addArtboard({ commit }, artboard) {
+  addArtboard({
+    commit
+  }, artboard) {
     commit('addArtboard', artboard)
   },
-  deleteArtboard({ commit }, artboard) {
+  deleteArtboard({
+    commit
+  }, artboard) {
     if (
       confirm(
         `Are you sure you want to delete the ${artboard.title} screen size? Click "OK" to delete.`
@@ -130,14 +125,18 @@ export const actions = {
       commit("removeArtboard", artboard.id);
     }
   },
-  async addMultipleArtboards({ commit }, payload) {
+  async addMultipleArtboards({
+    commit
+  }, payload) {
     const artboards = payload.data
 
     for (const i in artboards) {
       commit('addArtboard', artboards[i])
     }
   },
-  async duplicateArtboard({ commit }, payload) {
+  async duplicateArtboard({
+    commit
+  }, payload) {
     const newId = uuid()
 
     if (newId === payload.id) throw new Error('Failed to generate new ID')
@@ -151,7 +150,9 @@ export const actions = {
       newArtboard: newArtboard
     })
   },
-  setArtboards({ commit }, payload) {
+  setArtboards({
+    commit
+  }, payload) {
     commit('set', payload)
   }
 }
