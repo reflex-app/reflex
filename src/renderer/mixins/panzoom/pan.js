@@ -1,13 +1,8 @@
 let initialX
-
 let initialY
-
 let currentX
-
 let currentY
-
 let xOffset = 0
-
 let yOffset = 0
 
 export function start(e, context) {
@@ -29,12 +24,7 @@ export function start(e, context) {
     initialY = e.clientY - yOffset
   }
 
-  // Start kinetic
-  // console.log(context);
-  // context.kinetic.start();
-
   // Emit the event
-  // TODO: emit an event
   context._emit('panStart', e)
 
   // Update the state
@@ -53,26 +43,15 @@ export function pan(e, context) {
       currentY = e.clientY - initialY
     }
 
+    // Update internal state
     xOffset = currentX
     yOffset = currentY
 
-    // Update the matrix
-    const matrix = context.getTransform()
-
-    // Update the x, y indexes
-    // [0,1,2,3,4,5]
-    //          ^ ^
-    matrix.x = currentX
-    matrix.y = currentY
-
     // NEW API 
     context.setTransform({
-      x: matrix.x,
-      y: matrix.y
+      x: currentX,
+      y: currentY
     })
-
-    // Start kinetic
-    // context.kinetic.activate()
   }
 }
 
@@ -93,14 +72,10 @@ export function end(e, context) {
   }
 
   // Emit the event
-  // TODO: emit an event
   context._emit('panStop', e)
 
   // Update state
   context.state.isPanning = false
-
-  // End kinetic
-  // context.kinetic.stop()
 }
 
 export function panXY(context, event) {
@@ -110,11 +85,6 @@ export function panXY(context, event) {
 
     // Update the matrix
     const matrix = context.getTransform()
-
-    // Update the x, y indexes
-    // [0,1,2,3,4,5]
-    //          ^ ^
-    // @TODO: This isn't updating in the parent context — causing flickering
     matrix.x -= event.deltaX
     matrix.y -= event.deltaY
 

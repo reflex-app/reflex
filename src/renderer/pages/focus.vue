@@ -4,9 +4,9 @@
       <SidePanel />
       <Screenshots />
       <div class="focus-view__content">
-        <div id="canvas" ref="canvas">
+        <Panzoom id="canvas">
           <FocusArtboard ref="artboards" />
-        </div>
+        </Panzoom>
         <!-- <DiscoSwitch /> -->
         <SizeShifter />
         <!-- <DevToolsView /> -->
@@ -16,19 +16,18 @@
 </template>
 
 <script>
-import { ipcRenderer } from "electron";
-import isElectron from "is-electron";
+import Panzoom from "@/components/Panzoom";
 import SidePanel from "@/components/SidePanel";
 import Screenshots from "@/components/Screenshot";
 import FocusArtboard from "@/components/FocusMode/FocusArtboard";
 import SizeShifter from "@/components/FocusMode/SizeShifter";
 import DiscoSwitch from "@/components/FocusMode/DiscoSwitch";
 import DevToolsView from "@/components/DevToolsView";
-const isDev = require("electron-is-dev");
 
 export default {
   name: "FocusView",
   components: {
+    Panzoom,
     FocusArtboard,
     SidePanel,
     Screenshots,
@@ -37,61 +36,11 @@ export default {
     DevToolsView
   },
   data() {
-    return {
-      isDev: isDev
-    };
+    return {};
   },
-  methods: {
-    enableEventListeners() {
-      this.panzoomInstance
-        .on("zoomStart", () => {
-          this.$store.commit("interactions/interactionSetState", {
-            key: "isZooming",
-            value: true
-          });
-        })
-        .on("panStart", () => {
-          this.$store.commit("interactions/interactionSetState", {
-            key: "isPanning",
-            value: true
-          });
-        })
-        .on("zoomStop", () => {
-          this.$store.commit("interactions/interactionSetState", {
-            key: "isZooming",
-            value: false
-          });
-        })
-        .on("panStop", () => {
-          this.$store.commit("interactions/interactionSetState", {
-            key: "isPanning",
-            value: false
-          });
-        });
-
-      // Listen for menu bar events
-      // TODO Add tests for these
-      if (isElectron()) {
-        ipcRenderer.on("menu_zoom-to-fit", this.$root.$panzoom.fitToScreen);
-        ipcRenderer.on("menu_zoom-in", this.$root.$panzoom.zoomIn);
-        ipcRenderer.on("menu_zoom-out", this.$root.$panzoom.zoomOut);
-        ipcRenderer.on("menu_show-developer-canvas-debugger", () => {
-          this.$store.commit("dev/toggleCanvasDebugger");
-        });
-      }
-
-      // Listen for View to be destroyed
-      this.$once("hook:beforeDestroy", () => {
-        // TODO remove listeners
-      });
-    }
-  },
+  methods: {},
   mounted: function() {
     this.panzoomInstance = this.$root.$panzoom;
-    console.log(this.panzoomInstance);
-
-    // Add event listeners
-    this.$nextTick(this.enableEventListeners);
   }
 };
 </script>
@@ -110,7 +59,7 @@ export default {
     100vh - #{$gui-title-bar-height}
   ); // hard-coded height of toolbar
   position: relative;
-  display: flex;
+  // display: flex;
 }
 
 .focus-view__content {

@@ -79,8 +79,6 @@ export default {
       }
     },
     fitToScreen() {
-      console.log("event called");
-
       this.panzoomInstance.fitToScreen();
     }
   }

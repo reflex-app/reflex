@@ -56,7 +56,7 @@ export default {
 
   methods: {
     clearAllSelected() {
-      this.$store.dispatch("artboards/selectedArtboardsEmpty");
+      this.$store.dispatch("selectedArtboards/selectedArtboardsEmpty");
     },
 
     async screenshotAll() {

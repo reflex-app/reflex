@@ -95,10 +95,10 @@ function normalZoom(context, args) {
 
   switch (args) {
     case 'in':
-      nextScale = currentScale / context.zoomIncrement
+      nextScale = currentScale / (context.zoomIncrement)
       break
     case 'out':
-      nextScale = currentScale * context.zoomIncrement
+      nextScale = currentScale * (context.zoomIncrement)
       break
   }
 
