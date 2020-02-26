@@ -2,7 +2,6 @@ import {
   mount,
   createLocalVue
 } from '@vue/test-utils'
-import store from '@/store'
 import ComponentWithVuex from '@/components/Screens/Artboards.vue'
 
 const localVue = createLocalVue()
@@ -10,7 +9,6 @@ const appName = 'Reflex'
 
 describe('empty state', () => {
   const wrapper = mount(ComponentWithVuex, {
-    store,
     localVue
   })
 
