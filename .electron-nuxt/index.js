@@ -19,11 +19,11 @@ const launcher = new ElectronLauncher({
 })
 
 // Normal CLI usage: `electron-builder --mac --windows`
-require('dotenv').config()
+// require('dotenv').config()
 const builder = new ElectronBuilder({
   cliOptions: {
     config: path.join(__dirname, '../builder.config.js'),
-    publish: 'always',
+    // publish: 'always',
     // targets: require('electron-builder').Platform.WINDOWS.createTarget()
   }
 })
