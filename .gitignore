@@ -15,7 +15,6 @@ package-lock.json
 
 # Yarn
 .yarn
-yarn.lock
 .yarnrc.yml
 
 # local env files
