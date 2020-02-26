@@ -5,6 +5,9 @@ const windowsOS = {
     icon: ICONS_DIR + 'icon.ico',
     publisherName: 'Nick Wittwer',
     target: 'nsis'
+  },
+  nsis: {
+    differentialPackage: true
   }
 }
 
