@@ -25,6 +25,7 @@
     </div>
     <div class="artboard__keypoints"></div>
     <div class="artboard__content">
+      <div id="device-mockup"></div>
       <WebPage
         ref="frame"
         :allowInteractions="canInteractWithArtboard"
@@ -263,6 +264,10 @@ export default {
 <style lang="scss" scoped>
 @import "@/scss/_variables";
 $artboard-handle-height: 1rem;
+
+#device-mockup {
+  background-image: url("~@/assets/devices/iphone-11-pro.png");
+}
 
 .artboard {
   padding: 1rem;

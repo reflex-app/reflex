@@ -18,9 +18,7 @@ export default {
     iconHandler() {
       try {
         const iconFile = require(`@/assets/icons/${this.name}.svg`);
-        if (iconFile) {
-          return iconFile;
-        }
+        return iconFile;
       } catch (e) {
         throw new Error(`Icon not found: ${this.name}`);
       }
@@ -34,13 +32,13 @@ export default {
         case "light":
           return "icon--light";
           break;
-        
+
         case "accent":
           return "icon--accent";
           break;
 
         default:
-          throw new Error('Color not found')
+          throw new Error("Color not found");
           break;
       }
     }
