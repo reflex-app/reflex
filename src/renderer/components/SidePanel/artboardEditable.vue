@@ -127,10 +127,10 @@ export default {
 
       // Save to Store
       this.$store.commit("artboards/updateArtboardAtIndex", {
-        id: this.localFormData.id,
-        height: this.localFormData.height || 0,
-        width: this.localFormData.width || 0,
-        title: this.localFormData.title || "Untitled"
+        ...artboard,
+        width: Number(this.localFormData.width),
+        height: Number(this.localFormData.height),
+        title: this.localFormData.title,
       });
     },
     edit(id) {
