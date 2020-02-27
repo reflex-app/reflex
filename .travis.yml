@@ -17,14 +17,14 @@ cache:
 
 before_cache:
   - rm -rf $HOME/.cache/electron-builder/wine
-
+  
 jobs:
   include:
     - stage: Test
       script:
         - yarn test
     - stage: Deploy Windows & Mac
-      if: tag IS present
+      if: tag IS present # Only triggered if there is a Git tag for the version
       os: osx
       osx_image: xcode10.1
       script:
@@ -32,9 +32,9 @@ jobs:
       before_cache:
         - rm -rf $HOME/.cache/electron-builder/wine
 
+before_deploy:
 # Codesign on Mac
 # https://www.update.rocks/blog/osx-signing-with-travis/
-before_deploy:
   - if [ "$TRAVIS_OS_NAME" = osx ]; then chmod +x add-osx-cert.sh; fi
   - if [ "$TRAVIS_OS_NAME" = osx ]; then ./scripts/add-osx-cert.sh; fi
 
