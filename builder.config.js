@@ -21,7 +21,8 @@ const linuxOS = {
 const macOS = {
   mac: {
     target: 'dmg',
-    icon: ICONS_DIR + 'icon.icns'
+    icon: ICONS_DIR + 'icon.icns',
+    publish: ['github']
   },
   dmg: {
     contents: [{
