@@ -18,6 +18,20 @@ cache:
 before_cache:
   - rm -rf $HOME/.cache/electron-builder/wine
 
+jobs:
+  include:
+    - stage: Test
+      script:
+        - yarn test
+    - stage: Deploy Windows & Mac
+      if: tag IS present
+      os: osx
+      osx_image: xcode10.1
+      script:
+        - yarn run release --mac --win
+      before_cache:
+        - rm -rf $HOME/.cache/electron-builder/wine
+
 # Codesign on Mac
 # https://www.update.rocks/blog/osx-signing-with-travis/
 before_deploy:

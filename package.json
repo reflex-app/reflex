@@ -10,7 +10,8 @@
     "dev": "node .electron-nuxt/check-engines.js && cross-env-shell NODE_ENV=development node .electron-nuxt/index.js",
     "build": "node .electron-nuxt/check-engines.js && cross-env-shell NODE_ENV=production node .electron-nuxt/index.js",
     "test": "jest",
-    "release": "gulp release",
+    "release": "electron-builder -p always",
+    "releaseGulp": "gulp release",
     "preinstall": "node .electron-nuxt/check-engines.js",
     "postinstall": "electron-builder install-app-deps",
     "storybook": "start-storybook"
