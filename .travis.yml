@@ -1,4 +1,5 @@
 # Building & releasing Electron w/ Travis https://studiolacosanostra.github.io/2019/03/26/Automate-electron-app-release-build-on-github-with-Travis-CI/
+# Env variables for electron-builder codesigning https://www.electron.build/code-signing
 
 language: node_js
 node_js: "10"
@@ -20,19 +21,17 @@ jobs:
     - stage: Test
       script:
         - yarn test
-    - stage: Deploy Windows & Mac
-      # if: tag IS present # Only triggered if there is a Git tag for the version
+    - stage: Build Mac and Deploy to Github Release
       script:
         - yarn run build
-        # - yarn run release --mac --win
       before_cache:
         - rm -rf $HOME/.cache/electron-builder/wine
 
-before_deploy:
-# Codesign on Mac
-# https://www.update.rocks/blog/osx-signing-with-travis/
-  - if [ "$TRAVIS_OS_NAME" = osx ]; then chmod +x add-osx-cert.sh; fi
-  - if [ "$TRAVIS_OS_NAME" = osx ]; then ./scripts/add-osx-cert.sh; fi
+# before_deploy:
+# # Codesign on Mac
+# # https://www.update.rocks/blog/osx-signing-with-travis/
+#   - if [ "$TRAVIS_OS_NAME" = osx ]; then chmod +x add-osx-cert.sh; fi
+#   - if [ "$TRAVIS_OS_NAME" = osx ]; then ./scripts/add-osx-cert.sh; fi
 
 branches:
   except:
