@@ -3,37 +3,40 @@
 //   Panzoom
 // } from '../index'
 
-// describe('panzoom:api', () => {
-//   const setup = () => {
-//     document.body.innerHTML = '' // empty
-//     document.body.innerHTML = `
-//     <div id="parent">
-//       <div id="child"></div>
-//     </div>
-//   `
-//     return {
-//       parent: document.querySelector('#parent'),
-//       child: document.querySelector('#child')
-//     }
-//   }
+describe('panzoom:api', () => {
+  test('placeholder', () => {})
 
-//   it('emits panStart event', done => {
-//     const {
-//       parent,
-//       child
-//     } = setup()
+  
+  // const setup = () => {
+  //   document.body.innerHTML = '' // empty
+  //   document.body.innerHTML = `
+  //   <div id="parent">
+  //     <div id="child"></div>
+  //   </div>
+  // `
+  //   return {
+  //     parent: document.querySelector('#parent'),
+  //     child: document.querySelector('#child')
+  //   }
+  // }
 
-//     // Initialize Panzoom
-//     const instance = new Panzoom(parent, child, {
-//       startCentered: true
-//     })
+  // it('emits panStart event', done => {
+  //   const {
+  //     parent,
+  //     child
+  //   } = setup()
 
-//     // Event listener
-//     instance.on('panStart', () => {
-//       done()
-//     })
+  //   // Initialize Panzoom
+  //   const instance = new Panzoom(parent, child, {
+  //     startCentered: true
+  //   })
 
-//     // Trigger a pan
-//     pan.start({}, instance)
-//   })
-// })
+  //   // Event listener
+  //   instance.on('panStart', () => {
+  //     done()
+  //   })
+
+  //   // Trigger a pan
+  //   pan.start({}, instance)
+  // })
+})
