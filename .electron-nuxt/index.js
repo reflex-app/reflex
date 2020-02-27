@@ -23,8 +23,7 @@ const launcher = new ElectronLauncher({
 const builder = new ElectronBuilder({
   cliOptions: {
     config: path.join(__dirname, '../builder.config.js'),
-    // publish: 'always',
-    // targets: require('electron-builder').Platform.WINDOWS.createTarget()
+    publish: 'always'
   }
 })
 

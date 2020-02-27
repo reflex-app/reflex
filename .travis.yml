@@ -23,7 +23,8 @@ jobs:
       os: osx
       osx_image: xcode10.2
       script:
-        - yarn run release --mac --win
+        - yarn run build
+        # - yarn run release --mac --win
       before_cache:
         - rm -rf $HOME/.cache/electron-builder/wine
 
