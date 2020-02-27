@@ -28,6 +28,7 @@
       <div id="device-mockup"></div>
       <WebPage
         ref="frame"
+        :id="id"
         :allowInteractions="canInteractWithArtboard"
         @loadstart="state.isLoading = true"
         @loadend="state.isLoading = false"
