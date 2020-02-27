@@ -266,7 +266,17 @@ export default {
 $artboard-handle-height: 1rem;
 
 #device-mockup {
+  position: absolute;
+  top: -30px;
+  left: -30px;
   background-image: url("~@/assets/devices/iphone-11-pro.png");
+  height: 3460px;
+  width: 1734px;
+  transform: scale(0.23);
+  transform-origin: top left;
+  z-index: 1;
+  pointer-events: none;
+
 }
 
 .artboard {
