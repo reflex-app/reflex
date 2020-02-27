@@ -61,13 +61,17 @@
           <div>{{ artboard.width }} x {{ artboard.height }}</div>
         </div>
         <div class="artboard-tab__container-right">
+          <div>
+            <Icon v-if="artboard.isVisible" name="visible" />
+            <Icon v-if="!artboard.isVisible" name="hidden" />
+          </div>
           <Button role="secondary" @click="edit(artboard.id)">Edit</Button>
           <!-- <Button
             role="ghost"
             icon="delete"
             @click.stop="remove(artboard.title, artboard.id)"
             title="Delete"
-          ></Button> -->
+          ></Button>-->
         </div>
       </div>
     </div>
@@ -110,6 +114,9 @@ export default {
       set(value) {
         this.$store.dispatch("artboards/setArtboards", value);
       }
+    },
+    artboardVisibility(bool) {
+      return bool ? "visible" : "hidden";
     }
   },
   methods: {
@@ -172,7 +179,8 @@ export default {
         title: artboard.title,
         id: artboard.id,
         width: artboard.width,
-        height: artboard.height
+        height: artboard.height,
+        isVisible: artboard.isVisible
       });
     },
     hoverStart(id) {

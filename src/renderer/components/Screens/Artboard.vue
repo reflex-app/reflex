@@ -1,5 +1,6 @@
 <template>
   <div
+    v-show="isVisible"
     class="artboard"
     ref="artboard"
     :artboard-id="id"
@@ -56,7 +57,8 @@ export default {
     id: String,
     height: Number,
     width: Number,
-    selectedItems: Array
+    selectedItems: Array,
+    isVisible: Boolean
   },
   data() {
     return {
@@ -119,7 +121,8 @@ export default {
         title: this.title,
         id: this.id,
         width: this.width,
-        height: this.height
+        height: this.height,
+        isVisible: this.isVisible
       });
     },
     // Limits the size of an artboard

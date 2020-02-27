@@ -11,7 +11,7 @@ Reflex is a free, open-source Mac app that makes it easy to see how responsive w
 
 ## Download
 
-**[Download latest version (MacOS only)](https://github.com/nwittwer/Reflex/releases/latest)**
+**[Download latest version (MacOS)](https://github.com/nwittwer/Reflex/releases/latest)**
 
 [Having issues installing?](#faq)
 
@@ -23,20 +23,27 @@ Reflex is a free, open-source Mac app that makes it easy to see how responsive w
 - Synchronized interactions (scrolling, clicks, form inputs)
 - Chromium DevTools built-in
 
-Check out our [upcoming features](../../projects) and [feature requests](../../issues&q=label%3Afeature-request). If you have an idea that you didn't see it in either of those places, you can create a [new Github issue](../../issues) for it!
+Check out our [upcoming features](../../projects) and [feature requests](../../issues&q=label%3Afeature-request). If you have an idea that you didn't see it in either of those places, you can [create a new issue](../../issues) for it!
 
 ---
 
 ## Contributing
 
-Please take a look at the [upcoming features](../../projects) and the [open Github issues](../../issues). Bug reports and feature requests are welcome!
+This project is made possible by open-source contributors: [View Contributors](../../graphs/contributors)
+
+If you would like to add to the project, take a look at the [planned projects page](../../projects) and the [open issues](../../issues). Pull requests, bug reports and feature requests are welcome!
 
 ---
 
 ## Developing
 
 Requirements:
-- Node and NPM
+- Node
+- Yarn (1.x)
+
+Please note: The `dev` branch represents the latest works-in-progress, and should always be used for new development/pull requests. The `master` branch holds the latest public release code.
+
+### Getting Started
 
 1. Clone the project to your computer:
     ```sh
@@ -46,28 +53,30 @@ Requirements:
 
 2. Install dependencies:
     ```sh
-    $ npm install
+    $ yarn install
     ```
 
 3. Compile and watch for changes:
     ```sh
-    $ npm run dev
+    $ yarn run dev
     ```
 
-4. To compile for the final app, run the following command: 
+### Building
+
+1. To compile an executable app, run the following command: 
     ```sh
-    $ npm run build
+    $ yarn run build
     ```
 
-    This will output several files inside of the `build/` folder. You can directly run the `.app` file inside of `build/`.
+    This will output several files inside of the `build/` folder. You can directly run the `.app` or `.exe` file inside of `build/`.
 
 ### Debugging
 
-`CMD/CTRL + Shift + I` will open the Chrome DevTools.
+`CMD/CTRL + Shift + I` will open the Chrome DevTools inside of the Electron instance.
 
 ### Technologies used
 
-- [Vue (2)](https://vuejs.org/)
+- [Vue 2.x](https://vuejs.org/)
 - [Electron](https://electronjs.org/)
 - [BrowserSync](https://www.browsersync.io/)
 
