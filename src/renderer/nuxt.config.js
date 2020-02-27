@@ -13,6 +13,7 @@ module.exports = {
   loading: false,
   plugins: [
     { src: '~/plugins/vuex-persist.js', ssr: false },
+    { src: '~/plugins/eventBus.js', ssr: false },
     { src: '~/plugins/globalComponents.js', ssr: false }
   ]
 };
