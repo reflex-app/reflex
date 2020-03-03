@@ -1,4 +1,6 @@
-const uuid = require('uuid/v1')
+import {
+  v4 as uuid
+} from "uuid"
 
 // All artboards on the screen
 export const state = () => ({

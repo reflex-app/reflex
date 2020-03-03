@@ -1,5 +1,7 @@
 // TODO This is almost exactly the same as the artboards module, consider making reusable
-const uuid = require('uuid/v1')
+import {
+  v4 as uuid
+} from "uuid"
 
 // All artboards on the screen
 // const state = []
