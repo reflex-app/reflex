@@ -4,7 +4,7 @@
     class="artboard"
     ref="artboard"
     :artboard-id="id"
-    :style="{ height: height+'px', width: width+'px' }"
+    :style="{ minHeight: height+'px', minWidth: width+'px' }"
     :class="{ 'is-hover': isHover, 'is-selected': isSelected }"
     @click.right="rightClickHandler()"
   >
@@ -25,14 +25,15 @@
     </div>
     <div class="artboard__keypoints"></div>
     <div class="artboard__content">
-      <div id="device-mockup"></div>
-      <WebPage
-        ref="frame"
-        :id="id"
-        :allowInteractions="canInteractWithArtboard"
-        @loadstart="state.isLoading = true"
-        @loadend="state.isLoading = false"
-      />
+      <DeviceMockup :height="height" :width="width">
+        <WebPage
+          ref="frame"
+          :id="id"
+          :allowInteractions="canInteractWithArtboard"
+          @loadstart="state.isLoading = true"
+          @loadend="state.isLoading = false"
+        />
+      </DeviceMockup>
       <div class="artboard__handles">
         <div class="handle__bottom" @mousedown="triggerResize" title="Resize" />
       </div>
@@ -45,13 +46,15 @@ import { remote } from "electron";
 const { Menu, MenuItem } = remote;
 import isElectron from "is-electron";
 import { mapState, mapGetters } from "vuex";
-import WebPage from "./WebPage.vue";
 import rightClickMenu from "@/mixins/rightClickMenu.js";
+import WebPage from "./WebPage.vue";
+import DeviceMockup from "@/components/Mockups/deviceMockup.vue";
 
 export default {
   name: "Artboard",
   components: {
-    WebPage
+    WebPage,
+    DeviceMockup
   },
   props: {
     title: String,
@@ -266,30 +269,15 @@ export default {
 @import "@/scss/_variables";
 $artboard-handle-height: 1rem;
 
-#device-mockup {
-  position: absolute;
-  top: -30px;
-  left: -30px;
-  background-image: url("~@/assets/devices/iphone-11-pro.png");
-  height: 3460px;
-  width: 1734px;
-  transform: scale(0.23);
-  transform-origin: top left;
-  z-index: 1;
-  pointer-events: none;
-
-}
-
 .artboard {
   padding: 1rem;
   padding-right: 1.5rem;
   padding-bottom: $artboard-handle-height * 3;
   border: 3px solid transparent;
   position: relative;
-  display: block;
-  flex: 1 0 auto;
-  height: 1200px;
-  width: 300px;
+  display: inline-block;
+  // height: 1200px;
+  // width: 300px;
   margin: 0 3.5rem;
 
   &:first-child {
