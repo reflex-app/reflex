@@ -39,15 +39,47 @@ export default {
   },
   mounted() {
     const vm = this;
+    const frame = this.$refs.frame;
 
-    // Once the WebView is rendered
+    // Wait for Webview to be ready
+    frame.addEventListener("dom-ready", ready);
+
+    // Load the site
     this.$nextTick(() => {
-      const frame = vm.$refs.frame;
+      // Load the <webview> the initial time
+      vm.loadSite();
+
+      // Watch for History actions
+      // TODO Better way to watch for VueX actions?
+      vm.unsubscribeAction = vm.$store.subscribeAction((action, state) => {
+        switch (action.type) {
+          case "history/reload":
+            vm.reload();
+            break;
+
+          case "history/back":
+            vm.back();
+            break;
+
+          case "history/forward":
+            vm.forward();
+            break;
+
+          default:
+            break;
+        }
+      });
+    });
+
+    function ready() {
+      console.log("webview ready");
+
+      // Once the WebView is rendered
 
       // Listen for incoming events
-      this.$bus.$on("REFLEX_SYNC", args => {
+      vm.$bus.$on("REFLEX_SYNC", args => {
         // Don't trigger on the origin
-        if (this.id == args.originID) {
+        if (vm.id == args.originID) {
           // TODO Tell the Webview to change its state to origin = true
           frame.send("REFLEX_SYNC_setState", {
             isOrigin: true
@@ -71,40 +103,14 @@ export default {
         }
       });
 
-      // Bind event listeners
-      this.bindEventListeners();
-
-      // Load the <webview> the initial time
-      this.loadSite();
-
-      // Watch for History actions
-      // TODO Better way to watch for VueX actions?
-      this.unsubscribeAction = this.$store.subscribeAction((action, state) => {
-        switch (action.type) {
-          case "history/reload":
-            this.reload();
-            break;
-
-          case "history/back":
-            this.back();
-            break;
-
-          case "history/forward":
-            this.forward();
-            break;
-
-          default:
-            break;
-        }
-      });
-    });
+      // Remove listener
+      frame.removeEventListener("dom-ready", ready);
+    }
   },
   beforeDestroy() {
-    // Unbind any listeners
-    this.unbindEventListeners();
-
     // Unsubscribe from Store
-    this.unsubscribeAction();
+    // TODO Unsubscribe from Store actions when webpage is removed
+    // this.unsubscribeAction();
   },
   watch: {
     url: {
@@ -124,16 +130,6 @@ export default {
     }
   },
   methods: {
-    bindEventListeners() {
-      // Remove navigation event
-      const frame = this.$refs.frame;
-      frame.addEventListener("will-navigate", this.willNavigate);
-    },
-    unbindEventListeners() {
-      // Remove navigation event
-      const frame = this.$refs.frame;
-      frame.removeEventListener("will-navigate", this.willNavigate);
-    },
     reload() {
       // Reload the current page
       this.loadSite({
@@ -250,6 +246,8 @@ export default {
       frame.send("requestData");
     },
     onMessageReceived(event) {
+      console.log(event);
+
       if (event.channel === "REFLEX_SYNC") {
         // BUS: https://binbytes.com/blog/create-global-event-bus-in-nuxtjs
         const data = event.args[0];
@@ -278,7 +276,9 @@ export default {
         console.log("Unloading");
         // this.removeListeners();
       } else {
-        console.log("Unrecognized channel", event.args[0]);
+        console.log(
+          `Unrecognized channel "${event.channel}": ${event.args[0]}`
+        );
       }
     },
     loadstop() {
