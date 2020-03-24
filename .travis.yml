@@ -3,11 +3,19 @@
 
 language: node_js
 node_js: "10"
-os: osx
-osx_image: xcode10.2
 
+# Multiple operating systems
+# https://docs.travis-ci.com/user/multi-os/
+os:
+  - linux
+  - osx
+    osx_image: xcode10.2
+# os: osx
+# osx_image: xcode10.2
+
+# Remove Wine for Windows build
 before_cache:
-  - rm -rf $HOME/.cache/electron-builder/wine
+  - if ["$TRAVIS_OS_NAME" = "linux"]; rm -rf $HOME/.cache/electron-builder/wine; fi
 
 cache:
   yarn: true
@@ -24,25 +32,28 @@ branches:
   # - master
   # - dev
 
+# Staged jobs
+# https://docs.travis-ci.com/user/build-stages/#naming-your-jobs-within-build-stages
 jobs:
   include:
-    - stage: "Run Tests"
+    - stage: "Tests"
+      os: linux
       script:
         - yarn test
 
     - stage: "Build"
-    - name: "Mac"
-      if: (branch != master) AND (branch != stable)
+      name: "Mac"
+      os: osx
+      if: branch != master
       script: yarn run build
-      before_cache: rm -rf $HOME/.cache/electron-builder/wine
     - name: "Windows"
+      os: linux
       script: yarn run build
-      before_cache: rm -rf $HOME/.cache/electron-builder/wine
 
     - stage: "Release to Github"
-      if: (branch = master) OR (branch = stable)
+      if: branch = master
+      os: osx
       script: yarn run release
-      before_cache: rm -rf $HOME/.cache/electron-builder/wine
 
 
     # - stage: Build Mac

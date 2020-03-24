@@ -74,12 +74,14 @@ Please note: The `dev` branch represents the latest works-in-progress, and shoul
 
 ### Release
 
-`master` OR `stable` branch -> TravisCI -> Build app -> Codesign & Notarize (Mac only) -> Draft new/update existing Github Release
+Workflow: PR to `master` branch -> TravisCI -> Build app -> Codesign & Notarize (Mac only) -> Github Release
 
-1. Run `yarn run release`
+1. Create a PR to `master` branch
+    - TravisCI will run `yarn run release`
     - This adds a `process.env.RELEASE` env variable. 
     - The presence of the `RELEASE` flag will allow notarization of the Mac app with `scripts/notarize.js`.
-    - The presence of the `RELEASE` flag will publish artifacts to Github
+    - The presence of the `RELEASE` flag will publish artifacts to Github. It will draft new release or update existing artifacts.
+2. If everything worked, merge PR into `master` and publish Github Release
 
 Env vars required:
 - CSC_LINK: base64-encoded .p12 file
