@@ -37,6 +37,8 @@ If you would like to add to the project, take a look at the [planned projects pa
 
 ## Developing
 
+[![Build Status](https://travis-ci.com/nwittwer/reflex.svg?branch=dev)](https://travis-ci.com/nwittwer/reflex)
+
 Requirements:
 - Node
 - Yarn (1.x)
