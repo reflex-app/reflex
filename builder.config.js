@@ -41,13 +41,6 @@ const windowsOS = {
   }
 }
 
-// const linuxOS = {
-//   linux: {
-//     icon: ICONS_DIR,
-//     target: 'deb'
-//   }
-// }
-
 module.exports = {
   asar: true,
   productName: require('./package.json').productName,
@@ -68,7 +61,6 @@ module.exports = {
       to: 'dist/renderer/'
     }
   ],
-  ...windowsOS,
-  ...macOS
-  // ...linuxOS,
+  ...macOS,
+  ...windowsOS
 }
