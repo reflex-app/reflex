@@ -40,12 +40,12 @@ const windowsOS = {
   }
 }
 
-const linuxOS = {
-  linux: {
-    icon: ICONS_DIR,
-    target: 'deb'
-  }
-}
+// const linuxOS = {
+//   linux: {
+//     icon: ICONS_DIR,
+//     target: 'deb'
+//   }
+// }
 
 module.exports = {
   asar: true,
@@ -69,6 +69,6 @@ module.exports = {
   ],
   afterSign: isRelease ? "scripts/notarize.js" : null, // Notarize Mac (ONLY for deploys)
   ...windowsOS,
-  ...linuxOS,
   ...macOS
+  // ...linuxOS,
 }
