@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "~/*": [
+        "./src/renderer/*"
+      ],
+      "@/*": [
+        "./src/renderer/*"
+      ],
+      "~~/*": [
+        "./*"
+      ],
+      "@@/*": [
+        "./*"
+      ]
+    }
+  },
+  "exclude": [
+    ".nuxt"
+  ]
+}

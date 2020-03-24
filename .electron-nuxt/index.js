@@ -18,6 +18,7 @@ const launcher = new ElectronLauncher({
   entryFile: path.join(DIST_DIR, 'main/index.js')
 })
 
+// Normal CLI usage: `electron-builder --mac --windows`
 const builder = new ElectronBuilder({
   cliOptions: {
     config: path.join(__dirname, '../builder.config.js')

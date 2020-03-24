@@ -1,0 +1,88 @@
+# Building & releasing Electron w/ Travis https://studiolacosanostra.github.io/2019/03/26/Automate-electron-app-release-build-on-github-with-Travis-CI/
+# Env variables for electron-builder codesigning https://www.electron.build/code-signing
+
+language: node_js
+node_js: "10"
+
+# Multiple operating systems
+# https://docs.travis-ci.com/user/multi-os/
+os:
+  - osx
+  # - windows
+  # - linux
+
+stages:
+  - test
+  - name: build
+    if: branch != master
+  - name: release
+    if: branch = master
+
+# Staged jobs
+# https://docs.travis-ci.com/user/build-stages/#naming-your-jobs-within-build-stages
+jobs:
+  include:
+    # Run Tests
+    # - stage: test
+    #   script: yarn test
+
+    # Build
+    - stage: build
+      name: "Mac"
+      os: osx
+      osx_image: xcode10.2
+      script: yarn run build
+    # - name: "Windows"
+    #   os: windows
+    #   script: yarn run build
+    # - name: "Windows"
+    #   os: linux
+    #   services: docker
+    #   language: generic
+    #   script:
+    #     - |
+    #       docker run --rm \
+    #       --env-file <(env | sed -e 's/\s\s*/,/g' | grep -iE 'DEBUG|NODE_|ELECTRON_|YARN_|NPM_|CI|CIRCLE|TRAVIS|APPVEYOR_|CSC_|_TOKEN|_KEY|AWS_|STRIP|BUILD_') \
+    #       -v $PWD:/project \
+    #       -v ~/.cache/electron:/root/.cache/electron \
+    #       -v ~/.cache/electron-builder:/root/.cache/electron-builder \
+    #       electronuserland/builder:wine \
+    #       /bin/bash -c "yarn install --link-duplicates --pure-lockfile && yarn run build --win"
+
+    # Release to Github
+    - stage: release
+      name: "Mac"
+      os: osx
+      osx_image: xcode10.2
+      script: yarn run release
+    # - name: "Windows"
+    #   os: windows
+    #   script: yarn run release
+    # - name: "Windows"
+    #   os: linux
+    #   services: docker
+    #   language: generic
+    #   script:
+    #     - |
+    #       docker run --rm \
+    #       --env-file <(env | sed -e 's/\s\s*/,/g' | grep -iE 'DEBUG|NODE_|ELECTRON_|YARN_|NPM_|CI|CIRCLE|TRAVIS|APPVEYOR_|CSC_|_TOKEN|_KEY|AWS_|STRIP|BUILD_') \
+    #       -v $PWD:/project \
+    #       -v ~/.cache/electron:/root/.cache/electron \
+    #       -v ~/.cache/electron-builder:/root/.cache/electron-builder \
+    #       electronuserland/builder:wine \
+    #       /bin/bash -c "yarn install --link-duplicates --pure-lockfile && yarn run release --win"
+
+# Remove Wine
+before_cache: rm -rf $HOME/.cache/electron-builder/wine
+
+cache:
+  yarn: true
+  directories:
+    - node_modules
+    - $HOME/.cache/electron
+    - $HOME/.cache/electron-builder
+
+# Run on all branches (and PRs)
+branches:
+  except:
+    - "/^v\\d+\\.\\d+\\.\\d+$/"
