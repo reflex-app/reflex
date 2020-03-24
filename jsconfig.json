@@ -1,0 +1,20 @@
+// Works with Vetur plugin for VSCode to add Intellisense to Vue relative file paths
+// https://lmichelin.fr/vscode-intellisense-jsconfig-vue-js-nuxt-js-absolute-imports/
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "~/*": [
+        "./src/renderer/*"
+      ],
+      "@/*": [
+        "./src/renderer/*"
+      ]
+    }
+  },
+  "exclude": [
+    "node_modules",
+    ".nuxt",
+    "dist"
+  ]
+}
