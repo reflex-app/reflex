@@ -1,5 +1,5 @@
 <template>
-  <div id="toolbar" :class="{ 'is-fullscreen' : isFullScreen }">
+  <div id="toolbar" :class="{ 'is-fullscreen': isFullScreen, 'is-mac': isMac }">
     <Button
       role="ghost"
       icon="screens"
@@ -31,20 +31,21 @@
       </div>
     </div>
     <div id="toolbar__recentURLs"></div>
-    <!-- <div class="toolbar__right">
-      <div class="toolbar__button-group">
-      </div>
-    </div>-->
+    <div class="toolbar__right" v-if="artboards.length">
+      <SwitchMode />
+    </div>
+    <InstallUpdateButton />
     <div id="draggable" @dblclick="toggleWindowMaximize"></div>
   </div>
 </template>
 
 <script>
-import store from "@/store";
 import { mapState } from "vuex";
-import URLInput from "./URLInput.vue";
-import SyncButton from "./SyncButton.vue";
-import HistoryControls from "./HistoryControls.vue";
+import URLInput from "@/components/ToolBar/URLInput.vue";
+import SyncButton from "@/components/ToolBar/SyncButton.vue";
+import HistoryControls from "@/components/ToolBar/HistoryControls.vue";
+import InstallUpdateButton from "@/components/ToolBar/InstallUpdateButton.vue";
+import SwitchMode from "@/components/ToolBar/SwitchMode";
 import { remote } from "electron";
 import isElectron from "is-electron";
 
@@ -55,7 +56,9 @@ export default {
   components: {
     URLInput,
     HistoryControls,
-    SyncButton
+    SyncButton,
+    InstallUpdateButton,
+    SwitchMode
   },
   data() {
     return {
@@ -66,31 +69,34 @@ export default {
   },
   computed: {
     ...mapState({
-      artboards: state => state.artboards,
+      artboards: state => state.artboards.list,
       title: state => state.history.currentPage.title,
       url: state => state.history.currentPage.url,
       favicon: state => state.history.currentPage.favicon,
       sidebar: state => state.gui.sidebar
-    })
+    }),
+    isMac() {
+      return process.platform === "darwin" ? true : false;
+    }
   },
   methods: {
     changeURL: debounce(function(url) {
       // Change the URL
       // TODO Check if it's a valid URL
-      this.$store.commit("changeSiteData", {
+      this.$store.commit("history/changeSiteData", {
         url: url
       });
 
       console.log("change url triggered");
 
       // Add this new page to the history
-      store.dispatch("addPageToHistory", url);
+      this.$store.dispatch("history/addPageToHistory", url);
 
       // Off
       this.inputStateActive = false;
     }, 100),
     toggleSidebar() {
-      store.commit("toggleSidebar");
+      this.$store.commit("gui/toggleSidebar");
     },
     toggleWindowMaximize() {
       const window = remote.getCurrentWindow();
@@ -137,22 +143,23 @@ export default {
   justify-content: space-between;
   height: $gui-title-bar-height;
   padding: 8px 0;
+  padding-left: 1rem;
   z-index: 1;
   color: #434343;
   background: white;
   border-bottom: $gui-border;
   user-select: none;
 
+  // Adjust position of sidebar button for Macs
+  &.is-mac {
+    padding-left: calc(65px + 1rem);
+  }
+
   // Remove spacing reserved for traffic-sign on Mac
   &.is-fullscreen {
     & > *:first-child {
       margin-left: 1rem;
     }
-  }
-
-  // Extra spacing for traffic-sign on Mac
-  & > *:first-child {
-    margin-left: calc(65px + 1rem); // move away from the traffic sign
   }
 
   #draggable {
@@ -269,12 +276,10 @@ export default {
     }
   }
 
-  // .toolbar__right {
-  //   display: flex;
-
-  //   .toolbar__button-group:not(:last-child) {
-  //     margin-right: 24px;
-  //   }
-  // }
+  .toolbar__right {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
 </style>

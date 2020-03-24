@@ -1,14 +1,22 @@
 # Build
-/dist
-/build
+.nuxt
+dist
+build/*
 !build/icons
+!build/entitlements.mac.plist
 
 # Git & NPM
 .env
 !.gitkeep
 .DS_Store
-node_modules/
+
+# NPM
+node_modules
 package-lock.json
+
+# Yarn
+.yarn
+.yarnrc.yml
 
 # local env files
 .env.local

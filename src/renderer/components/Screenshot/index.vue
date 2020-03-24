@@ -44,7 +44,7 @@ export default {
   computed: {
     // Bind to our Vuex Store's URL value
     artboards() {
-      return this.$store.state.artboards;
+      return this.$store.state.artboards.list;
     },
     selectedArtboards() {
       return this.$store.state.selectedArtboards;
@@ -56,7 +56,7 @@ export default {
 
   methods: {
     clearAllSelected() {
-      this.$store.dispatch("selectedArtboardsEmpty");
+      this.$store.dispatch("selectedArtboards/selectedArtboardsEmpty");
     },
 
     async screenshotAll() {

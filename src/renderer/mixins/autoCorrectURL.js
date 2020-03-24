@@ -68,7 +68,7 @@ export default function (url) {
       } else {
         // TODO: Default should be http
         // The URL can be prepended by https://
-        url = 'https://' + url
+        url = 'http://' + url
         resolve(url)
       }
     } else {

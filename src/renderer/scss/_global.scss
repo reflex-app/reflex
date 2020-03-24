@@ -1,47 +1,53 @@
-@import 'variables';
+@import "variables";
 
 html {
-	box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 *,
 *:before,
 *:after {
-	box-sizing: inherit;
+  box-sizing: inherit;
 }
 
 html,
 body {
-	font-size: 15px;
+  font-size: 14px;
+}
+
+// Adjust default Nuxt divs
+#__nuxt,
+#__layout {
+  height: 100%;
 }
 
 html {
-	background: none;
-	background-size: cover;
-	background-repeat: no-repeat;
-	position: relative;
-	height: 100%;
-	width: 100%;
-	// border-radius: 80px; // make sure the frame for sure has no hard edges
-	overflow: hidden;
-	margin: 0;
-	padding: 0;
+  background: none;
+  background-size: cover;
+  background-repeat: no-repeat;
+  position: relative;
+  height: 100%;
+  width: 100%;
+  // border-radius: 80px; // make sure the frame for sure has no hard edges
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
 }
 
 body {
-	background: none;
-	// border-radius: 5px;
-	overflow: hidden;
-	font-family: $font-defaults;
-	line-height: 1.5;
-	height: 100%;
-	width: 100%;
-	margin: 0;
-	padding: 0;
+  background: none;
+  // border-radius: 5px;
+  overflow: hidden;
+  font-family: $font-defaults;
+  line-height: 1.5;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 a {
-	color: $accent-color;
-	text-decoration: none;
-	user-select: none;
+  color: $accent-color;
+  text-decoration: none;
+  user-select: none;
 }

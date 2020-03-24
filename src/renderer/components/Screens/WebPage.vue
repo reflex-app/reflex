@@ -1,10 +1,24 @@
 <template>
-  <webview ref="frame" class="frame" />
+  <webview ref="frame" class="frame" :preload="injectScript" allowpopups />
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
+  data() {
+    return {
+      options: {
+        history: true
+      }
+    };
+  },
   props: {
+    id: {
+      type: String,
+      required: true,
+      default: ""
+    },
     allowInteractions: {
       type: Boolean,
       default: false,
@@ -12,8 +26,15 @@ export default {
     }
   },
   computed: {
-    url() {
-      return this.$store.state.history.currentPage.url; // Bind to our Vuex Store's URL value
+    ...mapState({
+      url: state => state.history.currentPage.url
+    }),
+    injectScript() {
+      const appPath = require("electron").remote.app.getAppPath();
+      return `file://${require("path").resolve(
+        __dirname,
+        "../../mixins/reflex-sync"
+      )}`;
     }
   },
   mounted() {
@@ -21,11 +42,37 @@ export default {
 
     // Once the WebView is rendered
     this.$nextTick(() => {
-      // Permament events
       const frame = vm.$refs.frame;
 
+      // Listen for incoming events
+      this.$bus.$on("REFLEX_SYNC", args => {
+        // Don't trigger on the origin
+        if (this.id == args.originID) {
+          // TODO Tell the Webview to change its state to origin = true
+          frame.send("REFLEX_SYNC_setState", {
+            isOrigin: true
+          });
+        } else {
+          console.log("REFLEX EVENT:", args);
+
+          // Update state
+          frame.send("REFLEX_SYNC_setState", {
+            isOrigin: false
+          });
+
+          // Send event back to the frame
+          frame.send("REFLEX_SYNC_setDOMEffect", {
+            // event,
+            scrollOffset: {
+              top: 100
+            },
+            ...args
+          });
+        }
+      });
+
       // Bind event listeners
-      this.bindEventListers();
+      this.bindEventListeners();
 
       // Load the <webview> the initial time
       this.loadSite();
@@ -34,15 +81,15 @@ export default {
       // TODO Better way to watch for VueX actions?
       this.unsubscribeAction = this.$store.subscribeAction((action, state) => {
         switch (action.type) {
-          case "reload":
+          case "history/reload":
             this.reload();
             break;
 
-          case "back":
+          case "history/back":
             this.back();
             break;
 
-          case "forward":
+          case "history/forward":
             this.forward();
             break;
 
@@ -52,12 +99,12 @@ export default {
       });
     });
   },
-  beforeDestroy() { 
+  beforeDestroy() {
     // Unbind any listeners
     this.unbindEventListeners();
 
     // Unsubscribe from Store
-    this.unsubscribeAction()
+    this.unsubscribeAction();
   },
   watch: {
     url: {
@@ -69,15 +116,15 @@ export default {
     allowInteractions: function(value) {
       // Toggle frame pointer-events
       const element = this.$refs.frame;
-      if (value == true) {
-        element.style.pointerEvents = "auto"; // Default
-      } else if (value == false) {
-        element.style.pointerEvents = "none"; // Disable
+      if (value === true) {
+        element.style.pointerEvents = "auto"; // Allow interacting with webpage
+      } else if (value === false) {
+        element.style.pointerEvents = "none"; // Disable interactions with webpage
       }
     }
   },
   methods: {
-    bindEventListers() {
+    bindEventListeners() {
       // Remove navigation event
       const frame = this.$refs.frame;
       frame.addEventListener("will-navigate", this.willNavigate);
@@ -104,7 +151,7 @@ export default {
       // frame.loadURL(pages[nextPage]);
 
       // Update the URL in the store
-      this.$store.commit("changeSiteData", {
+      this.$store.commit("history/changeSiteData", {
         url: pages[nextPage]
       });
 
@@ -124,7 +171,7 @@ export default {
       // frame.loadURL(pages[nextPage]);
 
       // Update the URL in the store
-      this.$store.commit("changeSiteData", {
+      this.$store.commit("history/changeSiteData", {
         url: pages[nextPage]
       });
 
@@ -135,6 +182,7 @@ export default {
     },
     /**
      * Loads a site
+     * Data and listeners should clear after each call
      * By default, saves the URL to the history
      * @param {object} options Accepts a history option. When true, will save URL to history.
      */
@@ -142,113 +190,125 @@ export default {
       const vm = this;
       const frame = this.$refs.frame;
 
+      // The frame has been destroyed
+      // Remove event listeners
       if (!frame) {
-        // The frame has been destroyed
-        // Remove event listeners
-        throw new Error("Frame listeners still active after component destroy.")
+        throw new Error(
+          "Frame listeners still active after component destroy."
+        );
+        this.removeListeners();
         return false;
       }
 
-      // When loading of webview starts
-      function loadstart() {
-        vm.$emit("loadstart"); // Show loading spinner
+      // Turn history saving on/off
+      switch (options.history) {
+        case true:
+          this.options.history = true;
+          break;
 
-        // Change the title to Loading...
-        // TODO Add a VueX action for this?
-        vm.$store.commit("changeSiteData", {
-          title: "Loading..."
-        });
+        case false:
+          this.options.history = false;
+          break;
+
+        default:
+          break;
       }
 
       // Initialize the event listeners
-      addListeners();
+      this.addListeners();
 
       // Set the URL, start loading
       frame.setAttribute("src", this.url);
+    },
+    addListeners() {
+      const frame = this.$refs.frame;
+      frame.addEventListener("did-start-loading", this.loadstart); // loadstart
+      frame.addEventListener("dom-ready", this.contentloaded); // contentload
+      frame.addEventListener("did-stop-loading", this.loadstop); // loadstop
+      frame.addEventListener("ipc-message", this.onMessageReceived); // Listen for response
+      frame.addEventListener("loadabort", this.loadabort); // loadabort
+    },
+    removeListeners() {
+      const frame = this.$refs.frame;
+      frame.removeEventListener("did-start-loading", this.loadstart);
+      frame.removeEventListener("dom-ready", this.contentloaded);
+      frame.removeEventListener("did-stop-loading", this.loadstop);
+      frame.removeEventListener("ipc-message", this.onMessageReceived);
+      frame.removeEventListener("loadabort", this.loadabort);
+    },
+    loadstart() {
+      this.$emit("loadstart"); // Show loading spinner
 
-      // Once webview content is loaded
-      function contentloaded() {
-        const execCode = `
-          // Define the content from inside the page to return
-          let data = {
-            title: document.title,
-            favicon: "https://www.google.com/s2/favicons?domain=" +
-              window.location.href
-          }
+      // Change the title to Loading...
+      // TODO Add a VueX action for this?
+      this.$store.commit("history/changeSiteData", {
+        title: "Loading..."
+      });
+    },
+    contentloaded() {
+      const frame = this.$refs.frame;
+      frame.send("requestData");
+    },
+    onMessageReceived(event) {
+      if (event.channel === "REFLEX_SYNC") {
+        // BUS: https://binbytes.com/blog/create-global-event-bus-in-nuxtjs
+        const data = event.args[0];
+        // console.log(data);
 
-          // Listen for the incoming message & respond with data object
-          window.addEventListener("message", () => {
-            event.source.postMessage(data, '*');
-          }, false);
-        `;
+        // TODO This can fail if multiple artboards are selected
+        if (this.allowInteractions) {
+          this.$bus.$emit("REFLEX_SYNC", {
+            ...data,
+            originID: this.id
+          }); // Send a test event
+        }
+      } else if (event.channel === "replyData") {
+        const returnedData = event.args[0];
+        const title = returnedData.title;
+        const favicon = returnedData.favicon;
 
-        // Execute
-        frame.executeJavaScript(execCode, function() {
-          // After successfully injecting...
-          // Request the data
-          frame.contentWindow.postMessage("Send me your data!", "*");
-        });
-      }
-
-      function receiveHandshake(event) {
-        // Data is accessible as event.data.*
-        // Refer to the object that's injected during contentload()
-        // for all keys
-        const title = event.data.title;
-        const favicon = event.data.favicon;
+        console.log(title);
 
         // TODO Add to VueX Action
-        vm.$store.commit("changeSiteData", {
+        this.$store.commit("history/changeSiteData", {
           title: title,
           favicon: favicon
         });
-
-        window.removeEventListener("message", receiveHandshake);
+      } else if (event.channel === "unload") {
+        console.log("Unloading");
+        // this.removeListeners();
+      } else {
+        console.log("Unrecognized channel", event.args[0]);
       }
+    },
+    loadstop() {
+      const frame = this.$refs.frame;
+      this.$emit("loadend"); // Hide loading spinner
 
-      // Loading has finished
-      function loadstop() {
-        vm.$emit("loadend"); // Hide loading spinner
-
-        // Update History
-        // TODO Put this in a more obvious place
-        if (!options.history && options.history == false) {
-          vm.$store.commit("updateHistory", frame.getWebContents().history); // Array with URLs
-        }
-
-        // Remove the event listeners related to site loading
-        removeListeners();
+      // History
+      // If the call said history:false, then we need to update history
+      // TODO Shouldn't this only update when history:true?
+      if (this.options.history === false) {
+        this.$store.commit(
+          "history/updateHistory",
+          frame.getWebContents().history
+        );
       }
+    },
+    loadabort() {
+      // @TODO: Update with Electron API
+      new Notification("Aborted", {
+        body: "The site stopped loading for some reason."
+      });
 
-      function loadabort() {
-        // @TODO: Update with Electron API
-        new Notification("Aborted", {
-          body: "The site stopped loading for some reason."
-        });
-      }
-
-      // Bind events
-      function addListeners() {
-        frame.addEventListener("did-start-loading", loadstart); // loadstart
-        frame.addEventListener("dom-ready", contentloaded); // contentload
-        frame.addEventListener("did-stop-loading", loadstop); // loadstop
-        frame.addEventListener("loadabort", loadabort); // loadabort
-        window.addEventListener("message", receiveHandshake, false); // Listen for response
-      }
-
-      // Remove all event listeners
-      function removeListeners() {
-        frame.removeEventListener("did-start-loading", loadstart);
-        frame.removeEventListener("dom-ready", contentloaded);
-        frame.removeEventListener("did-stop-loading", loadstop);
-        frame.removeEventListener("loadabort", loadabort);
-      }
+      // Remove the event listeners related to site loading
+      this.removeListeners();
     },
     willNavigate(event) {
       // Handle user clicking on a link inside of the webview
       // TODO This should add a new page to the History
       // TODO Add to VueX Action
-      this.$store.commit("changeSiteData", {
+      this.$store.commit("history/changeSiteData", {
         url: event.url
       });
     }
@@ -260,6 +320,6 @@ export default {
 .frame {
   height: 100%;
   width: 100%;
-  pointer-events: none;
+  pointer-events: none; // Don't allow by default
 }
 </style>

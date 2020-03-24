@@ -44,9 +44,6 @@
             // "modules": false
           }
         ]
-      ],
-      "plugins": [
-        "require-context-hook"
       ]
     }
   },

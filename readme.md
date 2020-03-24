@@ -11,7 +11,7 @@ Reflex is a free, open-source Mac app that makes it easy to see how responsive w
 
 ## Download
 
-**[Download latest version (MacOS only)](https://github.com/nwittwer/Reflex/releases/latest)**
+**[Download latest version (MacOS)](https://github.com/nwittwer/Reflex/releases/latest)**
 
 [Having issues installing?](#faq)
 
@@ -23,20 +23,29 @@ Reflex is a free, open-source Mac app that makes it easy to see how responsive w
 - Synchronized interactions (scrolling, clicks, form inputs)
 - Chromium DevTools built-in
 
-Check out our [upcoming features](../../projects) and [feature requests](../../issues&q=label%3Afeature-request). If you have an idea that you didn't see it in either of those places, you can create a [new Github issue](../../issues) for it!
+Check out our [upcoming features](../../projects) and [feature requests](../../issues&q=label%3Afeature-request). If you have an idea that you didn't see it in either of those places, you can [create a new issue](../../issues) for it!
 
 ---
 
 ## Contributing
 
-Please take a look at the [upcoming features](../../projects) and the [open Github issues](../../issues). Bug reports and feature requests are welcome!
+This project is made possible by open-source contributors: [View Contributors](../../graphs/contributors)
+
+If you would like to add to the project, take a look at the [planned projects page](../../projects) and the [open issues](../../issues). Pull requests, bug reports and feature requests are welcome!
 
 ---
 
 ## Developing
 
+[![Build Status](https://travis-ci.com/nwittwer/reflex.svg?branch=dev)](https://travis-ci.com/nwittwer/reflex)
+
 Requirements:
-- Node and NPM
+- Node
+- Yarn (1.x)
+
+Please note: The `dev` branch represents the latest works-in-progress, and should always be used for new development/pull requests. The `master` branch holds the latest public release code.
+
+### Getting Started
 
 1. Clone the project to your computer:
     ```sh
@@ -46,28 +55,48 @@ Requirements:
 
 2. Install dependencies:
     ```sh
-    $ npm install --no-optional
+    $ yarn install
     ```
 
 3. Compile and watch for changes:
     ```sh
-    $ npm run start
+    $ yarn run dev
     ```
 
-4. To compile for the final app, run the following command: 
+### Building
+
+1. To compile an executable app, run the following command: 
     ```sh
-    $ npm run build
+    $ yarn run build
     ```
 
-    This will output several files inside of the `build/` folder. You can directly run the `.app` file inside of `build/mac/`.
+    This will output several files inside of the `build/` folder. You can directly run the `.app` or `.exe` file inside of `build/`.
+
+### Release
+
+Workflow: PR to `master` branch -> TravisCI -> Build app -> Codesign & Notarize (Mac only) -> Github Release
+
+1. Create a PR to `master` branch
+    - TravisCI will run `yarn run release`
+    - This adds a `process.env.RELEASE` env variable. 
+    - The presence of the `RELEASE` flag will allow notarization of the Mac app with `scripts/notarize.js`.
+    - The presence of the `RELEASE` flag will publish artifacts to Github. It will draft new release or update existing artifacts.
+2. If everything worked, merge PR into `master` and publish Github Release
+
+Env vars required:
+- CSC_LINK: base64-encoded .p12 file
+- CSC_KEY_PASSWORD: optional password
+- GH_TOKEN: Github token
+- APPLEID: Apple ID
+- APPLEIDPASS: App-specific password for Apple ID
 
 ### Debugging
 
-`CMD + Shift + I` will open the Chrome DevTools.
+`CMD/CTRL + Shift + I` will open the Chrome DevTools inside of the Electron instance.
 
 ### Technologies used
 
-- [VueJS](https://vuejs.org/)
+- [Vue 2.x](https://vuejs.org/)
 - [Electron](https://electronjs.org/)
 - [BrowserSync](https://www.browsersync.io/)
 

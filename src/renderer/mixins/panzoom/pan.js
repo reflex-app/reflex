@@ -1,22 +1,17 @@
 let initialX
-
 let initialY
-
 let currentX
-
 let currentY
-
 let xOffset = 0
-
 let yOffset = 0
 
 export function start(e, context) {
   // Set the current position of element based on the context
   // just in case something has moved outside of this file
-  const matrix = context.transformMatrix
+  const matrix = context.getTransform()
 
-  xOffset = (xOffset !== matrix[4]) ? matrix[4] : xOffset
-  yOffset = (yOffset !== matrix[5]) ? matrix[5] : yOffset
+  xOffset = (xOffset !== matrix.x) ? matrix.x : xOffset
+  yOffset = (yOffset !== matrix.y) ? matrix.y : yOffset
 
   if (e.type === 'touchstart') {
     initialX = e.touches[0].clientX - xOffset
@@ -29,12 +24,7 @@ export function start(e, context) {
     initialY = e.clientY - yOffset
   }
 
-  // Start kinetic
-  // console.log(context);
-  // context.kinetic.start();
-
   // Emit the event
-  // TODO: emit an event
   context._emit('panStart', e)
 
   // Update the state
@@ -53,23 +43,15 @@ export function pan(e, context) {
       currentY = e.clientY - initialY
     }
 
+    // Update internal state
     xOffset = currentX
     yOffset = currentY
 
-    // Update the matrix
-    const matrix = context.transformMatrix
-
-    // Update the x, y indexes
-    // [0,1,2,3,4,5]
-    //          ^ ^
-    matrix[4] = currentX
-    matrix[5] = currentY
-
-    // Zoom in by default amount
-    context.setTransform(matrix)
-
-    // Start kinetic
-    // context.kinetic.activate()
+    // NEW API 
+    context.setTransform({
+      x: currentX,
+      y: currentY
+    })
   }
 }
 
@@ -90,14 +72,10 @@ export function end(e, context) {
   }
 
   // Emit the event
-  // TODO: emit an event
   context._emit('panStop', e)
 
   // Update state
   context.state.isPanning = false
-
-  // End kinetic
-  // context.kinetic.stop()
 }
 
 export function panXY(context, event) {
@@ -106,26 +84,22 @@ export function panXY(context, event) {
     start(event, context)
 
     // Update the matrix
-    const matrix = context.transformMatrix
+    const matrix = context.getTransform()
+    matrix.x -= event.deltaX
+    matrix.y -= event.deltaY
 
-    // Update the x, y indexes
-    // [0,1,2,3,4,5]
-    //          ^ ^
-    // @TODO: This isn't updating in the parent context — causing flickering
-    matrix[4] -= event.deltaX
-    matrix[5] -= event.deltaY
-
-    // Update context's matrix
-    // This sets the position
-    context.setTransform(matrix)
+    // NEW API
+    context.setTransform({
+      x: matrix.x,
+      y: matrix.y
+    })
 
     // End
     end(event, context)
   }
 }
 
-export function panToElement(el) {
-  const context = document.$panzoom // The global Panzoom context
+export function panToElement(context, el) {
   if (!context.state.isPanning) {
     // Start
     // start(event, context)
@@ -134,6 +108,7 @@ export function panToElement(el) {
     const parent = context.parent // This is the total available height & width
     const container = context.element // This is the total available height & width
     const element = el // This is the element we want to center on
+    let matrix = context.getTransform()
 
     /**
      * We need to move our translate() coordinates
@@ -170,7 +145,7 @@ export function panToElement(el) {
      * Get the scale
      * This is required
      */
-    const scale = context.transformMatrix[0]
+    const scale = matrix.scale
 
     /**
      * The parent center point
@@ -204,16 +179,16 @@ export function panToElement(el) {
      * We'll get the difference between the viewport and the container,
      * and then move to our artboard
      */
-    // Update the matrix
-    const matrix = context.transformMatrix
 
     // This part is pure magic
-    matrix[4] = ((viewportCenterX - containerWidth) - (viewportCenterX - elementCenterX)) * -1
-    matrix[5] = ((viewportCenterY - containerHeight) - (viewportCenterY - elementCenterY)) * -1
+    matrix.x = ((viewportCenterX - containerWidth) - (viewportCenterX - elementCenterX)) * -1
+    matrix.y = ((viewportCenterY - containerHeight) - (viewportCenterY - elementCenterY)) * -1
 
-    // Update context's matrix
-    // This sets the position
-    context.setTransform(matrix)
+    // NEW API
+    context.setTransform({
+      x: matrix.x,
+      y: matrix.y
+    })
 
     // Scale to fit the screen
     context.scaleToFit()

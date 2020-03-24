@@ -1,9 +1,12 @@
 <template>
   <div
+    v-show="isVisible"
     class="artboard"
     ref="artboard"
+    :artboard-id="id"
     :style="{ height: height+'px', width: width+'px' }"
-    :class="{ 'is-selected': isSelected }"
+    :class="{ 'is-hover': isHover, 'is-selected': isSelected }"
+    @click.right="rightClickHandler()"
   >
     <div class="artboard__top">
       <div>
@@ -24,7 +27,8 @@
     <div class="artboard__content">
       <WebPage
         ref="frame"
-        :allowInteractions="canInteractArtboard"
+        :id="id"
+        :allowInteractions="canInteractWithArtboard"
         @loadstart="state.isLoading = true"
         @loadend="state.isLoading = false"
       />
@@ -36,8 +40,12 @@
 </template>
 
 <script>
+import { remote } from "electron";
+const { Menu, MenuItem } = remote;
+import isElectron from "is-electron";
 import { mapState, mapGetters } from "vuex";
 import WebPage from "./WebPage.vue";
+import rightClickMenu from "@/mixins/rightClickMenu.js";
 
 export default {
   name: "Artboard",
@@ -49,7 +57,8 @@ export default {
     id: String,
     height: Number,
     width: Number,
-    selectedItems: Array
+    selectedItems: Array,
+    isVisible: Boolean
   },
   data() {
     return {
@@ -63,16 +72,25 @@ export default {
     this.$nextTick(() => {
       // Remove any leftover selected artboards
       // @TODO: This should be done from VueX Store, or wiped before quitting
-      this.$store.dispatch("selectedArtboardsEmpty");
+      this.$store.dispatch("selectedArtboards/selectedArtboardsEmpty");
     });
   },
 
   computed: {
     ...mapState({
       url: state => state.history.currentPage.url,
-      selectedArtboards: state => state.selectedArtboards
+      selectedArtboards: state => state.selectedArtboards,
+      hoverArtboards: state => state.hoverArtboards
     }),
-    ...mapGetters(["isInteracting"]),
+    ...mapGetters("interactions", ["isInteracting"]),
+    isHover() {
+      const isHover = this.hoverArtboards.filter(item => item == this.id);
+      if (isHover.length) {
+        return true;
+      } else {
+        return false;
+      }
+    },
     isSelected() {
       const isSelected = this.selectedArtboards.filter(item => item == this.id);
       if (isSelected.length) {
@@ -86,12 +104,10 @@ export default {
      * artboard (WebView) when the artboard is selected
      * and the user is not dragging a selection area
      */
-    canInteractArtboard() {
+    canInteractWithArtboard() {
       if (this.isSelected == false) return false; // Not selected!
 
-      const isInteracting = this.isInteracting;
-
-      if (this.isSelected && isInteracting == false) {
+      if (this.isSelected && this.isInteracting == false) {
         return true; // Can interact!
       }
 
@@ -100,6 +116,15 @@ export default {
   },
 
   methods: {
+    rightClickHandler() {
+      rightClickMenu(this.$store, {
+        title: this.title,
+        id: this.id,
+        width: this.width,
+        height: this.height,
+        isVisible: this.isVisible
+      });
+    },
     // Limits the size of an artboard
     validateArtboardSizeInput(name, value) {
       // @TODO: Refactor this into the size editor
@@ -163,13 +188,13 @@ export default {
       document.documentElement.addEventListener("mouseup", stopDrag);
 
       // Pause the panzoom
-      if (document.$panzoom.state.isEnabled === true) {
-        document.$panzoom.disable(); // TODO: Cleaner solution that polluting document?
+      if (this.$root.$panzoom.state.isEnabled === true) {
+        this.$root.$panzoom.disable(); // TODO: Cleaner solution that polluting document?
       }
 
       function doStart() {
         // Update global state
-        vm.$store.commit("interactionSetState", {
+        vm.$store.commit("interactions/interactionSetState", {
           key: "isResizingArtboard",
           value: true
         });
@@ -192,10 +217,6 @@ export default {
 
           // Ignore pointer events on frames
           let frames = document.getElementsByClassName("frame");
-
-          for (let frame of frames) {
-            frame.style.pointerEvents = "none";
-          }
 
           // Update the dimensions in the UI
           vm.$emit("resize", {
@@ -226,15 +247,11 @@ export default {
         // Re-enable pointer events on frames
         let frames = document.getElementsByClassName("frame");
 
-        for (let frame of frames) {
-          frame.style.pointerEvents = "auto";
-        }
-
         // Re-enable the panzoom
-        document.$panzoom.enable(); // TODO: Cleaner solution that polluting document?
+        vm.$root.$panzoom.enable(); // TODO: Cleaner solution that polluting document?
 
         // Update global state
-        vm.$store.commit("interactionSetState", {
+        vm.$store.commit("interactions/interactionSetState", {
           key: "isResizingArtboard",
           value: false
         });
@@ -268,7 +285,8 @@ $artboard-handle-height: 1rem;
     margin-right: 3.5rem;
   }
 
-  &:hover {
+  &:hover,
+  &.is-hover {
     border-color: #929292;
     cursor: pointer;
   }
@@ -276,7 +294,6 @@ $artboard-handle-height: 1rem;
   &.is-selected {
     background: rgba(226, 239, 255, 0.63);
     border-color: #2f82ea;
-    pointer-events: none;
   }
 
   .artboard__top {
@@ -308,27 +325,6 @@ $artboard-handle-height: 1rem;
     background: #ffffff;
     transition: all 100ms ease-out;
     // box-shadow: 0 4px 10px rgba(#000, 0.1);
-
-    .frame {
-      // transition: all 125ms ease-out;
-
-      &:after {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        border: 1px solid #9a9a9a;
-        pointer-events: none; // Required so that events penetrate through
-      }
-    }
-
-    // .frame {
-    //   height: 100%;
-    //   width: 100%;
-    //   pointer-events: none;
-    // }
   }
 
   .artboard__handles {

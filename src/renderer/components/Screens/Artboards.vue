@@ -1,35 +1,35 @@
 <template>
-  <div v-if="artboards.length" id="artboards">
-    <Artboard
-      v-for="(artboard, index) in artboards"
-      v-bind="artboard"
-      :key="artboard.id"
-      :index="index"
-      :artboard-id="artboard.id"
-      :selectedItems="selectedArtboards"
-      ref="artboard"
-      class="artboard"
-      @resize="resize"
-    />
-  </div>
-  <!-- Show empty state if no artboards exist -->
-  <div v-else class="empty-state">
-    <img src="@/assets/ftu-vector.svg" class="empty-state__image" alt="Welcome graphic" />
-    <span class="empty-state__title">Welcome to {{ appName }}</span>
-    <p class="empty-state__body">You can create new screens in the Screens panel on the left.</p>
+  <div>
+    <div v-if="artboards.length" id="artboards">
+      <Artboard
+        v-for="(artboard, index) in artboards"
+        v-bind="artboard"
+        :key="artboard.id"
+        :index="index"
+        :artboard-id="artboard.id"
+        :selectedItems="selectedArtboards"
+        :isVisible="artboard.isVisible"
+        ref="artboard"
+        class="artboard"
+        @resize="resize"
+      />
+    </div>
+    <!-- Show empty state if no artboards exist -->
+    <WelcomeScreen v-else />
   </div>
 </template>
 
 <script>
-import { remote } from "electron";
-import { mapState } from "vuex";
+import { mapState, mapGetters } from "vuex";
 import Selection from "@simonwep/selection-js";
 import Artboard from "./Artboard";
+import WelcomeScreen from "./WelcomeScreen";
 
 export default {
   name: "Artboards",
   components: {
-    Artboard
+    Artboard,
+    WelcomeScreen
   },
   data() {
     return {
@@ -38,26 +38,15 @@ export default {
   },
   computed: {
     ...mapState({
-      artboards: state => state.artboards,
-      selectedArtboards: state => state.selectedArtboards,
-      isPanning: state => state.interactions.isPanning,
-      isZooming: state => state.interactions.isZooming,
-      isResizingArtboard: state => state.interactions.isResizingArtboard
+      artboards: state => state.artboards.list,
+      selectedArtboards: state => state.selectedArtboards
     }),
-    appName() {
-      // Return the name of the Electron app
-      // From package.json (name or productName)
-      // TODO this if check is required in case of tests
-      if (remote) {
-        return remote.app.getName();
-      } else {
-        const pkgJson = require("../../../../package.json");
-        return pkgJson.productName;
-      }
-    }
+    ...mapGetters("interactions", ["isInteracting"])
   },
   mounted() {
-    const vm = this;
+    this.$nextTick(() => {
+      if (this.artboards.length) this.fitToScreen();
+    });
 
     this.selectionInstance = new Selection({
       class: "selection-area", // Class for the selection-area
@@ -65,31 +54,19 @@ export default {
       selectables: ["#artboards > .artboard"], // All elements in this container can be selected
       boundaries: ["#canvas"], // The boundary
       singleClick: true // Enable single-click selection
-    });
-
-    this.selectionInstance
+    })
       .on("beforestart", evt => {
         // Prevent selections if the user is interacting with an artboard
-        // console.log(vm.isPanning, vm.isResizingArtboard);
-
-        if (
-          vm.isPanning === true ||
-          vm.isZooming === true ||
-          vm.isResizingArtboard === true
-        ) {
-          return false;
-        } else {
-          return true;
-        }
+        if (this.isInteracting) return false;
       })
       .on("start", evt => {
         // Every non-ctrlKey causes a selection reset
         if (!evt.ctrlKey) {
-          this.$store.dispatch("selectedArtboardsEmpty");
+          this.$store.dispatch("selectedArtboards/selectedArtboardsEmpty");
         }
 
         // Update state
-        this.$store.commit("interactionSetState", {
+        this.$store.commit("interactions/interactionSetState", {
           key: "isSelectingArea",
           value: true
         });
@@ -102,13 +79,13 @@ export default {
         // Add
         evt.changed.added.forEach(item => {
           const id = item.getAttribute("artboard-id");
-          this.$store.dispatch("selectedArtboardsAdd", id);
+          this.$store.dispatch("selectedArtboards/selectedArtboardsAdd", id);
         });
 
         // Remove
         evt.changed.removed.forEach(item => {
           const id = item.getAttribute("artboard-id");
-          this.$store.dispatch("selectedArtboardsRemove", id);
+          this.$store.dispatch("selectedArtboards/selectedArtboardsRemove", id);
         });
       })
       .on("stop", evt => {
@@ -118,10 +95,10 @@ export default {
          * to the current selection.
          */
         // Remove all in case temporarily added
-        this.$store.dispatch("selectedArtboardsEmpty");
+        this.$store.dispatch("selectedArtboards/selectedArtboardsEmpty");
 
         // Update state
-        this.$store.commit("interactionSetState", {
+        this.$store.commit("interactions/interactionSetState", {
           key: "isSelectingArea",
           value: false
         });
@@ -129,25 +106,30 @@ export default {
         // Push the new IDs
         evt.selected.forEach(item => {
           const id = item.getAttribute("artboard-id");
-          this.$store.dispatch("selectedArtboardsAdd", id); // Add these items to the Store
+          this.$store.dispatch("selectedArtboards/selectedArtboardsAdd", id); // Add these items to the Store
         });
       });
   },
   watch: {
+    // TODO Consider enabling this once panzoom is a Vue plugin?
     artboards: function() {
-      document.$panzoom.center();
+      this.$nextTick(() => {
+        this.fitToScreen();
+      });
     }
   },
   methods: {
     resize(artboard) {
-      this.$store.commit("resizeArtboard", artboard);
+      this.$store.commit("artboards/resizeArtboard", artboard);
     },
-    disableSelection() {
-      this.selectionInstance.disable();
-    },
-    enableSelection() {
-      this.selectionInstance.enable();
+    fitToScreen() {
+      // TODO De-couple this call to the parent
+      console.log("Artboards loaded", this.$parent);
+      this.$parent.fitToScreen();
     }
+  },
+  beforeDestroy() {
+    this.selectionInstance.destroy();
   }
 };
 </script>
@@ -186,28 +168,5 @@ export default {
 #sidebar {
   position: fixed;
   top: 100;
-}
-
-.empty-state {
-  height: 100%;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-
-  .empty-state__image {
-    margin-bottom: 2rem;
-  }
-
-  .empty-state__title {
-    font-size: 1.6rem;
-  }
-
-  .empty-state__body {
-    line-height: 1.5;
-    max-width: 250px;
-  }
 }
 </style>

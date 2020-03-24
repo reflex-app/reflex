@@ -1,14 +1,18 @@
 <template>
-  <draggable v-model="artboards" :animation="150">
-    <div v-for="artboard in artboards" v-bind="artboard" :key="artboard.id" class="artboard-tab">
+  <draggable
+    v-model="artboardsGetSet"
+    :group="{name:'artboards',pull:true,put:true}"
+    :animation="150"
+  >
+    <div v-for="artboard in artboards" :key="artboard.id" class="artboard-tab">
       <!-- Editing state -->
       <div v-if="editMode==true&&editID==artboard.id" class="editing">
         <div class="group">
           <label>Title</label>
           <input
-            ref="input"
-            v-model.lazy="artboard.title"
             type="text"
+            ref="input"
+            v-model="localFormData.title"
             placeholder="Title"
             @keyup.enter="save(artboard), editMode=false"
           />
@@ -18,8 +22,8 @@
           <div class="group__two-up">
             <div class="group__input-with-right-label">
               <input
-                v-model.number.lazy="artboard.width"
                 type="number"
+                v-model="localFormData.width"
                 placeholder="Width"
                 @keyup.enter="save(artboard), editMode=false"
               />
@@ -27,8 +31,8 @@
             </div>
             <div class="group__input-with-right-label">
               <input
-                v-model.number.lazy="artboard.height"
                 type="number"
+                v-model="localFormData.height"
                 placeholder="Height"
                 @keyup.enter="save(artboard), editMode=false"
               />
@@ -38,7 +42,7 @@
 
           <div class="buttons">
             <!-- TODO Cancel button doesn't really cancel/undo... -->
-            <Button role="secondary" @click="editMode=false">Cancel</Button>
+            <Button role="secondary" @click="cancelEdit(), editMode=false">Cancel</Button>
             <Button role="primary" @click="save(artboard)">Save</Button>
           </div>
         </div>
@@ -47,20 +51,27 @@
       <div
         v-else
         class="artboard-tab__container"
+        @click="selectArtboard(artboard.id)"
+        @mouseover="hoverStart(artboard.id)"
+        @mouseout="hoverEnd(artboard.id)"
         @contextmenu="rightClickMenu($event, artboard)"
       >
-        <div class="artboard-tab__container-left" @click="goToArtboard(artboard.id)">
+        <div class="artboard-tab__container-left">
           <div>{{ artboard.title }}</div>
           <div>{{ artboard.width }} x {{ artboard.height }}</div>
         </div>
         <div class="artboard-tab__container-right">
+          <div>
+            <Icon v-if="artboard.isVisible" name="visible" />
+            <Icon v-if="!artboard.isVisible" name="hidden" />
+          </div>
           <Button role="secondary" @click="edit(artboard.id)">Edit</Button>
-          <Button
+          <!-- <Button
             role="ghost"
             icon="delete"
-            @click="remove(artboard.title, artboard.id)"
+            @click.stop="remove(artboard.title, artboard.id)"
             title="Delete"
-          ></Button>
+          ></Button>-->
         </div>
       </div>
     </div>
@@ -72,6 +83,8 @@ import { remote } from "electron";
 import draggable from "vuedraggable";
 import isElectron from "is-electron";
 const { Menu, MenuItem } = remote;
+import { mapState } from "vuex";
+import rightClickMenu from "@/mixins/rightClickMenu.js";
 
 export default {
   name: "artboardEditable",
@@ -82,18 +95,28 @@ export default {
   data() {
     return {
       editMode: false,
-      editID: null
+      editID: null,
+      localFormData: {
+        title: "",
+        width: 0,
+        height: 0
+      }
     };
   },
   computed: {
-    // Bind to our Vuex Store's URL value
-    artboards: {
+    ...mapState({
+      artboards: state => state.artboards.list
+    }),
+    artboardsGetSet: {
       get() {
-        return this.$store.state.artboards;
+        return this.$store.state.artboards.list;
       },
       set(value) {
-        this.$store.commit("setArtboardList", value);
+        this.$store.dispatch("artboards/setArtboards", value);
       }
+    },
+    artboardVisibility(bool) {
+      return bool ? "visible" : "hidden";
     }
   },
   methods: {
@@ -102,17 +125,28 @@ export default {
       this.editMode = false;
       this.editID = null;
 
-      // Update the values so that VueJS pays attention
-      this.$store.commit("updateArtboardAtIndex", {
-        id: artboard.id,
-        height: artboard.height || 0,
-        width: artboard.width || 0,
-        title: artboard.title || "Untitled"
+      // Save to Store
+      this.$store.commit("artboards/updateArtboardAtIndex", {
+        id: this.localFormData.id,
+        height: this.localFormData.height || 0,
+        width: this.localFormData.width || 0,
+        title: this.localFormData.title || "Untitled"
       });
     },
     edit(id) {
+      // Udpate the state
       this.editMode = true;
       this.editID = id;
+
+      // Fill in the latest data
+      const currentArtboard = () => {
+        const obj = this.artboards.find(artboard => artboard.id === id);
+        // Return a clone of the Store object
+        return JSON.parse(JSON.stringify(obj));
+      };
+
+      // Update the local form data
+      this.localFormData = currentArtboard();
 
       // Auto-focus on the first field
       this.$nextTick(() => {
@@ -120,58 +154,48 @@ export default {
         this.$refs.input[0].select();
       });
     },
+    cancelEdit() {
+      // Reset to Vuex store state
+      this.localFormData = this.artboards;
+    },
     remove(name, id) {
       // TODO Custom prompts?
       if (
         confirm(
-          `You are able to to delete the ${name} screen size. Click "OK" to delete.`
+          `Are you sure you want to delete the ${name} screen size? Click "OK" to delete.`
         )
       ) {
-        this.$store.commit("removeArtboard", id);
+        this.$store.commit("artboards/removeArtboard", id);
       }
     },
     goToArtboard(id) {
       // Find the artboard (DOM)
-      const artboard = this.getArtboard(id);
+      const artboard = document.querySelector(`[artboard-id="${id}"]`);
       // Move the panzoom container
-      document.$panzoom.panToElement(artboard);
+      this.$root.$panzoom.panToElement(artboard);
     },
     rightClickMenu(e, artboard) {
-      // Open the DevTools for x screen ID
-      // TODO using brittle selectors
-      // const artboard = this.getArtboard(artboard.id);
-      const vm = this
-      const artboardFrame = this.getArtboard(artboard.id).querySelector("webview");
-
-      if (artboardFrame) {
-        if (isElectron()) {
-          const menu = new Menu();
-          menu.append(
-            new MenuItem({
-              label: "Duplicate",
-              click() {
-                vm.$store.dispatch("duplicateArtboard", artboard);
-              }
-            })
-          );
-          menu.append(
-            new MenuItem({
-              label: "Open DevTools",
-              click() {
-                artboardFrame.openDevTools();
-              }
-            })
-          );
-          menu.popup(remote.getCurrentWindow());
-        }
-      } else {
-        throw new Error("No frame near artboard");
-      }
+      rightClickMenu(this.$store, {
+        title: artboard.title,
+        id: artboard.id,
+        width: artboard.width,
+        height: artboard.height,
+        isVisible: artboard.isVisible
+      });
     },
-    getArtboard(id) {
-      // TODO add test here, selectors are brittle
-      // This could probably be a Store action
-      return document.querySelector(`[artboard-id="${id}"]`);
+    hoverStart(id) {
+      this.$store.dispatch("hoverArtboards/hoverArtboardsAdd", id);
+    },
+    hoverEnd(id) {
+      this.$store.dispatch("hoverArtboards/hoverArtboardsRemove", id);
+    },
+    selectArtboard(id) {
+      // Move screen to the selected artboard
+      this.goToArtboard(id);
+      // Remove all previous selections
+      this.$store.dispatch("selectedArtboards/selectedArtboardsEmpty", id);
+      // Add the new artboard to selection
+      this.$store.dispatch("selectedArtboards/selectedArtboardsAdd", id);
     }
   }
 };
@@ -191,11 +215,11 @@ $artboard-tab-side-padding: 1rem;
   border-bottom: 1px solid $border-color;
 
   &:hover {
-    // background: #f1f1f1;
+    background: #f1f1f1;
   }
 
   &:active {
-    // background: #e2e2e2;
+    background: #e2e2e2;
   }
 
   .artboard-tab__container {
@@ -204,13 +228,13 @@ $artboard-tab-side-padding: 1rem;
     align-items: center;
     padding: 0.5rem $artboard-tab-side-padding;
     overflow: auto;
+    cursor: pointer;
 
     .artboard-tab__container-left {
       max-width: 9rem;
       min-width: 5rem;
       white-space: nowrap;
       overflow: hidden;
-      cursor: pointer;
 
       & > * {
         text-overflow: ellipsis;

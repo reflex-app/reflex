@@ -1,37 +1,34 @@
 /* eslint-disable */
-// 'use strict';
+'use strict';
 
-// import EventEmitter from 'events';
 import * as pan from "./pan"
 import {
   on,
   off
 } from './utils'
 import * as panzoomEvents from './events'
-import kinetic from './kinetic'
 
-export class Panzoom {
+export default class Panzoom {
   constructor(element, parent, options = {}) {
     this.parent = parent
     this.element = element
+    this.transformData = {
+      x: 0,
+      y: 0,
+      scale: 1
+    }
     this.state = {
       isEnabled: false,
       isPanning: false,
       isZooming: false,
       isTouching: false
     }
-
-    this.zoomIncrement = options.zoomIncrement || 1.15
+    this.zoomIncrement = options.zoomIncrement || 0.2
 
     // Default Options
     this.options = options
-    this.options.minZoom = options.minZoom || 0.1
+    this.options.minZoom = options.minZoom || 0.125
     this.options.maxZoom = options.maxZoom || 10
-
-    // Set the original matrix
-    // This defaults to scale: 1
-    // scaleX, ?, ?, scaleY, x, y
-    this.transformMatrix = [1, 0, 0, 1, 0, 0]
 
     // This will keep track of events
     this._eventListener = {
@@ -48,56 +45,34 @@ export class Panzoom {
     this._init()
   }
 
-  // ==================
-  // Private
-
   // Set initial
-  _init() {
-    const _this = this
-
+  _init = () => {
     // TODO temporary using null to avoid in tests
     const parent_styles = {
-      position: 'relative',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      overflow: 'hidden',
-      position: 'relative'
-      // cursor: 'grab'
+      height: '100%',
+      overflow: 'hidden'
     }
 
     // Apply initial styles to parent
     Object.entries(parent_styles).forEach(
       ([key, value]) => {
-        return _this.parent.style[key] = value
+        return this.parent.style[key] = value
       }
     )
 
     const child_styles = {
-      transform: `matrix(${this.transformMatrix})`, // Set the matrix
-      transformOrigin: '50% 50%' // Enforce the default
-      // transformOrigin: '0 0'
+      transformOrigin: 'center center', // Enforce the default
+      willChange: 'transform',
+      display: 'inline-block',
+      // transition: 'transform 150ms',
     }
 
     // Apply initial styles to child
     Object.entries(child_styles).forEach(
       ([key, value]) => {
-        return _this.element.style[key] = value
+        return this.element.style[key] = value
       }
     )
-
-    // Enable Kinetic (inertia)
-    this.kinetic = kinetic({
-      x: this.transformMatrix[4],
-      y: this.transformMatrix[5]
-    }, scroll, this, this.options.kinetic)
-
-    // Options
-    if (this.options.startCentered) {
-      // Center the child inside of the parent
-      this.scaleToFit()
-      this.center()
-    }
 
     // Enable
     this.enable()
@@ -107,7 +82,7 @@ export class Panzoom {
    * Enable / Disable this plugin
    * @param {*} type
    */
-  _bindStartEvents(type) {
+  _bindStartEvents = (type) => {
     const fn = type === 'on' ? on : off
 
     // On/Off event listeners
@@ -118,23 +93,53 @@ export class Panzoom {
   }
 
   /**
-   * Update internal transform matrix + element transform
-   * @param  {Array} transform
+   * Emits an event
+   * @param {String} event
    */
-  _updateTransform(transform) {
-    // Round x, y to the nearest pixel
-    // No sub-pixels
-    transform[4] = Math.round(transform[4])
-    transform[5] = Math.round(transform[5])
+  _emit = (event, evt) => {
+    let ok = true
 
-    // Update local variable
-    this.transformMatrix = transform
+    for (const listener of this._eventListener[event]) {
+      ok = listener.call(this, {
+        inst: this,
+        oe: evt
+      }) && ok
+    }
+
+    return ok
+  }
+
+  /**
+   * Changes the transform/translate values
+   * Saves to panzoom.transformData
+   */
+  setTransform = async (newTransformValues) => {
+    if (!newTransformValues) throw new Error('No transform values passed in.')
+
+    console.error('Updating transforms', newTransformValues);
+
+    const ctx = this;
+    const currentTransformValues = this.getTransform()
+
+    // Update the state
+    for (let key in newTransformValues) {
+      const value = newTransformValues[key]
+      if (isNaN(value)) throw new Error(`Value passed in for ${key} is not a number.`)
+      ctx.transformData[key] = value
+    }
+
+    // Update the CSS
+    let newMatrix = {
+      x: newTransformValues.x || currentTransformValues.x,
+      y: newTransformValues.y || currentTransformValues.y,
+      scale: newTransformValues.scale || currentTransformValues.scale
+    }
+
+    // Commit the CSS styles
+    this.element.style.transform = `translate(${newMatrix.x}px, ${newMatrix.y}px) scale(${newMatrix.scale}, ${newMatrix.scale})`
 
     // Update Events.js context
     panzoomEvents._updateContext(this)
-
-    // Update the CSS style
-    this.element.style.transform = `matrix(${transform})`
 
     // Emit an event
     // TODO: emit an event
@@ -142,93 +147,74 @@ export class Panzoom {
   }
 
   /**
-   * Center the child element relative to it's parent
+   * Returns the current values as an object
+   * { x, y, scale }
    */
-  center() {
-    // Bounding box
-    // const el = this.element.getBoundingClientRect();
-    const el = this.element.getBoundingClientRect()
-    const parentEl = this.parent.getBoundingClientRect()
-
-    // Set the height, widths
-    const elHeight = el.height
-    const elWidth = el.width
-    const parentHeight = parentEl.height
-    const parentWidth = parentEl.width
-
-    // console.log(elHeight, parentHeight, elWidth, parentWidth)
-
-    // Prepare a new matrix from the current one
-    let newMatrix = this.transformMatrix
-
-    // Center the x, y positions
-    // (origin: 0, 0)
-    // newMatrix[4] = (parentWidth / 2) - (elWidth / 2);
-    // newMatrix[5] = (parentHeight / 2) - (elHeight / 2);
-
-    // newMatrix[4] = (parentWidth / 2) - (elWidth / 2);
-    // newMatrix[5] = (parentHeight / 2) - (elHeight / 2);
-
-    // (origin: 50, 50)
-    newMatrix[4] = 0
-    newMatrix[5] = 0
-
-    // Update the matrix
-    this.setTransform(newMatrix)
+  getTransform = () => {
+    return JSON.parse(JSON.stringify(this.transformData))
   }
 
-  scaleToFit() {
-    // Bounding box
-    // const el = this.element.getBoundingClientRect();
-    const el = this.element.getBoundingClientRect()
+  /**
+   * Center the child element relative to it's parent
+   */
+  center = async () => {
+    console.log('center');
+
     const parentEl = this.parent.getBoundingClientRect()
+    const childEl = this.element.getBoundingClientRect()
+    const parentHeight = parentEl.height
+    const parentWidth = parentEl.width
+    const childHeight = childEl.height
+    const childWidth = childEl.width
+
+    // 1. Get difference between parent and child
+    // 2. Calculate what 50% (center) would be, given the size of the element and its current scale
+    // 3. Done
+    const scale = this.getTransform().scale
+    return await this.setTransform({
+      x: (parentWidth - (childWidth * scale)) / 2,
+      y: (parentHeight - (childHeight * scale)) / 2 // This works well
+    })
+  }
+
+  scaleToFit = async () => {
+    console.log('scale');
+
+    // TODO This can scale beyond the maxZoom point
+    const parentEl = this.parent.getBoundingClientRect()
+    const childEl = this.element.getBoundingClientRect()
 
     // Set the height, widths
-    const elHeight = el.height
-    const elWidth = el.width
+    const childHeight = childEl.height
+    const childWidth = childEl.width
     const parentWidth = parentEl.width
     const parentHeight = parentEl.height
 
-    // Prepare a new matrix from the current one
-    let newMatrix = this.transformMatrix
-    // Get the current scale
-    const currentScale = newMatrix[0]
+    const scale = this.getTransform().scale
 
     // If the child is outside of the parent, scale it down
-    const childExceedsParent = !!((elWidth > parentWidth || elHeight > parentHeight));
-
+    const childExceedsParent = (childWidth >= parentWidth || childHeight >= parentHeight);
     if (childExceedsParent) {
-      // Scale down the child if it exceeds the parent
-      const zoomAspectRatioX = parentWidth / elWidth
-      const zoomAspectRatioY = parentHeight / elHeight
+      console.log('exceeds parent');
 
-      const scale = (value) => {
-        newMatrix[0] = value - 0.1 // TODO temporarily set to test zooming out
-        newMatrix[3] = value - 0.1 // TODO temporarily set to test zooming out
-        return newMatrix[0], newMatrix[3]
-      };
-
-      if (zoomAspectRatioX < 1 && zoomAspectRatioY < 1) {
-        // console.log('1');
-        scale(Math.min(parentWidth / (elWidth / currentScale), parentHeight / (elHeight / currentScale)))
-      } else if (zoomAspectRatioX < 1) {
-        // console.log('2');
-        scale(parentWidth / (elWidth / currentScale))
-      } else if (zoomAspectRatioY < 1) {
-        // console.log('3');
-        scale(parentHeight / (elHeight / currentScale))
-      }
+      return await this.setTransform({
+        scale: Math.min((parentWidth / childWidth), (parentHeight / childHeight))
+      })
+    } else {
+      console.log('scale not needed');
+      return
+      // TODO Add logic to scale up to a reasonable size
+      // await this.setTransform({
+      // scale: Math.max((parentWidth / childWidth), (parentHeight / childHeight))
+      // })
     }
-
-    // Update the matrix
-    this.setTransform(newMatrix)
   }
 
   /**
    * Scales the panzoom instance to fit a given DOM element
    * @TODO: This feature doesn't properly adjust to the given element
    */
-  scaleToFitEl(domElement) {
+  scaleToFitEl = (domElement) => {
     console.log(domElement)
 
     // Bounding box
@@ -243,25 +229,26 @@ export class Panzoom {
     const parentHeight = parentEl.height
 
     // Prepare a new matrix from the current one
-    let newMatrix = this.transformMatrix
+    // let newMatrix = this.transformMatrix
+    let newMatrix = this.getTransform()
 
     // Get the current scale
-    const currentScale = newMatrix[0]
+    const currentScale = newMatrix.scale
 
     // If the child is outside of the parent, scale it down
     const childExceedsParent = !!((elWidth > parentWidth || elHeight > parentHeight));
+
+    // Set the scale
+    const scale = (value) => {
+      newMatrix.scale = value
+      return newMatrix.scale
+    };
 
     // If bigger than the parent container
     if (childExceedsParent) {
       // Scale down the child if it exceeds the parent
       const zoomAspectRatioX = parentWidth / elWidth
       const zoomAspectRatioY = parentHeight / elHeight
-
-      const scale = (value) => {
-        newMatrix[0] = value
-        newMatrix[3] = value
-        return newMatrix[0], newMatrix[3]
-      };
 
       if (zoomAspectRatioX < 1 && zoomAspectRatioY < 1) {
         scale(Math.min(parentWidth / (elWidth / currentScale), parentHeight / (elHeight / currentScale)))
@@ -275,40 +262,69 @@ export class Panzoom {
       // We need to adjust the x, y
       // The x should be the center of the container div -
 
-      newMatrix[4] = parentWidth / elWidth
-      newMatrix[5] = parentHeight / elHeight
+      newMatrix.x = parentWidth / elWidth
+      newMatrix.y = parentHeight / elHeight
 
-      // Also, scale up this DOM element
-      const scale = (value) => {
-        newMatrix[0] = value
-        newMatrix[3] = value
-        return newMatrix[0], newMatrix[3]
-      };
       // scale(Math.min(parentWidth / (elWidth / currentScale), parentHeight / (elHeight / currentScale)));
 
       console.log(this.transformMatrix, newMatrix)
     }
 
-    // Update the matrix
-    this.setTransform(newMatrix)
+    // NEW API
+    this.setTransform({
+      x: newMatrix.x,
+      y: newMatrix.y,
+      scale: newMatrix.scale
+    })
   }
 
   /**
    * Scales the contents to fit,
    * then centers the canvas on the screen
    */
-  fitToScreen() {
-    this.scaleToFit()
-    this.center()
+  fitToScreen = async () => {
+    // this.scaleToFit()
+
+    // setTimeout(async () => this.scaleToFit)
+    await this.center()
+    await this.scaleToFit()
   }
 
-  // ==================
-  // Public
+  /**
+   * Adds an eventlistener
+   * @param event
+   * @param cb
+   */
+  on = (event, cb) => {
+    if (!this._eventListener[event]) throw new Error(`Event not setup ${event} ${cb}`)
+
+    this._eventListener[event].push(cb)
+    return this
+  }
+
+  /**
+   * Removes an event listener
+   * @param event
+   * @param cb
+   */
+  off = (event, cb) => {
+    const callBacks = this._eventListener[event]
+
+    if (callBacks) {
+      const index = callBacks.indexOf(cb)
+
+      if (~index) {
+        callBacks.splice(index, 1)
+      }
+    }
+
+    return this
+  }
 
   /**
    * Resume panzoom event listeners
    */
-  enable() {
+  enable = () => {
     // Update event context
     panzoomEvents._updateContext(this)
 
@@ -323,7 +339,7 @@ export class Panzoom {
   /**
    * Pause panzoom event listeners
    */
-  disable() {
+  disable = () => {
     // Unbind event listeners
     // panzoomEvents._unbind(this);
 
@@ -335,135 +351,30 @@ export class Panzoom {
     this.state.isEnabled = false
   }
 
-  /**
-   * Set the transform
-   */
-  setTransform(transform) {
-    if (transform.length < 6) {
-      throw new Error('Please pass in a correct matrix (example: [1,0,0,1,0,0])')
-    }
 
-    this._updateTransform(transform)
-  }
-
-  /**
-   * Returns the current transform
-   */
-  getTransform() {
-    return this.transformMatrix
-  }
-
-  /**
-   * Emits an event
-   * @param {String} event
-   */
-  _emit(event, evt) {
-    let ok = true
-
-    for (const listener of this._eventListener[event]) {
-
-      ok = listener.call(this, {
-        inst: this,
-        oe: evt
-      }) && ok
-    }
-
-    return ok
-  }
-
-  /**
-   * Adds an eventlistener
-   * @param event
-   * @param cb
-   */
-  on(event, cb) {
-    if (!this._eventListener[event]) throw new Error(`Event not setup ${event} ${cb}`)
-
-    this._eventListener[event].push(cb)
-    return this
-  }
-
-  /**
-   * Removes an event listener
-   * @param event
-   * @param cb
-   */
-  off(event, cb) {
-    const callBacks = this._eventListener[event]
-
-    if (callBacks) {
-      const index = callBacks.indexOf(cb)
-
-      if (~index) {
-        callBacks.splice(index, 1)
-      }
-    }
-
-    return this
-  }
-
-
-
-
-  _zoom(args) {
-    const matrix = this.transformMatrix // Current transform matrix [0,0,0,0,0,0]
-    const currentScale = matrix[0] // Current zoom
+  _zoom = (args) => {
+    const matrix = this.getTransform() // Current transform matrix [0,0,0,0,0,0]
+    const currentScale = matrix.scale // Current zoom
     let nextScale // Next zoom
-    const transformX = matrix[4]
-    const transformY = matrix[5]
 
     switch (args) {
       case 'in':
-        nextScale = currentScale * this.zoomIncrement
-        break
-      case 'out':
         nextScale = currentScale / this.zoomIncrement
         break
+      case 'out':
+        nextScale = currentScale * this.zoomIncrement
+        break
     }
 
-    // Tidy/validate the number
-    // TODO Fix "this" definition
-    const that = this;
-
-    function protectScale(scale) {
-      // @TODO: Bug: scale gets stuck here
-      // Prevent min/max scale
-      if (scale < that.options.minZoom) {
-        scale = that.options.minZoom
-      } else if (scale > that.options.maxZoom) {
-        scale = that.options.maxZoom
-      }
-
-      // Prettify the number
-      scale = parseFloat(scale.toFixed(10))
-
-      // Return a nice number
-      return scale
-    }
-
-    nextScale = protectScale(nextScale)
-
-    // Update the scale
-    matrix[0] = nextScale
-    matrix[3] = nextScale
-
-    const output = [
-      nextScale, // scale
-      matrix[1], // get existing rotation
-      matrix[2], // get existing rotation
-      nextScale, // scale
-      transformX, // x
-      transformY // y
-    ]
-
-    // Update the Panzoom internal matrix
-    this.setTransform(output)
+    this.setTransform({
+      scale: nextScale
+    })
   }
 
   /**
    * Zoom In
    */
-  zoomIn() {
+  zoomIn = () => {
     const event = new CustomEvent('zoomIn');
     this._emit('zoomIn', event)
     this._zoom('in')
@@ -472,7 +383,7 @@ export class Panzoom {
   /**
    * Zoom Out
    */
-  zoomOut() {
+  zoomOut = () => {
     const event = new CustomEvent('zoomOut');
     this._emit('zoomOut', event)
     this._zoom('out')
@@ -484,7 +395,7 @@ export class Panzoom {
    * @param {*} x px value
    * @param {*} y px value
    */
-  panToElement(el) {
-    pan.panToElement(el)
+  panToElement = (el) => {
+    pan.panToElement(this, el)
   }
 }
