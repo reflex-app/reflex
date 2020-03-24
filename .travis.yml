@@ -23,16 +23,18 @@ stages:
 # https://docs.travis-ci.com/user/build-stages/#naming-your-jobs-within-build-stages
 jobs:
   include:
+    # Run Tests
     - stage: test
       os: linux
       services: docker
       language: generic
-      script:
-        - yarn test
+      script: yarn test
 
+    # Build
     - stage: build
       name: "Mac"
       os: osx
+      osx_image: xcode10.2
       script: yarn run build
     - name: "Windows"
       os: linux
@@ -50,9 +52,11 @@ jobs:
           /bin/bash -c "yarn install --link-duplicates --pure-lockfile && yarn run build"
         fi
 
+    # Release to Github
     - stage: release
       name: "Mac"
       os: osx
+      osx_image: xcode10.2
       script: yarn run release
     - name: "Windows"
       os: linux
