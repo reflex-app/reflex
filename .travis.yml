@@ -7,53 +7,66 @@ node_js: "10"
 # Multiple operating systems
 # https://docs.travis-ci.com/user/multi-os/
 os:
-  - linux
   - osx
     osx_image: xcode10.2
+  - linux
+    services: docker
+    language: generic
 # os: osx
 # osx_image: xcode10.2
 
-# Remove Wine for Windows build
-before_cache:
-  - if ["$TRAVIS_OS_NAME" = "linux"]; rm -rf $HOME/.cache/electron-builder/wine; fi
-
-cache:
-  yarn: true
-  directories:
-    - node_modules
-    - $HOME/.cache/electron
-    - $HOME/.cache/electron-builder  
-
-# Run on all branches (and PRs)
-branches:
-  except:
-    - "/^v\\d+\\.\\d+\\.\\d+$/"
-  # only:
-  # - master
-  # - dev
+stages: 
+  - test
+  - build
+    if: branch != master
+  - release
+    if: branch = master
 
 # Staged jobs
 # https://docs.travis-ci.com/user/build-stages/#naming-your-jobs-within-build-stages
 jobs:
   include:
-    - stage: "Tests"
+    - stage: test
       os: linux
       script:
         - yarn test
 
-    - stage: "Build"
+    - stage: build
       name: "Mac"
       os: osx
-      if: branch != master
       script: yarn run build
     - name: "Windows"
       os: linux
       script: yarn run build
+      script: 
+        - |
+        if [ "$TRAVIS_OS_NAME" == "linux" ]; then
+          docker run --rm \
+          -e GH_TOKEN=$GH_TOKEN \
+          -v $PWD:/project \
+          -v ~/.cache/electron:/root/.cache/electron \
+          -v ~/.cache/electron-builder:/root/.cache/electron-builder \
+          electronuserland/builder:wine \
+          /bin/bash -c "yarn install --link-duplicates --pure-lockfile && yarn run build"
+        fi
 
-    - stage: "Release to Github"
-      if: branch = master
+    - stage: release
+      name: "Mac"
       os: osx
       script: yarn run release
+    - name: "Windows"
+      os: linux
+      script: 
+        - |
+        if [ "$TRAVIS_OS_NAME" == "linux" ]; then
+          docker run --rm \
+          -e GH_TOKEN=$GH_TOKEN \
+          -v $PWD:/project \
+          -v ~/.cache/electron:/root/.cache/electron \
+          -v ~/.cache/electron-builder:/root/.cache/electron-builder \
+          electronuserland/builder:wine \
+          /bin/bash -c "yarn install --link-duplicates --pure-lockfile && yarn run release"
+        fi
 
 
     # - stage: Build Mac
@@ -73,3 +86,19 @@ jobs:
     #     - yarn run release
     #   before_cache:
     #     - rm -rf $HOME/.cache/electron-builder/wine
+
+
+# Remove Wine
+before_cache: rm -rf $HOME/.cache/electron-builder/wine
+
+cache:
+  yarn: true
+  directories:
+    - node_modules
+    - $HOME/.cache/electron
+    - $HOME/.cache/electron-builder  
+
+# Run on all branches (and PRs)
+branches:
+  except:
+    - "/^v\\d+\\.\\d+\\.\\d+$/"
