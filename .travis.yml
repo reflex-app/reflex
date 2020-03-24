@@ -30,13 +30,13 @@ jobs:
       script:
         - yarn test
     - stage: Build Mac
-      if: branch != master
+      if: (branch != master) AND (branch != stable)
       script:
         - yarn run build
       before_cache:
         - rm -rf $HOME/.cache/electron-builder/wine
     - stage: Release — Build Mac, Notarize, Deploy to Github Release 
-      if: branch = master
+      if: (branch = master) OR (branch = stable)
       script:
         - yarn run release
       before_cache:

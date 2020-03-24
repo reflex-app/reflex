@@ -74,7 +74,7 @@ Please note: The `dev` branch represents the latest works-in-progress, and shoul
 
 ### Release
 
-`master` branch -> TravisCI -> Build app -> Codesign & Notarize (Mac only) -> Draft new/update existing Github Release
+`master` OR `stable` branch -> TravisCI -> Build app -> Codesign & Notarize (Mac only) -> Draft new/update existing Github Release
 
 1. Run `yarn run release`
     - This adds a `process.env.RELEASE` env variable. 
