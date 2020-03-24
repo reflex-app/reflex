@@ -9,8 +9,6 @@ node_js: "10"
 os:
   - osx
   - linux
-# os: osx
-# osx_image: xcode10.2
 
 stages: 
   - test
@@ -25,9 +23,6 @@ jobs:
   include:
     # Run Tests
     - stage: test
-      os: linux
-      services: docker
-      language: generic
       script: yarn test
 
     # Build
@@ -42,15 +37,13 @@ jobs:
       language: generic
       script: 
         - |
-          if [ "$TRAVIS_OS_NAME" == "linux" ]; then
-            docker run --rm \
-            -e GH_TOKEN=$GH_TOKEN \
-            -v $PWD:/project \
-            -v ~/.cache/electron:/root/.cache/electron \
-            -v ~/.cache/electron-builder:/root/.cache/electron-builder \
-            electronuserland/builder:wine \
-            /bin/bash -c "yarn install --link-duplicates --pure-lockfile && yarn run build"
-          fi
+          docker run --rm \
+          -e GH_TOKEN=$GH_TOKEN \
+          -v $PWD:/project \
+          -v ~/.cache/electron:/root/.cache/electron \
+          -v ~/.cache/electron-builder:/root/.cache/electron-builder \
+          electronuserland/builder:wine \
+          /bin/bash -c "yarn install --link-duplicates --pure-lockfile && yarn run build"
 
     # Release to Github
     - stage: release
@@ -64,15 +57,13 @@ jobs:
       language: generic
       script: 
         - |
-          if [ "$TRAVIS_OS_NAME" == "linux" ]; then
-            docker run --rm \
-            -e GH_TOKEN=$GH_TOKEN \
-            -v $PWD:/project \
-            -v ~/.cache/electron:/root/.cache/electron \
-            -v ~/.cache/electron-builder:/root/.cache/electron-builder \
-            electronuserland/builder:wine \
-            /bin/bash -c "yarn install --link-duplicates --pure-lockfile && yarn run release"
-          fi
+          docker run --rm \
+          -e GH_TOKEN=$GH_TOKEN \
+          -v $PWD:/project \
+          -v ~/.cache/electron:/root/.cache/electron \
+          -v ~/.cache/electron-builder:/root/.cache/electron-builder \
+          electronuserland/builder:wine \
+          /bin/bash -c "yarn install --link-duplicates --pure-lockfile && yarn run release"
 
 
     # - stage: Build Mac
