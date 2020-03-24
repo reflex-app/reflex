@@ -11,6 +11,7 @@ const macOS = {
     entitlementsInherit: "build/entitlements.mac.plist", // Required for MacOS Catalina
     publish: isRelease ? ['github'] : null //  Publish artifacts to Github (release)
   },
+  afterSign: isRelease ? "scripts/notarize.js" : null, // Notarize Mac (ONLY for deploys)
   dmg: {
     sign: false, // Required for MacOS Catalina
     contents: [{
@@ -67,7 +68,6 @@ module.exports = {
       to: 'dist/renderer/'
     }
   ],
-  afterSign: isRelease ? "scripts/notarize.js" : null, // Notarize Mac (ONLY for deploys)
   ...windowsOS,
   ...macOS
   // ...linuxOS,
