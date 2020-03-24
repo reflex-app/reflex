@@ -21,8 +21,7 @@ const launcher = new ElectronLauncher({
 // Normal CLI usage: `electron-builder --mac --windows`
 const builder = new ElectronBuilder({
   cliOptions: {
-    config: path.join(__dirname, '../builder.config.js'),
-    publish: 'always'
+    config: path.join(__dirname, '../builder.config.js')
   }
 })
 

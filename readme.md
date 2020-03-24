@@ -70,6 +70,22 @@ Please note: The `dev` branch represents the latest works-in-progress, and shoul
 
     This will output several files inside of the `build/` folder. You can directly run the `.app` or `.exe` file inside of `build/`.
 
+### Release
+
+`master` branch -> TravisCI -> Build app -> Codesign & Notarize (Mac only) -> Draft new/update existing Github Release
+
+1. Run `yarn run release`
+    - This adds a `process.env.RELEASE` env variable. 
+    - The presence of the `RELEASE` flag will allow notarization of the Mac app with `scripts/notarize.js`.
+    - The presence of the `RELEASE` flag will publish artifacts to Github
+
+Env vars required:
+- CSC_LINK: base64-encoded .p12 file
+- CSC_KEY_PASSWORD: optional password
+- GH_TOKEN: Github token
+- APPLEID: Apple ID
+- APPLEIDPASS: App-specific password for Apple ID
+
 ### Debugging
 
 `CMD/CTRL + Shift + I` will open the Chrome DevTools inside of the Electron instance.

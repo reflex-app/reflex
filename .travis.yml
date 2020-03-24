@@ -16,23 +16,28 @@ cache:
     - $HOME/.cache/electron
     - $HOME/.cache/electron-builder  
 
+# Run on all branches (and PRs)
+branches:
+  except:
+    - "/^v\\d+\\.\\d+\\.\\d+$/"
+  # only:
+  # - master
+  # - dev
+
 jobs:
   include:
-    - stage: Test
+    - stage: Run Tests
       script:
         - yarn test
-    - stage: Build Mac and Deploy to Github Release
+    - stage: Build Mac
+      if: branch != master
       script:
         - yarn run build
       before_cache:
         - rm -rf $HOME/.cache/electron-builder/wine
-
-# before_deploy:
-# # Codesign on Mac
-# # https://www.update.rocks/blog/osx-signing-with-travis/
-#   - if [ "$TRAVIS_OS_NAME" = osx ]; then chmod +x add-osx-cert.sh; fi
-#   - if [ "$TRAVIS_OS_NAME" = osx ]; then ./scripts/add-osx-cert.sh; fi
-
-branches:
-  except:
-    - "/^v\\d+\\.\\d+\\.\\d+$/"
+    - stage: Release — Build Mac, Notarize, Deploy to Github Release 
+      if: branch = master
+      script:
+        - yarn run release
+      before_cache:
+        - rm -rf $HOME/.cache/electron-builder/wine
