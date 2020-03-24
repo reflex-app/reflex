@@ -8,9 +8,9 @@ node_js: "10"
 # https://docs.travis-ci.com/user/multi-os/
 os:
   - osx
-  - windows
+  # - windows
   # - linux
-  
+
 stages:
   - test
   - name: build
@@ -32,9 +32,9 @@ jobs:
       os: osx
       osx_image: xcode10.2
       script: yarn run build
-    - name: "Windows"
-      os: windows
-      script: yarn run build
+    # - name: "Windows"
+    #   os: windows
+    #   script: yarn run build
     # - name: "Windows"
     #   os: linux
     #   services: docker
@@ -55,9 +55,9 @@ jobs:
       os: osx
       osx_image: xcode10.2
       script: yarn run release
-    - name: "Windows"
-      os: windows
-      script: yarn run release
+    # - name: "Windows"
+    #   os: windows
+    #   script: yarn run release
     # - name: "Windows"
     #   os: linux
     #   services: docker
