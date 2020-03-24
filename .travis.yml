@@ -10,10 +10,7 @@ os:
   - osx
   - windows
   # - linux
-
-env:
-  - CSC_IDENTITY_AUTO_DISCOVERY=false # Disable Windows certificate
-
+  
 stages:
   - test
   - name: build
