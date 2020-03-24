@@ -8,10 +8,7 @@ node_js: "10"
 # https://docs.travis-ci.com/user/multi-os/
 os:
   - osx
-    osx_image: xcode10.2
   - linux
-    services: docker
-    language: generic
 # os: osx
 # osx_image: xcode10.2
 
@@ -28,6 +25,8 @@ jobs:
   include:
     - stage: test
       os: linux
+      services: docker
+      language: generic
       script:
         - yarn test
 
@@ -37,7 +36,8 @@ jobs:
       script: yarn run build
     - name: "Windows"
       os: linux
-      script: yarn run build
+      services: docker
+      language: generic
       script: 
         - |
         if [ "$TRAVIS_OS_NAME" == "linux" ]; then
@@ -56,6 +56,8 @@ jobs:
       script: yarn run release
     - name: "Windows"
       os: linux
+      services: docker
+      language: generic
       script: 
         - |
         if [ "$TRAVIS_OS_NAME" == "linux" ]; then
