@@ -26,18 +26,39 @@ branches:
 
 jobs:
   include:
-    - stage: Run Tests
+    - stage: "Run Tests"
       script:
         - yarn test
-    - stage: Build Mac
+
+    - stage: "Build"
+    - name: "Mac"
       if: (branch != master) AND (branch != stable)
-      script:
-        - yarn run build
-      before_cache:
-        - rm -rf $HOME/.cache/electron-builder/wine
-    - stage: Release — Build Mac, Notarize, Deploy to Github Release 
+      script: yarn run build
+      before_cache: rm -rf $HOME/.cache/electron-builder/wine
+    - name: "Windows"
+      script: yarn run build
+      before_cache: rm -rf $HOME/.cache/electron-builder/wine
+
+    - stage: "Release to Github"
       if: (branch = master) OR (branch = stable)
-      script:
-        - yarn run release
-      before_cache:
-        - rm -rf $HOME/.cache/electron-builder/wine
+      script: yarn run release
+      before_cache: rm -rf $HOME/.cache/electron-builder/wine
+
+
+    # - stage: Build Mac
+    #   if: (branch != master) AND (branch != stable)
+    #   script:
+    #     - yarn run build
+    #   before_cache:
+    #     - rm -rf $HOME/.cache/electron-builder/wine
+    # - stage: Build Windows
+    #   script:
+    #     - yarn run build
+    #   before_cache:
+    #     - rm -rf $HOME/.cache/electron-builder/wine
+    # - stage: Release — Build Mac, Notarize, Deploy to Github Release 
+    #   if: (branch = master) OR (branch = stable)
+    #   script:
+    #     - yarn run release
+    #   before_cache:
+    #     - rm -rf $HOME/.cache/electron-builder/wine
