@@ -8,7 +8,8 @@
 </template>
 
 <script>
-import Panzoom from "@/mixins/panzoom";
+// import Panzoom from "@/mixins/panzoom";
+import Panzoom from "@panzoom/panzoom";
 import { mapState } from "vuex";
 import { ipcRenderer } from "electron";
 import isElectron from "is-electron";
@@ -28,14 +29,26 @@ export default {
   },
   mounted() {
     // Make it available to everyone!
+    // const parentEl = this.$refs.container;
+    // const childEl = parentEl.firstElementChild;
+    // this.$root.$panzoom = new Panzoom(childEl, parentEl, {});
+
+    // Initialize
     const parentEl = this.$refs.container;
-    const childEl = parentEl.firstElementChild;
-    this.$root.$panzoom = new Panzoom(childEl, parentEl, {});
+    const childEl = this.$refs.child;
+    this.$root.$panzoom = Panzoom(parentEl); // Initialize
+    this.$root.$panzoom = Panzoom(parentEl); // Set on child
     this.panzoomInstance = this.$root.$panzoom;
+
+    // Add wheel support
+    // this.panzoomInstance.addEventListener(
+    //   "wheel",
+    //   this.panzoomInstance.zoomWithWheel
+    // );
 
     // Enable event listeners
     this.$nextTick(() => {
-      this.enableEventListeners();
+      // this.enableEventListeners();
     });
   },
   methods: {
@@ -79,7 +92,7 @@ export default {
       }
     },
     fitToScreen() {
-      this.panzoomInstance.fitToScreen();
+      // this.panzoomInstance.fitToScreen();
     }
   }
 };
