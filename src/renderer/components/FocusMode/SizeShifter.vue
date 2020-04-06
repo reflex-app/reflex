@@ -6,10 +6,10 @@
         :key="item.id"
         :screen-id="item.id"
         class="size-shifter-item"
-        ref="size-shifter-item"
         :class="{ 'is-active' : item.id === focusModeActiveScreen.id }"
-        @click="changeSize(item.id)"
         :title="`Shortcut: ⌘${index + 1}`"
+        ref="size-shifter-item"
+        @click="changeSize(item.id)"
       >
         <div class="number">{{index + 1}}</div>
         <div class="size">{{item.width}}x{{item.height}}</div>
@@ -40,22 +40,24 @@ export default {
     const activeScreen = this.focusModeActiveScreen;
 
     // Start with the first item selected
-    const targetElement = document.querySelector(
-      `[screen-id='${activeScreen.id}']`
+    const targetElement = document.querySelectorAll(
+      `[artboard-id='${activeScreen.id}']`
     );
-
-    // TODO Bug when running this; component not loaded yet?
-    // this.changeSize(activeScreen.id);
+    // TODO Wait for artboards from Store?
+    this.$nextTick(() => {
+      setTimeout(() => {
+        this.changeSize(activeScreen.id);
+      });
+    });
   },
   methods: {
     changeSize(id) {
       // Update size in Store
       this.$store.commit("focusMode/focusChangeActiveScreen", id);
 
-      const index = this.getIndexFromId(this.focusModeActiveScreen.id);
-
-      const slidingObject = this.$refs["background-sliding-object"];
-      const targetElement = this.$refs["size-shifter-item"][index];
+      const index = this.getIndexFromId(this.focusModeActiveScreen.id); // The screen's number in the list
+      const slidingObject = this.$refs["background-sliding-object"]; // The selected item background
+      const targetElement = this.$refs["size-shifter-item"][index]; // The new element to slide to
 
       const currentOffsetLeft = slidingObject.offsetLeft;
       const targetOffsetLeft = targetElement.offsetLeft;
@@ -69,16 +71,25 @@ export default {
       slidingObject.style.width = `${targetElement.offsetWidth}px`;
       slidingObject.style.height = `${targetElement.offsetHeight}px`;
     },
+    /**
+     * Get the index, given the ID
+     * @param {String} id UUID
+     */
     getIndexFromId(id) {
       const nodes = Array.from(document.querySelectorAll(`[screen-id]`));
-      const index = nodes.indexOf(
-        document.querySelector(`[screen-id='${id}']`)
-      );
+      let index = nodes.indexOf(document.querySelector(`[screen-id='${id}']`));
+      if (index === -1) console.error("Elem not found");
       return index;
     },
+    /**
+     * Return the ID (String) of a screen, given the index
+     * @param {Number} index
+     */
     getIdFromIndex(index) {
-      // NOTE: this is 0-indexed (-1)
+      // NOTE: this index will be 0-indexed
       const item = document.querySelectorAll(`[screen-id]`)[index - 1];
+      if (item === -1) console.error("Elem not found");
+
       const id = item.getAttribute("screen-id");
       return id;
     },
@@ -100,7 +111,6 @@ export default {
         keys.some(key => key == event.key)
       ) {
         const id = this.getIdFromIndex(event.key);
-
         this.changeSize(id);
       }
     },
@@ -129,7 +139,7 @@ export default {
   align-items: center;
   position: relative;
   margin: 1rem;
-  z-index: 1;
+  // z-index: 1;
   backdrop-filter: blur(5px);
 
   // Small screens
