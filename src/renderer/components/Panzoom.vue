@@ -7,9 +7,7 @@
 </template>
 
 <script>
-import Panzoom from "@/assets/panzoom.js";
-// import Panzoom from "@panzoom/panzoom";
-
+import Panzoom from "@panzoom/panzoom";
 import { mapState } from "vuex";
 import { ipcRenderer } from "electron";
 import isElectron from "is-electron";
