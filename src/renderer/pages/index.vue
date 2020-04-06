@@ -1,26 +1,46 @@
 <template>
-  <div id="main-view">
-    <SidePanel />
-    <Screenshots />
-    <Panzoom id="canvas">
-      <Artboards />
-    </Panzoom>
+  <div id="focus-view">
+    <div class="canvasContainer">
+      <SidePanel />
+      <Screenshots />
+      <div class="focus-view__content">
+        <Panzoom id="canvas">
+          <FocusArtboard ref="artboards" />
+        </Panzoom>
+        <!-- <DiscoSwitch /> -->
+        <SizeShifter />
+        <!-- <DevToolsView /> -->
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import Artboards from "@/components/Screens/Artboards";
+import Panzoom from "@/components/Panzoom";
 import SidePanel from "@/components/SidePanel";
 import Screenshots from "@/components/Screenshot";
-import Panzoom from "@/components/Panzoom";
+import FocusArtboard from "@/components/FocusMode/FocusArtboard";
+import SizeShifter from "@/components/FocusMode/SizeShifter";
+import DiscoSwitch from "@/components/FocusMode/DiscoSwitch";
+import DevToolsView from "@/components/DevToolsView";
 
 export default {
-  name: "MainView",
+  name: "FocusView",
   components: {
-    Artboards,
+    Panzoom,
+    FocusArtboard,
     SidePanel,
     Screenshots,
-    Panzoom
+    SizeShifter,
+    DiscoSwitch,
+    DevToolsView
+  },
+  data() {
+    return {};
+  },
+  methods: {},
+  mounted: function() {
+    this.panzoomInstance = this.$root.$panzoom;
   }
 };
 </script>
@@ -33,68 +53,44 @@ export default {
 <style lang="scss" scoped>
 @import "@/scss/_variables";
 
-#main-view {
+.canvasContainer {
   background: $body-bg;
-  min-height: calc(
+  height: calc(
     100vh - #{$gui-title-bar-height}
   ); // hard-coded height of toolbar
-  width: 100%;
   position: relative;
-  display: flex;
+  // display: flex;
+}
+
+.focus-view__content {
+  width: 100%;
 
   #canvas {
-    height: 100%;
-    width: 100%;
+    display: flex;
     position: absolute;
-    overflow: hidden;
-    outline: none;
-
-    &:hover {
-      // cursor: grab;
-    }
-
-    &:active {
-      // cursor: grabbing;
-    }
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 0;
   }
 }
 
-.dev-visual-debugger {
-  &:before,
-  &:after {
-    position: absolute;
-    height: 100%;
-    width: 100%;
-    content: "";
-    z-index: 1;
-    pointer-events: none;
-  }
+.page-enter-active {
+  transition: all 250ms ease-in-out;
+}
+.page-enter {
+  opacity: 0;
+  transform: scale(0);
+}
 
-  // Vertical line
-  &:before {
-    left: 50%;
-    border-left: 1px solid red;
-  }
-
-  // Horizonal line
-  &:after {
-    top: 50%;
-    border-top: 1px solid red;
-  }
-
-  // Nested debugger
-  .dev-visual-debugger {
-    // Vertical line
-    &:before {
-      left: 50%;
-      border-left: 1px solid green;
-    }
-
-    // Horizonal line
-    &:after {
-      top: 50%;
-      border-top: 1px solid green;
-    }
-  }
+.page-leave-active {
+  transition: all 150ms ease-in-out;
+}
+.page-leave-to {
+  opacity: 0;
+  transform: scale(0.75);
 }
 </style>
