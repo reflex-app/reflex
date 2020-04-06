@@ -1,5 +1,6 @@
 <template>
   <div class="container" :class="{ 'dev-visual-debugger': showCanvasDebugger }">
+    <PanzoomControls :instance="this.panzoomInstance" />
     <div ref="parent" :class="{ 'dev-visual-debugger': showCanvasDebugger }">
       <slot></slot>
     </div>
@@ -8,17 +9,21 @@
 
 <script>
 import Panzoom from "@panzoom/panzoom";
+import PanzoomControls from "./PanzoomControls.vue";
 import { mapState } from "vuex";
 import { ipcRenderer } from "electron";
 import isElectron from "is-electron";
 const isDev = require("electron-is-dev");
 
 export default {
+  components: {
+    PanzoomControls
+  },
   data() {
     return {
       isDev: isDev,
       DOMElement: null,
-      panzoomInstance: null
+      panzoomInstance: {}
     };
   },
   computed: {

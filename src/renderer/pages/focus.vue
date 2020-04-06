@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import Panzoom from "@/components/Panzoom";
+import Panzoom from "@/components/panzoom/Panzoom.vue";
 import SidePanel from "@/components/SidePanel";
 import Screenshots from "@/components/Screenshot";
 import FocusArtboard from "@/components/FocusMode/FocusArtboard";

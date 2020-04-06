@@ -12,7 +12,7 @@
 import Artboards from "@/components/Screens/Artboards";
 import SidePanel from "@/components/SidePanel";
 import Screenshots from "@/components/Screenshot";
-import Panzoom from "@/components/Panzoom";
+import Panzoom from "@/components/panzoom/Panzoom.vue";
 
 export default {
   name: "MainView",
