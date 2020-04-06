@@ -44,15 +44,11 @@ export default {
     ...mapGetters("interactions", ["isInteracting"])
   },
   mounted() {
-    this.$nextTick(() => {
-      if (this.artboards.length) this.fitToScreen();
-    });
-
     this.selectionInstance = new Selection({
       class: "selection-area", // Class for the selection-area
       selectedClass: "is-selected",
       selectables: ["#artboards > .artboard"], // All elements in this container can be selected
-      boundaries: ["#canvas"], // The boundary
+      boundaries: ["#artboards"], // The boundary
       singleClick: true // Enable single-click selection
     })
       .on("beforestart", evt => {
@@ -112,11 +108,11 @@ export default {
   },
   watch: {
     // TODO Consider enabling this once panzoom is a Vue plugin?
-    artboards: function() {
-      this.$nextTick(() => {
-        this.fitToScreen();
-      });
-    }
+    // artboards: function() {
+    //   this.$nextTick(() => {
+    //     this.fitToScreen();
+    //   });
+    // }
   },
   methods: {
     resize(artboard) {
