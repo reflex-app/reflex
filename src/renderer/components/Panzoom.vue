@@ -17,6 +17,7 @@ export default {
   data() {
     return {
       isDev: isDev,
+      DOMElement: null,
       panzoomInstance: null
     };
   },
@@ -26,20 +27,17 @@ export default {
     })
   },
   mounted() {
+    const vm = this;
+
     // Initialize
-    const elem = this.$refs.parent;
-    this.$root.$panzoom = Panzoom(elem, {
-      canvas: true
+    this.DOMElement = this.$refs.parent;
+    this.$root.$panzoom = Panzoom(this.DOMElement, {
+      canvas: true, // Allows parent to control child
+      cursor: "default"
     });
 
     // Reference inside of this component
     this.panzoomInstance = this.$root.$panzoom;
-
-    // Add wheel support
-    elem.parentElement.addEventListener(
-      "wheel",
-      this.panzoomInstance.zoomWithWheel
-    );
 
     // Enable event listeners
     this.$nextTick(() => {
@@ -48,41 +46,70 @@ export default {
   },
   methods: {
     enableEventListeners() {
-      // Listen for changes
-      // this.panzoomInstance
-      //   .on("zoomStart", () => {
-      //     this.$store.commit("interactions/interactionSetState", {
-      //       key: "isZooming",
-      //       value: true
-      //     });
-      //   })
-      //   .on("panStart", () => {
-      //     this.$store.commit("interactions/interactionSetState", {
-      //       key: "isPanning",
-      //       value: true
-      //     });
-      //   })
-      //   .on("zoomStop", () => {
-      //     this.$store.commit("interactions/interactionSetState", {
-      //       key: "isZooming",
-      //       value: false
-      //     });
-      //   })
-      //   .on("panStop", () => {
-      //     this.$store.commit("interactions/interactionSetState", {
-      //       key: "isPanning",
-      //       value: false
-      //     });
-      //   });
+      const instance = this.panzoomInstance;
+      const element = this.DOMElement;
+      const vm = this;
+
+      // element.addEventListener("panzoomchange", event => {
+      //   console.log(event.detail); // => { x: 0, y: 0, scale: 1 }
+      // });
+
+      // TODO Add tests for these
+
+      // Handle mouse & touch events
+      this.mouseHandlers(element, instance, vm);
+
+      // Mousewheel zoom w/ CMD/CTRL key
+      this.wheelHandler(element, instance);
 
       // Listen for menu bar events
-      // TODO Add tests for these
       if (isElectron()) {
+        ipcRenderer.on("menu_zoom-in", this.panzoomInstance.zoomIn);
+        ipcRenderer.on("menu_zoom-out", this.panzoomInstance.zoomOut);
         // ipcRenderer.on("menu_zoom-to-fit", this.panzoomInstance.fitToScreen);
-        // ipcRenderer.on("menu_zoom-in", this.panzoomInstance.zoomIn);
-        // ipcRenderer.on("menu_zoom-out", this.panzoomInstance.zoomOut);
         ipcRenderer.on("menu_show-developer-canvas-debugger", () => {
           this.$store.commit("dev/toggleCanvasDebugger");
+        });
+      }
+    },
+    /**
+     * Handles wheel events (i.e. mousewheel)
+     * @param DOMElement DOM element that Panzoom is on
+     * @param instance The Panzoom instance
+     */
+    wheelHandler(DOMElement, instance) {
+      DOMElement.parentElement.addEventListener("wheel", function(event) {
+        if (!event.metaKey) return;
+        instance.zoomWithWheel(event);
+      });
+    },
+    /**
+     * Handles mouse and touch events
+     * @param DOMElement DOM element that Panzoom is on
+     * @param instance The Panzoom instance
+     */
+    mouseHandlers(DOMElement, instance, vm) {
+      // Emit start events
+      ["mousedown", "touchstart", "gesturestart"].forEach(name =>
+        DOMElement.addEventListener(name, startEvents)
+      );
+
+      function startEvents(e) {
+        vm.$store.commit("interactions/interactionSetState", {
+          key: "isPanzooming",
+          value: true
+        });
+      }
+
+      // Emit end events
+      ["mouseup", "touchend", "gestureend"].forEach(name =>
+        DOMElement.addEventListener(name, endEvents)
+      );
+
+      function endEvents(e) {
+        vm.$store.commit("interactions/interactionSetState", {
+          key: "isPanzooming",
+          value: false
         });
       }
     },

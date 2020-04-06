@@ -1,6 +1,7 @@
 export const state = () => ({
-  isPanning: false,
-  isZooming: false,
+  // isPanning: false,
+  // isZooming: false,
+  isPanzooming: false,
   isSelectingArea: false,
   isResizingArtboard: false
 })
