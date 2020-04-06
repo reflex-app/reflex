@@ -103,7 +103,6 @@ export default {
   // outline: none;
   // height: 100%;
   // width: 100%;
-  background: rgba(blue, 0.1);
   height: 100%;
   width: 100%;
 }
@@ -111,7 +110,6 @@ export default {
 #parent {
   height: auto;
   width: auto;
-  background: rgba(green, 0.1);
   position: relative;
   display: inline-flex;
   flex-direction: row;
@@ -122,7 +120,6 @@ export default {
 #child {
   height: 100%;
   width: 100%;
-  background: rgba(red, 0.1);
 }
 
 .dev-visual-debugger {
