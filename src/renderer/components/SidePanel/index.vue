@@ -95,7 +95,11 @@ export default {
   display: grid;
   grid-template-columns: auto 1fr;
   grid-template-rows: 1fr;
+  position: absolute;
   z-index: 100;
+  min-height: calc(
+      100vh - #{$gui-title-bar-height}
+  ); // hard-coded height of toolbar
 
   .side-panel__track {
     position: relative;
