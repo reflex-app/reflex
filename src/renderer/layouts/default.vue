@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container">
     <ToolBar />
     <nuxt />
   </div>
@@ -34,3 +34,10 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.container {
+  height: 100%;
+  width: 100%;
+}
+</style>
