@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { createLocalVue } from '@vue/test-utils'
 import Vuex from 'vuex'
 import artboards from '../artboards'

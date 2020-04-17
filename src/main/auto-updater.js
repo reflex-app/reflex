@@ -96,6 +96,7 @@ export default function init(window) {
         autoUpdater.quitAndInstall(false)
       })
     } else {
+      // eslint-disable-next-line no-console
       console.log('No update available')
     }
   })

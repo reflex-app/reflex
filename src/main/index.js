@@ -12,6 +12,7 @@ app.getVersion = () => version
 global.__resources = undefined // eslint-disable-line no-underscore-dangle
 // noinspection BadExpressionStatementJS
 INCLUDE_RESOURCES_PATH // eslint-disable-line no-unused-expressions
+// eslint-disable-next-line no-undef
 if (__resources === undefined)
   console.error('[Main-process]: Resources path is undefined')
 

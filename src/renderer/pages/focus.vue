@@ -21,8 +21,6 @@ import SidePanel from '@/components/SidePanel'
 import Screenshots from '@/components/Screenshot'
 import FocusArtboard from '@/components/FocusMode/FocusArtboard'
 import SizeShifter from '@/components/FocusMode/SizeShifter'
-import DiscoSwitch from '@/components/FocusMode/DiscoSwitch'
-import DevToolsView from '@/components/DevToolsView'
 
 export default {
   name: 'FocusView',
@@ -32,8 +30,6 @@ export default {
     SidePanel,
     Screenshots,
     SizeShifter,
-    DiscoSwitch,
-    DevToolsView,
   },
   data() {
     return {}

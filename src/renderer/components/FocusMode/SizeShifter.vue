@@ -40,12 +40,13 @@ export default {
   mounted() {
     this.enableListeners()
 
-    const activeScreen = this.focusModeActiveScreen
+    // TODO Re-enable changing size on load
+    // const activeScreen = this.focusModeActiveScreen
 
     // Start with the first item selected
-    const targetElement = document.querySelector(
-      `[screen-id='${activeScreen.id}']`
-    )
+    // const targetElement = document.querySelector(
+    //   `[screen-id='${activeScreen.id}']`
+    // )
 
     // TODO Bug when running this; component not loaded yet?
     // this.changeSize(activeScreen.id);
@@ -98,7 +99,7 @@ export default {
       // If Control or Command key is pressed and a key is pressed
       if (
         (event.ctrlKey || event.metaKey) &&
-        keys.some((key) => key == event.key)
+        keys.some((key) => key === event.key)
       ) {
         const id = this.getIdFromIndex(event.key)
 

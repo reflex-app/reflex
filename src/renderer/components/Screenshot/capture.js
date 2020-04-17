@@ -102,7 +102,7 @@ export async function captureMultiple(ids) {
 }
 
 // Capture ALL the screens
-export async function captureAll(vm) {
+export function captureAll(vm) {
   // 1. Get the file path to save all
   dialog.showOpenDialog(
     {
@@ -121,7 +121,7 @@ export async function captureAll(vm) {
 
 // Take a screenshot
 // Return the image (NativeImage)
-export async function screenshot(id) {
+export function screenshot(id) {
   try {
     const webview = getWebview(id)
     return webview.getWebContents().capturePage((image) => {

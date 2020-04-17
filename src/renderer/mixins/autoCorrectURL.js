@@ -64,7 +64,7 @@ export default function (url) {
       // Case: example.com
       // Check if URL starts with anything besides a letter or digit
       if (new RegExp(/^[0-9a-z]/).test(url) === false) {
-        reject()
+        reject(new Error('URL starts with other than a letter/digit'))
       } else {
         // TODO: Default should be http
         // The URL can be prepended by https://
@@ -74,7 +74,7 @@ export default function (url) {
     } else {
       // Empty string or unknown error
       // Example: alert(url + " is not a valid URL.");
-      reject()
+      reject(new Error('String or unknown error in URL'))
     }
   })
 }

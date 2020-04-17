@@ -12,7 +12,6 @@
 </template>
 
 <script>
-import { remote } from 'electron'
 import { mapState, mapGetters } from 'vuex'
 import Selection from '@simonwep/selection-js'
 import Artboard from '@/components/Screens/Artboard'
@@ -43,8 +42,6 @@ export default {
      * Watch the VueX discoMode Store
      */
     discoMode(newValue, oldValue) {
-      const vm = this
-
       if (newValue === true) {
         this.startDisco()
       } else {

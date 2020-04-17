@@ -40,12 +40,9 @@
 </template>
 
 <script>
-import { remote } from 'electron'
-import isElectron from 'is-electron'
 import { mapState, mapGetters } from 'vuex'
 import WebPage from './WebPage.vue'
 import rightClickMenu from '@/mixins/rightClickMenu.js'
-const { Menu, MenuItem } = remote
 
 export default {
   name: 'Artboard',
@@ -53,11 +50,26 @@ export default {
     WebPage,
   },
   props: {
-    title: String,
-    id: String,
-    height: Number,
-    width: Number,
-    selectedItems: Array,
+    title: {
+      type: String,
+      default: 'Artboard',
+    },
+    id: {
+      type: String,
+      default: '123',
+    },
+    height: {
+      type: Number,
+      default: 0,
+    },
+    width: {
+      type: Number,
+      default: 0,
+    },
+    selectedItems: {
+      type: Array,
+      default: () => [],
+    },
     isVisible: Boolean,
   },
   data() {
@@ -67,15 +79,6 @@ export default {
       },
     }
   },
-
-  mounted() {
-    this.$nextTick(() => {
-      // Remove any leftover selected artboards
-      // @TODO: This should be done from VueX Store, or wiped before quitting
-      this.$store.dispatch('selectedArtboards/selectedArtboardsEmpty')
-    })
-  },
-
   computed: {
     ...mapState({
       url: (state) => state.history.currentPage.url,
@@ -84,7 +87,7 @@ export default {
     }),
     ...mapGetters('interactions', ['isInteracting']),
     isHover() {
-      const isHover = this.hoverArtboards.filter((item) => item == this.id)
+      const isHover = this.hoverArtboards.filter((item) => item === this.id)
       if (isHover.length) {
         return true
       } else {
@@ -93,7 +96,7 @@ export default {
     },
     isSelected() {
       const isSelected = this.selectedArtboards.filter(
-        (item) => item == this.id
+        (item) => item === this.id
       )
       if (isSelected.length) {
         return true
@@ -107,14 +110,22 @@ export default {
      * and the user is not dragging a selection area
      */
     canInteractWithArtboard() {
-      if (this.isSelected == false) return false // Not selected!
+      if (this.isSelected === false) return false // Not selected!
 
-      if (this.isSelected && this.isInteracting == false) {
+      if (this.isSelected && this.isInteracting === false) {
         return true // Can interact!
       }
 
       return false // Otherwise, false
     },
+  },
+
+  mounted() {
+    this.$nextTick(() => {
+      // Remove any leftover selected artboards
+      // @TODO: This should be done from VueX Store, or wiped before quitting
+      this.$store.dispatch('selectedArtboards/selectedArtboardsEmpty')
+    })
   },
 
   methods: {
@@ -134,13 +145,14 @@ export default {
       const maxSize = 9999
 
       // Make sure we're working with a number
-      const newValue = typeof value === Number ? value : Number(parseInt(value))
+      const newValue =
+        typeof value === 'number' ? value : Number(parseInt(value))
 
       // Change the data based on the name
       let oldValue = ''
-      if (name == 'height') {
+      if (name === 'height') {
         oldValue = this.artboard.height
-      } else if (name == 'width') {
+      } else if (name === 'width') {
         oldValue = this.artboard.width
       }
 
@@ -152,13 +164,13 @@ export default {
       // Min & Max
       if (newValue > maxSize || newValue < minSize) {
         return false
-      } else {
         // Size is within range!
-        if (name == 'height') {
-          this.artboard.height = newValue
-        } else if (name == 'width') {
-          this.artboard.width = newValue
-        }
+      } else if (name === 'height') {
+        this.artboard.height = newValue
+      } else if (name === 'width') {
+        this.artboard.width = newValue
+      } else {
+        console.log('out of range')
       }
     },
     triggerResize(e) {
@@ -166,20 +178,14 @@ export default {
 
       const parent = vm.$refs.artboard
       const resizable = parent
-      let startX
-      let startY
-      let startWidth
-      let startHeight
+      const startX = e.clientX
+      const startY = e.clientY
 
-      // Allow resizing, attach event handlers
-      startX = e.clientX
-      startY = e.clientY
-
-      startWidth = parseInt(
+      const startWidth = parseInt(
         document.defaultView.getComputedStyle(resizable).width,
         10
       )
-      startHeight = parseInt(
+      const startHeight = parseInt(
         document.defaultView.getComputedStyle(resizable).height,
         10
       )
@@ -217,7 +223,7 @@ export default {
           resizable.style.height = startHeight + e.clientY - startY + 'px'
 
           // Ignore pointer events on frames
-          const frames = document.getElementsByClassName('frame')
+          // const frames = document.getElementsByClassName('frame')
 
           // Update the dimensions in the UI
           vm.$emit('resize', {
@@ -238,7 +244,7 @@ export default {
         document.documentElement.removeEventListener('mouseup', stopDrag, false)
 
         // Re-enable pointer events on frames
-        const frames = document.getElementsByClassName('frame')
+        // const frames = document.getElementsByClassName('frame')
 
         // Re-enable the panzoom
         vm.$root.$panzoom.enable() // TODO: Cleaner solution that polluting document?

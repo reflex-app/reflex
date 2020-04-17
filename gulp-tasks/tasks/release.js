@@ -1,5 +1,6 @@
-const gulp = require('gulp')
+/* eslint-disable no-console */
 const exec = require('child_process').exec
+const gulp = require('gulp')
 const inquirer = require('inquirer')
 const chalk = require('chalk')
 const replace = require('gulp-replace')

@@ -32,8 +32,6 @@ export default {
     }),
   },
   mounted() {
-    const vm = this
-
     // Initialize
     this.DOMElement = this.$refs.parent
     this.$root.$panzoom = Panzoom(this.DOMElement, {

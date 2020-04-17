@@ -11,7 +11,6 @@
 
 <script>
 // Synchronization server
-import { remote } from 'electron'
 import { mapState } from 'vuex'
 import * as sync from '../../mixins/sync'
 
@@ -93,7 +92,7 @@ export default {
     },
     returnHost(url) {
       const pathArray = url.split('/')
-      const protocol = pathArray[0]
+      // const protocol = pathArray[0]
       const host = pathArray[2]
       return host
     },

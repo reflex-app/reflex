@@ -33,6 +33,20 @@ export function setMenu(window) {
         {
           role: 'selectall',
         },
+        {
+          type: 'separator',
+        },
+        {
+          label: 'Speech',
+          submenu: [
+            {
+              role: 'startspeaking',
+            },
+            {
+              role: 'stopspeaking',
+            },
+          ],
+        },
       ],
     },
     {
@@ -92,6 +106,15 @@ export function setMenu(window) {
         },
         {
           role: 'close',
+        },
+        {
+          role: 'zoom',
+        },
+        {
+          type: 'separator',
+        },
+        {
+          role: 'front',
         },
       ],
     },
@@ -167,41 +190,7 @@ export function setMenu(window) {
         window.webContents.send('menu_reset-app')
       },
     }
-  ),
-    // Edit menu
-    template[1].submenu.push(
-      {
-        type: 'separator',
-      },
-      {
-        label: 'Speech',
-        submenu: [
-          {
-            role: 'startspeaking',
-          },
-          {
-            role: 'stopspeaking',
-          },
-        ],
-      }
-    )
-
-  // Window menu
-  template[3].submenu = [
-    {
-      role: 'minimize',
-    },
-    {
-      role: 'zoom',
-    },
-    {
-      type: 'separator',
-    },
-    {
-      role: 'front',
-    },
-  ]
-
+  )
   // If in Dev mode, add menu
   if (isDev) {
     template.splice(4, 0, {

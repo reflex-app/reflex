@@ -81,7 +81,7 @@ export default {
       }
     },
 
-    async copyToClipboard() {
+    copyToClipboard() {
       capture.copyToClipboard(this.selectedArtboards)
       // TODO Notify the user when the image has been saved to clipboard
     },

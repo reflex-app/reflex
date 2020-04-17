@@ -81,12 +81,9 @@
 </template>
 
 <script>
-import { remote } from 'electron'
 import draggable from 'vuedraggable'
-import isElectron from 'is-electron'
 import { mapState } from 'vuex'
 import rightClickMenu from '@/mixins/rightClickMenu.js'
-const { Menu, MenuItem } = remote
 
 export default {
   name: 'ArtboardEditable',

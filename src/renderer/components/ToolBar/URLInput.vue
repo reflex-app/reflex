@@ -73,7 +73,7 @@ export default {
         vm.$refs.input.blur()
       })
     },
-    async validateURL(url) {
+    validateURL(url) {
       try {
         // @TODO: Refactor/simplify the URL corrector
         return autoCorrectURL(url)

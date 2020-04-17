@@ -89,7 +89,7 @@ function responder(event) {
   })
 
   // Re-bind the event
-  if (typeof responderTimer !== 'undefind') clearTimeout(responderTimer)
+  if (typeof responderTimer !== 'undefined') clearTimeout(responderTimer)
 
   responderTimer = setTimeout(function () {
     document.addEventListener(event.type, responder)

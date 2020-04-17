@@ -82,13 +82,14 @@ export default {
         // Dark BG
         case 'primary':
           return 'light'
-          break
 
         // Light BG
         case 'secondary':
         case 'ghost':
           return 'dark'
-          break
+
+        default:
+          return false
       }
     },
   },

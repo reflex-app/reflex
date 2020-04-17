@@ -7,7 +7,7 @@ export default {
   mounted() {
     this.$nextTick(() => {
       const browserView = document.querySelector('webview.frame')
-      const devtoolsView = this.$el
+      // const devtoolsView = this.$el
 
       browserView.addEventListener('dom-ready', () => {
         const browser = browserView.getWebContents()

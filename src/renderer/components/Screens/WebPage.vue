@@ -30,7 +30,7 @@ export default {
       url: (state) => state.history.currentPage.url,
     }),
     injectScript() {
-      const appPath = require('electron').remote.app.getAppPath()
+      // const appPath = require('electron').remote.app.getAppPath()
       return `file://${require('path').resolve(
         __dirname,
         '../../mixins/reflex-sync'
@@ -64,7 +64,7 @@ export default {
       // Listen for incoming events
       this.$bus.$on('REFLEX_SYNC', (args) => {
         // Don't trigger on the origin
-        if (this.id == args.originID) {
+        if (this.id === args.originID) {
           // TODO Tell the Webview to change its state to origin = true
           frame.send('REFLEX_SYNC_setState', {
             isOrigin: true,
@@ -142,11 +142,11 @@ export default {
     },
     back() {
       // Load the previous page
-      const frame = this.$refs.frame
+      // const frame = this.$refs.frame
 
       // VueX
       const pages = this.$store.state.history.pages
-      const currentPage = this.$store.state.history.currentPage.index
+      // const currentPage = this.$store.state.history.currentPage.index
       const nextPage = this.$store.state.history.currentPage.index - 1
       // frame.loadURL(pages[nextPage]);
 
@@ -162,11 +162,11 @@ export default {
     },
     forward() {
       // Load the next page
-      const frame = this.$refs.frame
+      // const frame = this.$refs.frame
 
       // VueX
       const pages = this.$store.state.history.pages
-      const currentPage = this.$store.state.history.currentPage.index
+      // const currentPage = this.$store.state.history.currentPage.index
       const nextPage = this.$store.state.history.currentPage.index + 1
       // frame.loadURL(pages[nextPage]);
 
@@ -187,15 +187,14 @@ export default {
      * @param {object} options Accepts a history option. When true, will save URL to history.
      */
     loadSite(options = { history: true }) {
-      const vm = this
+      // const vm = this
       const frame = this.$refs.frame
 
       // The frame has been destroyed
       // Remove event listeners
       if (!frame) {
-        throw new Error('Frame listeners still active after component destroy.')
         this.removeListeners()
-        return false
+        throw new Error('Frame listeners still active after component destroy.')
       }
 
       // Turn history saving on/off
@@ -264,8 +263,6 @@ export default {
         const returnedData = event.args[0]
         const title = returnedData.title
         const favicon = returnedData.favicon
-
-        console.log(title)
 
         // TODO Add to VueX Action
         this.$store.commit('history/changeSiteData', {

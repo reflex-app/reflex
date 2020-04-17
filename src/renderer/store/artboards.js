@@ -119,14 +119,14 @@ export const actions = {
       commit('removeArtboard', artboard.id)
     }
   },
-  async addMultipleArtboards({ commit }, payload) {
+  addMultipleArtboards({ commit }, payload) {
     const artboards = payload.data
 
     for (const i in artboards) {
       commit('addArtboard', artboards[i])
     }
   },
-  async duplicateArtboard({ commit }, payload) {
+  duplicateArtboard({ commit }, payload) {
     const newId = uuid()
 
     if (newId === payload.id) throw new Error('Failed to generate new ID')
