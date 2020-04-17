@@ -1,13 +1,23 @@
 <template>
   <div class="panzoom-controls">
-    <div @click="zoomIn">+</div>
-    <div @click="zoomOut">-</div>
-    <div @click="reset">Reset</div>
+    <template v-if="enabled">
+      <div @click="zoomOut">-</div>
+      <div @click="zoomIn">+</div>
+      <div @click="reset">Reset</div>
+    </template>
+    <SwitchButton :value="true" label="Pan &amp; Zoom" @onToggle="toggleCanvas" />
   </div>
 </template>
 
 <script>
+import SwitchButton from "@/components/Shared/Switch.vue";
 export default {
+  components: {
+    SwitchButton
+  },
+  data: () => ({
+    enabled: true
+  }),
   props: {
     instance: {
       type: Object,
@@ -23,6 +33,27 @@ export default {
     },
     reset() {
       this.instance.reset();
+    },
+    /**
+     * Toggles the canvas
+     * When on, users can pan and zoom
+     * When off, users can only interact inside of Screens
+     */
+    toggleCanvas(state) {
+      // Update local state
+      this.enabled = state
+
+      if (state === true) {
+        this.instance.setOptions({
+          disablePan: false,
+          disableZoom: false
+        });
+      } else {
+        this.instance.setOptions({
+          disablePan: true,
+          disableZoom: true
+        });
+      }
     }
   }
 };
@@ -40,7 +71,7 @@ export default {
   z-index: 1;
 
   & > * {
-    padding: 1rem 1.5rem;
+    padding: 0.5rem 1.25rem;
 
     &:hover {
       cursor: pointer;
