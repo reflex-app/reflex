@@ -29,14 +29,35 @@ export default {
   computed: {
     ...mapState({
       showCanvasDebugger: (state) => state.dev.showCanvasDebugger,
+      isEnabled: (state) => state.interactions.panzoomEnabled,
     }),
+  },
+  watch: {
+    // Watch for changes and change Panzoom accordingly
+    isEnabled(newState) {
+      if (newState === true) {
+        // Enable panzoom
+        this.panzoomInstance.setOptions({
+          disablePan: false,
+          disableZoom: false,
+          cursor: 'grab',
+        })
+      } else {
+        // Disable panzoom
+        this.panzoomInstance.setOptions({
+          disablePan: true,
+          disableZoom: true,
+          cursor: 'default',
+        })
+      }
+    },
   },
   mounted() {
     // Initialize
     this.DOMElement = this.$refs.parent
     this.$root.$panzoom = Panzoom(this.DOMElement, {
       canvas: true, // Allows parent to control child
-      cursor: 'default',
+      cursor: 'grab',
     })
 
     // Reference inside of this component
@@ -63,7 +84,7 @@ export default {
       this.mouseHandlers(element, instance, vm)
 
       // Mousewheel zoom w/ CMD/CTRL key
-      this.wheelHandler(element, instance)
+      this.wheelHandler(element, instance, vm)
 
       // Listen for menu bar events
       if (isElectron()) {
@@ -80,16 +101,31 @@ export default {
      * @param DOMElement DOM element that Panzoom is on
      * @param instance The Panzoom instance
      */
-    wheelHandler(DOMElement, instance) {
-      DOMElement.parentElement.addEventListener('wheel', function (event) {
+    wheelHandler(DOMElement, instance, vm) {
+      DOMElement.parentElement.addEventListener('wheel', onWheel)
+
+      function onWheel(event) {
+        if (!vm.isEnabled) return false // Only do this if Panzoom is enabled
+
+        // Prevent default scroll event
         event.preventDefault()
 
         // Require the CMD/CTRL key to be pressed
         // This prevents accidental scrolling
-        if (!event.metaKey) return
+        if (event.ctrlKey || event.metaKey || event.altKey) {
+          instance.zoomWithWheel(event)
+        } else {
+          // Allow trackpads to pan using two fingers
+          const currentPan = instance.getPan()
 
-        instance.zoomWithWheel(event)
-      })
+          const newPan = {
+            x: currentPan.x - event.deltaX,
+            y: currentPan.y - event.deltaY,
+          }
+
+          instance.pan(newPan.x, newPan.y)
+        }
+      }
     },
     /**
      * Handles mouse and touch events
@@ -97,28 +133,45 @@ export default {
      * @param instance The Panzoom instance
      */
     mouseHandlers(DOMElement, instance, vm) {
+      // TODO These DO NOT WORK
+      const parentElement = DOMElement.parentElement
+
       // Emit start events
-      ;['mousedown', 'touchstart', 'gesturestart'].forEach((name) =>
-        DOMElement.addEventListener(name, startEvents)
-      )
+      const onEvents = ['mousedown', 'touchstart', 'gesturestart']
+      onEvents.forEach((name) => {
+        parentElement.addEventListener(name, startEvents)
+      })
+
+      const offEvents = ['mouseup', 'touchend', 'gestureend']
+      offEvents.forEach((name) => {
+        parentElement.removeEventListener(name, startEvents)
+        parentElement.addEventListener(name, endEvents)
+      })
 
       function startEvents(e) {
+        if (!vm.isEnabled) return false // Only do this if Panzoom is enabled
+
+        vm.panzoomInstance.setOptions({
+          cursor: 'grabbing',
+        })
+
         vm.$store.commit('interactions/interactionSetState', {
           key: 'isPanzooming',
           value: true,
         })
       }
 
-      // Emit end events
-      ;['mouseup', 'touchend', 'gestureend'].forEach((name) =>
-        DOMElement.addEventListener(name, endEvents)
-      )
-
       function endEvents(e) {
+        vm.panzoomInstance.setOptions({
+          cursor: 'grab',
+        })
+
         vm.$store.commit('interactions/interactionSetState', {
           key: 'isPanzooming',
           value: false,
         })
+
+        parentElement.removeEventListener(name, endEvents)
       }
     },
     fitToScreen() {

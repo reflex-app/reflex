@@ -33,7 +33,7 @@ export default {
   },
   data() {
     return {
-      selectionInstance: null,
+      selectionInstance: {},
     }
   },
   computed: {

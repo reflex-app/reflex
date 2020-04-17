@@ -1,9 +1,12 @@
 export const state = () => ({
   // isPanning: false,
   // isZooming: false,
-  isPanzooming: false,
-  isSelectingArea: false,
-  isResizingArtboard: false,
+  internal: {
+    isPanzooming: false,
+    isSelectingArea: false,
+    isResizingArtboard: false,
+  },
+  panzoomEnabled: true,
 })
 
 export const getters = {
@@ -13,8 +16,10 @@ export const getters = {
   isInteracting: (state) => {
     let isOn = false
 
-    for (const s in state) {
+    for (const s in state.internal) {
       if (state[s] === true) {
+        console.log(state[s])
+
         isOn = true
       }
     }
@@ -28,5 +33,8 @@ export const mutations = {
     if (state[key] !== value) {
       state[key] = value
     }
+  },
+  setPanzoomState: (state, { value }) => {
+    state.panzoomEnabled = value
   },
 }

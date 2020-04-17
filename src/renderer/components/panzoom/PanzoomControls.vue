@@ -5,11 +5,7 @@
       <div @click="zoomIn">+</div>
       <div @click="reset">Reset</div>
     </template>
-    <SwitchButton
-      :value="true"
-      label="Pan &amp; Zoom"
-      @onToggle="toggleCanvas"
-    />
+    <SwitchButton :value="true" label="Canvas" @onToggle="toggleCanvas" />
   </div>
 </template>
 
@@ -47,17 +43,10 @@ export default {
       // Update local state
       this.enabled = state
 
-      if (state === true) {
-        this.instance.setOptions({
-          disablePan: false,
-          disableZoom: false,
-        })
-      } else {
-        this.instance.setOptions({
-          disablePan: true,
-          disableZoom: true,
-        })
-      }
+      // Update Store
+      this.$store.commit('interactions/setPanzoomState', {
+        value: state,
+      })
     },
   },
 }

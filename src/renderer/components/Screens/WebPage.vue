@@ -70,21 +70,25 @@ export default {
             isOrigin: true,
           })
         } else {
-          console.log('REFLEX EVENT:', args)
+          try {
+            console.log('REFLEX EVENT:', args)
 
-          // Update state
-          frame.send('REFLEX_SYNC_setState', {
-            isOrigin: false,
-          })
+            // Update state
+            frame.send('REFLEX_SYNC_setState', {
+              isOrigin: false,
+            })
 
-          // Send event back to the frame
-          frame.send('REFLEX_SYNC_setDOMEffect', {
-            // event,
-            scrollOffset: {
-              top: 100,
-            },
-            ...args,
-          })
+            // Send event back to the frame
+            frame.send('REFLEX_SYNC_setDOMEffect', {
+              // event,
+              scrollOffset: {
+                top: 100,
+              },
+              ...args,
+            })
+          } catch (err) {
+            throw new Error(err)
+          }
         }
       })
 
@@ -220,9 +224,15 @@ export default {
     addListeners() {
       const frame = this.$refs.frame
       frame.addEventListener('did-start-loading', this.loadstart) // loadstart
+      frame.addEventListener('did-attach-webview', () => {
+        console.log('attached webview!!')
+      }) // loadstart
       frame.addEventListener('dom-ready', this.contentloaded) // contentload
       frame.addEventListener('did-stop-loading', this.loadstop) // loadstop
       frame.addEventListener('ipc-message', this.onMessageReceived) // Listen for response
+
+      // Fatal
+      frame.addEventListener('did-fail-load', this.loadabort) // Failed to load
       frame.addEventListener('loadabort', this.loadabort) // loadabort
     },
     removeListeners() {
@@ -231,6 +241,9 @@ export default {
       frame.removeEventListener('dom-ready', this.contentloaded)
       frame.removeEventListener('did-stop-loading', this.loadstop)
       frame.removeEventListener('ipc-message', this.onMessageReceived)
+
+      // Fatal
+      frame.removeEventListener('did-fail-load', this.loadabort)
       frame.removeEventListener('loadabort', this.loadabort)
     },
     loadstart() {
@@ -291,6 +304,8 @@ export default {
       }
     },
     loadabort() {
+      this.$emit('loadend') // Hide loading spinner
+
       // @TODO: Update with Electron API
       new Notification('Aborted', {
         body: 'The site stopped loading for some reason.',
