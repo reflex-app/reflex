@@ -1,4 +1,4 @@
-const isRelease = process.env.RELEASE == 'true'
+const isRelease = process.env.RELEASE === 'true'
 const ICONS_DIR = 'build/icons/'
 
 const macOS = {
@@ -47,6 +47,7 @@ module.exports = {
   asar: true,
   productName: require('./package.json').productName,
   appId: 'com.reflex.app',
+  // eslint-disable-next-line no-template-curly-in-string
   artifactName: 'Reflex-${version}.${ext}',
   directories: {
     output: 'build',
