@@ -84,7 +84,12 @@ export default {
      */
     wheelHandler(DOMElement, instance) {
       DOMElement.parentElement.addEventListener("wheel", function(event) {
+        event.preventDefault();
+
+        // Require the CMD/CTRL key to be pressed
+        // This prevents accidental scrolling
         if (!event.metaKey) return;
+
         instance.zoomWithWheel(event);
       });
     },
