@@ -6,7 +6,7 @@
         icon="mode-all"
         :tight="true"
         title="All Screens"
-        :isPressed="isRouteActive('/')"
+        :is-pressed="isRouteActive('/')"
       ></Button>
     </nuxt-link>
     <nuxt-link to="/focus">
@@ -15,7 +15,7 @@
         icon="mode-focus"
         :tight="true"
         title="Single Screen"
-        :isPressed="isRouteActive('/focus')"
+        :is-pressed="isRouteActive('/focus')"
       ></Button>
     </nuxt-link>
 
@@ -25,26 +25,26 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from 'vuex'
 export default {
   computed: {
     ...mapState({
-      toggleState: state => state.gui.focusMode
-    })
+      toggleState: (state) => state.gui.focusMode,
+    }),
   },
   methods: {
     toggle() {
-      this.$store.commit("toggleGui", "focusMode");
+      this.$store.commit('toggleGui', 'focusMode')
     },
     isRouteActive(id) {
       if (this.$route.path === id) {
-        return true;
+        return true
       } else {
-        return false;
+        return false
       }
-    }
-  }
-};
+    },
+  },
+}
 </script>
 
 <style lang="scss" scoped>
@@ -65,7 +65,7 @@ a {
   }
 }
 
-input[type="checkbox"] {
+input[type='checkbox'] {
   height: 0;
   width: 0;
   visibility: hidden;
@@ -93,7 +93,7 @@ label {
 }
 
 label:after {
-  content: "";
+  content: '';
   position: absolute;
   top: 5px;
   left: 5px;

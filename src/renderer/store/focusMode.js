@@ -8,8 +8,8 @@ export const state = () => ({
     id: uuid(),
     title: 'Reflex',
     height: 300,
-    width: 400
-  }
+    width: 400,
+  },
   // screens: [{
   //   id: uuid(),
   //   title: 'Test',
@@ -58,7 +58,7 @@ export const mutations = {
    */
   focusChangeActiveScreen(state, id) {
     const artboards = this.state.artboards.list // TODO This is accessing another Vuex module; not obvious
-    const index = artboards.findIndex(obj => obj.id === id)
+    const index = artboards.findIndex((obj) => obj.id === id)
     state.activeScreen = Object.assign(state.activeScreen, artboards[index])
-  }
+  },
 }

@@ -3,10 +3,10 @@
     <Button
       role="ghost"
       icon="screens"
-      @click="toggleSidebar"
       :tight="true"
-      :isPressed="sidebar"
+      :is-pressed="sidebar"
       title="Screens"
+      @click="toggleSidebar"
     ></Button>
     <div v-if="artboards.length" id="toolbar__url-container">
       <HistoryControls />
@@ -16,8 +16,11 @@
             <SyncButton />
           </div>
         </div>
-        <div class="bar__right" :class="{ 'is-active' : inputStateActive }">
-          <div v-show="!inputStateActive" @click="inputStateActive=!inputStateActive">
+        <div class="bar__right" :class="{ 'is-active': inputStateActive }">
+          <div
+            v-show="!inputStateActive"
+            @click="inputStateActive = !inputStateActive"
+          >
             <!-- <img v-if="favicon" :src="favicon" class="favicon" height="10" width="10"> -->
             <span class="title" :title="title">{{ title }}</span>
           </div>
@@ -25,13 +28,13 @@
             class="input"
             :state="inputStateActive"
             @url-changed="changeURL"
-            @toggle-input="inputStateActive=!inputStateActive"
+            @toggle-input="inputStateActive = !inputStateActive"
           />
         </div>
       </div>
     </div>
     <div id="toolbar__recentURLs"></div>
-    <div class="toolbar__right" v-if="artboards.length">
+    <div v-if="artboards.length" class="toolbar__right">
       <SwitchMode />
     </div>
     <InstallUpdateButton />
@@ -40,72 +43,72 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-import URLInput from "@/components/ToolBar/URLInput.vue";
-import SyncButton from "@/components/ToolBar/SyncButton.vue";
-import HistoryControls from "@/components/ToolBar/HistoryControls.vue";
-import InstallUpdateButton from "@/components/ToolBar/InstallUpdateButton.vue";
-import SwitchMode from "@/components/ToolBar/SwitchMode";
-import { remote } from "electron";
-import isElectron from "is-electron";
+import { mapState } from 'vuex'
+import { remote } from 'electron'
+import isElectron from 'is-electron'
+import URLInput from '@/components/ToolBar/URLInput.vue'
+import SyncButton from '@/components/ToolBar/SyncButton.vue'
+import HistoryControls from '@/components/ToolBar/HistoryControls.vue'
+import InstallUpdateButton from '@/components/ToolBar/InstallUpdateButton.vue'
+import SwitchMode from '@/components/ToolBar/SwitchMode'
 
-const debounce = require("lodash.debounce");
+const debounce = require('lodash.debounce')
 
 export default {
-  name: "ToolBar",
+  name: 'ToolBar',
   components: {
     URLInput,
     HistoryControls,
     SyncButton,
     InstallUpdateButton,
-    SwitchMode
+    SwitchMode,
   },
   data() {
     return {
       inputStateActive: false,
       isFullScreen: false,
-      currentWindow: null
-    };
+      currentWindow: null,
+    }
   },
   computed: {
     ...mapState({
-      artboards: state => state.artboards.list,
-      title: state => state.history.currentPage.title,
-      url: state => state.history.currentPage.url,
-      favicon: state => state.history.currentPage.favicon,
-      sidebar: state => state.gui.sidebar
+      artboards: (state) => state.artboards.list,
+      title: (state) => state.history.currentPage.title,
+      url: (state) => state.history.currentPage.url,
+      favicon: (state) => state.history.currentPage.favicon,
+      sidebar: (state) => state.gui.sidebar,
     }),
     isMac() {
-      return process.platform === "darwin" ? true : false;
-    }
+      return process.platform === 'darwin'
+    },
   },
   methods: {
-    changeURL: debounce(function(url) {
+    changeURL: debounce(function (url) {
       // Change the URL
       // TODO Check if it's a valid URL
-      this.$store.commit("history/changeSiteData", {
-        url: url
-      });
+      this.$store.commit('history/changeSiteData', {
+        url,
+      })
 
-      console.log("change url triggered");
+      console.log('change url triggered')
 
       // Add this new page to the history
-      this.$store.dispatch("history/addPageToHistory", url);
+      this.$store.dispatch('history/addPageToHistory', url)
 
       // Off
-      this.inputStateActive = false;
+      this.inputStateActive = false
     }, 100),
     toggleSidebar() {
-      this.$store.commit("gui/toggleSidebar");
+      this.$store.commit('gui/toggleSidebar')
     },
     toggleWindowMaximize() {
-      const window = remote.getCurrentWindow();
-      const isMaximized = window.isMaximized();
+      const window = remote.getCurrentWindow()
+      const isMaximized = window.isMaximized()
       // Do the opposite
       if (isMaximized) {
-        window.unmaximize();
+        window.unmaximize()
       } else {
-        window.maximize();
+        window.maximize()
       }
     },
     toggleFullscreen() {
@@ -114,26 +117,26 @@ export default {
       // To avoid this problem, ensure you clean up any references to renderer callbacks passed to the main process.
       // This involves cleaning up event handlers, or ensuring the main process is explicitly told to dereference callbacks that came from a renderer process that is exiting.
       // See: https://electronjs.org/docs/api/remote#passing-callbacks-to-the-main-process
-      const window = remote.getCurrentWindow();
-      this.isFullScreen = window.isFullScreen() ? true : false;
-    }
+      const window = remote.getCurrentWindow()
+      this.isFullScreen = !!window.isFullScreen()
+    },
   },
   mounted() {
     if (isElectron()) {
       // Check if already in fullscreen
-      this.toggleFullscreen();
+      this.toggleFullscreen()
 
       // Listen for fullscreen event
-      const currentWindow = remote.getCurrentWindow();
-      currentWindow.on("enter-full-screen", this.toggleFullscreen);
-      currentWindow.on("leave-full-screen", this.toggleFullscreen);
+      const currentWindow = remote.getCurrentWindow()
+      currentWindow.on('enter-full-screen', this.toggleFullscreen)
+      currentWindow.on('leave-full-screen', this.toggleFullscreen)
     }
-  }
-};
+  },
+}
 </script>
 
 <style lang="scss" scoped>
-@import "~@/scss/_variables";
+@import '~@/scss/_variables';
 
 #toolbar {
   // TODO Refactor if supporting Windows in the future

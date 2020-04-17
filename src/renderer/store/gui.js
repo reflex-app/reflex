@@ -1,7 +1,7 @@
 export const state = () => ({
   sidebar: true,
   focusMode: false,
-  discoMode: false
+  discoMode: false,
 })
 
 export const mutations = {
@@ -22,5 +22,5 @@ export const mutations = {
   },
   toggleGui(state, key) {
     state[key] = !state[key]
-  }
+  },
 }

@@ -1,10 +1,10 @@
 <template>
   <div
     v-show="isVisible"
-    class="artboard"
     ref="artboard"
+    class="artboard"
     :artboard-id="id"
-    :style="{ height: height+'px', width: width+'px' }"
+    :style="{ height: height + 'px', width: width + 'px' }"
     :class="{ 'is-hover': isHover, 'is-selected': isSelected }"
     @click.right="rightClickHandler()"
   >
@@ -26,31 +26,31 @@
     <div class="artboard__keypoints"></div>
     <div class="artboard__content">
       <WebPage
-        ref="frame"
         :id="id"
-        :allowInteractions="canInteractWithArtboard"
+        ref="frame"
+        :allow-interactions="canInteractWithArtboard"
         @loadstart="state.isLoading = true"
         @loadend="state.isLoading = false"
       />
       <div class="artboard__handles">
-        <div class="handle__bottom" @mousedown="triggerResize" title="Resize" />
+        <div class="handle__bottom" title="Resize" @mousedown="triggerResize" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { remote } from "electron";
-const { Menu, MenuItem } = remote;
-import isElectron from "is-electron";
-import { mapState, mapGetters } from "vuex";
-import WebPage from "./WebPage.vue";
-import rightClickMenu from "@/mixins/rightClickMenu.js";
+import { remote } from 'electron'
+import isElectron from 'is-electron'
+import { mapState, mapGetters } from 'vuex'
+import WebPage from './WebPage.vue'
+import rightClickMenu from '@/mixins/rightClickMenu.js'
+const { Menu, MenuItem } = remote
 
 export default {
-  name: "Artboard",
+  name: 'Artboard',
   components: {
-    WebPage
+    WebPage,
   },
   props: {
     title: String,
@@ -58,45 +58,47 @@ export default {
     height: Number,
     width: Number,
     selectedItems: Array,
-    isVisible: Boolean
+    isVisible: Boolean,
   },
   data() {
     return {
       state: {
-        isLoading: false
-      }
-    };
+        isLoading: false,
+      },
+    }
   },
 
   mounted() {
     this.$nextTick(() => {
       // Remove any leftover selected artboards
       // @TODO: This should be done from VueX Store, or wiped before quitting
-      this.$store.dispatch("selectedArtboards/selectedArtboardsEmpty");
-    });
+      this.$store.dispatch('selectedArtboards/selectedArtboardsEmpty')
+    })
   },
 
   computed: {
     ...mapState({
-      url: state => state.history.currentPage.url,
-      selectedArtboards: state => state.selectedArtboards,
-      hoverArtboards: state => state.hoverArtboards
+      url: (state) => state.history.currentPage.url,
+      selectedArtboards: (state) => state.selectedArtboards,
+      hoverArtboards: (state) => state.hoverArtboards,
     }),
-    ...mapGetters("interactions", ["isInteracting"]),
+    ...mapGetters('interactions', ['isInteracting']),
     isHover() {
-      const isHover = this.hoverArtboards.filter(item => item == this.id);
+      const isHover = this.hoverArtboards.filter((item) => item == this.id)
       if (isHover.length) {
-        return true;
+        return true
       } else {
-        return false;
+        return false
       }
     },
     isSelected() {
-      const isSelected = this.selectedArtboards.filter(item => item == this.id);
+      const isSelected = this.selectedArtboards.filter(
+        (item) => item == this.id
+      )
       if (isSelected.length) {
-        return true;
+        return true
       } else {
-        return false;
+        return false
       }
     },
     /**
@@ -105,14 +107,14 @@ export default {
      * and the user is not dragging a selection area
      */
     canInteractWithArtboard() {
-      if (this.isSelected == false) return false; // Not selected!
+      if (this.isSelected == false) return false // Not selected!
 
       if (this.isSelected && this.isInteracting == false) {
-        return true; // Can interact!
+        return true // Can interact!
       }
 
-      return false; // Otherwise, false
-    }
+      return false // Otherwise, false
+    },
   },
 
   methods: {
@@ -122,147 +124,138 @@ export default {
         id: this.id,
         width: this.width,
         height: this.height,
-        isVisible: this.isVisible
-      });
+        isVisible: this.isVisible,
+      })
     },
     // Limits the size of an artboard
     validateArtboardSizeInput(name, value) {
       // @TODO: Refactor this into the size editor
-      const minSize = 50;
-      const maxSize = 9999;
+      const minSize = 50
+      const maxSize = 9999
 
       // Make sure we're working with a number
-      const newValue =
-        typeof value === Number ? value : Number(parseInt(value));
+      const newValue = typeof value === Number ? value : Number(parseInt(value))
 
       // Change the data based on the name
-      let oldValue = "";
-      if (name == "height") {
-        oldValue = this.artboard.height;
-      } else if (name == "width") {
-        oldValue = this.artboard.width;
+      let oldValue = ''
+      if (name == 'height') {
+        oldValue = this.artboard.height
+      } else if (name == 'width') {
+        oldValue = this.artboard.width
       }
 
       // If no change
       if (oldValue === newValue) {
-        return;
+        return
       }
 
       // Min & Max
       if (newValue > maxSize || newValue < minSize) {
-        return false;
+        return false
       } else {
         // Size is within range!
-        if (name == "height") {
-          this.artboard.height = newValue;
-        } else if (name == "width") {
-          this.artboard.width = newValue;
+        if (name == 'height') {
+          this.artboard.height = newValue
+        } else if (name == 'width') {
+          this.artboard.width = newValue
         }
       }
     },
     triggerResize(e) {
-      const vm = this;
+      const vm = this
 
-      let parent = vm.$refs.artboard,
-        resizable = parent,
-        startX,
-        startY,
-        startWidth,
-        startHeight;
+      const parent = vm.$refs.artboard
+      const resizable = parent
+      let startX
+      let startY
+      let startWidth
+      let startHeight
 
       // Allow resizing, attach event handlers
-      startX = e.clientX;
-      startY = e.clientY;
+      startX = e.clientX
+      startY = e.clientY
 
       startWidth = parseInt(
         document.defaultView.getComputedStyle(resizable).width,
         10
-      );
+      )
       startHeight = parseInt(
         document.defaultView.getComputedStyle(resizable).height,
         10
-      );
+      )
 
-      document.documentElement.addEventListener("mousedown", doStart);
-      document.documentElement.addEventListener("mousemove", doDrag);
-      document.documentElement.addEventListener("mouseup", stopDrag);
+      document.documentElement.addEventListener('mousedown', doStart)
+      document.documentElement.addEventListener('mousemove', doDrag)
+      document.documentElement.addEventListener('mouseup', stopDrag)
 
       // Pause the panzoom
       if (this.$root.$panzoom.state.isEnabled === true) {
-        this.$root.$panzoom.disable(); // TODO: Cleaner solution that polluting document?
+        this.$root.$panzoom.disable() // TODO: Cleaner solution that polluting document?
       }
 
       function doStart() {
         // Update global state
-        vm.$store.commit("interactions/interactionSetState", {
-          key: "isResizingArtboard",
-          value: true
-        });
+        vm.$store.commit('interactions/interactionSetState', {
+          key: 'isResizingArtboard',
+          value: true,
+        })
       }
 
       // Resize objects
-      let isDraggingTracker;
+      let isDraggingTracker
       function doDrag(e) {
         // This event needs to be debounced, as it's called on mousemove
         // Debounce via https://gomakethings.com/debouncing-your-javascript-events/
         if (isDraggingTracker) {
-          window.cancelAnimationFrame(isDraggingTracker);
+          window.cancelAnimationFrame(isDraggingTracker)
         }
 
         // Setup the new requestAnimationFrame()
-        isDraggingTracker = window.requestAnimationFrame(function() {
+        isDraggingTracker = window.requestAnimationFrame(function () {
           // Run our scroll functions
-          resizable.style.width = startWidth + e.clientX - startX + "px";
-          resizable.style.height = startHeight + e.clientY - startY + "px";
+          resizable.style.width = startWidth + e.clientX - startX + 'px'
+          resizable.style.height = startHeight + e.clientY - startY + 'px'
 
           // Ignore pointer events on frames
-          let frames = document.getElementsByClassName("frame");
+          const frames = document.getElementsByClassName('frame')
 
           // Update the dimensions in the UI
-          vm.$emit("resize", {
+          vm.$emit('resize', {
             id: vm.id,
             width: parseInt(resizable.style.width, 10),
-            height: parseInt(resizable.style.height, 10)
-          });
-        });
+            height: parseInt(resizable.style.height, 10),
+          })
+        })
       }
 
       function stopDrag() {
         document.documentElement.removeEventListener(
-          "mousedown",
+          'mousedown',
           doStart,
           false
-        );
-        document.documentElement.removeEventListener(
-          "mousemove",
-          doDrag,
-          false
-        );
-        document.documentElement.removeEventListener(
-          "mouseup",
-          stopDrag,
-          false
-        );
+        )
+        document.documentElement.removeEventListener('mousemove', doDrag, false)
+        document.documentElement.removeEventListener('mouseup', stopDrag, false)
 
         // Re-enable pointer events on frames
-        let frames = document.getElementsByClassName("frame");
+        const frames = document.getElementsByClassName('frame')
 
         // Re-enable the panzoom
-        vm.$root.$panzoom.enable(); // TODO: Cleaner solution that polluting document?
+        vm.$root.$panzoom.enable() // TODO: Cleaner solution that polluting document?
 
         // Update global state
-        vm.$store.commit("interactions/interactionSetState", {
-          key: "isResizingArtboard",
-          value: false
-        });
+        vm.$store.commit('interactions/interactionSetState', {
+          key: 'isResizingArtboard',
+          value: false,
+        })
       }
-    }
-  }
-};
+    },
+  },
+}
 </script>
 
 <style lang="scss" scoped>
-@import "@/scss/_variables";
+@import '@/scss/_variables';
 $artboard-handle-height: 1rem;
 
 .artboard {
@@ -356,7 +349,7 @@ $artboard-handle-height: 1rem;
       }
 
       &:after {
-        content: "";
+        content: '';
         position: relative;
         background: $accent-color;
         height: $artboard-handle-height;

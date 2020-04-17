@@ -12,85 +12,85 @@ export default {
   props: {
     role: {
       type: String,
-      default: "secondary"
+      default: 'secondary',
     },
     icon: {
-      type: String
+      type: String,
     },
     rounded: {
       type: Boolean,
-      default: false
+      default: false,
     },
     tight: {
       type: Boolean,
-      default: false
+      default: false,
     },
     isPressed: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   computed: {
     containerStyles() {
       // Returns a class name based on
       // some logic w/ props
-      let classNames = [];
+      const classNames = []
 
       // Set primary/secondary
       switch (this.role) {
-        case "primary":
-          classNames.push("button--primary");
-          break;
+        case 'primary':
+          classNames.push('button--primary')
+          break
 
-        case "secondary":
-          classNames.push("button--secondary");
-          break;
+        case 'secondary':
+          classNames.push('button--secondary')
+          break
 
-        case "ghost":
-          classNames.push("button--ghost");
-          break;
+        case 'ghost':
+          classNames.push('button--ghost')
+          break
       }
 
       // Check for button content + icon
-      const slotHasContent = !!this.$slots.default;
+      const slotHasContent = !!this.$slots.default
 
       if (slotHasContent && this.icon) {
-        classNames.push("button--with-icon");
+        classNames.push('button--with-icon')
       }
 
       // If isPressed
       if (this.isPressed) {
-        classNames.push("button--is-pressed");
+        classNames.push('button--is-pressed')
       }
-      
+
       // If tight
       if (this.tight) {
-        classNames.push("button--tight");
+        classNames.push('button--tight')
       }
 
       // If rounded
       if (this.rounded) {
-        classNames.push("button--rounded");
+        classNames.push('button--rounded')
       }
 
-      return classNames;
+      return classNames
     },
     iconColor() {
-      if (!this.icon) return false;
+      if (!this.icon) return false
 
       switch (this.role) {
         // Dark BG
-        case "primary":
-          return "light";
-          break;
+        case 'primary':
+          return 'light'
+          break
 
         // Light BG
-        case "secondary":
-        case "ghost":
-          return "dark";
-          break;
+        case 'secondary':
+        case 'ghost':
+          return 'dark'
+          break
       }
-    }
+    },
   },
   methods: {
     /**
@@ -98,14 +98,14 @@ export default {
      * Can be listened via @click
      */
     onClick(event) {
-      this.$emit("click", event);
-    }
-  }
-};
+      this.$emit('click', event)
+    },
+  },
+}
 </script>
 
 <style lang="scss" scoped>
-@import "@/scss/_variables.scss";
+@import '@/scss/_variables.scss';
 
 .button {
   display: inline-flex;

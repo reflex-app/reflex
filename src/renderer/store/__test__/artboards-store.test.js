@@ -1,6 +1,4 @@
-import {
-  createLocalVue
-} from '@vue/test-utils'
+import { createLocalVue } from '@vue/test-utils'
 import Vuex from 'vuex'
 import artboards from '../artboards'
 
@@ -11,9 +9,9 @@ function setup() {
 
   return new Vuex.Store({
     modules: {
-      artboards
+      artboards,
     },
-    strict: false
+    strict: false,
   })
 }
 
@@ -25,26 +23,21 @@ test('empty state exists', () => {
 
 describe('artboards: add, remove', () => {
   // const store = setup()
-
   // test('adds an artboard to array', () => {
   //   const newArtboard = {
   //     title: 'Untitled',
   //     width: 375,
   //     height: 667
   //   }
-
   //   // Dispatch to VueX
   //   store.dispatch('artboards/addArtboard', newArtboard)
-
   //   // Check the result
   //   expect(store.state.artboards.list.length).toBe(1)
   //   expect(store.state.artboards.list).toEqual([newArtboard])
   // })
-
   // test('removes an artboard at index', () => {
   //   // Dispatch to VueX
   //   store.commit('artboards/removeArtboard', 0)
-
   //   // Check the result
   //   expect(store.state.artboards.list.length).toBe(0)
   //   expect(store.state.artboards.list).toEqual([])

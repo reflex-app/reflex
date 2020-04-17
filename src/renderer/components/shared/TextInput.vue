@@ -14,17 +14,17 @@ export default {
   props: {
     placeholder: {
       type: String,
-      default: 'Enter something...'
+      default: 'Enter something...',
     },
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>
-@import "~@/scss/_variables";
+@import '~@/scss/_variables';
 
-input[type="text"],
-input[type="number"] {
+input[type='text'],
+input[type='number'] {
   position: relative;
   border: 1px solid $border-color;
   border-radius: 4px;

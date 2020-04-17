@@ -3,14 +3,14 @@ export const state = () => ({
   // isZooming: false,
   isPanzooming: false,
   isSelectingArea: false,
-  isResizingArtboard: false
+  isResizingArtboard: false,
 })
 
 export const getters = {
   /**
    * Getter to check if any states are true
    */
-  isInteracting: state => {
+  isInteracting: (state) => {
     let isOn = false
 
     for (const s in state) {
@@ -20,16 +20,13 @@ export const getters = {
     }
 
     return isOn
-  }
+  },
 }
 
 export const mutations = {
-  interactionSetState: (state, {
-    key,
-    value
-  }) => {
+  interactionSetState: (state, { key, value }) => {
     if (state[key] !== value) {
       state[key] = value
     }
-  }
+  },
 }

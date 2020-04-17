@@ -6,10 +6,10 @@
 export default {
   methods: {
     toggleDisco() {
-      this.$store.commit("gui/toggleGui", "discoMode");
-    }
-  }
-};
+      this.$store.commit('gui/toggleGui', 'discoMode')
+    },
+  },
+}
 </script>
 
 <style lang="scss" scoped>

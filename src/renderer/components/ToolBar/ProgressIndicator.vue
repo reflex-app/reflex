@@ -7,7 +7,7 @@
     <svg
       :viewBox="`0 0 ${size} ${size}`"
       class="circular-chart"
-      :class="{'is-complete':readyToInstall }"
+      :class="{ 'is-complete': readyToInstall }"
     >
       <path
         class="circle"
@@ -33,54 +33,54 @@ export default {
   props: {
     strokeWidth: {
       type: Number,
-      default: 3
+      default: 3,
     },
     percentage: {
       type: Number,
-      default: 30
-    }
+      default: 30,
+    },
   },
 
   data() {
     return {
-      size: 36
-    };
+      size: 36,
+    }
   },
 
   computed: {
     x() {
-      return this.size / 2;
+      return this.size / 2
     },
     y() {
-      return (this.size - this.diameter) / 2;
+      return (this.size - this.diameter) / 2
     },
     pi() {
-      return 3.14159;
+      return 3.14159
     },
     radius() {
-      return 100 / (this.pi * 2);
+      return 100 / (this.pi * 2)
       //      ^ magic number
     },
     diameter() {
-      return this.radius * 2;
+      return this.radius * 2
     },
     readyToInstall() {
       if (this.percentage === 100) {
-        return true;
+        return true
       }
-      return false;
-    }
+      return false
+    },
   },
   methods: {
     clickHandler() {
-      this.$emit("click");
-    }
-  }
-};
+      this.$emit('click')
+    },
+  },
+}
 </script>
 
 <style lang="scss" scoped>
-@import "~@/scss/_variables";
+@import '~@/scss/_variables';
 
 .download-progress-indicator {
   position: relative;
@@ -122,7 +122,7 @@ export default {
   padding: 0.5rem;
 
   .download-icon {
-    transform: scale(0.7)
+    transform: scale(0.7);
   }
 }
 </style>

@@ -5,34 +5,38 @@
       <div @click="zoomIn">+</div>
       <div @click="reset">Reset</div>
     </template>
-    <SwitchButton :value="true" label="Pan &amp; Zoom" @onToggle="toggleCanvas" />
+    <SwitchButton
+      :value="true"
+      label="Pan &amp; Zoom"
+      @onToggle="toggleCanvas"
+    />
   </div>
 </template>
 
 <script>
-import SwitchButton from "@/components/Shared/Switch.vue";
+import SwitchButton from '@/components/Shared/Switch.vue'
 export default {
   components: {
-    SwitchButton
+    SwitchButton,
   },
-  data: () => ({
-    enabled: true
-  }),
   props: {
     instance: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
+  data: () => ({
+    enabled: true,
+  }),
   methods: {
     zoomIn() {
-      this.instance.zoomIn();
+      this.instance.zoomIn()
     },
     zoomOut() {
-      this.instance.zoomOut();
+      this.instance.zoomOut()
     },
     reset() {
-      this.instance.reset();
+      this.instance.reset()
     },
     /**
      * Toggles the canvas
@@ -46,17 +50,17 @@ export default {
       if (state === true) {
         this.instance.setOptions({
           disablePan: false,
-          disableZoom: false
-        });
+          disableZoom: false,
+        })
       } else {
         this.instance.setOptions({
           disablePan: true,
-          disableZoom: true
-        });
+          disableZoom: true,
+        })
       }
-    }
-  }
-};
+    },
+  },
+}
 </script>
 
 <style lang="scss" scoped>

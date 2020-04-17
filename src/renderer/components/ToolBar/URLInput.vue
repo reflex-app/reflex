@@ -24,69 +24,69 @@
 </template>
 
 <script>
-import autoCorrectURL from "@/mixins/autoCorrectURL.js";
+import autoCorrectURL from '@/mixins/autoCorrectURL.js'
 
 export default {
-  name: "URLInput",
+  name: 'URLInput',
   props: {
     state: {
       type: Boolean,
       required: true,
-      default: false
-    }
+      default: false,
+    },
   },
   computed: {
     url() {
-      return this.$store.state.history.currentPage.url;
-    }
+      return this.$store.state.history.currentPage.url
+    },
   },
   watch: {
-    state: function() {
-      const vm = this;
+    state() {
+      const vm = this
       if (this.state === true) {
         // When clicked, select the text in the input
         vm.$nextTick(() => {
-          vm.$refs.input.focus();
-          vm.$refs.input.select();
-        });
+          vm.$refs.input.focus()
+          vm.$refs.input.select()
+        })
       }
     },
-    url: function() {
+    url() {
       // When the URL changes...
       // update notBrowserSyncURL
-      console.log("url changed");
-    }
+      console.log('url changed')
+    },
   },
   methods: {
     async triggerSiteLoad(url) {
-      if (!url) return false;
+      if (!url) return false
 
       // Validate URL
-      const newURL = await this.validateURL(url);
-      this.$emit("url-changed", newURL);
-      this.blur();
+      const newURL = await this.validateURL(url)
+      this.$emit('url-changed', newURL)
+      this.blur()
     },
     blur() {
       // Blur the input
-      const vm = this;
+      const vm = this
       vm.$nextTick(() => {
-        vm.$refs.input.blur();
-      });
+        vm.$refs.input.blur()
+      })
     },
     async validateURL(url) {
       try {
         // @TODO: Refactor/simplify the URL corrector
-        return autoCorrectURL(url);
+        return autoCorrectURL(url)
       } catch (e) {
-        return false;
+        return false
       }
-    }
-  }
-};
+    },
+  },
+}
 </script>
 
 <style lang="scss" scoped>
-@import "~@/scss/_variables";
+@import '~@/scss/_variables';
 
 .input {
   width: 100%;
@@ -101,7 +101,7 @@ export default {
   }
 }
 
-input[type="text"] {
+input[type='text'] {
   border: none;
   font-size: 1rem;
   box-sizing: border-box;

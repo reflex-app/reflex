@@ -4,21 +4,27 @@
     <transition name="slide-fade">
       <div v-if="selectedArtboards.length > 0" class="modal">
         <div>
+          <Button role="primary" @click="screenshotSelected"
+            >Save
+            {{
+              selectedArtboards.length > 1
+                ? selectedArtboards.length + ' images...'
+                : selectedArtboards.length + ' image...'
+            }}</Button
+          >
           <Button
-            role="primary"
-            @click="screenshotSelected"
-          >Save {{ selectedArtboards.length > 1 ? selectedArtboards.length + ' images...' : selectedArtboards.length + ' image...' }}</Button>
-          <Button
+            v-if="selectedArtboards.length === 1"
             role="secondary"
             @click="copyToClipboard"
-            v-if="selectedArtboards.length===1"
-          >Copy to Clipboard</Button>
+            >Copy to Clipboard</Button
+          >
         </div>
         <Button
           role="secondary"
-          @click="clearAllSelected"
           class="modal__close button"
-        >Clear Selection</Button>
+          @click="clearAllSelected"
+          >Clear Selection</Button
+        >
       </div>
     </transition>
 
@@ -28,63 +34,63 @@
 </template>
 
 <script>
-import * as capture from "./capture.js";
-import { mapState } from "vuex";
+import { mapState } from 'vuex'
+import * as capture from './capture.js'
 
 export default {
-  name: "Screenshots",
+  name: 'Screenshots',
 
   data() {
     return {
       isScreenshotMode: false,
-      filePath: ""
-    };
+      filePath: '',
+    }
   },
 
   computed: {
     // Bind to our Vuex Store's URL value
     artboards() {
-      return this.$store.state.artboards.list;
+      return this.$store.state.artboards.list
     },
     selectedArtboards() {
-      return this.$store.state.selectedArtboards;
+      return this.$store.state.selectedArtboards
     },
     ...mapState({
-      selectedArtboards: state => state.selectedArtboards
-    })
+      selectedArtboards: (state) => state.selectedArtboards,
+    }),
   },
 
   methods: {
     clearAllSelected() {
-      this.$store.dispatch("selectedArtboards/selectedArtboardsEmpty");
+      this.$store.dispatch('selectedArtboards/selectedArtboardsEmpty')
     },
 
     async screenshotAll() {
       try {
-        await capture.captureAll(this);
+        await capture.captureAll(this)
       } catch (err) {
-        throw new Error(err);
+        throw new Error(err)
       }
     },
 
     async screenshotSelected() {
       try {
-        await capture.captureMultiple(this.selectedArtboards);
+        await capture.captureMultiple(this.selectedArtboards)
       } catch (err) {
-        throw new Error(err);
+        throw new Error(err)
       }
     },
 
     async copyToClipboard() {
-      capture.copyToClipboard(this.selectedArtboards);
+      capture.copyToClipboard(this.selectedArtboards)
       // TODO Notify the user when the image has been saved to clipboard
-    }
-  }
-};
+    },
+  },
+}
 </script>
 
 <style lang="scss" scoped>
-@import "~@/scss/_variables";
+@import '~@/scss/_variables';
 
 #screenshots {
   .modal {

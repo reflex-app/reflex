@@ -7,18 +7,15 @@ module.exports = {
   TEST: 'test/',
 
   SERVER: {
-    PORT: 8080
+    PORT: 8080,
   },
 
-  JS_FILES: [
-    'js/*.js'
-  ],
+  JS_FILES: ['js/*.js'],
 
   // Assets
   ASSETS_FILES: [
     'img/assets/**/*',
     '!img/assets/{js,scss}',
-    '!img/assets/{js,scss}/**/*'
-  ]
-
+    '!img/assets/{js,scss}/**/*',
+  ],
 }

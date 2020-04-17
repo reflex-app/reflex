@@ -6,20 +6,20 @@
 export default {
   mounted() {
     this.$nextTick(() => {
-      const browserView = document.querySelector("webview.frame");
-      const devtoolsView = this.$el;
+      const browserView = document.querySelector('webview.frame')
+      const devtoolsView = this.$el
 
-      browserView.addEventListener("dom-ready", () => {
-        const browser = browserView.getWebContents();
-        browser.openDevTools();
+      browserView.addEventListener('dom-ready', () => {
+        const browser = browserView.getWebContents()
+        browser.openDevTools()
 
         // Blocked by: https://github.com/electron/electron/issues/14095
         // browser.setDevToolsWebContents(devtoolsView.getWebContents());
         // browser.openDevTools({mode: right});
-      });
-    });
-  }
-};
+      })
+    })
+  },
+}
 </script>
 
 <style lang="scss" scoped>

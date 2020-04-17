@@ -1,24 +1,14 @@
 <template>
   <div class="switch-mode-container" @click.stop="toggle">
-    <label for="switch">{{label}}</label>
+    <label for="switch">{{ label }}</label>
     <input type="checkbox" :checked="isChecked" />
-    <div class="switch" :class="{ 'is-active' : isChecked }"></div>
+    <div class="switch" :class="{ 'is-active': isChecked }"></div>
   </div>
 </template>
 
 <script>
 export default {
-  name: "Switch",
-  data() {
-    return {
-      checked: false
-    };
-  },
-  computed: {
-    isChecked: function() {
-      return this.checked;
-    }
-  },
+  name: 'Switch',
   props: {
     /**
      * Sets the initial value of the switch
@@ -26,30 +16,40 @@ export default {
      */
     value: {
       type: Boolean,
-      default: false
+      default: false,
     },
     /**
      * Text label
      */
     label: {
       type: String,
-      default: "Label"
+      default: 'Label',
+    },
+  },
+  data() {
+    return {
+      checked: false,
     }
+  },
+  computed: {
+    isChecked() {
+      return this.checked
+    },
+  },
+  mounted() {
+    // Set the initial value
+    this.checked = this.value
   },
   methods: {
     /**
      * Toggle the boolean value
      */
     toggle() {
-      this.checked = !this.checked;
-      this.$emit("onToggle", this.checked); // Emit event and Boolean
-    }
+      this.checked = !this.checked
+      this.$emit('onToggle', this.checked) // Emit event and Boolean
+    },
   },
-  mounted() {
-    // Set the initial value
-    this.checked = this.value;
-  }
-};
+}
 </script>
 
 <style lang="scss" scoped>
@@ -71,7 +71,7 @@ a {
   }
 }
 
-input[type="checkbox"] {
+input[type='checkbox'] {
   height: 0;
   width: 0;
   visibility: hidden;
@@ -103,7 +103,7 @@ label {
   }
 
   &:after {
-    content: "";
+    content: '';
     position: absolute;
     top: 5px;
     left: 5px;

@@ -3,13 +3,13 @@
     <div v-if="artboards.length" id="artboards">
       <Artboard
         v-for="(artboard, index) in artboards"
-        v-bind="artboard"
         :key="artboard.id"
+        ref="artboard"
+        v-bind="artboard"
         :index="index"
         :artboard-id="artboard.id"
-        :selectedItems="selectedArtboards"
-        :isVisible="artboard.isVisible"
-        ref="artboard"
+        :selected-items="selectedArtboards"
+        :is-visible="artboard.isVisible"
         class="artboard"
         @resize="resize"
       />
@@ -20,91 +20,28 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from "vuex";
-import Selection from "@simonwep/selection-js";
-import Artboard from "./Artboard";
-import WelcomeScreen from "./WelcomeScreen";
+import { mapState, mapGetters } from 'vuex'
+import Selection from '@simonwep/selection-js'
+import Artboard from './Artboard'
+import WelcomeScreen from './WelcomeScreen'
 
 export default {
-  name: "Artboards",
+  name: 'Artboards',
   components: {
     Artboard,
-    WelcomeScreen
+    WelcomeScreen,
   },
   data() {
     return {
-      selectionInstance: null
-    };
+      selectionInstance: null,
+    }
   },
   computed: {
     ...mapState({
-      artboards: state => state.artboards.list,
-      selectedArtboards: state => state.selectedArtboards
+      artboards: (state) => state.artboards.list,
+      selectedArtboards: (state) => state.selectedArtboards,
     }),
-    ...mapGetters("interactions", ["isInteracting"])
-  },
-  mounted() {
-    this.selectionInstance = new Selection({
-      class: "selection-area", // Class for the selection-area
-      selectedClass: "is-selected",
-      selectables: ["#artboards > .artboard"], // All elements in this container can be selected
-      boundaries: ["#artboards"], // The boundary
-      singleClick: true // Enable single-click selection
-    })
-      .on("beforestart", evt => {
-        // Prevent selections if the user is interacting with an artboard
-        if (this.isInteracting) return false;
-      })
-      .on("start", evt => {
-        // Every non-ctrlKey causes a selection reset
-        if (!evt.ctrlKey) {
-          this.$store.dispatch("selectedArtboards/selectedArtboardsEmpty");
-        }
-
-        // Update state
-        this.$store.commit("interactions/interactionSetState", {
-          key: "isSelectingArea",
-          value: true
-        });
-      })
-      .on("move", evt => {
-        /**
-         * Only add / remove selected class to increase selection performance.
-         */
-
-        // Add
-        evt.changed.added.forEach(item => {
-          const id = item.getAttribute("artboard-id");
-          this.$store.dispatch("selectedArtboards/selectedArtboardsAdd", id);
-        });
-
-        // Remove
-        evt.changed.removed.forEach(item => {
-          const id = item.getAttribute("artboard-id");
-          this.$store.dispatch("selectedArtboards/selectedArtboardsRemove", id);
-        });
-      })
-      .on("stop", evt => {
-        /**
-         * Every element has a artboard-id property which is used
-         * to find the selected nodes. Find these and append they
-         * to the current selection.
-         */
-        // Remove all in case temporarily added
-        this.$store.dispatch("selectedArtboards/selectedArtboardsEmpty");
-
-        // Update state
-        this.$store.commit("interactions/interactionSetState", {
-          key: "isSelectingArea",
-          value: false
-        });
-
-        // Push the new IDs
-        evt.selected.forEach(item => {
-          const id = item.getAttribute("artboard-id");
-          this.$store.dispatch("selectedArtboards/selectedArtboardsAdd", id); // Add these items to the Store
-        });
-      });
+    ...mapGetters('interactions', ['isInteracting']),
   },
   watch: {
     // TODO Consider enabling this once panzoom is a Vue plugin?
@@ -114,22 +51,84 @@ export default {
     //   });
     // }
   },
+  mounted() {
+    this.selectionInstance = new Selection({
+      class: 'selection-area', // Class for the selection-area
+      selectedClass: 'is-selected',
+      selectables: ['#artboards > .artboard'], // All elements in this container can be selected
+      boundaries: ['#artboards'], // The boundary
+      singleClick: true, // Enable single-click selection
+    })
+      .on('beforestart', (evt) => {
+        // Prevent selections if the user is interacting with an artboard
+        if (this.isInteracting) return false
+      })
+      .on('start', (evt) => {
+        // Every non-ctrlKey causes a selection reset
+        if (!evt.ctrlKey) {
+          this.$store.dispatch('selectedArtboards/selectedArtboardsEmpty')
+        }
+
+        // Update state
+        this.$store.commit('interactions/interactionSetState', {
+          key: 'isSelectingArea',
+          value: true,
+        })
+      })
+      .on('move', (evt) => {
+        /**
+         * Only add / remove selected class to increase selection performance.
+         */
+
+        // Add
+        evt.changed.added.forEach((item) => {
+          const id = item.getAttribute('artboard-id')
+          this.$store.dispatch('selectedArtboards/selectedArtboardsAdd', id)
+        })
+
+        // Remove
+        evt.changed.removed.forEach((item) => {
+          const id = item.getAttribute('artboard-id')
+          this.$store.dispatch('selectedArtboards/selectedArtboardsRemove', id)
+        })
+      })
+      .on('stop', (evt) => {
+        /**
+         * Every element has a artboard-id property which is used
+         * to find the selected nodes. Find these and append they
+         * to the current selection.
+         */
+        // Remove all in case temporarily added
+        this.$store.dispatch('selectedArtboards/selectedArtboardsEmpty')
+
+        // Update state
+        this.$store.commit('interactions/interactionSetState', {
+          key: 'isSelectingArea',
+          value: false,
+        })
+
+        // Push the new IDs
+        evt.selected.forEach((item) => {
+          const id = item.getAttribute('artboard-id')
+          this.$store.dispatch('selectedArtboards/selectedArtboardsAdd', id) // Add these items to the Store
+        })
+      })
+  },
+  beforeDestroy() {
+    this.selectionInstance.destroy()
+  },
   methods: {
     resize(artboard) {
-      this.$store.commit("artboards/resizeArtboard", artboard);
+      this.$store.commit('artboards/resizeArtboard', artboard)
     },
     fitToScreen() {
       // TODO De-couple this call to the parent
-      console.log("Artboards loaded", this.$parent);
-      this.$parent.fitToScreen();
-    }
+      console.log('Artboards loaded', this.$parent)
+      this.$parent.fitToScreen()
+    },
   },
-  beforeDestroy() {
-    this.selectionInstance.destroy();
-  }
-};
+}
 </script>
-
 
 <style lang="scss">
 // WARNING: UNSCOPED!

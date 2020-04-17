@@ -16,16 +16,16 @@
 </template>
 
 <script>
-import Panzoom from "@/components/panzoom/Panzoom.vue";
-import SidePanel from "@/components/SidePanel";
-import Screenshots from "@/components/Screenshot";
-import FocusArtboard from "@/components/FocusMode/FocusArtboard";
-import SizeShifter from "@/components/FocusMode/SizeShifter";
-import DiscoSwitch from "@/components/FocusMode/DiscoSwitch";
-import DevToolsView from "@/components/DevToolsView";
+import Panzoom from '@/components/panzoom/Panzoom.vue'
+import SidePanel from '@/components/SidePanel'
+import Screenshots from '@/components/Screenshot'
+import FocusArtboard from '@/components/FocusMode/FocusArtboard'
+import SizeShifter from '@/components/FocusMode/SizeShifter'
+import DiscoSwitch from '@/components/FocusMode/DiscoSwitch'
+import DevToolsView from '@/components/DevToolsView'
 
 export default {
-  name: "FocusView",
+  name: 'FocusView',
   components: {
     Panzoom,
     FocusArtboard,
@@ -33,25 +33,25 @@ export default {
     Screenshots,
     SizeShifter,
     DiscoSwitch,
-    DevToolsView
+    DevToolsView,
   },
   data() {
-    return {};
+    return {}
+  },
+  mounted() {
+    this.panzoomInstance = this.$root.$panzoom
   },
   methods: {},
-  mounted: function() {
-    this.panzoomInstance = this.$root.$panzoom;
-  }
-};
+}
 </script>
 
 <style lang="scss">
 // Make global styles available
-@import "@/scss/_global";
+@import '@/scss/_global';
 </style>
 
 <style lang="scss" scoped>
-@import "@/scss/_variables";
+@import '@/scss/_variables';
 
 .canvasContainer {
   background: $body-bg;

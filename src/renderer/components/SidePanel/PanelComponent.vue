@@ -4,35 +4,35 @@
       {{ title }}
     </div>-->
     <div class="panel__content">
-        <ScreensPanel v-show="isChildPanel('Screens')" />
+      <ScreensPanel v-show="isChildPanel('Screens')" />
     </div>
   </div>
 </template>
 
 <script>
-import ScreensPanel from "./ScreensPanel.vue";
+import ScreensPanel from './ScreensPanel.vue'
 
 export default {
-  name: "PanelComponent",
+  name: 'PanelComponent',
   components: {
-    ScreensPanel
+    ScreensPanel,
   },
-  props: ["title"],
+  props: ['title'],
   computed: {},
   methods: {
-    isChildPanel: function(val) {
+    isChildPanel(val) {
       if (this.title === val) {
-        return true;
+        return true
       } else {
-        return false;
+        return false
       }
-    }
-  }
-};
+    },
+  },
+}
 </script>
 
 <style lang="scss" scoped>
-@import "../../scss/_variables";
+@import '../../scss/_variables';
 
 #panel-container {
   position: absolute;

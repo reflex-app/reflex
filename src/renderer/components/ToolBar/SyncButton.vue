@@ -2,7 +2,7 @@
   <div
     v-if="canSyncURL"
     id="sync-button"
-    :class="{ 'is-active' : isOnSyncURL }"
+    :class="{ 'is-active': isOnSyncURL }"
     @click="syncSite()"
   >
     <Icon name="sync" />
@@ -11,20 +11,20 @@
 
 <script>
 // Synchronization server
-import { remote } from "electron";
-import * as sync from "../../mixins/sync";
-import { mapState } from "vuex";
+import { remote } from 'electron'
+import { mapState } from 'vuex'
+import * as sync from '../../mixins/sync'
 
 export default {
-  name: "SyncButton",
+  name: 'SyncButton',
   data() {
     return {
-      syncServer: ""
-    };
+      syncServer: '',
+    }
   },
   computed: {
     ...mapState({
-      url: state => state.history.currentPage.url
+      url: (state) => state.history.currentPage.url,
     }),
     canSyncURL() {
       // Not available when on http
@@ -38,69 +38,71 @@ export default {
     isOnSyncURL() {
       // Show "active" state of button
       // when on the synced URL
-      let siteHost = this.returnHost(this.url);
-      let syncServerHost = this.returnHost(this.syncServer);
+      const siteHost = this.returnHost(this.url)
+      const syncServerHost = this.returnHost(this.syncServer)
 
       if (syncServerHost && syncServerHost.includes(siteHost)) {
-        return true;
+        return true
       } else {
-        return false;
+        return false
       }
-    }
+    },
   },
   mounted() {
-    const vm = this;
+    const vm = this
 
-    vm.$nextTick().then(async function() {
+    vm.$nextTick().then(async function () {
       // Start our synchronization server
-      const setup = await sync.startServer();
+      const setup = await sync.startServer()
 
       // Fill in syncServer URL
-      vm.syncServer = setup.proxy;
-    });
+      vm.syncServer = setup.proxy
+    })
   },
   methods: {
     async syncSite() {
       if (this.compareHosts(this.url, this.syncServer) === true) {
-        alert(`You're currently viewing the synced server URL. If your screens are out of sync, visit the original URL and sync it again.`);
-        return false;
+        alert(
+          `You're currently viewing the synced server URL. If your screens are out of sync, visit the original URL and sync it again.`
+        )
+        return false
       } else {
         // Trigger the NodeJS change
         // Send request to change the URL being proxied
-        const data = await sync.changeURL(this.url);
+        const data = await sync.changeURL(this.url)
 
         // Update the global URL to the proxy URL
         // This will navigate to synced site via the proxy url
-        this.$store.commit("history/changeSiteData", {
-          url: data.proxy
-        });
+        this.$store.commit('history/changeSiteData', {
+          url: data.proxy,
+        })
 
         // Update the sync server url locally
-        this.syncServer = data.proxy;
+        this.syncServer = data.proxy
       }
     },
     compareHosts(url1, url2) {
-      const host1 = this.returnHost(url1);
-      const host2 = this.returnHost(url2);
+      const host1 = this.returnHost(url1)
+      const host2 = this.returnHost(url2)
 
       if (host1 === host2) {
-        return true;
+        return true
       } else {
-        return false;
+        return false
       }
     },
     returnHost(url) {
-      var pathArray = url.split("/");
-      var protocol = pathArray[0];
-      var host = pathArray[2];
-      return host;
-    }
-  }
-};
+      const pathArray = url.split('/')
+      const protocol = pathArray[0]
+      const host = pathArray[2]
+      return host
+    },
+  },
+}
 </script>
 
 <style lang="scss" scoped>
-@import "../../scss/_variables";
+@import '../../scss/_variables';
 
 #sync-button {
   background: #e0e0e0;

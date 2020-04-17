@@ -1,15 +1,10 @@
 import path from 'path'
+import { app, shell } from 'electron'
 import BrowserWinHandler from './BrowserWinHandler'
 
-import {
-  app,
-  shell
-} from 'electron'
 import autoUpdater from './auto-updater'
 
-import {
-  setMenu
-} from './menu'
+import { setMenu } from './menu'
 const log = require('electron-log')
 const isDev = require('electron-is-dev')
 
@@ -26,12 +21,12 @@ const winHandler = new BrowserWinHandler({
   // show: false, // Shown when ready-to-show event fires
   webPreferences: {
     webviewTag: true, // Required
-    nodeIntegration: true // Required
+    nodeIntegration: true, // Required
   },
-  titleBarStyle: 'hiddenInset' // Hide the bar
+  titleBarStyle: 'hiddenInset', // Hide the bar
 })
 
-winHandler.onCreated(browserWindow => {
+winHandler.onCreated((browserWindow) => {
   if (isDev) browserWindow.loadURL(DEV_SERVER_URL)
   else browserWindow.loadFile(INDEX_PATH)
 

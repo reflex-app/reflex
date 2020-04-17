@@ -1,47 +1,47 @@
 <template>
-  <div class="install-button-container" v-if="progress !== null">
+  <div v-if="progress !== null" class="install-button-container">
     <ProgressIndicator :percentage="progress" @click="triggerInstall" />
   </div>
 </template>
 
 <script>
-import isElectron from "is-electron";
-import { ipcRenderer } from "electron";
-import ProgressIndicator from "./ProgressIndicator";
+import isElectron from 'is-electron'
+import { ipcRenderer } from 'electron'
+import ProgressIndicator from './ProgressIndicator'
 
 export default {
   components: {
-    ProgressIndicator
+    ProgressIndicator,
   },
   data() {
     return {
-      progress: null
-    };
+      progress: null,
+    }
   },
   computed: {
     percentage() {
-      return `${this.progress}%`;
+      return `${this.progress}%`
     },
     readyToInstallUpdate() {
       if (this.progress && this.progress === 100) {
-        return true;
+        return true
       }
-      return false;
-    }
+      return false
+    },
   },
   mounted() {
     if (isElectron()) {
-      ipcRenderer.on("DOWNLOAD_PROGRESS", (event, progress) => {
-        this.progress = Number(progress);
-      });
+      ipcRenderer.on('DOWNLOAD_PROGRESS', (event, progress) => {
+        this.progress = Number(progress)
+      })
     }
   },
   methods: {
     triggerInstall() {
-      ipcRenderer.send("TRIGGER_INSTALL");
-    }
-  }
-};
+      ipcRenderer.send('TRIGGER_INSTALL')
+    },
+  },
+}
 </script>
 
 <style lang="scss" scoped>
