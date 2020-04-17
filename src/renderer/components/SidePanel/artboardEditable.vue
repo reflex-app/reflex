@@ -127,10 +127,10 @@ export default {
 
       // Save to Store
       this.$store.commit("artboards/updateArtboardAtIndex", {
-        id: this.localFormData.id,
-        height: this.localFormData.height || 0,
-        width: this.localFormData.width || 0,
-        title: this.localFormData.title || "Untitled"
+        ...artboard,
+        width: Number(this.localFormData.width),
+        height: Number(this.localFormData.height),
+        title: this.localFormData.title
       });
     },
     edit(id) {
@@ -171,8 +171,10 @@ export default {
     goToArtboard(id) {
       // Find the artboard (DOM)
       const artboard = document.querySelector(`[artboard-id="${id}"]`);
-      // Move the panzoom container
-      this.$root.$panzoom.panToElement(artboard);
+
+      // Pan to the position of the element relative to the parent
+      // TODO factor in the size of the artboard... Panzoom should scale down to fith the screen
+      this.$root.$panzoom.pan(-artboard.offsetLeft, artboard.offsetTop);
     },
     rightClickMenu(e, artboard) {
       rightClickMenu(this.$store, {
