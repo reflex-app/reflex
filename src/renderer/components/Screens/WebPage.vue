@@ -4,6 +4,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import { webpageSyncBus } from '@/plugins/eventBus'
 
 export default {
   props: {
@@ -59,7 +60,7 @@ export default {
       const frame = vm.$refs.frame
 
       // Listen for incoming events
-      this.$bus.$on('REFLEX_SYNC', (args) => {
+      webpageSyncBus.$on('REFLEX_SYNC', (args) => {
         // Don't trigger on the origin
         if (this.id === args.originID) {
           // TODO Tell the Webview to change its state to origin = true
@@ -277,7 +278,7 @@ export default {
 
         // TODO This can fail if multiple artboards are selected
         if (this.allowInteractions) {
-          this.$bus.$emit('REFLEX_SYNC', {
+          webpageSyncBus.$emit('REFLEX_SYNC', {
             ...data,
             originID: this.id,
           }) // Send a test event
