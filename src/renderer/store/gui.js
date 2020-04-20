@@ -2,6 +2,7 @@ export const state = () => ({
   sidebar: true,
   focusMode: false,
   discoMode: false,
+  fullScreenWebPage: false,
 })
 
 export const mutations = {
@@ -21,6 +22,8 @@ export const mutations = {
     }
   },
   toggleGui(state, key) {
+    if (state[key] === 'undefined')
+      throw new Error(`No matching key: ${key} in state.gui`)
     state[key] = !state[key]
   },
 }

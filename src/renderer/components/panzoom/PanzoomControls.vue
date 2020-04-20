@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import SwitchButton from '@/components/Shared/Switch.vue'
+import SwitchButton from '@/components/Shared/SwitchButton.vue'
 export default {
   components: {
     SwitchButton,
