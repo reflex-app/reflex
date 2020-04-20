@@ -44,18 +44,15 @@ export default {
         this.loadSite()
       },
     },
-    allowInteractions(value) {
-      // Toggle frame pointer-events
-      const element = this.$refs.frame
-      if (value === true) {
-        element.style.pointerEvents = 'auto' // Allow interacting with webpage
-      } else if (value === false) {
-        element.style.pointerEvents = 'none' // Disable interactions with webpage
-      }
+    allowInteractions(newValue) {
+      this.checkAllowInteractionsProp(newValue)
     },
   },
   mounted() {
     const vm = this
+
+    // Check the initial prop
+    this.checkAllowInteractionsProp(this.allowInteractions)
 
     // Once the WebView is rendered
     this.$nextTick(() => {
@@ -128,6 +125,19 @@ export default {
     this.unsubscribeAction()
   },
   methods: {
+    /**
+     * Handle external interactions
+     * such as props toggling internal interactions
+     */
+    checkAllowInteractionsProp(newValue) {
+      // Toggle frame pointer-events
+      const element = this.$refs.frame
+      if (newValue === true) {
+        element.style.pointerEvents = 'auto' // Allow interacting with webpage
+      } else if (newValue === false) {
+        element.style.pointerEvents = 'none' // Disable interactions with webpage
+      }
+    },
     bindEventListeners() {
       // Remove navigation event
       const frame = this.$refs.frame
@@ -330,6 +340,5 @@ export default {
 .frame {
   height: 100%;
   width: 100%;
-  pointer-events: none; // Don't allow by default
 }
 </style>
