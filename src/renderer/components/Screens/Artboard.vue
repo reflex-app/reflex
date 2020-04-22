@@ -14,14 +14,7 @@
         <span class="dimension">{{ width }} x {{ height }}</span>
       </div>
       <!-- Show a loader when state.isLoading == true -->
-      <div v-show="state.isLoading" class="artboard__loader is-loading">
-        <div class="content">
-          <div class="lds-ripple">
-            <div></div>
-            <div></div>
-          </div>
-        </div>
-      </div>
+      <Loading :is-loading="state.isLoading" />
     </div>
     <div class="artboard__keypoints"></div>
     <div class="artboard__content">
@@ -43,11 +36,13 @@
 import { mapState, mapGetters } from 'vuex'
 import WebPage from './WebPage.vue'
 import rightClickMenu from '@/mixins/rightClickMenu.js'
+import Loading from '@/components/Screens/Loading.vue'
 
 export default {
   name: 'Artboard',
   components: {
     WebPage,
+    Loading,
   },
   props: {
     title: {
@@ -364,60 +359,6 @@ $artboard-handle-height: 1rem;
         border-radius: 100%;
         border: 3px solid transparent;
         z-index: 1;
-      }
-    }
-  }
-
-  & .artboard__loader {
-    position: absolute;
-    top: 0;
-    right: 2rem;
-
-    .content {
-      left: 50%;
-      transform: translateX(-50%);
-      color: white;
-      position: absolute;
-    }
-
-    &.is-loading {
-      display: block;
-    }
-
-    .lds-ripple {
-      display: inline-block;
-      position: relative;
-      width: 64px;
-      height: 64px;
-    }
-
-    .lds-ripple div {
-      position: absolute;
-      border: 4px solid $accent-color;
-      opacity: 1;
-      border-radius: 50%;
-      animation: lds-ripple 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;
-    }
-
-    .lds-ripple div:nth-child(2) {
-      animation-delay: -0.5s;
-    }
-
-    @keyframes lds-ripple {
-      0% {
-        top: 20px;
-        left: 20px;
-        width: 0;
-        height: 0;
-        opacity: 1;
-      }
-
-      100% {
-        top: -1px;
-        left: -1px;
-        width: 42px;
-        height: 42px;
-        opacity: 0;
       }
     }
   }
