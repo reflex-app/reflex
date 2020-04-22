@@ -1,6 +1,7 @@
 <template>
   <div class="container">
     <ToolBar />
+    <FullScreenWebPage />
     <nuxt />
   </div>
 </template>
@@ -9,10 +10,12 @@
 import { remote, ipcRenderer } from 'electron'
 import isElectron from 'is-electron'
 import ToolBar from '@/components/ToolBar'
+import FullScreenWebPage from '@/components/Screens/FullScreenWebPage.vue'
 
 export default {
   components: {
     ToolBar,
+    FullScreenWebPage,
   },
   mounted() {
     // Global listeners

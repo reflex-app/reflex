@@ -26,4 +26,8 @@ export const mutations = {
       throw new Error(`No matching key: ${key} in state.gui`)
     state[key] = !state[key]
   },
+  setFullscreen(state, key) {
+    if (!key) throw new Error('No value provided')
+    state[key] = key
+  },
 }

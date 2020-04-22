@@ -14,4 +14,4 @@ export const webpageSyncBus = new Vue()
 /**
  * Communicate app-level events
  */
-export const appBus = new Vue()
+export const fullScreenWebPage = new Vue()
