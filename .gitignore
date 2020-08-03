@@ -3,6 +3,7 @@
 dist
 build/*
 !build/icons
+!build/entitlements.mac.plist
 
 # Git & NPM
 .env
@@ -15,7 +16,6 @@ package-lock.json
 
 # Yarn
 .yarn
-yarn.lock
 .yarnrc.yml
 
 # local env files

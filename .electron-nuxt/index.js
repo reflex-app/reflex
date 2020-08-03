@@ -1,4 +1,4 @@
-
+require('dotenv').config()
 const path = require('path')
 const webpack = require('webpack')
 const electron = require('electron')
@@ -19,7 +19,7 @@ const launcher = new ElectronLauncher({
 })
 
 // Normal CLI usage: `electron-builder --mac --windows`
-require('dotenv').config()
+
 const builder = new ElectronBuilder({
   cliOptions: {
     config: path.join(__dirname, '../builder.config.js'),

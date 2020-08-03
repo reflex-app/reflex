@@ -37,6 +37,8 @@ If you would like to add to the project, take a look at the [planned projects pa
 
 ## Developing
 
+[![Build Status](https://travis-ci.com/nwittwer/reflex.svg?branch=dev)](https://travis-ci.com/nwittwer/reflex)
+
 Requirements:
 - Node
 - Yarn (1.x)
@@ -69,6 +71,24 @@ Please note: The `dev` branch represents the latest works-in-progress, and shoul
     ```
 
     This will output several files inside of the `build/` folder. You can directly run the `.app` or `.exe` file inside of `build/`.
+
+### Release
+
+Workflow: PR to `master` branch -> TravisCI -> Build app -> Codesign & Notarize (Mac only) -> Github Release
+
+1. Create a PR to `master` branch
+    - TravisCI will run `yarn run release`
+    - This adds a `process.env.RELEASE` env variable. 
+    - The presence of the `RELEASE` flag will allow notarization of the Mac app with `scripts/notarize.js`.
+    - The presence of the `RELEASE` flag will publish artifacts to Github. It will draft new release or update existing artifacts.
+2. If everything worked, merge PR into `master` and publish Github Release
+
+Env vars required:
+- CSC_LINK: base64-encoded .p12 file
+- CSC_KEY_PASSWORD: optional password
+- GH_TOKEN: Github token
+- APPLEID: Apple ID
+- APPLEIDPASS: App-specific password for Apple ID
 
 ### Debugging
 

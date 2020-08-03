@@ -14,6 +14,11 @@ export default {
     };
   },
   props: {
+    id: {
+      type: String,
+      required: true,
+      default: ""
+    },
     allowInteractions: {
       type: Boolean,
       default: false,
@@ -28,7 +33,7 @@ export default {
       const appPath = require("electron").remote.app.getAppPath();
       return `file://${require("path").resolve(
         __dirname,
-        "../../mixins/injectWebPageScript.js"
+        "../../mixins/reflex-sync"
       )}`;
     }
   },
@@ -37,8 +42,34 @@ export default {
 
     // Once the WebView is rendered
     this.$nextTick(() => {
-      // Permament events
       const frame = vm.$refs.frame;
+
+      // Listen for incoming events
+      this.$bus.$on("REFLEX_SYNC", args => {
+        // Don't trigger on the origin
+        if (this.id == args.originID) {
+          // TODO Tell the Webview to change its state to origin = true
+          frame.send("REFLEX_SYNC_setState", {
+            isOrigin: true
+          });
+        } else {
+          console.log("REFLEX EVENT:", args);
+
+          // Update state
+          frame.send("REFLEX_SYNC_setState", {
+            isOrigin: false
+          });
+
+          // Send event back to the frame
+          frame.send("REFLEX_SYNC_setDOMEffect", {
+            // event,
+            scrollOffset: {
+              top: 100
+            },
+            ...args
+          });
+        }
+      });
 
       // Bind event listeners
       this.bindEventListeners();
@@ -194,7 +225,7 @@ export default {
       frame.addEventListener("did-start-loading", this.loadstart); // loadstart
       frame.addEventListener("dom-ready", this.contentloaded); // contentload
       frame.addEventListener("did-stop-loading", this.loadstop); // loadstop
-      frame.addEventListener("ipc-message", this.receiveHandshake); // Listen for response
+      frame.addEventListener("ipc-message", this.onMessageReceived); // Listen for response
       frame.addEventListener("loadabort", this.loadabort); // loadabort
     },
     removeListeners() {
@@ -202,7 +233,7 @@ export default {
       frame.removeEventListener("did-start-loading", this.loadstart);
       frame.removeEventListener("dom-ready", this.contentloaded);
       frame.removeEventListener("did-stop-loading", this.loadstop);
-      frame.removeEventListener("ipc-message", this.receiveHandshake);
+      frame.removeEventListener("ipc-message", this.onMessageReceived);
       frame.removeEventListener("loadabort", this.loadabort);
     },
     loadstart() {
@@ -218,16 +249,25 @@ export default {
       const frame = this.$refs.frame;
       frame.send("requestData");
     },
-    receiveHandshake(event) {
-      // Data is accessible as event.data.*
-      // Refer to the object that's injected during contentload()
-      // for all keys
-      if (event.channel === "replyData") {
+    onMessageReceived(event) {
+      if (event.channel === "REFLEX_SYNC") {
+        // BUS: https://binbytes.com/blog/create-global-event-bus-in-nuxtjs
+        const data = event.args[0];
+        // console.log(data);
+
+        // TODO This can fail if multiple artboards are selected
+        if (this.allowInteractions) {
+          this.$bus.$emit("REFLEX_SYNC", {
+            ...data,
+            originID: this.id
+          }); // Send a test event
+        }
+      } else if (event.channel === "replyData") {
         const returnedData = event.args[0];
         const title = returnedData.title;
         const favicon = returnedData.favicon;
 
-        // console.log(title);
+        console.log(title);
 
         // TODO Add to VueX Action
         this.$store.commit("history/changeSiteData", {
@@ -235,7 +275,7 @@ export default {
           favicon: favicon
         });
       } else if (event.channel === "unload") {
-        // console.log("Unloading...");
+        console.log("Unloading");
         // this.removeListeners();
       } else {
         console.log("Unrecognized channel", event.args[0]);
