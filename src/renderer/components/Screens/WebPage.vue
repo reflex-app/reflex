@@ -46,6 +46,11 @@ export default {
 
       // Listen for incoming events
       this.$bus.$on("REFLEX_SYNC", args => {
+        if (!frame) {
+          console.error("Frame not found?");
+          return;
+        }
+
         // Don't trigger on the origin
         if (this.id == args.originID) {
           // TODO Tell the Webview to change its state to origin = true
