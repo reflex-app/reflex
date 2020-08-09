@@ -4,6 +4,7 @@
 
 <script>
 import { mapState } from "vuex";
+import { remote } from "electron";
 
 export default {
   data() {
@@ -296,7 +297,7 @@ export default {
       if (this.options.history === false) {
         this.$store.commit(
           "history/updateHistory",
-          frame.getWebContents().history
+          remote.webContents.fromId(frame.getWebContentsId()).history
         );
       }
     },
