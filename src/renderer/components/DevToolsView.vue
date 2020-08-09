@@ -3,6 +3,8 @@
 </template>
 
 <script>
+import { remote } from "electron";
+
 export default {
   mounted() {
     this.$nextTick(() => {
@@ -10,7 +12,9 @@ export default {
       const devtoolsView = this.$el;
 
       browserView.addEventListener("dom-ready", () => {
-        const browser = browserView.getWebContents();
+        const browser = remote.webContents.fromId(
+          browserView.getWebContentsId()
+        );
         browser.openDevTools();
 
         // Blocked by: https://github.com/electron/electron/issues/14095

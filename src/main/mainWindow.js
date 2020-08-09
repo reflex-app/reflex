@@ -1,39 +1,35 @@
-import path from 'path'
-import BrowserWinHandler from './BrowserWinHandler'
+import path from "path";
+import BrowserWinHandler from "./BrowserWinHandler";
 
-import {
-  app,
-  shell
-} from 'electron'
-import autoUpdater from './auto-updater'
+import { app, shell } from "electron";
+import autoUpdater from "./auto-updater";
 
-import {
-  setMenu
-} from './menu'
-const log = require('electron-log')
-const isDev = require('electron-is-dev')
+import { setMenu } from "./menu";
+const log = require("electron-log");
+const isDev = require("electron-is-dev");
 
 // const isDev = process.env.NODE_ENV === 'development'
 
-const INDEX_PATH = path.join(__dirname, '..', 'renderer', 'index.html')
-const DEV_SERVER_URL = process.env.DEV_SERVER_URL // eslint-disable-line prefer-destructuring
+const INDEX_PATH = path.join(__dirname, "..", "renderer", "index.html");
+const DEV_SERVER_URL = process.env.DEV_SERVER_URL; // eslint-disable-line prefer-destructuring
 
 const winHandler = new BrowserWinHandler({
   height: 750,
   width: 1200,
   useContentSize: true,
-  backgroundColor: '#F5F5F5',
+  backgroundColor: "#F5F5F5",
   // show: false, // Shown when ready-to-show event fires
   webPreferences: {
     webviewTag: true, // Required
-    nodeIntegration: true // Required
+    nodeIntegration: true, // Required
+    enableRemoteModule: true // Required
   },
-  titleBarStyle: 'hiddenInset' // Hide the bar
-})
+  titleBarStyle: "hiddenInset" // Hide the bar
+});
 
 winHandler.onCreated(browserWindow => {
-  if (isDev) browserWindow.loadURL(DEV_SERVER_URL)
-  else browserWindow.loadFile(INDEX_PATH)
+  if (isDev) browserWindow.loadURL(DEV_SERVER_URL);
+  else browserWindow.loadFile(INDEX_PATH);
 
   // Do stuff...
 
@@ -41,13 +37,13 @@ winHandler.onCreated(browserWindow => {
   // Important to not wait for page to load
   // just in case there was a fatal bug
   // with their current release
-  autoUpdater(browserWindow)
+  autoUpdater(browserWindow);
 
   // Log the version
-  log.info(`Version ${app.getVersion()}`)
+  log.info(`Version ${app.getVersion()}`);
 
   // Setup the menu
-  setMenu(browserWindow)
+  setMenu(browserWindow);
 
   // Show the app once it's ready
   // browserWindow.once('ready-to-show', () => {
@@ -57,15 +53,15 @@ winHandler.onCreated(browserWindow => {
   // Listen for outbound links and
   // open in user's default web browser
   // instead of inside Electron app
-  browserWindow.webContents.on('will-navigate', (event, url) => {
-    event.preventDefault()
-    shell.openExternal(url)
-  })
+  browserWindow.webContents.on("will-navigate", (event, url) => {
+    event.preventDefault();
+    shell.openExternal(url);
+  });
 
   // Listen for window to be closed
-  browserWindow.on('closed', () => {
-    browserWindow = null
-  })
-})
+  browserWindow.on("closed", () => {
+    browserWindow = null;
+  });
+});
 
-export default winHandler
+export default winHandler;

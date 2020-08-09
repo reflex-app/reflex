@@ -4,6 +4,7 @@
 
 <script>
 import { mapState } from "vuex";
+import { remote } from "electron";
 
 export default {
   data() {
@@ -46,6 +47,11 @@ export default {
 
       // Listen for incoming events
       this.$bus.$on("REFLEX_SYNC", args => {
+        if (!frame) {
+          console.error("Frame not found?");
+          return;
+        }
+
         // Don't trigger on the origin
         if (this.id == args.originID) {
           // TODO Tell the Webview to change its state to origin = true
@@ -291,7 +297,7 @@ export default {
       if (this.options.history === false) {
         this.$store.commit(
           "history/updateHistory",
-          frame.getWebContents().history
+          remote.webContents.fromId(frame.getWebContentsId()).history
         );
       }
     },
