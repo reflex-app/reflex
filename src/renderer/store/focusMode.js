@@ -1,12 +1,12 @@
 // TODO This is almost exactly the same as the artboards module, consider making reusable
-const uuid = require('uuid/v1')
+import { v1 as uuid } from "uuid";
 
 // All artboards on the screen
 // const state = []
 export const state = () => ({
   activeScreen: {
     id: uuid(),
-    title: 'Reflex',
+    title: "Reflex",
     height: 300,
     width: 400
   }
@@ -26,7 +26,7 @@ export const state = () => ({
   //   width: 1920,
   //   height: 1080
   // }
-})
+});
 
 export const mutations = {
   /** Resize an Artboard
@@ -34,8 +34,8 @@ export const mutations = {
    * @param  {Object} payload {id, height, width}
    */
   focusResizeArtboard(state, payload) {
-    state.activeScreen.height = payload.height
-    state.activeScreen.width = payload.width
+    state.activeScreen.height = payload.height;
+    state.activeScreen.width = payload.width;
   },
 
   /**
@@ -45,9 +45,9 @@ export const mutations = {
    * @param {*} options
    */
   focusSetRandomSize(state, options) {
-    const artboard = state.activeScreen
-    if (options.height) artboard.height = options.height
-    if (options.width) artboard.width = options.width
+    const artboard = state.activeScreen;
+    if (options.height) artboard.height = options.height;
+    if (options.width) artboard.width = options.width;
   },
 
   /**
@@ -57,8 +57,8 @@ export const mutations = {
    * @param {*} id
    */
   focusChangeActiveScreen(state, id) {
-    const artboards = this.state.artboards.list // TODO This is accessing another Vuex module; not obvious
-    const index = artboards.findIndex(obj => obj.id === id)
-    state.activeScreen = Object.assign(state.activeScreen, artboards[index])
+    const artboards = this.state.artboards.list; // TODO This is accessing another Vuex module; not obvious
+    const index = artboards.findIndex(obj => obj.id === id);
+    state.activeScreen = Object.assign(state.activeScreen, artboards[index]);
   }
-}
+};

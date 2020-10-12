@@ -57,6 +57,9 @@ export default {
     })
       .on("beforestart", evt => {
         // Prevent selections if the user is interacting with an artboard
+        console.info(
+          "Cannot interact with artboard during canvas interaction."
+        );
         if (this.isInteracting) return false;
       })
       .on("start", evt => {
@@ -133,7 +136,6 @@ export default {
   }
 };
 </script>
-
 
 <style lang="scss">
 // WARNING: UNSCOPED!
