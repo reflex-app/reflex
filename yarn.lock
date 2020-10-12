@@ -15202,6 +15202,11 @@ vue-devtools@5.1.4:
   resolved "https://registry.yarnpkg.com/vue-devtools/-/vue-devtools-5.1.4.tgz#265a7458ade2affb291739176964256b597fa302"
   integrity sha512-EBAEXvAHUinsPzoSiElps0JgtLXUnJXKIJbP6nfdz/R63VdKBMfJ34/rFip+4iT7iMbVS5lA4W6N1jq4Hj4LCg==
 
+vue-feature-flipping@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/vue-feature-flipping/-/vue-feature-flipping-2.1.0.tgz#f1a52687a7e14ab6bdfe64361a3c74695196be5e"
+  integrity sha512-b+NUuKwV3mljgNlrVYu/jRdFySL6luBxsiU/w5M1U/VNTnqSzBaPYyCGLzu2lzvkWUZ5fKzWtiSdI0fFHXlP8Q==
+
 vue-hot-reload-api@^2.3.0:
   version "2.3.4"
   resolved "https://registry.yarnpkg.com/vue-hot-reload-api/-/vue-hot-reload-api-2.3.4.tgz#532955cc1eb208a3d990b3a9f9a70574657e08f2"

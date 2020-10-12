@@ -9,15 +9,19 @@
         :isPressed="isRouteActive('/')"
       ></Button>
     </nuxt-link>
-    <nuxt-link to="/focus">
-      <Button
-        role="ghost"
-        icon="mode-focus"
-        :tight="true"
-        title="Single Screen"
-        :isPressed="isRouteActive('/focus')"
-      ></Button>
-    </nuxt-link>
+
+    <!-- Focus mode -->
+    <div v-feature-flipping="'focus-mode'">
+      <nuxt-link to="/focus">
+        <Button
+          role="ghost"
+          icon="mode-focus"
+          :tight="true"
+          title="Single Screen"
+          :isPressed="isRouteActive('/focus')"
+        ></Button>
+      </nuxt-link>
+    </div>
 
     <!-- <input type="checkbox" id="switch" :checked="toggleState" /> -->
     <!-- <label for="switch" @click="toggle" :class="{ 'is-active' : toggleState }">Toggle</label> -->
