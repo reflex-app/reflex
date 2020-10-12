@@ -7,7 +7,9 @@
         <Panzoom id="canvas">
           <FocusArtboard ref="artboards" />
         </Panzoom>
-        <!-- <DiscoSwitch /> -->
+        <div v-feature-flipping="'disco-switch'">
+          <DiscoSwitch />
+        </div>
         <SizeShifter />
         <!-- <DevToolsView /> -->
       </div>

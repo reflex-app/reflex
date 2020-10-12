@@ -7,4 +7,5 @@ Vue.use(FeatureFlipping);
 // Set the enabled features
 setEnabledFeatures([
   // "focus-mode"
+  // "disco-switch"
 ]);

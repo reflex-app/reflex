@@ -1,14 +1,16 @@
 <template>
   <div class="switch-mode-container">
-    <nuxt-link to="/">
-      <Button
-        role="ghost"
-        icon="mode-focus"
-        :tight="true"
-        title="Single Screen"
-        :isPressed="isRouteActive('/')"
-      ></Button>
-    </nuxt-link>
+    <div v-feature-flipping="'focus-mode'">
+      <nuxt-link to="/">
+        <Button
+          role="ghost"
+          icon="mode-focus"
+          :tight="true"
+          title="Single Screen"
+          :isPressed="isRouteActive('/')"
+        ></Button>
+      </nuxt-link>
+    </div>
     <nuxt-link to="/focus">
       <Button
         role="ghost"

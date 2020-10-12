@@ -262,6 +262,7 @@ export default {
         // console.log(data);
 
         // TODO This can fail if multiple artboards are selected
+        // TODO wait for did-attach-webview event
         if (this.allowInteractions) {
           this.$bus.$emit("REFLEX_SYNC", {
             ...data,
