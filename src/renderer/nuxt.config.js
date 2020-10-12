@@ -5,7 +5,7 @@
  */
 
 module.exports = {
-  mode: "spa", // or 'universal'
+  ssr: "false",
   head: {
     title: "Reflex"
   },

@@ -7,7 +7,7 @@ import autoUpdater from "./auto-updater";
 import { setMenu } from "./menu";
 const log = require("electron-log");
 const isDev = require("electron-is-dev");
-
+// const isDev = process.argv.includes("ELECTRON_IS_DEV");
 // const isDev = process.env.NODE_ENV === 'development'
 
 const INDEX_PATH = path.join(__dirname, "..", "renderer", "index.html");

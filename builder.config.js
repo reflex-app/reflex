@@ -43,7 +43,7 @@ const windowsOS = {
   // }
 };
 
-module.exports = {
+export default {
   asar: false,
   productName: require("./package.json").productName,
   appId: "com.reflex.app",

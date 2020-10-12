@@ -1,81 +1,85 @@
-import { EventEmitter } from 'events'
-import { BrowserWindow, app } from 'electron'
-const isProduction = process.env.NODE_ENV === 'production'
+import { EventEmitter } from "events";
+import { BrowserWindow, app } from "electron";
+const isProduction = process.env.NODE_ENV === "production";
+const isDev = require("electron-is-dev");
 
 export default class BrowserWinHandler {
   /**
-     * @param [options] {object} - browser window options
-     * @param [allowRecreate] {boolean}
-     */
-  constructor (options, allowRecreate = true) {
-    this._eventEmitter = new EventEmitter()
-    this.allowRecreate = allowRecreate
-    this.options = options
-    this.browserWindow = null
-    this._createInstance()
+   * @param [options] {object} - browser window options
+   * @param [allowRecreate] {boolean}
+   */
+  constructor(options, allowRecreate = true) {
+    this._eventEmitter = new EventEmitter();
+    this.allowRecreate = allowRecreate;
+    this.options = options;
+    this.browserWindow = null;
+    this._createInstance();
   }
 
-  _createInstance () {
+  _createInstance() {
     // This method will be called when Electron has finished
     // initialization and is ready to create browser windows.
     // Some APIs can only be used after this event occurs.
-    app.on('ready', () => {
-      this._create()
-    })
+    app.on("ready", () => {
+      this._create();
+    });
 
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
-    if (!this.allowRecreate) return
-    app.on('activate', () => this._recreate())
+    if (!this.allowRecreate) return;
+    app.on("activate", () => this._recreate());
   }
 
-  _create () {
-    this.browserWindow = new BrowserWindow(
-      {
-        ...this.options,
-        webPreferences: {
-          ...this.options.webPreferences,
-          webSecurity: isProduction, // disable on dev to allow loading local resources
-          nodeIntegration: true, // allow loading modules via the require () function
-          devTools: !process.env.SPECTRON // disable on e2e test environment
-        }
+  _create() {
+    // const isDev = !app.isPackaged; // via https://github.com/sindresorhus/electron-is-dev/issues/24#issuecomment-692379137
+
+    this.browserWindow = new BrowserWindow({
+      ...this.options,
+      webPreferences: {
+        ...this.options.webPreferences,
+        webSecurity: isProduction, // disable on dev to allow loading local resources
+        nodeIntegration: true, // allow loading modules via the require () function
+        devTools: !process.env.SPECTRON, // disable on e2e test environment
+        additionalArguments: [
+          isDev ? "ELECTRON_IS_DEV" : "ELECTRON_IS_PACKAGED"
+        ] // Dev mode switch
       }
-    )
-    this.browserWindow.on('closed', () => {
+    });
+    this.browserWindow.on("closed", () => {
       // Dereference the window object
-      this.browserWindow = null
-    })
-    this._eventEmitter.emit('created')
+      this.browserWindow = null;
+    });
+    this._eventEmitter.emit("created");
   }
 
-  _recreate () {
-    if (this.browserWindow === null) this._create()
-  }
-
-  /**
-     * @callback onReadyCallback
-     * @param {BrowserWindow}
-     */
-
-  /**
-     *
-     * @param callback {onReadyCallback}
-     */
-  onCreated (callback) {
-    this._eventEmitter.once('created', () => {
-      callback(this.browserWindow)
-    })
+  _recreate() {
+    if (this.browserWindow === null) this._create();
   }
 
   /**
-     *
-     * @returns {Promise<BrowserWindow>}
-     */
-  created () {
+   * @callback onReadyCallback
+   * @param {BrowserWindow}
+   */
+
+  /**
+   *
+   * @param callback {onReadyCallback}
+   */
+  onCreated(callback) {
+    this._eventEmitter.once("created", () => {
+      callback(this.browserWindow);
+    });
+  }
+
+  /**
+   *
+   * @returns {Promise<BrowserWindow>}
+   */
+  created() {
     return new Promise(resolve => {
-      this._eventEmitter.once('created', () => {
-        resolve(this.browserWindow)
-      })
-    })
+      this._eventEmitter.once("created", () => {
+        resolve(this.browserWindow);
+      });
+    });
   }
 }

@@ -1,5 +1,9 @@
 <template>
-  <div ref="container" class="container" :class="{ 'dev-visual-debugger': showCanvasDebugger }">
+  <div
+    ref="container"
+    class="container"
+    :class="{ 'dev-visual-debugger': showCanvasDebugger }"
+  >
     <div ref="child" :class="{ 'dev-visual-debugger': showCanvasDebugger }">
       <!-- Any draggable content comes in here -->
       <slot></slot>
@@ -12,12 +16,13 @@ import Panzoom from "@/mixins/panzoom";
 import { mapState } from "vuex";
 import { ipcRenderer } from "electron";
 import isElectron from "is-electron";
-const isDev = require("electron-is-dev");
+// const isDev = require("electron-is-dev");
+// const isDev = process.argv.includes("ELECTRON_IS_DEV");
 
 export default {
   data() {
     return {
-      isDev: isDev,
+      // isDev: isDev,
       panzoomInstance: null
     };
   },
