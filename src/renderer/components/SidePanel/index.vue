@@ -95,7 +95,7 @@ export default {
   display: grid;
   grid-template-columns: auto 1fr;
   grid-template-rows: 1fr;
-  z-index: 100;
+  z-index: 150;
 
   .side-panel__track {
     position: relative;
