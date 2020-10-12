@@ -80,6 +80,7 @@
     "sass-loader": "9.0.3",
     "uuid": "8.3.0",
     "vue-devtools": "5.1.4",
+    "vue-feature-flipping": "^2.1.0",
     "vue-jest": "^3.0.5",
     "vuedraggable": "^2.23.2",
     "vuex-persist": "^2.1.1",
