@@ -9,111 +9,60 @@
 </template>
 
 <script>
-import Artboards from "@/components/Screens/Artboards";
-import SidePanel from "@/components/SidePanel";
-import Screenshots from "@/components/Screenshot";
-import Panzoom from "@/components/Panzoom";
+import Panzoom from '@/components/panzoom/Panzoom.vue'
+import SidePanel from '@/components/SidePanel'
+import Screenshots from '@/components/Screenshot'
+import FocusArtboard from '@/components/FocusMode/FocusArtboard'
+import SizeShifter from '@/components/FocusMode/SizeShifter'
 
 export default {
-  name: "MainView",
+  name: 'FocusView',
   components: {
     Artboards,
     SidePanel,
     Screenshots,
-    Panzoom
-  }
-};
+    SizeShifter,
+  },
+  data() {
+    return {}
+  },
+  mounted() {
+    this.panzoomInstance = this.$root.$panzoom
+  },
+  methods: {},
+}
 </script>
 
 <style lang="scss">
 // Make global styles available
-@import "@/scss/_global";
+@import '@/scss/_global';
 </style>
 
 <style lang="scss" scoped>
-@import "@/scss/_variables";
+@import '@/scss/_variables';
 
 #main-view {
   background: $body-bg;
   min-height: calc(
     100vh - #{$gui-title-bar-height}
   ); // hard-coded height of toolbar
-  width: 100%;
   position: relative;
-  display: flex;
-
-  #canvas {
-    height: 100%;
-    width: 100%;
-    position: absolute;
-    overflow: hidden;
-    outline: none;
-
-    &:hover {
-      // cursor: grab;
-    }
-
-    &:active {
-      // cursor: grabbing;
-    }
-  }
+  // display: flex;
 }
 
-.dev-visual-debugger {
-  &:before,
-  &:after {
-    position: absolute;
-    height: 100%;
-    width: 100%;
-    content: "";
-    z-index: 1;
-    pointer-events: none;
-  }
+// .focus-view__content {
+//   width: 100%;
 
-  // Vertical line
-  &:before {
-    left: 50%;
-    border-left: 1px solid red;
-  }
-
-  // Horizonal line
-  &:after {
-    top: 50%;
-    border-top: 1px solid red;
-  }
-
-  // Nested debugger
-  .dev-visual-debugger {
-    // Vertical line
-    &:before {
-      left: 50%;
-      border-left: 1px solid green;
-    }
-
-    // Horizonal line
-    &:after {
-      top: 50%;
-      border-top: 1px solid green;
-    }
-  }
-}
-
-.page-enter-active {
-  transition: all 500ms ease-in-out;
-}
-.page-leave-active {
-  transition: all 250ms ease-in-out;
-}
-
-// Transition should look like we just zoomed backwards
-.page-enter {
-  opacity: 0;
-  transform: scale(1.5);
-}
-
-// Zoom back out
-.page-leave-to {
-  opacity: 0;
-  transform: scale(1.5);
-}
+//   // #canvas {
+//   //   display: flex;
+//   //   position: absolute;
+//   //   // align-items: center;
+//   //   // justify-content: center;
+//   //   // width: 100%;
+//   //   // height: 100%;
+//   //   // top: 0;
+//   //   // left: 0;
+//   //   z-index: 0;
+//   // }
+// }
 </style>

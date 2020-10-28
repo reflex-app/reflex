@@ -1,11 +1,7 @@
 /* globals INCLUDE_RESOURCES_PATH */
-import {
-  app
-} from 'electron'
+import { app } from 'electron'
 
-import {
-  version
-} from '../../package.json'
+import { version } from '../../package.json'
 
 // Set the version
 app.getVersion = () => version
@@ -16,7 +12,9 @@ app.getVersion = () => version
 global.__resources = undefined // eslint-disable-line no-underscore-dangle
 // noinspection BadExpressionStatementJS
 INCLUDE_RESOURCES_PATH // eslint-disable-line no-unused-expressions
-if (__resources === undefined) console.error('[Main-process]: Resources path is undefined')
+// eslint-disable-next-line no-undef
+if (__resources === undefined)
+  console.error('[Main-process]: Resources path is undefined')
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {
@@ -39,11 +37,11 @@ app.on('web-contents-created', (event, contents) => {
   })
 })
 
-/** 
+/**
  * Workarounds for accessing HTTP/HTTPS sites with Browsersync & Chromium
  */
-app.commandLine.appendSwitch('ignore-certificate-errors', 'true');
-app.commandLine.appendSwitch('allow-insecure-localhost', 'true');
+app.commandLine.appendSwitch('ignore-certificate-errors', 'true')
+app.commandLine.appendSwitch('allow-insecure-localhost', 'true')
 
 // app.on('certificate-error', (event, webContents, url, error, certificate, callback) => {
 //   // On certificate error we disable default behaviour (stop loading the page)

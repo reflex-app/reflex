@@ -1,41 +1,53 @@
-const {
-  app,
-  Menu,
-  shell
-} = require('electron')
+const { app, Menu, shell } = require('electron')
 const isDev = require('electron-is-dev')
 
 export function setMenu(window) {
-  const template = [{
+  const template = [
+    {
       label: 'Edit',
-      submenu: [{
-          role: 'undo'
+      submenu: [
+        {
+          role: 'undo',
         },
         {
-          role: 'redo'
+          role: 'redo',
         },
         {
-          type: 'separator'
+          type: 'separator',
         },
         {
-          role: 'cut'
+          role: 'cut',
         },
         {
-          role: 'copy'
+          role: 'copy',
         },
         {
-          role: 'paste'
+          role: 'paste',
         },
         {
-          role: 'pasteandmatchstyle'
+          role: 'pasteandmatchstyle',
         },
         {
-          role: 'delete'
+          role: 'delete',
         },
         {
-          role: 'selectall'
-        }
-      ]
+          role: 'selectall',
+        },
+        {
+          type: 'separator',
+        },
+        {
+          label: 'Speech',
+          submenu: [
+            {
+              role: 'startspeaking',
+            },
+            {
+              role: 'stopspeaking',
+            },
+          ],
+        },
+      ],
     },
     {
       label: 'View',
@@ -49,7 +61,7 @@ export function setMenu(window) {
           // role: 'zoomin',
           click() {
             window.webContents.send('menu_zoom-in')
-          }
+          },
         },
         {
           label: 'Zoom Out',
@@ -57,44 +69,54 @@ export function setMenu(window) {
           // role: 'zoomout'
           click() {
             window.webContents.send('menu_zoom-out')
-          }
+          },
         },
         {
-          type: 'separator'
+          type: 'separator',
         },
         {
-          role: 'togglefullscreen'
+          role: 'togglefullscreen',
         },
         {
           label: 'Center to Screen',
           accelerator: 'CmdOrCtrl+0',
           click() {
             window.webContents.send('menu_zoom-to-fit')
-          }
+          },
         },
         {
-          type: 'separator'
+          type: 'separator',
         },
         // {
         //   role: 'reload'
         // },
         {
-          role: 'forcereload'
+          role: 'forcereload',
         },
         {
-          role: 'toggledevtools'
-        }
-      ]
+          role: 'toggledevtools',
+        },
+      ],
     },
     {
       role: 'window',
-      submenu: [{
-          role: 'minimize'
+      submenu: [
+        {
+          role: 'minimize',
         },
         {
-          role: 'close'
-        }
-      ]
+          role: 'close',
+        },
+        {
+          role: 'zoom',
+        },
+        {
+          type: 'separator',
+        },
+        {
+          role: 'front',
+        },
+      ],
     },
     {
       role: 'help',
@@ -109,101 +131,78 @@ export function setMenu(window) {
           label: 'Report a Bug',
           click() {
             shell.openExternal('https://github.com/nwittwer/reflex/issues/new')
-          }
+          },
         },
         {
           label: 'Follow on Twitter',
           click() {
             shell.openExternal('https://twitter.com/reflex_app')
-          }
-        }
-      ]
-    }
+          },
+        },
+      ],
+    },
   ]
 
   if (process.platform === 'darwin') {
     template.unshift({
       label: app.name,
-      submenu: [{
-          role: 'about'
+      submenu: [
+        {
+          role: 'about',
         },
         {
-          type: 'separator'
+          type: 'separator',
         },
         {
-          role: 'services'
+          role: 'services',
         },
         {
-          type: 'separator'
+          type: 'separator',
         },
         {
-          role: 'hide'
+          role: 'hide',
         },
         {
-          role: 'hideothers'
+          role: 'hideothers',
         },
         {
-          role: 'unhide'
+          role: 'unhide',
         },
         {
-          type: 'separator'
+          type: 'separator',
         },
         {
-          role: 'quit'
-        }
-      ]
+          role: 'quit',
+        },
+      ],
     })
   }
 
-
-  template[0].submenu.splice(1, 0, {
+  template[0].submenu.splice(
+    1,
+    0,
+    {
       type: 'separator',
-    }, {
+    },
+    {
       label: `Reset ${app.name}...`,
       click() {
         window.webContents.send('menu_reset-app')
-      }
-    }),
-
-    // Edit menu
-    template[1].submenu.push({
-      type: 'separator'
-    }, {
-      label: 'Speech',
-      submenu: [{
-          role: 'startspeaking'
-        },
-        {
-          role: 'stopspeaking'
-        }
-      ]
-    })
-
-  // Window menu
-  template[3].submenu = [{
-      role: 'minimize'
-    },
-    {
-      role: 'zoom'
-    },
-    {
-      type: 'separator'
-    },
-    {
-      role: 'front'
+      },
     }
-  ]
-
+  )
   // If in Dev mode, add menu
   if (isDev) {
     template.splice(4, 0, {
       label: 'Developer',
-      submenu: [{
-        label: 'Show Canvas Debugger',
-        click() {
-          window.webContents.send('menu_show-developer-canvas-debugger')
-        }
-      }]
+      submenu: [
+        {
+          label: 'Show Canvas Debugger',
+          click() {
+            window.webContents.send('menu_show-developer-canvas-debugger')
+          },
+        },
+      ],
     })
   }
 

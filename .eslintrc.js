@@ -1,26 +1,24 @@
 module.exports = {
   root: true,
-  parserOptions: {
-    parser: 'babel-eslint',
-    sourceType: 'module'
-  },
   env: {
     browser: true,
     node: true,
-    jest: true
+  },
+  parserOptions: {
+    parser: 'babel-eslint',
   },
   extends: [
-    'standard',
-    'plugin:vue/recommended',
-    'plugin:vue/base'
+    '@nuxtjs',
+    'prettier',
+    'prettier/vue',
+    'plugin:prettier/recommended',
+    'plugin:nuxt/recommended',
   ],
-  globals: {
-    __static: true
-  },
-  plugins: [
-    'vue'
-  ],
-  'rules': {
+  plugins: ['prettier'],
+  // add your custom rules here
+  rules: {
+    'prettier/prettier': 'error',
+    'nuxt/no-cjs-in-config': 'off',
     // allow paren-less arrow functions
     'arrow-parens': 0,
     // stop being annoying about spaces before parameters
@@ -30,6 +28,7 @@ module.exports = {
     // allow new()
     'no-new': 0,
     // allow debugger during development
-    'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0
-  }
+    'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0,
+    eqeqeq: ['error', 'smart'],
+  },
 }

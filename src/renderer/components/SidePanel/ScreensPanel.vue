@@ -7,7 +7,13 @@
 
     <!-- New Artboard -->
     <div>
-      <Button role="primary" icon="plus" @click="add" class="artboard-tabs__button">New Screen</Button>
+      <Button
+        role="primary"
+        icon="plus"
+        class="artboard-tabs__button"
+        @click="add"
+        >New Screen</Button
+      >
     </div>
 
     <!-- Show a tip if there's no artboards -->
@@ -29,134 +35,134 @@
 </template>
 
 <script>
-import artboardEditable from "@/components/SidePanel/artboardEditable";
+import artboardEditable from '@/components/SidePanel/artboardEditable'
 
 export default {
-  name: "ScreensPanel",
+  name: 'ScreensPanel',
   components: {
-    artboardEditable
+    artboardEditable,
   },
 
   data() {
     return {
-      defaultSizeSelection: ""
-    };
+      defaultSizeSelection: '',
+    }
   },
 
   computed: {
     // Bind to our Vuex Store's URL value
     artboards: {
       get() {
-        return this.$store.state.artboards.list;
+        return this.$store.state.artboards.list
       },
       set(value) {
-        this.$store.dispatch("artboards/setArtboards", value);
-      }
-    }
+        this.$store.dispatch('artboards/setArtboards', value)
+      },
+    },
   },
 
   methods: {
     add() {
-      this.$store.dispatch("artboards/addArtboard", {
-        title: "Untitled",
+      this.$store.dispatch('artboards/addArtboard', {
+        title: 'Untitled',
         width: 375,
-        height: 667
-      });
+        height: 667,
+      })
     },
     addDefaultSizes() {
-      if (!this.defaultSizeSelection) return false;
+      if (!this.defaultSizeSelection) return false
 
-      let sizes; // This will contain the size data
+      let sizes // This will contain the size data
 
       const defaults = {
         small: {
-          title: "Small",
+          title: 'Small',
           width: 375,
-          height: 667
+          height: 667,
         },
         medium: {
-          title: "Medium",
+          title: 'Medium',
           width: 768,
-          height: 1024
+          height: 1024,
         },
         large: {
-          title: "Large",
+          title: 'Large',
           width: 1024,
-          height: 720
-        }
-      };
+          height: 720,
+        },
+      }
 
       const bootstrap = {
         xsmall: {
-          title: "XS",
+          title: 'XS',
           width: 375,
-          height: 500
+          height: 500,
         },
         small: {
-          title: "S",
+          title: 'S',
           width: 576,
-          height: 800
+          height: 800,
         },
         medium: {
-          title: "M",
+          title: 'M',
           width: 768,
-          height: 1000
+          height: 1000,
         },
         large: {
-          title: "MD",
+          title: 'MD',
           width: 992,
-          height: 1200
+          height: 1200,
         },
         xlarge: {
-          title: "LG",
+          title: 'LG',
           width: 1200,
-          height: 1400
-        }
-      };
+          height: 1400,
+        },
+      }
 
       const foundation = {
         small: {
-          title: "Small",
+          title: 'Small',
           width: 400,
-          height: 600
+          height: 600,
         },
         medium: {
-          title: "Medium",
+          title: 'Medium',
           width: 640,
-          height: 800
+          height: 800,
         },
         large: {
-          title: "Large",
+          title: 'Large',
           width: 1024,
-          height: 1200
-        }
-      };
-
-      switch (this.defaultSizeSelection) {
-        case "basic":
-          sizes = defaults;
-          break;
-        case "bootstrap":
-          sizes = bootstrap;
-          break;
-        case "foundation":
-          sizes = foundation;
-          break;
+          height: 1200,
+        },
       }
 
-      this.$store.dispatch("artboards/addMultipleArtboards", {
-        data: sizes
-      });
+      switch (this.defaultSizeSelection) {
+        case 'basic':
+          sizes = defaults
+          break
+        case 'bootstrap':
+          sizes = bootstrap
+          break
+        case 'foundation':
+          sizes = foundation
+          break
+      }
+
+      this.$store.dispatch('artboards/addMultipleArtboards', {
+        data: sizes,
+      })
 
       // Empty selected value
-      this.defaultSizeSelection = "";
-    }
-  }
-};
+      this.defaultSizeSelection = ''
+    },
+  },
+}
 </script>
 
 <style lang="scss" scoped>
-@import "~@/scss/_variables";
+@import '~@/scss/_variables';
 
 #artboard-tabs {
   display: flex;
@@ -197,7 +203,7 @@ export default {
 
     // Triangle
     &:after {
-      content: "";
+      content: '';
       position: absolute;
       top: -6px;
       left: 0.5rem;

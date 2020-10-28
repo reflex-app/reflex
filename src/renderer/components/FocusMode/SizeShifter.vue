@@ -4,127 +4,126 @@
       <div
         v-for="(item, index) in artboards"
         :key="item.id"
+        ref="size-shifter-item"
         :screen-id="item.id"
         class="size-shifter-item"
-        :class="{ 'is-active' : item.id === focusModeActiveScreen.id }"
+        :class="{ 'is-active': item.id === focusModeActiveScreen.id }"
         :title="`Shortcut: ⌘${index + 1}`"
-        ref="size-shifter-item"
         @click="changeSize(item.id)"
       >
-        <div class="number">{{index + 1}}</div>
-        <div class="size">{{item.width}}x{{item.height}}</div>
+        <div class="number">{{ index + 1 }}</div>
+        <div class="size">{{ item.width }}x{{ item.height }}</div>
       </div>
-      <div class="background-sliding-object" ref="background-sliding-object"></div>
+      <div
+        ref="background-sliding-object"
+        class="background-sliding-object"
+      ></div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from 'vuex'
 export default {
   data() {
     return {
-      resizeTimer: null
-    };
+      resizeTimer: null,
+    }
   },
   computed: {
     ...mapState({
-      focusModeActiveScreen: state => state.focusMode.activeScreen,
-      focusModeScreens: state => state.focusMode.screens,
-      artboards: state => state.artboards.list
-    })
+      focusModeActiveScreen: (state) => state.focusMode.activeScreen,
+      focusModeScreens: (state) => state.focusMode.screens,
+      artboards: (state) => state.artboards.list,
+    }),
   },
   mounted() {
-    this.enableListeners();
+    this.enableListeners()
 
-    const activeScreen = this.focusModeActiveScreen;
+    // TODO Re-enable changing size on load
+    // const activeScreen = this.focusModeActiveScreen
 
     // Start with the first item selected
-    const targetElement = document.querySelectorAll(
-      `[artboard-id='${activeScreen.id}']`
-    );
-    // TODO Wait for artboards from Store?
-    this.$nextTick(() => {
-      setTimeout(() => {
-        this.changeSize(activeScreen.id);
-      });
-    });
+    // const targetElement = document.querySelector(
+    //   `[screen-id='${activeScreen.id}']`
+    // )
+
+    // TODO Bug when running this; component not loaded yet?
+    // this.changeSize(activeScreen.id);
   },
   methods: {
     changeSize(id) {
       // Update size in Store
-      this.$store.commit("focusMode/focusChangeActiveScreen", id);
+      this.$store.commit('focusMode/focusChangeActiveScreen', id)
 
-      const index = this.getIndexFromId(this.focusModeActiveScreen.id); // The screen's number in the list
-      const slidingObject = this.$refs["background-sliding-object"]; // The selected item background
-      const targetElement = this.$refs["size-shifter-item"][index]; // The new element to slide to
+      const index = this.getIndexFromId(this.focusModeActiveScreen.id)
 
-      const currentOffsetLeft = slidingObject.offsetLeft;
-      const targetOffsetLeft = targetElement.offsetLeft;
-      const currentOffsetTop = slidingObject.offsetTop;
-      const targetOffsetTop = targetElement.offsetTop;
+      const slidingObject = this.$refs['background-sliding-object']
+      const targetElement = this.$refs['size-shifter-item'][index]
+
+      const currentOffsetLeft = slidingObject.offsetLeft
+      const targetOffsetLeft = targetElement.offsetLeft
+      const currentOffsetTop = slidingObject.offsetTop
+      const targetOffsetTop = targetElement.offsetTop
 
       // Move the sliding object along X axis
-      const newX = targetOffsetLeft - currentOffsetLeft;
-      const newY = targetOffsetTop - currentOffsetTop;
-      slidingObject.style.transform = `translate3d(${newX}px, ${newY}px, 0)`;
-      slidingObject.style.width = `${targetElement.offsetWidth}px`;
-      slidingObject.style.height = `${targetElement.offsetHeight}px`;
+      const newX = targetOffsetLeft - currentOffsetLeft
+      const newY = targetOffsetTop - currentOffsetTop
+      slidingObject.style.transform = `translate3d(${newX}px, ${newY}px, 0)`
+      slidingObject.style.width = `${targetElement.offsetWidth}px`
+      slidingObject.style.height = `${targetElement.offsetHeight}px`
     },
     /**
      * Get the index, given the ID
      * @param {String} id UUID
      */
     getIndexFromId(id) {
-      const nodes = Array.from(document.querySelectorAll(`[screen-id]`));
-      let index = nodes.indexOf(document.querySelector(`[screen-id='${id}']`));
-      if (index === -1) console.error("Elem not found");
-      return index;
+      const nodes = Array.from(document.querySelectorAll(`[screen-id]`))
+      const index = nodes.indexOf(document.querySelector(`[screen-id='${id}']`))
+      return index
     },
     /**
      * Return the ID (String) of a screen, given the index
      * @param {Number} index
      */
     getIdFromIndex(index) {
-      // NOTE: this index will be 0-indexed
-      const item = document.querySelectorAll(`[screen-id]`)[index - 1];
-      if (item === -1) console.error("Elem not found");
-
-      const id = item.getAttribute("screen-id");
-      return id;
+      // NOTE: this is 0-indexed (-1)
+      const item = document.querySelectorAll(`[screen-id]`)[index - 1]
+      const id = item.getAttribute('screen-id')
+      return id
     },
     enableListeners() {
-      window.addEventListener("keydown", this.keyupHandler);
-      window.addEventListener("resize", this.resizeHandler);
+      window.addEventListener('keydown', this.keyupHandler)
+      window.addEventListener('resize', this.resizeHandler)
 
-      this.$once("hook:beforeDestroy", () => {
-        window.removeEventListener("keydown", this.keyupHandler);
-        window.removeEventListener("resize", this.resizeHandler);
-      });
+      this.$once('hook:beforeDestroy', () => {
+        window.removeEventListener('keydown', this.keyupHandler)
+        window.removeEventListener('resize', this.resizeHandler)
+      })
     },
     keyupHandler(event) {
-      const keys = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+      const keys = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
       // If Control or Command key is pressed and a key is pressed
       if (
         (event.ctrlKey || event.metaKey) &&
-        keys.some(key => key == event.key)
+        keys.some((key) => key === event.key)
       ) {
-        const id = this.getIdFromIndex(event.key);
-        this.changeSize(id);
+        const id = this.getIdFromIndex(event.key)
+        this.changeSize(id)
       }
     },
     resizeHandler() {
       // Only calls after resize event stops
       // via http://bencentra.com/code/2015/02/27/optimizing-window-resize.html
-      clearTimeout(this.resizeTimer);
+      clearTimeout(this.resizeTimer)
 
       this.resizeTimer = setTimeout(() => {
-        this.changeSize(this.focusModeActiveScreen.id);
-      }, 50);
-    }
-  }
-};
+        this.changeSize(this.focusModeActiveScreen.id)
+      }, 50)
+    },
+  },
+}
 </script>
 
 <style lang="scss" scoped>
@@ -175,7 +174,7 @@ export default {
   position: absolute;
   top: 0;
   left: 0;
-  content: "";
+  content: '';
   background: white;
   border: 1px solid #858585;
   width: 10px;

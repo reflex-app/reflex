@@ -1,20 +1,20 @@
 <template>
   <draggable
     v-model="artboardsGetSet"
-    :group="{name:'artboards',pull:true,put:true}"
+    :group="{ name: 'artboards', pull: true, put: true }"
     :animation="150"
   >
     <div v-for="artboard in artboards" :key="artboard.id" class="artboard-tab">
       <!-- Editing state -->
-      <div v-if="editMode==true&&editID==artboard.id" class="editing">
+      <div v-if="editMode == true && editID == artboard.id" class="editing">
         <div class="group">
           <label>Title</label>
           <input
-            type="text"
             ref="input"
             v-model="localFormData.title"
+            type="text"
             placeholder="Title"
-            @keyup.enter="save(artboard), editMode=false"
+            @keyup.enter="save(artboard), (editMode = false)"
           />
         </div>
         <div class="group group--two-up">
@@ -22,19 +22,19 @@
           <div class="group__two-up">
             <div class="group__input-with-right-label">
               <input
-                type="number"
                 v-model="localFormData.width"
+                type="number"
                 placeholder="Width"
-                @keyup.enter="save(artboard), editMode=false"
+                @keyup.enter="save(artboard), (editMode = false)"
               />
               <label>W</label>
             </div>
             <div class="group__input-with-right-label">
               <input
-                type="number"
                 v-model="localFormData.height"
+                type="number"
                 placeholder="Height"
-                @keyup.enter="save(artboard), editMode=false"
+                @keyup.enter="save(artboard), (editMode = false)"
               />
               <label>H</label>
             </div>
@@ -42,7 +42,9 @@
 
           <div class="buttons">
             <!-- TODO Cancel button doesn't really cancel/undo... -->
-            <Button role="secondary" @click="cancelEdit(), editMode=false">Cancel</Button>
+            <Button role="secondary" @click="cancelEdit(), (editMode = false)"
+              >Cancel</Button
+            >
             <Button role="primary" @click="save(artboard)">Save</Button>
           </div>
         </div>
@@ -79,84 +81,81 @@
 </template>
 
 <script>
-import { remote } from "electron";
-import draggable from "vuedraggable";
-import isElectron from "is-electron";
-const { Menu, MenuItem } = remote;
-import { mapState } from "vuex";
-import rightClickMenu from "@/mixins/rightClickMenu.js";
+import draggable from 'vuedraggable'
+import { mapState } from 'vuex'
+import rightClickMenu from '@/mixins/rightClickMenu.js'
 
 export default {
-  name: "artboardEditable",
+  name: 'ArtboardEditable',
   components: {
-    draggable
+    draggable,
   },
-  props: ["data"],
+  props: ['data'],
   data() {
     return {
       editMode: false,
       editID: null,
       localFormData: {
-        title: "",
+        title: '',
         width: 0,
-        height: 0
-      }
-    };
+        height: 0,
+      },
+    }
   },
   computed: {
     ...mapState({
-      artboards: state => state.artboards.list
+      artboards: (state) => state.artboards.list,
     }),
     artboardsGetSet: {
       get() {
-        return this.$store.state.artboards.list;
+        return this.$store.state.artboards.list
       },
       set(value) {
-        this.$store.dispatch("artboards/setArtboards", value);
-      }
+        this.$store.dispatch('artboards/setArtboards', value)
+      },
     },
     artboardVisibility(bool) {
-      return bool ? "visible" : "hidden";
-    }
+      return bool ? 'visible' : 'hidden'
+    },
   },
   methods: {
     save(artboard) {
       // Disable editing mode
-      this.editMode = false;
-      this.editID = null;
+      this.editMode = false
+      this.editID = null
 
       // Save to Store
-      this.$store.commit("artboards/updateArtboardAtIndex", {
+      this.$store.commit('artboards/updateArtboardAtIndex', {
         ...artboard,
         width: Number(this.localFormData.width),
         height: Number(this.localFormData.height),
         title: this.localFormData.title,
-      });
+      })
     },
     edit(id) {
       // Udpate the state
-      this.editMode = true;
-      this.editID = id;
+      this.editMode = true
+      this.editID = id
 
       // Fill in the latest data
       const currentArtboard = () => {
-        const obj = this.artboards.find(artboard => artboard.id === id);
+        const obj = this.artboards.find((artboard) => artboard.id === id)
         // Return a clone of the Store object
-        return JSON.parse(JSON.stringify(obj));
-      };
+        return JSON.parse(JSON.stringify(obj))
+      }
 
       // Update the local form data
-      this.localFormData = currentArtboard();
+      this.localFormData = currentArtboard()
 
       // Auto-focus on the first field
       this.$nextTick(() => {
-        this.$refs.input[0].focus();
-        this.$refs.input[0].select();
-      });
+        this.$refs.input[0].focus()
+        this.$refs.input[0].select()
+      })
     },
     cancelEdit() {
       // Reset to Vuex store state
-      this.localFormData = this.artboards;
+      this.localFormData = this.artboards
     },
     remove(name, id) {
       // TODO Custom prompts?
@@ -165,14 +164,16 @@ export default {
           `Are you sure you want to delete the ${name} screen size? Click "OK" to delete.`
         )
       ) {
-        this.$store.commit("artboards/removeArtboard", id);
+        this.$store.commit('artboards/removeArtboard', id)
       }
     },
     goToArtboard(id) {
       // Find the artboard (DOM)
-      const artboard = document.querySelector(`[artboard-id="${id}"]`);
-      // Move the panzoom container
-      this.$root.$panzoom.panToElement(artboard);
+      const artboard = document.querySelector(`[artboard-id="${id}"]`)
+
+      // Pan to the position of the element relative to the parent
+      // TODO factor in the size of the artboard... Panzoom should scale down to fith the screen
+      this.$root.$panzoom.pan(-artboard.offsetLeft, artboard.offsetTop)
     },
     rightClickMenu(e, artboard) {
       rightClickMenu(this.$store, {
@@ -180,29 +181,29 @@ export default {
         id: artboard.id,
         width: artboard.width,
         height: artboard.height,
-        isVisible: artboard.isVisible
-      });
+        isVisible: artboard.isVisible,
+      })
     },
     hoverStart(id) {
-      this.$store.dispatch("hoverArtboards/hoverArtboardsAdd", id);
+      this.$store.dispatch('hoverArtboards/hoverArtboardsAdd', id)
     },
     hoverEnd(id) {
-      this.$store.dispatch("hoverArtboards/hoverArtboardsRemove", id);
+      this.$store.dispatch('hoverArtboards/hoverArtboardsRemove', id)
     },
     selectArtboard(id) {
       // Move screen to the selected artboard
-      this.goToArtboard(id);
+      this.goToArtboard(id)
       // Remove all previous selections
-      this.$store.dispatch("selectedArtboards/selectedArtboardsEmpty", id);
+      this.$store.dispatch('selectedArtboards/selectedArtboardsEmpty', id)
       // Add the new artboard to selection
-      this.$store.dispatch("selectedArtboards/selectedArtboardsAdd", id);
-    }
-  }
-};
+      this.$store.dispatch('selectedArtboards/selectedArtboardsAdd', id)
+    },
+  },
+}
 </script>
 
-<style lang='scss' scoped>
-@import "~@/scss/_variables";
+<style lang="scss" scoped>
+@import '~@/scss/_variables';
 $artboard-tab-side-padding: 1rem;
 
 .artboard-tab {
@@ -314,8 +315,8 @@ $artboard-tab-side-padding: 1rem;
       }
     }
 
-    input[type="text"],
-    input[type="number"] {
+    input[type='text'],
+    input[type='number'] {
       position: relative;
       border: 1px solid $border-color;
       border-radius: 4px;

@@ -21,7 +21,7 @@
         </div>
     </div>-->
     <transition name="slide-in">
-      <div v-if="sidebar===true" class="side-panel__content">
+      <div v-if="sidebar === true" class="side-panel__content">
         <PanelComponent :title="activeStation" />
       </div>
     </transition>
@@ -29,73 +29,77 @@
 </template>
 
 <script>
-import PanelComponent from "./PanelComponent.vue";
+import PanelComponent from './PanelComponent.vue'
 
 export default {
-  name: "SidePanel",
+  name: 'SidePanel',
   components: {
-    PanelComponent
+    PanelComponent,
   },
   data() {
     return {
-      activeStation: "Screens"
-    };
+      activeStation: 'Screens',
+    }
   },
   computed: {
     // Bind to our Vuex Store's URL value
-    artboards: function() {
-      return this.$store.state.artboards.list;
+    artboards() {
+      return this.$store.state.artboards.list
     },
     sidebar() {
-      return this.$store.state.gui.sidebar;
-    }
+      return this.$store.state.gui.sidebar
+    },
   },
 
   methods: {
-    setActive: function(val) {
+    setActive(val) {
       // Handle hide/show side panel
       if (this.sidebar && this.activeStation !== val) {
         // Normal State
         // Simply set the clicked station to active
-        this.activeStation = val;
+        this.activeStation = val
       } else if (this.sidebar && this.activeStation === val) {
         // Close State
         // When clicking on the same station,
         // it should close the sidebar
-        this.toggleSidebar(false);
-        this.activeStation = "";
+        this.toggleSidebar(false)
+        this.activeStation = ''
       } else if (this.sidebar === false) {
         // Closed State
         // Sidebar is closed, re-open
-        this.toggleSidebar(true);
-        this.activeStation = val;
+        this.toggleSidebar(true)
+        this.activeStation = val
       }
     },
-    isActive: function(val) {
+    isActive(val) {
       // Make sure to open the sidebar
       // if it was open in last session
       // Otherwise, don't set an active state
       if (this.sidebar === true) {
-        return this.activeStation === val;
+        return this.activeStation === val
       } else {
-        return "";
+        return ''
       }
     },
     toggleSidebar() {
-      this.$store.commit("gui/toggleSidebar");
-    }
-  }
-};
+      this.$store.commit('gui/toggleSidebar')
+    },
+  },
+}
 </script>
 
 <style lang="scss" scoped>
-@import "../../scss/_variables";
+@import '../../scss/_variables';
 
 .side-panel {
   display: grid;
   grid-template-columns: auto 1fr;
   grid-template-rows: 1fr;
-  z-index: 150;
+  position: absolute;
+  z-index: 100;
+  min-height: calc(
+    100vh - #{$gui-title-bar-height}
+  ); // hard-coded height of toolbar
 
   .side-panel__track {
     position: relative;

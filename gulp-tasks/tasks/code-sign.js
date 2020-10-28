@@ -1,8 +1,8 @@
 // Update process.env based on .env file (in root directory)
 require('dotenv').config()
 
-const gulp = require('gulp')
 const exec = require('child_process').exec
+const gulp = require('gulp')
 
 const APP_NAME = 'Shift' // TODO: un-hardcode this value
 const MAC_CERTIFICATE = process.env.MAC_CERT_ID // Mac certificate ID (xxxxxxxxxx)
@@ -17,8 +17,6 @@ function sign(callback) {
     `
 
   exec(command, (err, stdout, stderr) => {
-    console.log(stdout)
-    console.log(stderr)
     callback(err)
   })
 }
@@ -30,8 +28,6 @@ function validate(callback) {
     `
 
   exec(command, (err, stdout, stderr) => {
-    console.log(stdout)
-    console.log(stderr)
     callback(err)
   })
 }

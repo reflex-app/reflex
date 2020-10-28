@@ -4,8 +4,8 @@ export const state = () => ({
     index: 0,
     url: '',
     title: null,
-    favicon: null
-  }
+    favicon: null,
+  },
 })
 
 export const mutations = {
@@ -25,12 +25,12 @@ export const mutations = {
         state.currentPage.index = state.currentPage.index - 1
         break
 
-        // If adding a new page (i.e. user has entered a URL in the search input bar)
+      // If adding a new page (i.e. user has entered a URL in the search input bar)
       case 'new':
         state.currentPage.index = state.pages.length - 1 // zero indexed
         break
 
-        // Allow to set to a specific index
+      // Allow to set to a specific index
       default:
         state.currentPage.index = payload
         break
@@ -57,25 +57,19 @@ export const mutations = {
     if (val.favicon) {
       state.currentPage.favicon = val.favicon // Update the URL based on the incoming value
     }
-  }
+  },
 }
 
 export const actions = {
   reload() {},
-  back({
-    commit
-  }) {
+  back({ commit }) {
     commit('setCurrentPageIndex', 'back')
   },
-  forward({
-    commit
-  }) {
+  forward({ commit }) {
     commit('setCurrentPageIndex', 'forward')
   },
-  addPageToHistory({
-    commit
-  }, payload) {
+  addPageToHistory({ commit }, payload) {
     commit('addPage', payload) // Add to the array
     commit('setCurrentPageIndex', 'new') // Update the current page
-  }
+  },
 }

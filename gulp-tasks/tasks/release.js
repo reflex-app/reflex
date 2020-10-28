@@ -1,5 +1,6 @@
-const gulp = require('gulp')
+/* eslint-disable no-console */
 const exec = require('child_process').exec
+const gulp = require('gulp')
 const inquirer = require('inquirer')
 const chalk = require('chalk')
 const replace = require('gulp-replace')
@@ -19,11 +20,17 @@ let NEXT_APP_VERSION
 
 // Confirm version number
 gulp.task('release:prompt-version', function (done) {
-  inquirer.prompt([{
-    type: 'input',
-    name: 'version',
-    message: 'What release version is this? (Currently ' + CURRENT_APP_VERSION + '):'
-  }])
+  inquirer
+    .prompt([
+      {
+        type: 'input',
+        name: 'version',
+        message:
+          'What release version is this? (Currently ' +
+          CURRENT_APP_VERSION +
+          '):',
+      },
+    ])
     .then(function (res) {
       if (res.version) {
         NEXT_APP_VERSION = res.version
@@ -42,17 +49,21 @@ gulp.task('release:bump-version', function (done) {
   // Only run this if the version has changed
   if (NEXT_APP_VERSION === CURRENT_APP_VERSION) done()
 
-  return gulp.src('./package.json', {
-    base: './'
-  })
+  return gulp
+    .src('./package.json', {
+      base: './',
+    })
     .pipe(replace(CURRENT_APP_VERSION, NEXT_APP_VERSION))
     .pipe(gulp.dest('./'))
 })
 
 gulp.task('release:build-and-publish', function (cb) {
-  const process = exec(`cross-env GH_TOKEN="${GH_TOKEN}" electron-builder -p 'always'`, function (err, stdout, stderr) {
-    cb(err)
-  })
+  const process = exec(
+    `cross-env GH_TOKEN="${GH_TOKEN}" electron-builder -p 'always'`,
+    function (err, stdout, stderr) {
+      cb(err)
+    }
+  )
 
   process.stdout.on('data', function (data) {
     console.log(data)
@@ -60,8 +71,11 @@ gulp.task('release:build-and-publish', function (cb) {
 })
 
 // Build taskÎ
-gulp.task('release', gulp.series(
-  'release:prompt-version',
-  'release:bump-version',
-  'release:build-and-publish'
-))
+gulp.task(
+  'release',
+  gulp.series(
+    'release:prompt-version',
+    'release:bump-version',
+    'release:build-and-publish'
+  )
+)

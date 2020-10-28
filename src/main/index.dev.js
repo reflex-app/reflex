@@ -7,7 +7,7 @@ process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = 'true'
 
 electronDebug({
   showDevTools: false,
-  devToolsMode: 'right'
+  devToolsMode: 'right',
 })
 
 app.on('ready', () => {
@@ -18,13 +18,13 @@ app.on('ready', () => {
     accelerator: 'CommandOrControl+E',
     click: () => {
       app.exit(ELECTRON_RELAUNCH_CODE)
-    }
+    },
   })
   menu.append(refreshButton)
   Menu.setApplicationMenu(menu)
 })
 
-mainWinHandler.onCreated(browserWindow => {
+mainWinHandler.onCreated((browserWindow) => {
   browserWindow.webContents.openDevTools()
 })
 

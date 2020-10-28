@@ -1,9 +1,12 @@
-import { clipboard, nativeImage, remote, shell } from "electron";
-import isElectron from "is-electron";
-const { dialog } = isElectron() ? remote : {};
-const path = require("path");
-const fs = require("fs");
-const moment = require("moment");
+import { clipboard, nativeImage, remote, shell } from 'electron'
+
+import isElectron from 'is-electron'
+
+const { dialog } = isElectron() ? remote : {}
+
+const path = require('path')
+const fs = require('fs')
+const moment = require('moment')
 
 function getWebview(id) {
   // TODO add test here, selectors are brittle
@@ -17,11 +20,11 @@ export async function capture(id, title, screenshotPath) {
       // Prompt location to save screenshot
       if (isElectron()) {
         const fileSelection = dialog.showOpenDialog({
-          properties: ["openFile", "openDirectory", "createDirectory"]
-        });
+          properties: ['openFile', 'openDirectory', 'createDirectory'],
+        })
 
-        await fileSelection.then(result => {
-          console.log(result);
+        await fileSelection.then((result) => {
+          console.log(result)
 
           if (result.canceled || !result.filePaths.length) return false;
 
@@ -29,7 +32,7 @@ export async function capture(id, title, screenshotPath) {
             makeFile(result.filePaths[0], screenshot);
           } catch (e) {
             // Nothing was selected
-            console.log("No file or directory selected");
+            console.log('No file or directory selected')
           }
         });
       }
@@ -43,7 +46,7 @@ export async function capture(id, title, screenshotPath) {
   function makeFile(filePath, screenshot) {
     const timestamp = moment().format("YYYY-MM-D_h-mm-ssa");
 
-    title ? (title = `_${title}_`) : (title = "");
+    title ? (title = `_${title}_`) : (title = '')
 
     fs.writeFile(
       path.join(filePath, `reflex${title}${timestamp}.png`),
@@ -52,9 +55,9 @@ export async function capture(id, title, screenshotPath) {
         if (err) throw err;
 
         // Alert the user that the screenshot was saved
-        new Notification("Screenshot saved", {
-          body: filePath
-        });
+        new Notification('Screenshot saved', {
+          body: filePath,
+        })
 
         // Open in Finder
         shell.openItem(filePath);
@@ -81,8 +84,8 @@ export async function captureMultiple(ids) {
 
   // 1. Capture the path to save all
   const fileSelection = dialog.showOpenDialog({
-    properties: ["openFile", "openDirectory", "createDirectory"]
-  });
+    properties: ['openFile', 'openDirectory', 'createDirectory'],
+  })
 
   await fileSelection.then(result => {
     if (result.canceled || !result.filePaths.length) return false;
@@ -90,7 +93,7 @@ export async function captureMultiple(ids) {
     try {
       // Capture each & save it
       for (const item of ids) {
-        capture(item, `${item}`, result.filePaths[0]);
+        capture(item, `${item}`, result.filePaths[0])
       }
 
       return result.filePaths[0];
@@ -101,16 +104,16 @@ export async function captureMultiple(ids) {
 }
 
 // Capture ALL the screens
-export async function captureAll(vm) {
+export function captureAll(vm) {
   // 1. Get the file path to save all
   dialog.showOpenDialog(
     {
-      properties: ["openFile", "openDirectory", "createDirectory"]
+      properties: ['openFile', 'openDirectory', 'createDirectory'],
     },
-    async function(filePaths) {
+    async function (filePaths) {
       // 2. Capture each & save it
       for (let i = 0; i < vm.artboards.length; i++) {
-        await capture(i, `${vm.artboards[i].title}_${i}`, filePaths[0]);
+        await capture(i, `${vm.artboards[i].title}_${i}`, filePaths[0])
       }
 
       return filePaths[0];
@@ -120,12 +123,12 @@ export async function captureAll(vm) {
 
 // Take a screenshot
 // Return the image (NativeImage)
-export async function screenshot(id) {
+export function screenshot(id) {
   try {
-    const webview = getWebview(id);
-    return webview.getWebContents().capturePage(image => {
-      return image;
-    });
+    const webview = getWebview(id)
+    return webview.getWebContents().capturePage((image) => {
+      return image
+    })
   } catch (error) {
     throw new Error(error);
   }

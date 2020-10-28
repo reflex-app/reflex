@@ -1,5 +1,5 @@
 module.exports = {
-    CLICK: 'click',
-    DBLCLICK: 'dblclick',
-    SCROLL: 'scroll'
+  CLICK: 'click',
+  DBLCLICK: 'dblclick',
+  SCROLL: 'scroll',
 }

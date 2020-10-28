@@ -1,9 +1,9 @@
-import { v1 as uuid } from "uuid";
+import { v1 as uuid } from 'uuid'
 
 // All artboards on the screen
 export const state = () => ({
-  list: []
-});
+  list: [],
+})
 
 export const mutations = {
   /**
@@ -13,12 +13,12 @@ export const mutations = {
    */
   addArtboard(state, artboard) {
     state.list.push({
-      title: artboard.title || "Undefined",
+      title: artboard.title || 'Undefined',
       width: artboard.width || 375,
       height: artboard.height || 667,
       isVisible: artboard.isVisible || true,
-      id: uuid()
-    });
+      id: uuid(),
+    })
   },
 
   /**
@@ -27,19 +27,19 @@ export const mutations = {
    * @param  {} artboard
    */
   duplicateArtboard(state, payload) {
-    const { oldArtboard, newArtboard } = payload;
+    const { oldArtboard, newArtboard } = payload
 
     // Copy the input artboard
     // Insert a new one at the next index
-    const index = state.list.findIndex(obj => obj.id === oldArtboard.id);
-    const newIndex = index + 1;
+    const index = state.list.findIndex((obj) => obj.id === oldArtboard.id)
+    const newIndex = index + 1
 
     // Set a new ID
-    newArtboard.id = uuid();
+    newArtboard.id = uuid()
 
     // Push into array at index,
     // don't remove any, just insert this artboard
-    state.list.splice(newIndex, 0, newArtboard);
+    state.list.splice(newIndex, 0, newArtboard)
   },
 
   /**
@@ -49,10 +49,10 @@ export const mutations = {
    */
   changeArtboardVisibility(state, artboard) {
     // 1. Get the artboard.id
-    const id = artboard.id;
-    const index = state.list.findIndex(obj => obj.id === id);
+    const id = artboard.id
+    const index = state.list.findIndex((obj) => obj.id === id)
     // 2. Change the visibility of just that artboard's is property
-    state.list[index].isVisible = !artboard.isVisible;
+    state.list[index].isVisible = !artboard.isVisible
   },
 
   /**
@@ -61,8 +61,8 @@ export const mutations = {
    * @param  {} id The ID of the artboard object
    */
   removeArtboard(state, id) {
-    const index = state.list.findIndex(obj => obj.id === id);
-    state.list.splice(index, 1);
+    const index = state.list.findIndex((obj) => obj.id === id)
+    state.list.splice(index, 1)
   },
 
   /** Modify an Artboard by Index
@@ -71,11 +71,11 @@ export const mutations = {
    */
   updateArtboardAtIndex(state, artboard) {
     // 1. Get the artboard.id
-    const id = artboard.id;
-    const index = state.list.findIndex(obj => obj.id === id);
+    const id = artboard.id
+    const index = state.list.findIndex((obj) => obj.id === id)
 
     // 2. Change just that artboard's content
-    state.list[index] = artboard;
+    state.list[index] = artboard
   },
 
   /** Resize an Artboard
@@ -84,16 +84,16 @@ export const mutations = {
    */
   resizeArtboard(state, payload) {
     if (!payload.id || !payload.height || !payload.width)
-      throw new Error("Payload missing properties");
+      throw new Error('Payload missing properties')
 
-    const artboards = state.list;
+    const artboards = state.list
 
-    for (var i = 0; i < artboards.length; i++) {
+    for (let i = 0; i < artboards.length; i++) {
       if (payload.id === artboards[i].id) {
         // look for match by id
-        artboards[i].height = payload.height; // updated object
-        artboards[i].width = payload.width; // updated object
-        break; // exit loop, object has been updated
+        artboards[i].height = payload.height // updated object
+        artboards[i].width = payload.width // updated object
+        break // exit loop, object has been updated
       }
     }
   },
@@ -101,14 +101,14 @@ export const mutations = {
   set(state, payload) {
     // TODO this is not reactive currently
     if (state !== payload) {
-      state.list = payload;
+      state.list = payload
     }
-  }
-};
+  },
+}
 
 export const actions = {
   addArtboard({ commit }, artboard) {
-    commit("addArtboard", artboard);
+    commit('addArtboard', artboard)
   },
   deleteArtboard({ commit }, artboard) {
     if (
@@ -116,31 +116,31 @@ export const actions = {
         `Are you sure you want to delete the ${artboard.title} screen size? Click "OK" to delete.`
       )
     ) {
-      commit("removeArtboard", artboard.id);
+      commit('removeArtboard', artboard.id)
     }
   },
-  async addMultipleArtboards({ commit }, payload) {
-    const artboards = payload.data;
+  addMultipleArtboards({ commit }, payload) {
+    const artboards = payload.data
 
     for (const i in artboards) {
-      commit("addArtboard", artboards[i]);
+      commit('addArtboard', artboards[i])
     }
   },
-  async duplicateArtboard({ commit }, payload) {
-    const newId = uuid();
+  duplicateArtboard({ commit }, payload) {
+    const newId = uuid()
 
-    if (newId === payload.id) throw new Error("Failed to generate new ID");
+    if (newId === payload.id) throw new Error('Failed to generate new ID')
 
     // New object from payload
-    const newArtboard = JSON.parse(JSON.stringify(payload));
-    newArtboard.id = newId;
+    const newArtboard = JSON.parse(JSON.stringify(payload))
+    newArtboard.id = newId
 
-    commit("duplicateArtboard", {
+    commit('duplicateArtboard', {
       oldArtboard: payload,
-      newArtboard: newArtboard
-    });
+      newArtboard,
+    })
   },
   setArtboards({ commit }, payload) {
-    commit("set", payload);
-  }
-};
+    commit('set', payload)
+  },
+}

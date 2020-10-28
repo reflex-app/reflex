@@ -1,6 +1,6 @@
 // A list of selected artboards by index
 // I.e. state.selectedArtboards = [ 0, 3 ]
-export const state = () => ([]) 
+export const state = () => []
 
 export const mutations = {
   add: (state, payload) => {
@@ -12,32 +12,26 @@ export const mutations = {
   },
 
   remove: (state, payload) => {
-    const index = state.findIndex(obj => obj === payload)
+    const index = state.findIndex((obj) => obj === payload)
     state.splice(index, 1)
   },
 
   empty(state, payload) {
     // TODO Make this less specific
     this.state.selectedArtboards = []
-  }
+  },
 }
 
 export const actions = {
-  selectedArtboardsAdd({
-    commit
-  }, payload) {
+  selectedArtboardsAdd({ commit }, payload) {
     commit('add', payload)
   },
 
-  selectedArtboardsRemove({
-    commit
-  }, payload) {
+  selectedArtboardsRemove({ commit }, payload) {
     commit('remove', payload)
   },
 
-  selectedArtboardsEmpty({
-    commit
-  }) {
+  selectedArtboardsEmpty({ commit }) {
     commit('empty')
-  }
+  },
 }

@@ -1,12 +1,6 @@
 const log = require('electron-log')
-const {
-  ipcMain,
-  app,
-  BrowserWindow
-} = require('electron')
-const {
-  autoUpdater
-} = require('electron-updater')
+const { ipcMain, app, BrowserWindow } = require('electron')
+const { autoUpdater } = require('electron-updater')
 const isDev = require('electron-is-dev')
 
 autoUpdater.logger = log
@@ -22,7 +16,9 @@ export default function init(window) {
 
   win.on('did-finish-load', () => {
     if (isDev) {
-      sendStatusToWindow('Not checking for updates in dev mode, triggering example instead.')
+      sendStatusToWindow(
+        'Not checking for updates in dev mode, triggering example instead.'
+      )
       win.send('DOWNLOAD_PROGRESS', '10')
 
       setTimeout(() => {
@@ -68,7 +64,13 @@ export default function init(window) {
   autoUpdater.on('download-progress', (progressObj) => {
     let logMessage = 'Download speed: ' + progressObj.bytesPerSecond
     logMessage = logMessage + ' - Downloaded ' + progressObj.percent + '%'
-    logMessage = logMessage + ' (' + progressObj.transferred + '/' + progressObj.total + ')'
+    logMessage =
+      logMessage +
+      ' (' +
+      progressObj.transferred +
+      '/' +
+      progressObj.total +
+      ')'
     sendStatusToWindow(logMessage)
 
     // Send the current progress to our IPC window
@@ -94,6 +96,7 @@ export default function init(window) {
         autoUpdater.quitAndInstall(false)
       })
     } else {
+      // eslint-disable-next-line no-console
       console.log('No update available')
     }
   })
@@ -114,7 +117,7 @@ export default function init(window) {
  */
 function ensureSafeQuitAndInstall() {
   app.removeAllListeners('window-all-closed')
-  var browserWindows = BrowserWindow.getAllWindows()
+  const browserWindows = BrowserWindow.getAllWindows()
   browserWindows.forEach(function (browserWindow) {
     browserWindow.removeAllListeners('close')
   })

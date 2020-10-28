@@ -1,34 +1,40 @@
 export const state = () => ({
-  isPanning: false,
-  isZooming: false,
-  isSelectingArea: false,
-  isResizingArtboard: false
+  // isPanning: false,
+  // isZooming: false,
+  internal: {
+    isPanzooming: false,
+    isSelectingArea: false,
+    isResizingArtboard: false,
+  },
+  panzoomEnabled: true,
 })
 
 export const getters = {
   /**
    * Getter to check if any states are true
    */
-  isInteracting: state => {
+  isInteracting: (state) => {
     let isOn = false
 
-    for (const s in state) {
+    for (const s in state.internal) {
       if (state[s] === true) {
+        console.log(state[s])
+
         isOn = true
       }
     }
 
     return isOn
-  }
+  },
 }
 
 export const mutations = {
-  interactionSetState: (state, {
-    key,
-    value
-  }) => {
+  interactionSetState: (state, { key, value }) => {
     if (state[key] !== value) {
       state[key] = value
     }
-  }
+  },
+  setPanzoomState: (state, { value }) => {
+    state.panzoomEnabled = value
+  },
 }
