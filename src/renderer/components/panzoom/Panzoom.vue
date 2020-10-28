@@ -1,7 +1,16 @@
 <template>
-  <div class="container" :class="{ 'dev-visual-debugger': showCanvasDebugger }">
+  <div
+    class="panzoom-container"
+    :class="{ 'dev-visual-debugger': showCanvasDebugger }"
+  >
     <PanzoomControls :instance="this.panzoomInstance" />
-    <div ref="parent" :class="{ 'dev-visual-debugger': showCanvasDebugger }">
+    <div
+      ref="parent"
+      :class="{
+        'dev-visual-debugger': showCanvasDebugger,
+        'panzoom-exclude': this.isInteracting == false,
+      }"
+    >
       <slot></slot>
     </div>
   </div>
@@ -9,7 +18,7 @@
 
 <script>
 import Panzoom from '@panzoom/panzoom'
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 import { ipcRenderer } from 'electron'
 import isElectron from 'is-electron'
 import PanzoomControls from './PanzoomControls.vue'
@@ -31,6 +40,7 @@ export default {
       showCanvasDebugger: (state) => state.dev.showCanvasDebugger,
       isEnabled: (state) => state.interactions.panzoomEnabled,
     }),
+    ...mapGetters('interactions', ['isInteracting']),
   },
   watch: {
     // Watch for changes and change Panzoom accordingly
@@ -183,7 +193,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.container {
+.panzoom-container {
   // position: absolute;
   // overflow: hidden;
   // outline: none;
@@ -191,6 +201,9 @@ export default {
   // width: 100%;
   height: 100%;
   width: 100%;
+  // position: absolute;
+  top: 0;
+  left: 0;
 }
 
 #parent {
