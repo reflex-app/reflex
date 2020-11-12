@@ -18,10 +18,12 @@
 </template>
 
 <script>
-import Artboards from '@/components/Screens/Artboards'
+import Panzoom from '@/components/panzoom/Panzoom.vue'
 import SidePanel from '@/components/SidePanel'
 import Screenshots from '@/components/Screenshot'
-import Panzoom from '@/components/panzoom/Panzoom.vue'
+import FocusArtboard from '@/components/FocusMode/FocusArtboard'
+import SizeShifter from '@/components/FocusMode/SizeShifter'
+import DiscoSwitch from '@/components/FocusMode/DiscoSwitch'
 
 export default {
   name: 'MainView',
@@ -31,6 +33,8 @@ export default {
     SidePanel,
     Screenshots,
     Panzoom,
+    DiscoSwitch,
+    SizeShifter,
   },
 }
 </script>

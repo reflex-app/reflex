@@ -3,8 +3,8 @@ const ICONS_DIR = 'build/icons/'
 
 const macOS = {
   mac: {
-    target: "dmg",
-    icon: ICONS_DIR + "icon.icns",
+    target: 'dmg',
+    icon: ICONS_DIR + 'icon.icns',
     hardenedRuntime: true, // Required for MacOS Catalina
     gatekeeperAssess: false, // Required for MacOS Catalina
     entitlements: 'build/entitlements.mac.plist', // Required for MacOS Catalina
@@ -32,7 +32,7 @@ const macOS = {
 
 const windowsOS = {
   win: {
-    icon: ICONS_DIR + "icon.ico",
+    icon: ICONS_DIR + 'icon.ico',
     // publisherName: 'Nick Wittwer',
     // target: 'nsis',
     // verifyUpdateCodeSignature: false, // Don't codesign https://github.com/electron-userland/electron-builder/issues/2786#issuecomment-383813995
@@ -41,7 +41,7 @@ const windowsOS = {
   // nsis: {
   //   differentialPackage: true
   // }
-};
+}
 
 module.exports = {
   asar: true,
@@ -54,7 +54,7 @@ module.exports = {
   },
   // default files: https://www.electron.build/configuration/contents
   files: [
-    "package.json",
+    'package.json',
     {
       from: 'dist/main/',
       to: 'dist/main/',

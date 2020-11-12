@@ -4,6 +4,7 @@
 
 <script>
 import { mapState } from 'vuex'
+const { remote } = require('electron')
 
 export default {
   props: {
