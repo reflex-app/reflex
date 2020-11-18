@@ -10,7 +10,7 @@ const moment = require('moment')
 
 function getWebview(id) {
   // TODO add test here, selectors are brittle
-  return document.querySelector(`[artboard-id="${id}"] webview`);
+  return document.querySelector(`[artboard-id="${id}"] webview`)
 }
 
 export async function capture(id, title, screenshotPath) {
@@ -26,33 +26,33 @@ export async function capture(id, title, screenshotPath) {
         await fileSelection.then((result) => {
           console.log(result)
 
-          if (result.canceled || !result.filePaths.length) return false;
+          if (result.canceled || !result.filePaths.length) return false
 
           try {
-            makeFile(result.filePaths[0], screenshot);
+            makeFile(result.filePaths[0], screenshot)
           } catch (e) {
             // Nothing was selected
             console.log('No file or directory selected')
           }
-        });
+        })
       }
     } else {
       // Case: already has a path (multi-save)
-      makeFile(screenshotPath, screenshot);
+      makeFile(screenshotPath, screenshot)
     }
   }
 
   // Create the file
   function makeFile(filePath, screenshot) {
-    const timestamp = moment().format("YYYY-MM-D_h-mm-ssa");
+    const timestamp = moment().format('YYYY-MM-D_h-mm-ssa')
 
     title ? (title = `_${title}_`) : (title = '')
 
     fs.writeFile(
       path.join(filePath, `reflex${title}${timestamp}.png`),
       screenshot,
-      err => {
-        if (err) throw err;
+      (err) => {
+        if (err) throw err
 
         // Alert the user that the screenshot was saved
         new Notification('Screenshot saved', {
@@ -60,35 +60,35 @@ export async function capture(id, title, screenshotPath) {
         })
 
         // Open in Finder
-        shell.openItem(filePath);
+        shell.openItem(filePath)
       }
-    );
+    )
   }
 
   try {
     // Capture the <webview>
     // Loop through the selected Webviews
-    const webview = getWebview(id);
+    const webview = getWebview(id)
     const image = await remote.webContents
       .fromId(webview.getWebContentsId())
-      .capturePage();
-    saveScreenshot(image.toPNG());
+      .capturePage()
+    saveScreenshot(image.toPNG())
   } catch (error) {
-    throw new Error(error);
+    throw new Error(error)
   }
 }
 
 export async function captureMultiple(ids) {
   // Accepts an array of ids to capture [ 0, 1 ]
-  if (!ids) return false;
+  if (!ids) return false
 
   // 1. Capture the path to save all
   const fileSelection = dialog.showOpenDialog({
     properties: ['openFile', 'openDirectory', 'createDirectory'],
   })
 
-  await fileSelection.then(result => {
-    if (result.canceled || !result.filePaths.length) return false;
+  await fileSelection.then((result) => {
+    if (result.canceled || !result.filePaths.length) return false
 
     try {
       // Capture each & save it
@@ -96,11 +96,11 @@ export async function captureMultiple(ids) {
         capture(item, `${item}`, result.filePaths[0])
       }
 
-      return result.filePaths[0];
+      return result.filePaths[0]
     } catch (err) {
-      throw new Error(err);
+      throw new Error(err)
     }
-  });
+  })
 }
 
 // Capture ALL the screens
@@ -116,9 +116,9 @@ export function captureAll(vm) {
         await capture(i, `${vm.artboards[i].title}_${i}`, filePaths[0])
       }
 
-      return filePaths[0];
+      return filePaths[0]
     }
-  );
+  )
 }
 
 // Take a screenshot
@@ -130,7 +130,7 @@ export function screenshot(id) {
       return image
     })
   } catch (error) {
-    throw new Error(error);
+    throw new Error(error)
   }
 }
 
@@ -141,13 +141,13 @@ export function screenshot(id) {
  */
 export async function copyToClipboard(id) {
   try {
-    const image = await screenshot(id);
+    const image = await screenshot(id)
     // Convert again to the proper format
     // NativeImage in PNG format
     // https://electronjs.org/docs/api/native-image
     // via https://github.com/electron/electron/issues/8151#issuecomment-265288291
-    clipboard.writeImage(nativeImage.createFromBuffer(image.toPNG()));
+    clipboard.writeImage(nativeImage.createFromBuffer(image.toPNG()))
   } catch (err) {
-    throw new Error("Error writing to clipboard");
+    throw new Error('Error writing to clipboard')
   }
 }

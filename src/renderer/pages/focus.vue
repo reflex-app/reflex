@@ -12,7 +12,7 @@
 import Panzoom from '@/components/panzoom/Panzoom.vue'
 import SidePanel from '@/components/SidePanel'
 import Screenshots from '@/components/Screenshot'
-import FocusArtboard from '@/components/FocusMode/FocusArtboard'
+import Artboards from '@/components/Screens/Artboards'
 import SizeShifter from '@/components/FocusMode/SizeShifter'
 
 export default {
@@ -22,6 +22,7 @@ export default {
     SidePanel,
     Screenshots,
     SizeShifter,
+    Panzoom,
   },
   data() {
     return {}
@@ -43,10 +44,9 @@ export default {
 
 #main-view {
   background: $body-bg;
-  min-height: calc(
-    100vh - #{$gui-title-bar-height}
-  ); // hard-coded height of toolbar
   position: relative;
+  height: 100%;
+  width: 100%;
   // display: flex;
 }
 
