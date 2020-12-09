@@ -35,6 +35,9 @@
       <div class="artboard__handles">
         <div class="handle__bottom" title="Resize" @mousedown="triggerResize" />
       </div>
+      <div class="artboard__cross-browser-screenshots">
+        <CrossBrowserScreenshots :height="height" :width="width" />
+      </div>
     </div>
   </div>
 </template>
@@ -43,11 +46,14 @@
 import { mapState, mapGetters } from 'vuex'
 import WebPage from './WebPage.vue'
 import rightClickMenu from '@/mixins/rightClickMenu.js'
+import { log } from 'electron-log'
+import CrossBrowserScreenshots from '~/components/CrossBrowser/Screenshots/CrossBrowserScreenshots.vue'
 
 export default {
   name: 'Artboard',
   components: {
     WebPage,
+    CrossBrowserScreenshots,
   },
   props: {
     title: {
