@@ -18,8 +18,8 @@ function setDOMEffect(event, args) {
   if (args.event.type === eventTypes.SCROLL) {
     scrollHandler(
       args.origin,
-      args.origin.scrollOffset.left,
-      args.origin.scrollOffset.top
+      args.origin.scrollOffset.x,
+      args.origin.scrollOffset.y
     )
   }
 }

@@ -82,8 +82,8 @@ function responder(event) {
       ),
       viewportHeight: helpers.documentHeight(),
       scrollOffset: {
-        top: window.scrollY,
-        left: window.scrollX,
+        x: window.scrollX,
+        y: window.scrollY,
       },
     },
   })

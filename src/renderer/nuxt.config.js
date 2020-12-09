@@ -15,6 +15,7 @@ module.exports = {
     { src: '~/plugins/eventBus.js', ssr: false },
     { src: '~/plugins/globalComponents.js', ssr: false },
     { src: '~/plugins/featureFlipping.js', ssr: false },
+    { src: '~/plugins/vueCompositionApi.js', ssr: false },
   ],
   /*
    ** Nuxt.js dev-modules

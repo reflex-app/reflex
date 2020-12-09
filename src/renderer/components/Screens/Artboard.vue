@@ -1,42 +1,54 @@
 <template>
-  <div
-    v-show="isVisible"
-    ref="artboard"
-    class="artboard"
-    :artboard-id="id"
-    :style="{ height: height + 'px', width: width + 'px' }"
-    :class="{ 'is-hover': isHover, 'is-selected': isSelected }"
-    @click.right="rightClickHandler()"
-  >
-    <div class="artboard__top">
-      <div>
-        <span class="title">{{ title }}</span>
-        <span class="dimension">{{ width }} x {{ height }}</span>
-      </div>
-      <!-- Show a loader when state.isLoading == true -->
-      <div v-show="state.isLoading" class="artboard__loader is-loading">
-        <div class="content">
-          <div class="lds-ripple">
-            <div></div>
-            <div></div>
+  <div class="artboard-container">
+    <div
+      v-show="isVisible"
+      ref="artboard"
+      class="artboard"
+      :artboard-id="id"
+      :class="{ 'is-hover': isHover, 'is-selected': isSelected }"
+      @click.right="rightClickHandler()"
+    >
+      <div class="artboard__top">
+        <div>
+          <span class="title">{{ title }}</span>
+          <span class="dimension">{{ width }} x {{ height }}</span>
+        </div>
+        <!-- Show a loader when state.isLoading == true -->
+        <div v-show="state.isLoading" class="artboard__loader is-loading">
+          <div class="content">
+            <div class="lds-ripple">
+              <div></div>
+              <div></div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="artboard__keypoints"></div>
-    <div class="artboard__content">
-      <WebPage
-        :id="id"
-        ref="frame"
-        :allow-interactions="canInteractWithArtboard"
-        @loadstart="state.isLoading = true"
-        @loadend="state.isLoading = false"
-      />
+      <div class="artboard__keypoints"></div>
+      <div
+        class="artboard__content"
+        :class="{ 'layout--horizontal': state.horizontalLayout }"
+      >
+        {{ scrollPosition }}
+        <WebPage
+          :id="id"
+          ref="frame"
+          :allow-interactions="canInteractWithArtboard"
+          :style="{ height: height + 'px', width: width + 'px' }"
+          @loadstart="state.isLoading = true"
+          @loadend="state.isLoading = false"
+          @scroll="updateScrollPosition"
+        />
+        <div class="artboard__cross-browser-screenshots">
+          <CrossBrowserScreenshots
+            ref="cross-browser-DOM"
+            :height="height"
+            :width="width"
+            @loaded="expandHorizontally()"
+          />
+        </div>
+      </div>
       <div class="artboard__handles">
         <div class="handle__bottom" title="Resize" @mousedown="triggerResize" />
-      </div>
-      <div class="artboard__cross-browser-screenshots">
-        <CrossBrowserScreenshots :height="height" :width="width" />
       </div>
     </div>
   </div>
@@ -82,6 +94,11 @@ export default {
     return {
       state: {
         isLoading: false,
+        horizontalLayout: true,
+      },
+      scrollPosition: {
+        x: 0,
+        y: 0,
       },
     }
   },
@@ -116,13 +133,14 @@ export default {
      * and the user is not dragging a selection area
      */
     canInteractWithArtboard() {
-      if (this.isSelected === false) return false // Not selected!
+      return true
+      // if (this.isSelected === false) return false // Not selected!
 
-      if (this.isSelected && this.isInteracting === false) {
-        return true // Can interact!
-      }
+      // if (this.isSelected && this.isInteracting === false) {
+      //   return true // Can interact!
+      // }
 
-      return false // Otherwise, false
+      // return false // Otherwise, false
     },
   },
 
@@ -135,6 +153,19 @@ export default {
   },
 
   methods: {
+    updateScrollPosition({ x, y }) {
+      console.log('scrolled')
+      this.scrollPosition.x = x
+      this.scrollPosition.y = y
+    },
+    expandHorizontally() {
+      this.state.horizontalLayout = true
+
+      const el = this.$refs['cross-browser-DOM'].$el
+      console.log('el', el)
+
+      const { height, width } = el.getBoundingClientRect()
+    },
     rightClickHandler() {
       rightClickMenu(this.$store, {
         title: this.title,
@@ -270,6 +301,14 @@ export default {
 @import '@/scss/_variables';
 $artboard-handle-height: 1rem;
 
+.artboard-container {
+  display: block;
+  position: relative;
+  padding-right: 15rem;
+  width: auto;
+  height: auto;
+}
+
 .artboard {
   padding: 1rem;
   padding-right: 1.5rem;
@@ -278,8 +317,8 @@ $artboard-handle-height: 1rem;
   position: relative;
   display: block;
   flex: 1 0 auto;
-  height: 1200px;
-  width: 300px;
+  min-height: 10px;
+  min-width: 10px;
   margin: 0 3.5rem;
 
   &:first-child {
@@ -327,9 +366,30 @@ $artboard-handle-height: 1rem;
     position: relative;
     border: 1px solid white;
     box-sizing: border-box;
-    background: #ffffff;
+    // background: #ffffff;
     transition: all 100ms ease-out;
     // box-shadow: 0 4px 10px rgba(#000, 0.1);
+    overflow: visible;
+
+    .frame {
+      // min-width: 100%;
+      // min-height: 100%;
+      // display: block;
+    }
+
+    &.layout--horizontal {
+      display: flex;
+      flex-direction: row;
+      // flex-wrap: wrap;
+      max-width: 100%;
+    }
+
+    .artboard__cross-browser-screenshots {
+      position: relative;
+      // left: 100%;
+      // top: 0;
+      width: auto;
+    }
   }
 
   .artboard__handles {

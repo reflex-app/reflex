@@ -1,60 +1,119 @@
 import playwright from 'playwright'
+import { reactive, watchEffect } from '@vue/composition-api'
+import { v1 as uuid } from 'uuid'
+
+// Keep track of all the open browser contexts
+// This data can be accessed reactively
+export const browserContexts = reactive({
+  active: [],
+})
+
+// Log changes to the browser contextss
+watchEffect(() => console.log('browser', browserContexts.active))
 
 // A single browser's screenshot
 class CrossBrowserScreenshot {
   constructor(options) {
     this.url = options.url || 'https://google.com'
-    this.browser = options.browser || 'chromium'
+    this.browser = ['chromium', 'webkit', 'firefox'].includes(options.browser)
+      ? options.browser
+      : 'chromium' // Default to Chromium
     this.height = options.height || 100
     this.width = options.width || 100
+    this.x = options.x || 0
+    this.y = options.y || 0
   }
 
   async takeScreenshot() {
-    console.log(`Loading ${this.browser}`)
-    const browser = await playwright[this.browser].launch()
-    const context = await browser.newContext({
-      viewport: {
-        height: this.height,
-        width: this.width,
-      },
-    })
-    const page = await context.newPage()
-    await page.goto(this.url)
-    const screenshotBuffer = await page.screenshot({
-      //   clip: {
-      //     x: 0,
-      //     y: 0,
-      //     height: this.height,
-      //     width: this.width,
-      //   },
-    })
-    await browser.close()
-    return screenshotBuffer
+    try {
+      const id = uuid()
+      console.log(`Loading ${this.browser}, ${id}`)
+      const browser = await playwright[this.browser].launch()
+      const context = await browser.newContext({
+        viewport: {
+          height: this.height,
+          width: this.width,
+        },
+      })
+      // Track the context
+      browserContexts.active.push({ id, context: context, type: this.browser })
+
+      const page = await context.newPage()
+      await page.goto(this.url, {
+        waitUntil: 'networkidle',
+      })
+
+      // Scroll up/down as needed
+      await page.evaluate(`(async () => {
+        await new Promise((resolve, reject) => {
+          window.scrollTo(${this.x}, ${this.y})
+          resolve()
+        })
+      })()`)
+
+      const screenshotBuffer = await page.screenshot({
+        //   clip: {
+        //     x: 0,
+        //     y: 0,
+        //     height: this.height,
+        //     width: this.width,
+        //   },
+      })
+
+      // Remove from the array
+      browserContexts.active = browserContexts.active.filter(
+        (i) => !i.id === id
+      ) // Remove this ID from the list of active
+      await browser.close()
+
+      return screenshotBuffer
+    } catch (err) {
+      console.log(err)
+      await browser.close()
+    }
   }
 }
 
 export async function takeScreenshots(
-  url,
-  browsers = ['chromium', 'firefox', 'webkit'],
-  height,
-  width
+  { url = '', browsers = [], height = 0, width = 0, x = 0, y = 0 },
+  callback = () => {}
 ) {
-  const arr = []
-
   // Loop through each browser
-  for (const browserType of browsers) {
-    const browser = new CrossBrowserScreenshot({
-      url: url,
-      browser: browserType,
-      height: height,
-      width: width,
+  const screenshotPromiseGenerator = (browser) => {
+    return new Promise((resolve) => {
+      const b = new CrossBrowserScreenshot({
+        url,
+        browser,
+        height,
+        width,
+        x,
+        y,
+      })
+
+      b.takeScreenshot().then((screenshot) => {
+        resolve({ type: browser, img: screenshot })
+      })
     })
-    const screenshot = await browser.takeScreenshot()
-    arr.push({ type: browserType, img: screenshot })
   }
 
-  // Return an array of image buffers
-  return arr
+  // Loop through each browser
+  // Store a promise for each browser
+  const promises = browsers.map(screenshotPromiseGenerator)
+
+  //  Trigger callback (optional) every time one finishes
+  promises.forEach((promise) => {
+    // Return the result
+    promise.then((d) => {
+      if (!d) reject()
+      console.log('browser finished', d)
+      callback(d)
+    })
+  })
+
+  // Wait until they all complete
+  return Promise.all(promises).then((data) => {
+    console.log(data)
+  })
 }
 
 // Convert an image buffer into base64

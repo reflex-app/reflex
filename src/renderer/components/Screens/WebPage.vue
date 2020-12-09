@@ -15,7 +15,6 @@ export default {
     },
     allowInteractions: {
       type: Boolean,
-      default: false,
       required: true,
     },
   },
@@ -269,7 +268,7 @@ export default {
       if (event.channel === 'REFLEX_SYNC') {
         // BUS: https://binbytes.com/blog/create-global-event-bus-in-nuxtjs
         const data = event.args[0]
-        // console.log(data);
+        console.log(this.allowInteractions, data)
 
         // TODO This can fail if multiple artboards are selected
         // TODO wait for did-attach-webview event
@@ -278,6 +277,16 @@ export default {
             ...data,
             originID: this.id,
           }) // Send a test event
+
+          if (data.event.type === 'scroll') {
+            const { x, y } = data.origin.scrollOffset
+
+            // Emit the event if its a scroll
+            this.$emit('scroll', {
+              x,
+              y,
+            })
+          }
         }
       } else if (event.channel === 'replyData') {
         const returnedData = event.args[0]
@@ -334,9 +343,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.frame {
+.frame,
+webview {
   height: 100%;
   width: 100%;
-  pointer-events: none; // Don't allow by default
+  // min-width: 100%;
+  // min-height: 100%;
+  // pointer-events: none; // Don't allow by default
+  position: relative;
+  // display: block;
 }
 </style>
