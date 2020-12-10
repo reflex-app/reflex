@@ -19,6 +19,10 @@
       </button>
     </div>
     <!-- The cross-browser screenshots -->
+    <div>
+      <div>X: {{ x }}</div>
+      <div>Y: {{ y }}</div>
+    </div>
     <div class="cbs__results">
       <div v-for="item in crossBrowserScreens" :key="item.id">
         <span class="result__type">({{ item.type }})</span>
@@ -58,6 +62,14 @@ export default {
     width: {
       type: Number,
       default: 100,
+    },
+    x: {
+      type: Number,
+      default: 0,
+    },
+    y: {
+      type: Number,
+      default: 0,
     },
   },
   data() {
@@ -102,6 +114,8 @@ export default {
           browsers: browsers,
           height: this.height,
           width: this.width,
+          x: this.x,
+          y: this.y,
         },
         renderImage
       )
