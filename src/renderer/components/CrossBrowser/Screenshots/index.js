@@ -28,7 +28,7 @@ class CrossBrowserScreenshot {
     try {
       const id = uuid()
       console.log(`Loading ${this.browser}, ${id}`)
-      const browser = await playwright[this.browser].launch()
+      const browser = await playwright[this.browser].launch({ headless: false })
       const context = await browser.newContext({
         viewport: {
           height: this.height,
@@ -44,12 +44,10 @@ class CrossBrowserScreenshot {
       })
 
       // Scroll up/down as needed
-      await page.evaluate(`(async () => {
-        await new Promise((resolve, reject) => {
-          window.scrollTo(${this.x}, ${this.y})
-          resolve()
-        })
-      })()`)
+      await page.evaluate(`window.scrollTo(${this.x}, ${this.y})`)
+
+      // Wait...
+      await page.waitForTimeout(1000)
 
       const screenshotBuffer = await page.screenshot({
         //   clip: {
