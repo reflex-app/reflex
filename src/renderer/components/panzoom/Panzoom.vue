@@ -8,7 +8,7 @@
       ref="parent"
       :class="{
         'dev-visual-debugger': showCanvasDebugger,
-        'panzoom-exclude': this.isInteracting == false,
+        'panzoom-exclude': this.panzoomEnabled === false, // Allow pointer-events to child DOM elements when panzoom is disabled
       }"
     >
       <slot></slot>
@@ -38,15 +38,17 @@ export default {
   computed: {
     ...mapState({
       showCanvasDebugger: (state) => state.dev.showCanvasDebugger,
-      isEnabled: (state) => state.interactions.panzoomEnabled,
+      panzoomEnabled: (state) => state.interactions.panzoomEnabled,
     }),
     ...mapGetters('interactions', ['isInteracting']),
   },
   watch: {
     // Watch for changes and change Panzoom accordingly
-    isEnabled(newState) {
-      if (newState === true) {
+    panzoomEnabled(state) {
+      if (state === true) {
         // Enable panzoom
+        this.panzoomInstance.bind() // Add event listeners
+
         this.panzoomInstance.setOptions({
           disablePan: false,
           disableZoom: false,
@@ -54,6 +56,8 @@ export default {
         })
       } else {
         // Disable panzoom
+        this.panzoomInstance.destroy() // Remove event listeners until re-enabled
+
         this.panzoomInstance.setOptions({
           disablePan: true,
           disableZoom: true,
@@ -115,7 +119,7 @@ export default {
       DOMElement.parentElement.addEventListener('wheel', onWheel)
 
       function onWheel(event) {
-        if (!vm.isEnabled) return false // Only do this if Panzoom is enabled
+        if (!vm.panzoomEnabled) return false // Only do this if Panzoom is enabled
 
         // Prevent default scroll event
         event.preventDefault()
@@ -159,7 +163,11 @@ export default {
       })
 
       function startEvents(e) {
-        if (!vm.isEnabled) return false // Only do this if Panzoom is enabled
+        // Only continue if Panzoom is enabled
+        if (vm.panzoomEnabled === false) {
+          // e.stopPropogation()
+          return false
+        }
 
         vm.panzoomInstance.setOptions({
           cursor: 'grabbing',
@@ -199,11 +207,13 @@ export default {
   // outline: none;
   // height: 100%;
   // width: 100%;
-  height: 100%;
+  // height: 100%;
   width: 100%;
+  position: relative;
   // position: absolute;
   top: 0;
   left: 0;
+  overflow: hidden;
 }
 
 #parent {

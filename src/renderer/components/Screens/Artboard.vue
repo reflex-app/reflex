@@ -133,14 +133,13 @@ export default {
      * and the user is not dragging a selection area
      */
     canInteractWithArtboard() {
-      return true
-      // if (this.isSelected === false) return false // Not selected!
+      if (this.isSelected === false) return false // Not selected!
 
-      // if (this.isSelected && this.isInteracting === false) {
-      //   return true // Can interact!
-      // }
+      if (this.isSelected && this.isInteracting === false) {
+        return true // Can interact!
+      }
 
-      // return false // Otherwise, false
+      return false // Otherwise, false
     },
   },
 
