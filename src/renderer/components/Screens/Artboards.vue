@@ -10,7 +10,6 @@
         :artboard-id="artboard.id"
         :selected-items="selectedArtboards"
         :is-visible="artboard.isVisible"
-        class="artboard"
         @resize="resize"
       />
     </div>

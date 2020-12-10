@@ -3,8 +3,8 @@
     <div
       v-show="isVisible"
       ref="artboard"
-      class="artboard"
       :artboard-id="id"
+      class="artboard"
       :class="{ 'is-hover': isHover, 'is-selected': isSelected }"
       @click.right="rightClickHandler()"
     >
@@ -28,7 +28,6 @@
         class="artboard__content"
         :class="{ 'layout--horizontal': state.horizontalLayout }"
       >
-        {{ scrollPosition }}
         <WebPage
           :id="id"
           ref="frame"
@@ -43,7 +42,8 @@
             ref="cross-browser-DOM"
             :height="height"
             :width="width"
-            @loaded="expandHorizontally()"
+            :x="scrollPosition.x"
+            :y="scrollPosition.y"
           />
         </div>
       </div>
@@ -58,8 +58,8 @@
 import { mapState, mapGetters } from 'vuex'
 import WebPage from './WebPage.vue'
 import rightClickMenu from '@/mixins/rightClickMenu.js'
-import { log } from 'electron-log'
 import CrossBrowserScreenshots from '~/components/CrossBrowser/Screenshots/CrossBrowserScreenshots.vue'
+import { log } from 'electron-log'
 
 export default {
   name: 'Artboard',
@@ -153,17 +153,8 @@ export default {
 
   methods: {
     updateScrollPosition({ x, y }) {
-      console.log('scrolled')
       this.scrollPosition.x = x
       this.scrollPosition.y = y
-    },
-    expandHorizontally() {
-      this.state.horizontalLayout = true
-
-      const el = this.$refs['cross-browser-DOM'].$el
-      console.log('el', el)
-
-      const { height, width } = el.getBoundingClientRect()
     },
     rightClickHandler() {
       rightClickMenu(this.$store, {
@@ -210,6 +201,7 @@ export default {
       }
     },
     triggerResize(e) {
+      console.log('should resize')
       const vm = this
 
       const parent = vm.$refs.artboard
