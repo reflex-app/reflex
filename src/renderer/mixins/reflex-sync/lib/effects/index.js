@@ -16,6 +16,7 @@ function setDOMEffect(event, args) {
   }
 
   if (args.event.type === eventTypes.SCROLL) {
+    console.log(args.origin)
     scrollHandler(
       args.origin,
       args.origin.scrollOffset.x,

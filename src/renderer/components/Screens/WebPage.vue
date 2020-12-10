@@ -5,6 +5,7 @@
 <script>
 import { mapState } from 'vuex'
 const { remote } = require('electron')
+import { state as reflexState, setPublisher } from '~/mixins/reflex-sync'
 
 export default {
   props: {
@@ -16,6 +17,7 @@ export default {
     allowInteractions: {
       type: Boolean,
       required: true,
+      default: false,
     },
   },
   data() {
@@ -33,7 +35,7 @@ export default {
       // const appPath = require('electron').remote.app.getAppPath()
       return `file://${require('path').resolve(
         __dirname,
-        '../../mixins/reflex-sync'
+        '../../mixins/reflex-sync/inject.js' // Inject this script in the WebView context
       )}`
     },
   },
@@ -60,42 +62,6 @@ export default {
     // Once the WebView is rendered
     this.$nextTick(() => {
       const frame = vm.$refs.frame
-
-      // Listen for incoming events
-      this.$bus.$on('REFLEX_SYNC', (args) => {
-        if (!frame) {
-          console.error('Frame not found?')
-          return
-        }
-
-        // Don't trigger on the origin
-        if (this.id === args.originID) {
-          // TODO Tell the Webview to change its state to origin = true
-          frame.send('REFLEX_SYNC_setState', {
-            isOrigin: true,
-          })
-        } else {
-          try {
-            console.log('REFLEX EVENT:', args)
-
-            // Update state
-            frame.send('REFLEX_SYNC_setState', {
-              isOrigin: false,
-            })
-
-            // Send event back to the frame
-            frame.send('REFLEX_SYNC_setDOMEffect', {
-              // event,
-              scrollOffset: {
-                top: 100,
-              },
-              ...args,
-            })
-          } catch (err) {
-            throw new Error(err)
-          }
-        }
-      })
 
       // Bind event listeners
       this.bindEventListeners()
@@ -137,11 +103,50 @@ export default {
       // Remove navigation event
       const frame = this.$refs.frame
       frame.addEventListener('will-navigate', this.willNavigate)
+
+      // Listen for incoming events
+      this.$bus.$on('REFLEX_SYNC', this.syncResponder)
     },
     unbindEventListeners() {
       // Remove navigation event
       const frame = this.$refs.frame
       frame.removeEventListener('will-navigate', this.willNavigate)
+
+      // Detach from the frame. Important!
+      this.$bus.$off('REFLEX_SYNC', this.syncResponder)
+    },
+    syncResponder(args) {
+      // Remove navigation event
+      const frame = this.$refs.frame
+
+      if (!frame) {
+        console.error('Frame not found?')
+        return
+      }
+
+      console.log(args)
+      console.log('publisher', reflexState.publisher)
+
+      // Do the following actions inside of the <WebView>
+      if (this.id === reflexState.publisher) {
+        // Don't trigger on the origin
+        // TODO Tell the Webview to change its state to origin = true
+        frame.send('REFLEX_SYNC_setState', {
+          isOrigin: true,
+        })
+      } else {
+        console.log('REFLEX EVENT:', args)
+
+        // Update state
+        frame.send('REFLEX_SYNC_setState', {
+          isOrigin: false,
+        })
+
+        // Send event back to the frame
+        frame.send('REFLEX_SYNC_setDOMEffect', {
+          ...args,
+        })
+      }
     },
     reload() {
       // Reload the current page
@@ -262,31 +267,35 @@ export default {
     },
     contentloaded() {
       const frame = this.$refs.frame
-      frame.send('requestData')
+      // Request some initial information from the <WebView> context
+      // This is where we can pass over any identifier info needed for later
+      frame.send('requestData', { id: this.id })
     },
     onMessageReceived(event) {
       if (event.channel === 'REFLEX_SYNC') {
         // BUS: https://binbytes.com/blog/create-global-event-bus-in-nuxtjs
         const data = event.args[0]
-        console.log(this.allowInteractions, data)
+        // console.log(data)
 
         // TODO This can fail if multiple artboards are selected
         // TODO wait for did-attach-webview event
         if (this.allowInteractions) {
+          // The sender
+          setPublisher(this.id) // Update the publisher
+
+          // Only capture actions while allowed
           this.$bus.$emit('REFLEX_SYNC', {
             ...data,
-            originID: this.id,
-          }) // Send a test event
+          })
+        }
 
-          if (data.event.type === 'scroll') {
-            const { x, y } = data.origin.scrollOffset
-
-            // Emit the event if its a scroll
-            this.$emit('scroll', {
-              x,
-              y,
-            })
-          }
+        // Update the scroll info in the parent components
+        if (data.event.type === 'scroll') {
+          const { x, y } = data.origin.scrollOffset
+          this.$emit('scroll', {
+            x,
+            y,
+          })
         }
       } else if (event.channel === 'replyData') {
         const returnedData = event.args[0]
@@ -349,7 +358,7 @@ webview {
   width: 100%;
   // min-width: 100%;
   // min-height: 100%;
-  // pointer-events: none; // Don't allow by default
+  pointer-events: none; // Don't allow by default
   position: relative;
   // display: block;
 }

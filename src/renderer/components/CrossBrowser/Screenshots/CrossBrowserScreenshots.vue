@@ -19,10 +19,7 @@
       </button>
     </div>
     <!-- The cross-browser screenshots -->
-    <div>
-      <div>X: {{ x }}</div>
-      <div>Y: {{ y }}</div>
-    </div>
+
     <div class="cbs__results">
       <div v-for="item in crossBrowserScreens" :key="item.id">
         <span class="result__type">({{ item.type }})</span>
