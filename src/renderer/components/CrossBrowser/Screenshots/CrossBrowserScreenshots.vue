@@ -1,56 +1,40 @@
 <template>
   <div class="cbs">
-    <div class="absolute-box">
-      <!-- Loading -->
-      <div v-if="isLoading" class="cbs__loading">Loading...</div>
-      <!-- Displays the currently running browsers -->
-      <div v-if="browserContexts.active.length">
-        <div v-for="item in browserContexts.active" :key="item.id">
-          {{ item.type }} | {{ item.id }}
-        </div>
-      </div>
-      <!-- Trigger -->
-      <button
-        class="cbs__button"
-        v-if="!isLoading"
-        @click="takeCrossBrowserScreenshot()"
-      >
-        Screenshot other browsers
-      </button>
-    </div>
+    <Trigger :data="props" @clicked="getScreenshots()" />
     <!-- The cross-browser screenshots -->
-
     <div class="cbs__results">
-      <div v-for="item in crossBrowserScreens" :key="item.id">
-        <span class="result__type">({{ item.type }})</span>
-        <template v-if="item.img">
+      <template v-if="screenshots.length">
+        <div v-for="item in screenshots" :key="item.id">
+          <span class="result__type">({{ item.type }})</span>
           <img
             :src="item.img"
             :height="height"
             :width="width"
             alt="Cross-browser screenshot"
           />
-        </template>
-        <!-- Skeleton loading state -->
-        <template v-else>
-          <template v-if="isLoading">
-            <div class="image-skeleton"></div>
-          </template>
-        </template>
-      </div>
+        </div>
+      </template>
+      <template v-else>
+        <div class="image-skeleton">Hey there</div>
+        <div class="image-skeleton">Hey there</div>
+      </template>
     </div>
   </div>
 </template>
 
 <script>
+import { toRefs } from '@vue/composition-api'
+import Trigger from './Trigger'
 import {
   browserContexts,
   takeScreenshots,
   toBase64Image,
 } from '~/components/CrossBrowser/Screenshots'
-import { mapState } from 'vuex'
-
+import useCrossBrowserScreenshots from './UseCrossBrowserScreenshots'
 export default {
+  components: {
+    Trigger,
+  },
   props: {
     height: {
       type: Number,
@@ -69,73 +53,37 @@ export default {
       default: 0,
     },
   },
-  data() {
-    return {
-      isLoading: false,
-      crossBrowserScreens: [], // Stores any browser screenshots
-      browserContexts,
-    }
-  },
-  computed: {
-    ...mapState({
-      url: (state) => state.history.currentPage.url, // We grab the current URL
-    }),
-  },
-  methods: {
-    async takeCrossBrowserScreenshot() {
-      // Update loading state
-      this.isLoading = true
+  setup(props, { emit, root: { $store } }) {
+    const { state, takeCrossBrowserScreenshot } = useCrossBrowserScreenshots()
 
-      // Browsers
-      const browsers = ['firefox', 'webkit']
+    // function showSkeletonLoader(count) {
+    //   for (let i in count) {
+    //     state.screenshots.push({ type: 'webkit', img: '' })
+    //   }
+    // }
 
-      // Empty out the current list
-      this.crossBrowserScreens = []
+    // function hideSkeletonLoader(count) {
+    //   for (let i in count) {
+    //     state.screenshots.splice(i, 1)
+    //   }
+    // }
 
-      // Add a temporary frame for each browser
-      this.showSkeletonLoader(browsers.length)
+    async function getScreenshots() {
+      const url = $store.state.history.currentPage.url
 
-      // Render the image to the front-end as it loads
-      const renderImage = (screenshot) => {
-        if (!screenshot) return false
-        console.log(screenshot)
-        screenshot.img = toBase64Image(screenshot.img) // Convert buffer to base64
-        this.crossBrowserScreens.push(screenshot)
-        return true
-      }
-
-      // Return the screenshot to the frame
-      const screenshots = await takeScreenshots(
-        {
-          url: this.url,
-          browsers: browsers,
-          height: this.height,
-          width: this.width,
-          x: this.x,
-          y: this.y,
-        },
-        renderImage
-      )
-
-      // Update loading state
-      this.isLoading = false
-
-      // Hide the skeleton loader
-      this.hideSkeletonLoader(browsers.length)
+      const payload = { ...props, browsers: ['firefox', 'webkit'], url }
+      console.log(payload)
+      await takeCrossBrowserScreenshot(payload)
 
       // Emit an event to let parent know it has finished
-      this.$emit('loaded', true)
-    },
-    showSkeletonLoader(count) {
-      for (let i in count) {
-        this.crossBrowserScreens.push({ type: 'webkit', img: '' })
-      }
-    },
-    hideSkeletonLoader(count) {
-      for (let i in count) {
-        this.crossBrowserScreens.splice(i, 1)
-      }
-    },
+      emit('loaded', true)
+    }
+
+    return {
+      ...toRefs(state), // Returns invidual parts of the state
+      props,
+      getScreenshots,
+    }
   },
 }
 </script>
@@ -167,11 +115,6 @@ export default {
     top: -2rem;
     font-weight: bold;
     text-transform: uppercase;
-  }
-
-  .absolute-box {
-    position: absolute;
-    top: -4rem;
   }
 
   .image-skeleton {
