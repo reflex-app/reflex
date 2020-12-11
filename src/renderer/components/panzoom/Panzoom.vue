@@ -205,9 +205,7 @@ export default {
   // position: absolute;
   // overflow: hidden;
   // outline: none;
-  // height: 100%;
-  // width: 100%;
-  // height: 100%;
+  height: 100%;
   width: 100%;
   position: relative;
   // position: absolute;
