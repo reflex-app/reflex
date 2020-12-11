@@ -7,52 +7,68 @@ import {
 
 export default function useCrossBrowserScreenshots() {
   const state = reactive({
-    isLoading: false,
+    isLoading: false, // All screens for this browser
+    loading: [], // Tracks the currently loading IDs
     screenshots: [],
     browsers: ['firefox', 'webkit'],
   })
 
-  async function takeCrossBrowserScreenshot({
-    url,
-    browsers = state.browsers,
-    height,
-    width,
-    x,
-    y,
-  }) {
+  class paramsInterface {
+    constructor(params) {
+      this.url = params.url || ''
+      this.browsers = params.browsers || ['firefox', 'webkit']
+      this.height = params.height || 0
+      this.width = params.width || 0
+      this.x = params.x || 0
+      this.y = params.y || 0
+    }
+  }
+
+  const defaultParams = () => {
+    return {
+      url: '',
+      browsers: ['firefox', 'webkit'],
+      height: 0,
+      width: 0,
+      x: 0,
+      y: 0,
+    }
+  }
+
+  async function takeCrossBrowserScreenshot(params = defaultParams()) {
     state.isLoading = true // Update loading state
+    state.loading = [] // empty it out
     state.screenshots = [] // empty it out
 
-    // Add a temporary frame for each browser
-    // showSkeletonLoader(browsers.length)
-
-    // Render the image to the front-end as it loads
-    const renderImage = (screenshot) => {
-      if (!screenshot) return false
-      console.log(screenshot)
-      screenshot.img = toBase64Image(screenshot.img) // Convert buffer to base64
-      state.screenshots.push(screenshot) // Add in "real-time"
-      return true
+    // Add a placeholder for each browser
+    for (const b of params.browsers) {
+      state.loading.push(b)
     }
 
-    // Return the screenshot to the frame
+    // Each screenshot...
     await takeScreenshots(
-      {
-        url,
-        browsers,
-        height,
-        width,
-        x,
-        y,
-      },
-      renderImage
+      params,
+      // Callback function: Render each screenshot as it becomes available
+      (screenshot) => {
+        if (!screenshot) return false
+
+        console.log(screenshot)
+        screenshot.img = toBase64Image(screenshot.img) // Convert buffer to base64
+
+        // Update loading state
+        state.loading = state.loading.filter((item) => item !== screenshot.type) // remove this item
+        screenshot.isLoading = false // End loading state
+
+        // Return the screenshot to the frame
+        state.screenshots.push(screenshot) // Add in "real-time"
+
+        // Respond to callback
+        return true
+      }
     )
 
     // Update loading state
     state.isLoading = false
-
-    // Hide the skeleton loader
-    // hideSkeletonLoader(browsers.length)
   }
 
   return {

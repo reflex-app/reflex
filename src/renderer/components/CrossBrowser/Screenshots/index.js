@@ -22,12 +22,15 @@ class CrossBrowserScreenshot {
     this.width = options.width || 100
     this.x = options.x || 0
     this.y = options.y || 0
+
+    this.isLoading = true // Initial state
   }
 
   async takeScreenshot() {
     try {
       const id = uuid()
       console.log(`Preparing to launch ${this.browser}, ${id}`)
+      this.isLoading = true
 
       const browser = await playwright[this.browser].launch({
         /* headless: false */
@@ -73,6 +76,7 @@ class CrossBrowserScreenshot {
 
       return screenshotBuffer
     } catch (err) {
+      this.isLoading = false
       console.log(err)
       await browser.close()
     }

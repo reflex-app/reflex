@@ -3,20 +3,31 @@
     <Trigger :data="props" @clicked="getScreenshots()" />
     <!-- The cross-browser screenshots -->
     <div class="cbs__results">
+      <div v-for="browserName in loading" :key="browserName.id">
+        <div
+          class="loading-skeleton"
+          :style="{ height: props.height + 'px', width: props.width + 'px' }"
+        >
+          <img :src="require(`~/assets/browsers/${browserName}.svg`)" />
+          {{ browserName }}
+        </div>
+      </div>
       <template v-if="screenshots.length">
         <div v-for="item in screenshots" :key="item.id">
-          <span class="result__type">({{ item.type }})</span>
-          <img
-            :src="item.img"
-            :height="height"
-            :width="width"
-            alt="Cross-browser screenshot"
-          />
+          <template v-if="item.isLoading">
+            <div class="image-skeleton">Hey there</div>
+            <div class="image-skeleton">Hey there</div>
+          </template>
+          <template v-else>
+            <span class="result__type">({{ item.type }})</span>
+            <img
+              :src="item.img"
+              :height="height"
+              :width="width"
+              alt="Cross-browser screenshot"
+            />
+          </template>
         </div>
-      </template>
-      <template v-else>
-        <div class="image-skeleton">Hey there</div>
-        <div class="image-skeleton">Hey there</div>
       </template>
     </div>
   </div>
@@ -116,11 +127,40 @@ export default {
     font-weight: bold;
     text-transform: uppercase;
   }
+}
 
-  .image-skeleton {
-    background: gray;
-    height: 100%;
-    width: 100%;
+.loading-skeleton {
+  background: #eeeeee;
+  border: 1rem dashed #cfcfcf;
+  height: 100%;
+  width: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  flex-wrap: wrap;
+  font-size: 1rem;
+  font-weight: bold;
+
+  & > * {
+    display: block;
+    height: 50%;
+    animation: pulse 2s infinite;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.95);
+  }
+
+  70% {
+    transform: scale(1);
+  }
+
+  100% {
+    transform: scale(0.95);
   }
 }
 </style>
