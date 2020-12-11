@@ -3,7 +3,7 @@
     <Trigger :data="props" @clicked="getScreenshots()" />
     <!-- The cross-browser screenshots -->
     <div class="cbs__results">
-      <div v-for="browserName in loading" :key="browserName.id">
+      <div v-for="browserName in loadingSorted" :key="browserName.id">
         <div
           class="loading-skeleton"
           :style="{ height: props.height + 'px', width: props.width + 'px' }"
@@ -12,14 +12,14 @@
           {{ browserName }}
         </div>
       </div>
-      <template v-if="screenshots.length">
-        <div v-for="item in screenshots" :key="item.id">
+      <template v-if="screenshotsSorted.length">
+        <div v-for="item in screenshotsSorted" :key="item.id">
           <template v-if="item.isLoading">
             <div class="image-skeleton">Hey there</div>
             <div class="image-skeleton">Hey there</div>
           </template>
           <template v-else>
-            <span class="result__type">({{ item.type }})</span>
+            <span class="result__type">{{ item.type }}</span>
             <img
               :src="item.img"
               :height="height"
@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import { toRefs } from '@vue/composition-api'
+import { computed, toRefs } from '@vue/composition-api'
 import Trigger from './Trigger'
 import {
   browserContexts,
@@ -79,6 +79,26 @@ export default {
     //   }
     // }
 
+    const loadingSorted = computed(() => {
+      function compare(a, b) {
+        if (a < b) return -1
+        if (a > b) return 1
+        return 0
+      }
+
+      return state.loading.sort(compare)
+    })
+
+    const screenshotsSorted = computed(() => {
+      function compare(a, b) {
+        if (a.type < b.type) return -1
+        if (a.type > b.type) return 1
+        return 0
+      }
+
+      return state.screenshots.sort(compare)
+    })
+
     async function getScreenshots() {
       const url = $store.state.history.currentPage.url
 
@@ -91,7 +111,9 @@ export default {
     }
 
     return {
-      ...toRefs(state), // Returns invidual parts of the state
+      // ...toRefs(state), // Returns invidual parts of the state
+      loadingSorted,
+      screenshotsSorted,
       props,
       getScreenshots,
     }
