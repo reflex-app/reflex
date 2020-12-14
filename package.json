@@ -7,8 +7,8 @@
   "license": "MIT",
   "main": "./dist/main/index.js",
   "scripts": {
-    "dev": "node .electron-nuxt/check-engines.js && cross-env-shell NODE_ENV=development node .electron-nuxt/index.js",
-    "build": "node .electron-nuxt/check-engines.js && cross-env-shell NODE_ENV=production node .electron-nuxt/index.js",
+    "dev": "node .electron-nuxt/dev.js",
+    "build": "node .electron-nuxt/build.js",
     "release": "cross-env-shell RELEASE=true yarn run build",
     "test": "jest",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
@@ -20,7 +20,7 @@
   "keywords": [],
   "homepage": "https://reflexapp.nickwittwer.com",
   "engines": {
-    "node": ">=8.10.0"
+    "node": ">=12.13.0"
   },
   "jest": {
     "moduleFileExtensions": [
@@ -85,8 +85,9 @@
     "jest-vue-preprocessor": "^1.7.0",
     "lodash.debounce": "^4.0.8",
     "moment": "^2.24.0",
+    "native-ext-loader": "2.3.0",
     "node-sass": "4.14.1",
-    "nuxt": "2.14.1",
+    "nuxt": ">2.14.1",
     "sass-loader": "9.0.3",
     "uuid": "8.3.0",
     "vue-devtools": "5.1.4",
