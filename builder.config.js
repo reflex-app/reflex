@@ -44,9 +44,10 @@ const windowsOS = {
 }
 
 module.exports = {
-  asar: false, // Should be false
+  asar: true, // Should be false
   productName: require('./package.json').productName,
   appId: 'com.reflex.app',
+  // eslint-disable-next-line no-template-curly-in-string
   artifactName: 'Reflex-${version}.${ext}',
   directories: {
     output: 'build',
