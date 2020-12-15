@@ -1,4 +1,4 @@
-const isRelease = process.env.RELEASE === 'true'
+const isRelease = process.env.RELEASE // true or false
 const ICONS_DIR = 'build/icons/'
 
 const macOS = {
