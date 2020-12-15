@@ -11,11 +11,11 @@
     <div v-if="artboards.length" id="toolbar__url-container">
       <HistoryControls />
       <div class="bar">
-        <div class="bar__left">
+        <!-- <div class="bar__left">
           <div v-show="!inputStateActive" class="sync">
             <SyncButton />
           </div>
-        </div>
+        </div> -->
         <div class="bar__right" :class="{ 'is-active': inputStateActive }">
           <div
             v-show="!inputStateActive"
