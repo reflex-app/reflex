@@ -52,6 +52,7 @@ module.exports = {
   directories: {
     output: 'build',
   },
+  extends: null, // via https://stackoverflow.com/a/61119994/1114901
   // default files: https://www.electron.build/configuration/contents
   files: [
     'package.json',
