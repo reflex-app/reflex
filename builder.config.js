@@ -44,7 +44,7 @@ const windowsOS = {
 }
 
 module.exports = {
-  asar: true, // Should be false
+  asar: false, // Should be false
   productName: require('./package.json').productName,
   appId: 'com.reflex.app',
   // eslint-disable-next-line no-template-curly-in-string
