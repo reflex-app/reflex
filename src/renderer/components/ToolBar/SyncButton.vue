@@ -12,7 +12,8 @@
 <script>
 // Synchronization server
 import { mapState } from 'vuex'
-import * as sync from '../../mixins/sync'
+// import * as sync from '../../mixins/sync'
+const sync = () => {} // stubbed
 
 export default {
   name: 'SyncButton',
