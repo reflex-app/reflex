@@ -1,4 +1,4 @@
-const isRelease = process.env.RELEASE === 'true'
+const isRelease = process.env.RELEASE // true or false
 const ICONS_DIR = 'build/icons/'
 
 const macOS = {
@@ -44,7 +44,7 @@ const windowsOS = {
 }
 
 module.exports = {
-  asar: true,
+  asar: false, // Should be false
   productName: require('./package.json').productName,
   appId: 'com.reflex.app',
   // eslint-disable-next-line no-template-curly-in-string
@@ -52,6 +52,7 @@ module.exports = {
   directories: {
     output: 'build',
   },
+  extends: null, // via https://stackoverflow.com/a/61119994/1114901
   // default files: https://www.electron.build/configuration/contents
   files: [
     'package.json',

@@ -22,7 +22,6 @@ import { mapState, mapGetters } from 'vuex'
 import { ipcRenderer } from 'electron'
 import isElectron from 'is-electron'
 import PanzoomControls from './PanzoomControls.vue'
-const isDev = require('electron-is-dev')
 
 export default {
   components: {
@@ -30,7 +29,6 @@ export default {
   },
   data() {
     return {
-      isDev,
       DOMElement: null,
       panzoomInstance: {},
     }

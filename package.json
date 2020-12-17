@@ -7,8 +7,8 @@
   "license": "MIT",
   "main": "./dist/main/index.js",
   "scripts": {
-    "dev": "node .electron-nuxt/check-engines.js && cross-env-shell NODE_ENV=development node .electron-nuxt/index.js",
-    "build": "node .electron-nuxt/check-engines.js && cross-env-shell NODE_ENV=production node .electron-nuxt/index.js",
+    "dev": "node .electron-nuxt/dev.js",
+    "build": "node .electron-nuxt/build.js",
     "release": "cross-env-shell RELEASE=true yarn run build",
     "test": "jest",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
@@ -20,7 +20,7 @@
   "keywords": [],
   "homepage": "https://reflexapp.nickwittwer.com",
   "engines": {
-    "node": ">=8.10.0"
+    "node": ">=12.13.0"
   },
   "jest": {
     "moduleFileExtensions": [
@@ -36,11 +36,6 @@
       "^@/(.*)$": "<rootDir>/src/renderer/$1"
     }
   },
-  "dependencies": {
-    "@vue/composition-api": "^1.0.0-beta.21",
-    "browser-sync": "^2.26.7",
-    "prettier": "^2.0.4"
-  },
   "devDependencies": {
     "@babel/runtime-corejs2": "7.9.2",
     "@nuxtjs/eslint-config": "^2.0.2",
@@ -52,6 +47,7 @@
     "@storybook/addon-notes": "^5.3.18",
     "@storybook/addons": "^5.3.18",
     "@storybook/vue": "^5.3.18",
+    "@vue/composition-api": "^1.0.0-beta.21",
     "@vue/test-utils": "^1.0.0-beta.32",
     "@xpda-dev/core": "^0.1.5",
     "@xpda-dev/electron-builder": "^0.2.1",
@@ -66,13 +62,13 @@
     "deepmerge": "4.2.2",
     "devtron": "^1.4.0",
     "dotenv": "^8.2.0",
-    "electron": "9.3.1",
-    "electron-builder": "^22.3.2",
+    "electron": "^11.0.0",
+    "electron-builder": "^22.9.0",
     "electron-debug": "3.1.0",
     "electron-is-dev": "1.2",
-    "electron-log": "4.2.2",
+    "electron-log": "^4.3.0",
     "electron-notarize": "1.0.0",
-    "electron-updater": "4.3.4",
+    "electron-updater": "^4.3.5",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.10.1",
     "eslint-plugin-nuxt": "^0.5.2",
@@ -86,9 +82,10 @@
     "jest-vue-preprocessor": "^1.7.0",
     "lodash.debounce": "^4.0.8",
     "moment": "^2.24.0",
+    "native-ext-loader": "2.3.0",
     "node-sass": "4.14.1",
-    "nuxt": "2.14.1",
-    "playwright": "^1.5.2",
+    "nuxt": ">2.14.1",
+    "prettier": "^2.0.4",
     "sass-loader": "9.0.3",
     "uuid": "8.3.0",
     "vue-devtools": "5.1.4",
@@ -96,7 +93,7 @@
     "vue-jest": "^3.0.5",
     "vuedraggable": "^2.23.2",
     "vuex-persist": "^2.1.1",
-    "webpack": "4.44.1",
-    "webpack-node-externals": "2.5.1"
+    "webpack": "^4.44.0",
+    "webpack-node-externals": "^2.5.0"
   }
 }

@@ -22,6 +22,7 @@ const winHandler = new BrowserWinHandler({
   webPreferences: {
     webviewTag: true, // Required
     nodeIntegration: true, // Required
+    enableRemoteModule: true,
   },
   titleBarStyle: 'hiddenInset', // Hide the bar
 })
