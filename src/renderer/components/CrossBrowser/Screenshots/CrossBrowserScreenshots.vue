@@ -1,6 +1,6 @@
 <template>
   <div class="cbs">
-    <Trigger :data="props" @clicked="getScreenshots()" />
+    <!-- <Trigger :data="props" @clicked="getScreenshots()" /> -->
     <!-- The cross-browser screenshots -->
     <div class="cbs__results">
       <div v-for="browserName in loadingSorted" :key="browserName.id">

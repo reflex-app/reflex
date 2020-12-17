@@ -4,6 +4,7 @@
 import { remote } from 'electron'
 import isElectron from 'is-electron'
 const { Menu, MenuItem } = remote
+import Trigger from '~/components/CrossBrowser/Screenshots/Trigger.vue'
 
 /**
  * @param {Object} store The Vue component's context
@@ -50,6 +51,27 @@ export default function (store, artboard) {
       label: 'Open DevTools',
       click() {
         artboardFrame.openDevTools()
+      },
+    })
+  )
+  menu.append(
+    new MenuItem({
+      label: 'Preview Cross-browser',
+      click() {
+        try {
+          // Emit an event to the correct artboard
+          const instance = getArtboard(artboard.id).__vue__
+
+          // Find the child component in which to trigger a function
+          const childCrossBrowserComponent = instance.$children.find((obj) =>
+            obj.$vnode.tag.includes('CrossBrowserScreenshots')
+          )
+
+          // Trigger the screenshot
+          childCrossBrowserComponent.getScreenshots()
+        } catch (err) {
+          console.log(`Cross-browser error: ${err}`)
+        }
       },
     })
   )

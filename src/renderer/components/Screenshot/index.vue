@@ -18,6 +18,12 @@
             @click="copyToClipboard"
             >Copy to Clipboard</Button
           >
+          <!-- <Button
+            v-if="selectedArtboards.length === 1"
+            role="secondary"
+            @click="copyToClipboard"
+            >Run Cross-browser</Button
+          > -->
         </div>
         <Button
           role="secondary"
@@ -106,7 +112,7 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  max-width: 500px;
+  max-width: 700px;
   background: white;
   padding: 1rem;
   z-index: 100;
