@@ -59,7 +59,6 @@ import { mapState, mapGetters } from 'vuex'
 import WebPage from './WebPage.vue'
 import rightClickMenu from '@/mixins/rightClickMenu.js'
 import CrossBrowserScreenshots from '~/components/CrossBrowser/Screenshots/CrossBrowserScreenshots.vue'
-import { log } from 'electron-log'
 
 export default {
   name: 'Artboard',

@@ -27,23 +27,23 @@ class CrossBrowserScreenshot {
   }
 
   async takeScreenshot() {
+    const id = uuid()
+    console.log(`Preparing to launch ${this.browser}, ${id}`)
+    this.isLoading = true // Update loading state
+
+    const browser = await playwright[this.browser].launch({
+      /* headless: false */
+    })
+    const context = await browser.newContext({
+      viewport: {
+        height: this.height,
+        width: this.width,
+      },
+    })
+    // Track the context
+    browserContexts.active.push({ id, context, type: this.browser })
+
     try {
-      const id = uuid()
-      console.log(`Preparing to launch ${this.browser}, ${id}`)
-      this.isLoading = true
-
-      const browser = await playwright[this.browser].launch({
-        /* headless: false */
-      })
-      const context = await browser.newContext({
-        viewport: {
-          height: this.height,
-          width: this.width,
-        },
-      })
-      // Track the context
-      browserContexts.active.push({ id, context: context, type: this.browser })
-
       console.log(`Loading ${this.browser}, ${id}`)
 
       const page = await context.newPage()
@@ -113,16 +113,16 @@ export async function takeScreenshots(
   promises.forEach((promise) => {
     // Return the result
     promise.then((d) => {
-      if (!d) reject()
+      if (!d) return false
       console.log('browser finished', d)
       callback(d)
     })
   })
 
   // Wait until they all complete
-  return Promise.all(promises).then((data) => {
-    console.log(data)
-  })
+  const data = await Promise.all(promises)
+  console.log(data)
+  return data
 }
 
 // Convert an image buffer into base64

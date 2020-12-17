@@ -13,20 +13,20 @@ export default function useCrossBrowserScreenshots() {
     browsers: ['firefox', 'webkit'],
   })
 
-  class paramsInterface {
-    constructor(params) {
-      this.url = params.url || ''
-      this.browsers = params.browsers || ['firefox', 'webkit']
-      this.height = params.height || 0
-      this.width = params.width || 0
-      this.x = params.x || 0
-      this.y = params.y || 0
-    }
-  }
+  // class paramsInterface {
+  //   constructor(params) {
+  //     this.url = params.url || ''
+  //     this.browsers = params.browsers || ['firefox', 'webkit']
+  //     this.height = params.height || 0
+  //     this.width = params.width || 0
+  //     this.x = params.x || 0
+  //     this.y = params.y || 0
+  //   }
+  // }
 
   const defaultParams = () => {
     return {
-      url: '',
+      url: 'http://google.com',
       browsers: ['firefox', 'webkit'],
       height: 0,
       width: 0,
@@ -46,7 +46,7 @@ export default function useCrossBrowserScreenshots() {
     }
 
     // Each screenshot...
-    await takeScreenshots(
+    return await takeScreenshots(
       params,
       // Callback function: Render each screenshot as it becomes available
       (screenshot) => {
@@ -62,13 +62,13 @@ export default function useCrossBrowserScreenshots() {
         // Return the screenshot to the frame
         state.screenshots.push(screenshot) // Add in "real-time"
 
+        // Update loading state
+        state.isLoading = false
+
         // Respond to callback
         return true
       }
     )
-
-    // Update loading state
-    state.isLoading = false
   }
 
   return {
