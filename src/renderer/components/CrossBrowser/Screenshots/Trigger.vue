@@ -11,8 +11,8 @@
       </div>
       <!-- Trigger -->
       <button
-        class="cbs__button"
         v-if="!state.isLoading"
+        class="cbs__button"
         @click="emit('clicked')"
       >
         Screenshot other browsers
@@ -23,8 +23,8 @@
 
 <script>
 // import { reactive, toRefs } from '@vue/composition-api'
-import { browserContexts } from '~/components/CrossBrowser/Screenshots'
 import useCrossBrowserScreenshots from './UseCrossBrowserScreenshots'
+import { browserContexts } from '~/components/CrossBrowser/Screenshots'
 
 export default {
   props: {
