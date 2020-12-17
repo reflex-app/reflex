@@ -17,7 +17,12 @@ module.exports = {
   plugins: ['prettier'],
   // add your custom rules here
   rules: {
-    'prettier/prettier': 'error',
+    'prettier/prettier': [
+      'error',
+      {
+        endOfLine: 'auto',
+      },
+    ],
     'nuxt/no-cjs-in-config': 'off',
     // allow paren-less arrow functions
     'arrow-parens': 0,
