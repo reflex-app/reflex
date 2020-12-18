@@ -81,6 +81,7 @@
     "native-ext-loader": "2.3.0",
     "node-sass": "4.14.1",
     "nuxt": ">2.14.1",
+    "playwright": "^1.7.0",
     "prettier": "^2.0.4",
     "sass-loader": "9.0.3",
     "uuid": "8.3.0",
@@ -88,7 +89,7 @@
     "vue-feature-flipping": "^2.1.0",
     "vue-jest": "^3.0.5",
     "vuedraggable": "^2.23.2",
-    "vuex-persist": "^2.1.1",
+    "vuex-persist": "^3.1.0",
     "webpack": "^4.44.0",
     "webpack-node-externals": "^2.5.0"
   }
