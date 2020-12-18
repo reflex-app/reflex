@@ -2,7 +2,7 @@
   "name": "reflex",
   "productName": "Reflex",
   "description": "Make responsive websites without the guesswork.",
-  "version": "0.7.0-beta.4",
+  "version": "0.7.0-beta.5",
   "author": "Nick Wittwer",
   "license": "MIT",
   "homepage": "https://reflexapp.nickwittwer.com",
@@ -10,7 +10,6 @@
   "scripts": {
     "dev": "node .electron-nuxt/dev.js",
     "build": "node .electron-nuxt/build.js",
-    "release": "cross-env-shell RELEASE=true yarn run build",
     "test": "jest",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
     "lint:fix": "eslint --fix --ext .js,.vue --ignore-path .gitignore .",
