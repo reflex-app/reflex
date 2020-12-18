@@ -5,6 +5,7 @@
   "version": "0.7.0-beta.2",
   "author": "Nick Wittwer",
   "license": "MIT",
+  "homepage": "https://reflexapp.nickwittwer.com",
   "main": "./dist/main/index.js",
   "scripts": {
     "dev": "node .electron-nuxt/dev.js",
@@ -17,8 +18,6 @@
     "postinstall": "electron-builder install-app-deps",
     "storybook": "start-storybook"
   },
-  "keywords": [],
-  "homepage": "https://reflexapp.nickwittwer.com",
   "engines": {
     "node": ">=12.13.0"
   },
@@ -74,10 +73,6 @@
     "eslint-config-prettier": "^6.10.1",
     "eslint-plugin-nuxt": "^0.5.2",
     "eslint-plugin-prettier": "^3.1.3",
-    "gulp": "^4.0.2",
-    "gulp-hub": "^4.2.0",
-    "gulp-notify": "^3.2.0",
-    "gulp-replace": "^1.0.0",
     "is-electron": "^2.2.0",
     "jest": "26.2.2",
     "jest-vue-preprocessor": "^1.7.0",
