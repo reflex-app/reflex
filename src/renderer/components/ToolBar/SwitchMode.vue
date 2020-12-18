@@ -7,7 +7,7 @@
           icon="mode-focus"
           :tight="true"
           title="Single Screen"
-          :isPressed="isRouteActive('/')"
+          :is-pressed="isRouteActive('/')"
         ></Button>
       </nuxt-link>
     </div>
@@ -17,7 +17,7 @@
         icon="mode-all"
         :tight="true"
         title="All Screens"
-        :isPressed="isRouteActive('/focus')"
+        :is-pressed="isRouteActive('/focus')"
       ></Button>
     </nuxt-link>
 

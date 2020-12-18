@@ -3,8 +3,8 @@
  */
 import { remote } from 'electron'
 import isElectron from 'is-electron'
-const { Menu, MenuItem } = remote
 import Trigger from '~/components/CrossBrowser/Screenshots/Trigger.vue'
+const { Menu, MenuItem } = remote
 
 /**
  * @param {Object} store The Vue component's context

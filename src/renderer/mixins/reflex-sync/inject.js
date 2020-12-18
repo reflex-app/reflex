@@ -7,7 +7,7 @@ const helpers = require('./lib/helpers')
 const setDOMEffect = require('./lib/effects')
 const eventTypes = require('./lib/eventTypes')
 
-let state = {
+const state = {
   isOrigin: false,
   id: '', // the ID of the parent - used for connection purposes
 }

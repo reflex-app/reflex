@@ -4,8 +4,8 @@
 
 <script>
 import { mapState } from 'vuex'
-const { remote } = require('electron')
 import { state as reflexState, setPublisher } from '~/mixins/reflex-sync'
+const { remote } = require('electron')
 
 export default {
   props: {

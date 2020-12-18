@@ -36,12 +36,12 @@
 <script>
 import { computed, toRefs } from '@vue/composition-api'
 import Trigger from './Trigger'
+import useCrossBrowserScreenshots from './UseCrossBrowserScreenshots'
 import {
   browserContexts,
   takeScreenshots,
   toBase64Image,
 } from '~/components/CrossBrowser/Screenshots'
-import useCrossBrowserScreenshots from './UseCrossBrowserScreenshots'
 export default {
   components: {
     Trigger,
