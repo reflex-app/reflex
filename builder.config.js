@@ -1,4 +1,4 @@
-const isRelease = process.env.RELEASE // true or false
+// const isRelease = process.env.RELEASE // true or false
 const ICONS_DIR = 'build/icons/'
 
 const macOS = {
@@ -9,9 +9,9 @@ const macOS = {
     gatekeeperAssess: false, // Required for MacOS Catalina
     entitlements: 'build/entitlements.mac.plist', // Required for MacOS Catalina
     entitlementsInherit: 'build/entitlements.mac.plist', // Required for MacOS Catalina
-    publish: isRelease ? ['github'] : null, //  Publish artifacts to Github (release)
+    // publish: isRelease ? ['github'] : null, //  Publish artifacts to Github (release)
   },
-  afterSign: isRelease ? 'scripts/notarize.js' : null, // Notarize Mac (ONLY for deploys)
+  afterSign: 'scripts/notarize.js', // Notarize Mac (ONLY for deploys)
   dmg: {
     sign: false, // Required for MacOS Catalina
     contents: [
@@ -36,7 +36,7 @@ const windowsOS = {
     // publisherName: 'Nick Wittwer',
     // target: 'nsis',
     // verifyUpdateCodeSignature: false, // Don't codesign https://github.com/electron-userland/electron-builder/issues/2786#issuecomment-383813995
-    publish: isRelease ? ['github'] : null, // Publish artifacts to Github (release)
+    // publish: isRelease ? ['github'] : null, // Publish artifacts to Github (release)
   },
   // nsis: {
   //   differentialPackage: true
