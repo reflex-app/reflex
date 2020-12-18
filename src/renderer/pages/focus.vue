@@ -1,10 +1,19 @@
 <template>
-  <div id="main-view">
-    <SidePanel />
-    <Screenshots />
-    <Panzoom id="canvas">
-      <Artboards />
-    </Panzoom>
+  <div id="focus-view">
+    <div class="canvasContainer">
+      <SidePanel />
+      <Screenshots />
+      <div class="focus-view__content">
+        <Panzoom id="canvas">
+          <FocusArtboard ref="artboards" />
+        </Panzoom>
+        <div v-feature-flipping="'disco-switch'">
+          <DiscoSwitch />
+        </div>
+        <SizeShifter />
+        <!-- <DevToolsView /> -->
+      </div>
+    </div>
   </div>
 </template>
 
@@ -12,25 +21,20 @@
 import Panzoom from '@/components/panzoom/Panzoom.vue'
 import SidePanel from '@/components/SidePanel'
 import Screenshots from '@/components/Screenshot'
-import Artboards from '@/components/Screens/Artboards'
+import FocusArtboard from '@/components/FocusMode/FocusArtboard'
 import SizeShifter from '@/components/FocusMode/SizeShifter'
+import DiscoSwitch from '@/components/FocusMode/DiscoSwitch'
 
 export default {
-  name: 'FocusView',
+  name: 'MainView',
   components: {
-    Artboards,
+    Panzoom,
+    FocusArtboard,
     SidePanel,
     Screenshots,
+    DiscoSwitch,
     SizeShifter,
-    Panzoom,
   },
-  data() {
-    return {}
-  },
-  mounted() {
-    this.panzoomInstance = this.$root.$panzoom
-  },
-  methods: {},
 }
 </script>
 
@@ -40,29 +44,8 @@ export default {
 </style>
 
 <style lang="scss" scoped>
-@import '@/scss/_variables';
-
 #main-view {
-  background: $body-bg;
-  position: relative;
   height: 100%;
   width: 100%;
-  // display: flex;
 }
-
-// .focus-view__content {
-//   width: 100%;
-
-//   // #canvas {
-//   //   display: flex;
-//   //   position: absolute;
-//   //   // align-items: center;
-//   //   // justify-content: center;
-//   //   // width: 100%;
-//   //   // height: 100%;
-//   //   // top: 0;
-//   //   // left: 0;
-//   //   z-index: 0;
-//   // }
-// }
 </style>
