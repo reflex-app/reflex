@@ -43,4 +43,4 @@ jobs:
         env:
           # macOS notarization
           APPLEID: ${{ secrets.APPLEID }}
-          APPLEIDPASSWORD: ${{ secrets.APPLEIDPASS }}
+          APPLEIDPASS: ${{ secrets.APPLEIDPASS }}
