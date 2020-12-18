@@ -18,6 +18,7 @@ Reflex is a free, open-source Mac app that makes it easy to see how responsive w
 ---
 
 ### Features:
+
 - Preview your website across as many sizes as you want
 - Screenshot individual screens or all at once
 - Synchronized interactions (scrolling, clicks, form inputs)
@@ -40,6 +41,7 @@ If you would like to add to the project, take a look at the [planned projects pa
 [![Build Status](https://travis-ci.com/nwittwer/reflex.svg?branch=dev)](https://travis-ci.com/nwittwer/reflex)
 
 Requirements:
+
 - Node
 - Yarn (1.x)
 
@@ -48,42 +50,53 @@ Please note: The `dev` branch represents the latest works-in-progress, and shoul
 ### Getting Started
 
 1. Clone the project to your computer:
-    ```sh
-    $ git clone https://github.com/nwittwer/reflex.git
-    $ cd reflex
-    ```
+
+   ```sh
+   $ git clone https://github.com/nwittwer/reflex.git
+   $ cd reflex
+   ```
 
 2. Install dependencies:
-    ```sh
-    $ yarn install
-    ```
+
+   ```sh
+   $ yarn install
+   ```
 
 3. Compile and watch for changes:
-    ```sh
-    $ yarn run dev
-    ```
+   ```sh
+   $ yarn run dev
+   ```
 
 ### Building
 
-1. To compile an executable app, run the following command: 
-    ```sh
-    $ yarn run build
-    ```
+1. To compile an executable app, run the following command:
 
-    This will output several files inside of the `build/` folder. You can directly run the `.app` or `.exe` file inside of `build/`.
+   ```sh
+   $ yarn run build
+   ```
+
+   This will output several files inside of the `build/` folder. You can directly run the `.app` or `.exe` file inside of `build/`.
 
 ### Release
 
-Workflow: PR to `master` branch -> TravisCI -> Build app -> Codesign & Notarize (Mac only) -> Github Release
+<!-- Workflow: PR to `master` branch -> TravisCI -> Build app -> Codesign & Notarize (Mac only) -> Github Release
 
 1. Create a PR to `master` branch
-    - TravisCI will run `yarn run release`
-    - This adds a `process.env.RELEASE` env variable. 
-    - The presence of the `RELEASE` flag will allow notarization of the Mac app with `scripts/notarize.js`.
-    - The presence of the `RELEASE` flag will publish artifacts to Github. It will draft new release or update existing artifacts.
-2. If everything worked, merge PR into `master` and publish Github Release
+   - TravisCI will run `yarn run release`
+   - This adds a `process.env.RELEASE` env variable.
+   - The presence of the `RELEASE` flag will allow notarization of the Mac app with `scripts/notarize.js`.
+   - The presence of the `RELEASE` flag will publish artifacts to Github. It will draft new release or update existing artifacts.
+2. If everything worked, merge PR into `master` and publish Github Release -->
+
+1. Update the version in your project's package.json file (e.g. 1.2.3)
+2. Commit that change (git commit -am v1.2.3)
+3. Tag your commit (git tag v1.2.3). Make sure your tag name's format is v*.*.\*. Your workflow will use this tag to detect when to create a release
+4. Push your changes to GitHub (git push && git push --tags)
+
+https://github.com/samuelmeuli/action-electron-builder#releasing
 
 Env vars required:
+
 - CSC_LINK: base64-encoded .p12 file
 - CSC_KEY_PASSWORD: optional password
 - GH_TOKEN: Github token
@@ -105,19 +118,20 @@ Env vars required:
 ## FAQ
 
 1. Help installing for MacOS
-    1. Download from the [Releases](../../releases) page 
-    2. Move the Application to your Applications folder
-    3. Open the application by double-clicking the icon
-    4. If asked if you would like to open the application that was downloaded from the Internet, confirm. This is a standard MacOS security feature.
+
+   1. Download from the [Releases](../../releases) page
+   2. Move the Application to your Applications folder
+   3. Open the application by double-clicking the icon
+   4. If asked if you would like to open the application that was downloaded from the Internet, confirm. This is a standard MacOS security feature.
 
 2. Does Shift work on Windows OS?
-At the moment, only the Mac version is being supported/tested, as it requires a large amount of effort to add another OS to support. With more help, most or all of this project could work on the web, MacOS, and Windows.
+   At the moment, only the Mac version is being supported/tested, as it requires a large amount of effort to add another OS to support. With more help, most or all of this project could work on the web, MacOS, and Windows.
 
 3. How can I check for updates?
-The app will automatically check for updates when it is opened. If an update is available, it will be downloaded automatically. The next time you open the app, you'll be using the latest version!
+   The app will automatically check for updates when it is opened. If an update is available, it will be downloaded automatically. The next time you open the app, you'll be using the latest version!
 
 4. Find a bug?
-Please look at the [issues](../../issues), and file a new one if it hasn't already been reported.
+   Please look at the [issues](../../issues), and file a new one if it hasn't already been reported.
 
 ---
 
