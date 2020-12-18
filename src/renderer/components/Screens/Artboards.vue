@@ -10,7 +10,6 @@
         :artboard-id="artboard.id"
         :selected-items="selectedArtboards"
         :is-visible="artboard.isVisible"
-        class="artboard"
         @resize="resize"
       />
     </div>
@@ -53,10 +52,11 @@ export default {
   },
   mounted() {
     this.selectionInstance = new Selection({
+      selectables: ['.artboard'], // All elements in this container can be selected
+      boundaries: ['#canvas'], // The boundary
+      // startareas: ['#canvas'],
       class: 'selection-area', // Class for the selection-area
       selectedClass: 'is-selected',
-      selectables: ['#artboards > .artboard'], // All elements in this container can be selected
-      boundaries: ['#artboards'], // The boundary
       singleClick: true, // Enable single-click selection
     })
       .on('beforestart', (evt) => {
@@ -76,24 +76,24 @@ export default {
           value: true,
         })
       })
-      .on('move', (evt) => {
+      .on('move', ({ changed: { removed, added } }) => {
         /**
          * Only add / remove selected class to increase selection performance.
          */
 
         // Add
-        evt.changed.added.forEach((item) => {
+        added.forEach((item) => {
           const id = item.getAttribute('artboard-id')
           this.$store.dispatch('selectedArtboards/selectedArtboardsAdd', id)
         })
 
         // Remove
-        evt.changed.removed.forEach((item) => {
+        removed.forEach((item) => {
           const id = item.getAttribute('artboard-id')
           this.$store.dispatch('selectedArtboards/selectedArtboardsRemove', id)
         })
       })
-      .on('stop', (evt) => {
+      .on('stop', ({ selected }) => {
         /**
          * Every element has a artboard-id property which is used
          * to find the selected nodes. Find these and append they
@@ -109,7 +109,7 @@ export default {
         })
 
         // Push the new IDs
-        evt.selected.forEach((item) => {
+        selected.forEach((item) => {
           const id = item.getAttribute('artboard-id')
           this.$store.dispatch('selectedArtboards/selectedArtboardsAdd', id) // Add these items to the Store
         })

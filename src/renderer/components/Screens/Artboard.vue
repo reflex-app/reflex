@@ -1,37 +1,52 @@
 <template>
-  <div
-    v-show="isVisible"
-    ref="artboard"
-    class="artboard"
-    :artboard-id="id"
-    :style="{ height: height + 'px', width: width + 'px' }"
-    :class="{ 'is-hover': isHover, 'is-selected': isSelected }"
-    @click.right="rightClickHandler()"
-  >
-    <div class="artboard__top">
-      <div>
-        <span class="title">{{ title }}</span>
-        <span class="dimension">{{ width }} x {{ height }}</span>
-      </div>
-      <!-- Show a loader when state.isLoading == true -->
-      <div v-show="state.isLoading" class="artboard__loader is-loading">
-        <div class="content">
-          <div class="lds-ripple">
-            <div></div>
-            <div></div>
+  <div class="artboard-container">
+    <div
+      v-show="isVisible"
+      ref="artboard"
+      :artboard-id="id"
+      class="artboard"
+      :class="{ 'is-hover': isHover, 'is-selected': isSelected }"
+      @click.right="rightClickHandler()"
+    >
+      <div class="artboard__top">
+        <div>
+          <span class="title">{{ title }}</span>
+          <span class="dimension">{{ width }} x {{ height }}</span>
+        </div>
+        <!-- Show a loader when state.isLoading == true -->
+        <div v-show="state.isLoading" class="artboard__loader is-loading">
+          <div class="content">
+            <div class="lds-ripple">
+              <div></div>
+              <div></div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="artboard__keypoints"></div>
-    <div class="artboard__content">
-      <WebPage
-        :id="id"
-        ref="frame"
-        :allow-interactions="canInteractWithArtboard"
-        @loadstart="state.isLoading = true"
-        @loadend="state.isLoading = false"
-      />
+      <div class="artboard__keypoints"></div>
+      <div
+        class="artboard__content"
+        :class="{ 'layout--horizontal': state.horizontalLayout }"
+      >
+        <WebPage
+          :id="id"
+          ref="frame"
+          :allow-interactions="canInteractWithArtboard"
+          :style="{ height: height + 'px', width: width + 'px' }"
+          @loadstart="state.isLoading = true"
+          @loadend="state.isLoading = false"
+          @scroll="updateScrollPosition"
+        />
+        <div class="artboard__cross-browser-screenshots">
+          <CrossBrowserScreenshots
+            ref="cross-browser-DOM"
+            :height="height"
+            :width="width"
+            :x="scrollPosition.x"
+            :y="scrollPosition.y"
+          />
+        </div>
+      </div>
       <div class="artboard__handles">
         <div class="handle__bottom" title="Resize" @mousedown="triggerResize" />
       </div>
@@ -43,11 +58,13 @@
 import { mapState, mapGetters } from 'vuex'
 import WebPage from './WebPage.vue'
 import rightClickMenu from '@/mixins/rightClickMenu.js'
+import CrossBrowserScreenshots from '~/components/CrossBrowser/Screenshots/CrossBrowserScreenshots.vue'
 
 export default {
   name: 'Artboard',
   components: {
     WebPage,
+    CrossBrowserScreenshots,
   },
   props: {
     title: {
@@ -76,6 +93,11 @@ export default {
     return {
       state: {
         isLoading: false,
+        horizontalLayout: true,
+      },
+      scrollPosition: {
+        x: 0,
+        y: 0,
       },
     }
   },
@@ -129,6 +151,10 @@ export default {
   },
 
   methods: {
+    updateScrollPosition({ x, y }) {
+      this.scrollPosition.x = x
+      this.scrollPosition.y = y
+    },
     rightClickHandler() {
       rightClickMenu(this.$store, {
         title: this.title,
@@ -174,6 +200,7 @@ export default {
       }
     },
     triggerResize(e) {
+      console.log('should resize')
       const vm = this
 
       const parent = vm.$refs.artboard
@@ -264,6 +291,14 @@ export default {
 @import '@/scss/_variables';
 $artboard-handle-height: 1rem;
 
+.artboard-container {
+  display: block;
+  position: relative;
+  padding-right: 15rem;
+  width: auto;
+  height: auto;
+}
+
 .artboard {
   padding: 1rem;
   padding-right: 1.5rem;
@@ -272,8 +307,8 @@ $artboard-handle-height: 1rem;
   position: relative;
   display: block;
   flex: 1 0 auto;
-  height: 1200px;
-  width: 300px;
+  min-height: 10px;
+  min-width: 10px;
   margin: 0 3.5rem;
 
   &:first-child {
@@ -321,9 +356,30 @@ $artboard-handle-height: 1rem;
     position: relative;
     border: 1px solid white;
     box-sizing: border-box;
-    background: #ffffff;
+    // background: #ffffff;
     transition: all 100ms ease-out;
     // box-shadow: 0 4px 10px rgba(#000, 0.1);
+    overflow: visible;
+
+    .frame {
+      // min-width: 100%;
+      // min-height: 100%;
+      // display: block;
+    }
+
+    &.layout--horizontal {
+      display: flex;
+      flex-direction: row;
+      // flex-wrap: wrap;
+      max-width: 100%;
+    }
+
+    .artboard__cross-browser-screenshots {
+      position: relative;
+      // left: 100%;
+      // top: 0;
+      width: auto;
+    }
   }
 
   .artboard__handles {

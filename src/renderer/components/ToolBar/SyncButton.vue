@@ -53,10 +53,9 @@ export default {
 
     vm.$nextTick().then(async function () {
       // Start our synchronization server
-      const setup = await sync.startServer()
-
+      // const setup = await sync.startServer()
       // Fill in syncServer URL
-      vm.syncServer = setup.proxy
+      // vm.syncServer = setup.proxy
     })
   },
   methods: {

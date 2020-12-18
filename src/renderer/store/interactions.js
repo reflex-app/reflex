@@ -12,6 +12,7 @@ export const state = () => ({
 export const getters = {
   /**
    * Getter to check if any states are true
+   * Is Interacting = true when any internal state is true
    */
   isInteracting: (state) => {
     let isOn = false

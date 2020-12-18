@@ -11,7 +11,6 @@ electronDebug({
 })
 
 app.on('ready', () => {
-  vueDevtools.install()
   const menu = Menu.getApplicationMenu()
   const refreshButton = new MenuItem({
     label: 'Relaunch electron',
@@ -25,7 +24,7 @@ app.on('ready', () => {
 })
 
 mainWinHandler.onCreated((browserWindow) => {
-  browserWindow.webContents.openDevTools()
+  vueDevtools.install() // Add Vue devtools
 })
 
 // Require `main` process to boot app
