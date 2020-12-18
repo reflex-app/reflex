@@ -1,6 +1,5 @@
 import Vue from 'vue'
-import { setEnabledFeatures } from FeatureFlipping from "vue-feature-flipping";
-
+import FeatureFlipping, { setEnabledFeatures } from 'vue-feature-flipping'
 
 Vue.use(FeatureFlipping)
 
