@@ -1,11 +1,21 @@
 <template>
-  <webview ref="frame" class="frame" :preload="injectScript" allowpopups />
+  <webview
+    ref="frame"
+    class="frame"
+    :preload="injectScript"
+    allowpopups
+    enableremotemodule="true"
+    plugins="true"
+    webpreferences="contextIsolation=yes, nodeIntegration=yes"
+  />
 </template>
 
 <script>
+import path from 'path'
 import { mapState } from 'vuex'
 import { state as reflexState, setPublisher } from '~/mixins/reflex-sync'
 const { remote } = require('electron')
+const fs = remote.require('fs')
 
 export default {
   props: {
@@ -32,11 +42,19 @@ export default {
       url: (state) => state.history.currentPage.url,
     }),
     injectScript() {
-      // const appPath = require('electron').remote.app.getAppPath()
-      return `file://${require('path').resolve(
-        __dirname,
-        '../../mixins/reflex-sync/inject.js' // Inject this script in the WebView context
-      )}`
+      // const appPath = remote.app.getPath('appData')
+      // Load the inject script
+      const injectScriptPath = 'file://' + path.join(__resources, './inject.js')
+
+      // Make sure the inject file is found
+      try {
+        fs.accessSync(injectScriptPath.replace('file://', ''))
+      } catch (err) {
+        console.log(`No inject script found at: ${injectScriptPath}`)
+        throw new Error(err)
+      }
+
+      return injectScriptPath
     },
   },
   watch: {
@@ -267,9 +285,10 @@ export default {
     },
     contentloaded() {
       const frame = this.$refs.frame
-      // Request some initial information from the <WebView> context
-      // This is where we can pass over any identifier info needed for later
-      frame.send('requestData', { id: this.id })
+
+      frame.send('bridgeToFrame', {
+        id: this.id,
+      })
     },
     onMessageReceived(event) {
       if (event.channel === 'REFLEX_SYNC') {
@@ -297,7 +316,7 @@ export default {
             y,
           })
         }
-      } else if (event.channel === 'replyData') {
+      } else if (event.channel === 'initiateBridge') {
         const returnedData = event.args[0]
         const title = returnedData.title
         const favicon = returnedData.favicon

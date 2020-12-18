@@ -64,6 +64,10 @@ module.exports = {
       from: 'dist/renderer',
       to: 'dist/renderer/',
     },
+    {
+      from: 'src/resources',
+      to: 'dist/resources/',
+    },
   ],
   ...macOS,
   ...windowsOS,

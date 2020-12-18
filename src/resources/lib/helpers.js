@@ -1,4 +1,4 @@
-const documentHeight = () => {
+function documentHeight() {
   // via https://stackoverflow.com/questions/1145850/how-to-get-height-of-entire-document-with-javascript
   const body = document.body
   const html = document.documentElement

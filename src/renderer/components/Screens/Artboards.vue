@@ -61,7 +61,9 @@ export default {
     })
       .on('beforestart', (evt) => {
         // Prevent selections if the user is interacting with an artboard
-        console.info('Cannot interact with artboard during canvas interaction.')
+        console.info(
+          'Cannot interact with artboard while canvas is enabled. Please disable canvas.'
+        )
         if (this.isInteracting) return false
       })
       .on('start', (evt) => {
