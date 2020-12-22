@@ -2,6 +2,10 @@ import playwright from 'playwright'
 import { reactive, watchEffect } from '@vue/composition-api'
 import { v1 as uuid } from 'uuid'
 
+// Let's check where the app is running
+const app = require('electron').remote.app
+console.log(app.getPath('appData'))
+
 // Keep track of all the open browser contexts
 // This data can be accessed reactively
 export const browserContexts = reactive({
@@ -34,14 +38,23 @@ class CrossBrowserScreenshot {
     const browser = await playwright[this.browser].launch({
       /* headless: false */
     })
+
     const context = await browser.newContext({
       viewport: {
         height: this.height,
         width: this.width,
       },
     })
+
     // Track the context
     browserContexts.active.push({ id, context, type: this.browser })
+
+    // Remove this ID from the list of active
+    function removeBrowserContext(id) {
+      browserContexts.active = browserContexts.active.filter(
+        (i) => !i.id === id
+      )
+    }
 
     try {
       console.log(`Loading ${this.browser}, ${id}`)
@@ -68,17 +81,16 @@ class CrossBrowserScreenshot {
         //   },
       })
 
-      // Remove from the array
-      browserContexts.active = browserContexts.active.filter(
-        (i) => !i.id === id
-      ) // Remove this ID from the list of active
+      removeBrowserContext(id) // Remove from the array of active browsers
       await browser.close()
 
       return screenshotBuffer
     } catch (err) {
       this.isLoading = false
-      console.log(err)
+      removeBrowserContext(id)
       await browser.close()
+      console.log(err)
+      return false
     }
   }
 }
