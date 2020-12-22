@@ -13,7 +13,7 @@
     "test": "jest",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
     "lint:fix": "eslint --fix --ext .js,.vue --ignore-path .gitignore .",
-    "preinstall": "node .electron-nuxt/check-engines.js",
+    "preinstall": "node .electron-nuxt/check-engines.js && npx cross-env CROSSPLAYWRIGHT_BROWSERS_PATH=0",
     "postinstall": "electron-builder install-app-deps",
     "storybook": "start-storybook"
   },
