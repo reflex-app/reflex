@@ -33,14 +33,14 @@ const macOS = {
 const windowsOS = {
   win: {
     icon: ICONS_DIR + 'icon.ico',
-    // publisherName: 'Nick Wittwer',
-    // target: 'nsis',
+    publisherName: 'Nick Wittwer',
+    target: 'nsis',
     // verifyUpdateCodeSignature: false, // Don't codesign https://github.com/electron-userland/electron-builder/issues/2786#issuecomment-383813995
     // publish: isRelease ? ['github'] : null, // Publish artifacts to Github (release)
   },
-  // nsis: {
-  //   differentialPackage: true
-  // }
+  nsis: {
+    differentialPackage: true,
+  },
 }
 
 module.exports = {
