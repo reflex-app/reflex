@@ -9,6 +9,7 @@ const macOS = {
     gatekeeperAssess: false, // Required for MacOS Catalina
     entitlements: 'build/entitlements.mac.plist', // Required for MacOS Catalina
     entitlementsInherit: 'build/entitlements.mac.plist', // Required for MacOS Catalina
+    // ignore: '<resources>/.local-browsers', // Waiting for a way to manually ignore Playwright's browser binaries https://github.com/electron-userland/electron-builder/issues/5500
     // publish: isRelease ? ['github'] : null, //  Publish artifacts to Github (release)
   },
   afterSign: 'scripts/notarize.js', // Notarize Mac (ONLY for deploys)
@@ -56,6 +57,11 @@ module.exports = {
   // default files: https://www.electron.build/configuration/contents
   files: [
     'package.json',
+    {
+      from: 'node_modules/playwright/.local-browsers', // TEMPORARY WORKAROUND
+      to: 'node_modules/playwright/.local-browsers',
+      filter: ['**/*'],
+    },
     {
       from: 'dist/main/',
       to: 'dist/main/',

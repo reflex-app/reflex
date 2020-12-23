@@ -4,7 +4,7 @@ const { notarize } = require('electron-notarize')
 exports.default = async function notarizing(context) {
   const { electronPlatformName, appOutDir } = context
 
-  if (electronPlatformName !== 'darwin') return false
+  if (electronPlatformName !== 'darwin') return false // Only Notarize MacOS apps
 
   const appName = context.packager.appInfo.productFilename
   const appBundleId = 'com.nickwittwer.reflex'

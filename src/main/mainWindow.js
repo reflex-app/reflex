@@ -37,21 +37,22 @@ winHandler.onCreated((browserWindow) => {
     // When compiled, we are accessing Playwright via a Web Worker
     // and the Web Worker's path is not
     // Set the env var that Playwright will check for
-    // process.env.PLAYWRIGHT_BROWSERS_PATH = path.join(
-    //   app.getAppPath(),
-    //   '/node_modules/playwright/.local-browsers'
-    // )
-
-    if (!__resources)
-      throw new Error(
-        `Resources path not found. Likely an issue with Electron-Nuxt. 
-        See: https://michalzaq12.github.io/electron-nuxt/guide/#resolving-paths-in-html`
-      )
-
     process.env.PLAYWRIGHT_BROWSERS_PATH = path.join(
-      __resources, // this will be defined by electron-nuxt (https://michalzaq12.github.io/electron-nuxt/guide/#resolving-paths-in-html)
-      '/.local-browsers'
+      app.getAppPath(),
+      '/node_modules/playwright/.local-browsers'
     )
+
+    // Waiting on https://github.com/electron-userland/electron-builder/issues/5500
+    // if (!__resources)
+    //   throw new Error(
+    //     `Resources path not found. Likely an issue with Electron-Nuxt.
+    //     See: https://michalzaq12.github.io/electron-nuxt/guide/#resolving-paths-in-html`
+    //   )
+
+    // process.env.PLAYWRIGHT_BROWSERS_PATH = path.join(
+    //   __resources, // this will be defined by electron-nuxt (https://michalzaq12.github.io/electron-nuxt/guide/#resolving-paths-in-html)
+    //   '/.local-browsers'
+    // )
   }
 
   if (isDev) browserWindow.loadURL(DEV_SERVER_URL)

@@ -6,8 +6,9 @@ const { PROJECT_ROOT, RESOURCES_DIR } = require('../.electron-nuxt/config') // I
 ;(async () => {
   // This will copy the .local-browsers binaries that Playwright installed for us
   // into the resources directory for the final app
-  const input = `${PROJECT_ROOT}/node_modules/playwright/.local-browsers/`
-  const output = `${RESOURCES_DIR}/.local-browsers/`
+  const input = `${PROJECT_ROOT}/node_modules/playwright/.local-browsers`
+  const output = input // Waiting on https://github.com/electron-userland/electron-builder/issues/5500
+  // const output = `${RESOURCES_DIR}/.local-browsers/` // Should be this! // Waiting on https://github.com/electron-userland/electron-builder/issues/5500
 
   // Check if is installed
   const isInstalled = await ls(input).catch((err) => {
