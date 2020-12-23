@@ -77,7 +77,6 @@ function installPlaywright() {
 
     child.on('exit', function () {
       resolve(true)
-      process.exit(1)
     })
   })
 }
