@@ -28,6 +28,14 @@ const winHandler = new BrowserWinHandler({
 })
 
 winHandler.onCreated((browserWindow) => {
+  // Tell Playwright to look within the node_modules/.local-browsers directory
+  // https://github.com/microsoft/playwright/blob/master/docs/api.md#environment-variables
+  process.env.PLAYWRIGHT_BROWSERS_PATH = 0
+  console.log(
+    'process.env.PLAYWRIGHT_BROWSERS_PATH',
+    process.env.PLAYWRIGHT_BROWSERS_PATH
+  )
+
   if (isDev) browserWindow.loadURL(DEV_SERVER_URL)
   else browserWindow.loadFile(INDEX_PATH)
 

@@ -2,10 +2,6 @@ import playwright from 'playwright'
 import { reactive, watchEffect } from '@vue/composition-api'
 import { v1 as uuid } from 'uuid'
 
-// Let's check where the app is running
-const app = require('electron').remote.app
-console.log(app.getPath('appData'))
-
 // Keep track of all the open browser contexts
 // This data can be accessed reactively
 export const browserContexts = reactive({
@@ -13,7 +9,7 @@ export const browserContexts = reactive({
 })
 
 // Log changes to the browser contextss
-watchEffect(() => console.log('browser', browserContexts.active))
+watchEffect(() => console.log('browser contexts', browserContexts.active))
 
 // A single browser's screenshot
 class CrossBrowserScreenshot {
@@ -38,7 +34,6 @@ class CrossBrowserScreenshot {
     const browser = await playwright[this.browser].launch({
       /* headless: false */
     })
-
     const context = await browser.newContext({
       viewport: {
         height: this.height,
