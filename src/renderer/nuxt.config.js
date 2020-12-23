@@ -24,4 +24,21 @@ module.exports = {
     // Doc: https://github.com/nuxt-community/eslint-module
     // '@nuxtjs/eslint-module',
   ],
+  build: {
+    extend(config, { isDev, isClient }) {
+      // ..
+      config.module.rules.push({
+        test: /\.worker\.(js|ts)$/i,
+        loader: 'comlink-loader',
+        // use: 'comlink-loader',
+        options: {
+          singleton: true,
+        },
+      })
+      // Sets webpack's mode to development if `isDev` is true.
+      // if (isDev) {
+      //   config.mode = 'development'
+      // }
+    },
+  },
 }

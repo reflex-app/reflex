@@ -34,18 +34,13 @@
 </template>
 
 <script>
-import { computed, toRefs } from '@vue/composition-api'
-import Trigger from './Trigger'
+import { computed } from '@vue/composition-api'
+// import Trigger from './Trigger'
 import useCrossBrowserScreenshots from './UseCrossBrowserScreenshots'
-import {
-  browserContexts,
-  takeScreenshots,
-  toBase64Image,
-} from '~/components/CrossBrowser/Screenshots'
 export default {
-  components: {
-    Trigger,
-  },
+  // components: {
+  //   Trigger,
+  // },
   props: {
     height: {
       type: Number,
