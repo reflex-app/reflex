@@ -23,6 +23,7 @@ const winHandler = new BrowserWinHandler({
     webviewTag: true, // Required
     nodeIntegration: true, // Required
     enableRemoteModule: true,
+    nodeIntegrationInWorker: true, // Enable Web Workers https://www.electronjs.org/docs/tutorial/multithreading
   },
   titleBarStyle: 'hiddenInset', // Hide the bar
 })
@@ -30,11 +31,28 @@ const winHandler = new BrowserWinHandler({
 winHandler.onCreated((browserWindow) => {
   // Tell Playwright to look within the node_modules/.local-browsers directory
   // https://github.com/microsoft/playwright/blob/master/docs/api.md#environment-variables
-  process.env.PLAYWRIGHT_BROWSERS_PATH = 0
-  console.log(
-    'process.env.PLAYWRIGHT_BROWSERS_PATH',
-    process.env.PLAYWRIGHT_BROWSERS_PATH
-  )
+  if (isDev) {
+    process.env.PLAYWRIGHT_BROWSERS_PATH = 0
+  } else {
+    // When compiled, we are accessing Playwright via a Web Worker
+    // and the Web Worker's path is not
+    // Set the env var that Playwright will check for
+    // process.env.PLAYWRIGHT_BROWSERS_PATH = path.join(
+    //   app.getAppPath(),
+    //   '/node_modules/playwright/.local-browsers'
+    // )
+
+    if (!__resources)
+      throw new Error(
+        `Resources path not found. Likely an issue with Electron-Nuxt. 
+        See: https://michalzaq12.github.io/electron-nuxt/guide/#resolving-paths-in-html`
+      )
+
+    process.env.PLAYWRIGHT_BROWSERS_PATH = path.join(
+      __resources, // this will be defined by electron-nuxt (https://michalzaq12.github.io/electron-nuxt/guide/#resolving-paths-in-html)
+      '/.local-browsers'
+    )
+  }
 
   if (isDev) browserWindow.loadURL(DEV_SERVER_URL)
   else browserWindow.loadFile(INDEX_PATH)

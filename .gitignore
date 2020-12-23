@@ -4,6 +4,7 @@ dist
 build/*
 !build/icons
 !build/entitlements.mac.plist
+src/resources/.local-browsers
 
 # Git & NPM
 .env

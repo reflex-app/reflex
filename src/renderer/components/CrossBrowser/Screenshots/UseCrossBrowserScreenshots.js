@@ -54,6 +54,7 @@ export default function useCrossBrowserScreenshots() {
 
         console.log(screenshot)
         screenshot.img = toBase64Image(screenshot.img) // Convert buffer to base64
+        // screenshot.img = toBase64Image(screenshot.img) // Convert buffer to base64
 
         // Update loading state
         state.loading = state.loading.filter((item) => item !== screenshot.type) // remove this item

@@ -24,4 +24,18 @@ module.exports = {
     // Doc: https://github.com/nuxt-community/eslint-module
     // '@nuxtjs/eslint-module',
   ],
+  build: {
+    extend(config, { isDev, isClient }) {
+      // ..
+      // Comlink loader
+      // https://github.com/GoogleChromeLabs/comlink-loader#singleton-mode
+      config.module.rules.push({
+        test: /\.worker\.(js|ts)$/i,
+        loader: 'comlink-loader',
+        options: {
+          singleton: true,
+        },
+      })
+    },
+  },
 }
