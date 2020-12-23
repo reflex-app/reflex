@@ -18,7 +18,9 @@ export class CrossBrowserScreenshot {
   }
 
   async takeScreenshot() {
-    console.log(`Preparing to launch ${this.browser}, ${this.contextId}`)
+    console.log(`Preparing to launch ${this.browser}, ${this.contextId}`, {
+      browsers: process.env.PLAYWRIGHT_BROWSERS_PATH,
+    })
     this.isLoading = true // Update loading state
 
     const browser = await playwright[this.browser].launch({

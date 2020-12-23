@@ -27,18 +27,15 @@ module.exports = {
   build: {
     extend(config, { isDev, isClient }) {
       // ..
+      // Comlink loader
+      // https://github.com/GoogleChromeLabs/comlink-loader#singleton-mode
       config.module.rules.push({
         test: /\.worker\.(js|ts)$/i,
         loader: 'comlink-loader',
-        // use: 'comlink-loader',
         options: {
           singleton: true,
         },
       })
-      // Sets webpack's mode to development if `isDev` is true.
-      // if (isDev) {
-      //   config.mode = 'development'
-      // }
     },
   },
 }
