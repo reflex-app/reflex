@@ -1,6 +1,10 @@
 import playwright from 'playwright'
 import { reactive, watchEffect } from '@vue/composition-api'
 import { v1 as uuid } from 'uuid'
+import playwrightWorker from '@/workers/index'
+
+const test = playwrightWorker(50)
+console.log(test)
 
 // Keep track of all the open browser contexts
 // This data can be accessed reactively

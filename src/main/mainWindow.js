@@ -23,6 +23,7 @@ const winHandler = new BrowserWinHandler({
     webviewTag: true, // Required
     nodeIntegration: true, // Required
     enableRemoteModule: true,
+    nodeIntegrationInWorker: true, // Enable Web Workers https://www.electronjs.org/docs/tutorial/multithreading
   },
   titleBarStyle: 'hiddenInset', // Hide the bar
 })
