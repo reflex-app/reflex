@@ -13,8 +13,8 @@
     "test": "jest",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
     "lint:fix": "eslint --fix --ext .js,.vue --ignore-path .gitignore .",
-    "preinstall": "npx cross-env PLAYWRIGHT_BROWSERS_PATH=0 node .electron-nuxt/check-engines.js",
-    "postinstall": "electron-builder install-app-deps",
+    "preinstall": "node .electron-nuxt/check-engines.js && npx cross-env PLAYWRIGHT_BROWSERS_PATH=0",
+    "postinstall": "npx cross-env PLAYWRIGHT_BROWSERS_PATH=0 electron-builder install-app-deps",
     "storybook": "start-storybook",
     "debug:playwright": "npx cross-env DEBUG=pw:browser* yarn run dev"
   },
@@ -60,6 +60,8 @@
     "babel-eslint": "^10.1.0",
     "babel-preset-vue": "^2.0.2",
     "browser-env": "3.3.0",
+    "comlink": "^4.3.0",
+    "comlink-loader": "^2.0.0",
     "core-js": "3.6.5",
     "cross-env": "7.0.2",
     "deepmerge": "4.2.2",
@@ -85,7 +87,6 @@
     "node-sass": "4.14.1",
     "nuxt": ">2.14.1",
     "prettier": "^2.0.4",
-    "promise-worker": "^2.0.1",
     "sass-loader": "9.0.3",
     "uuid": "8.3.0",
     "vue-devtools": "5.1.4",
@@ -94,7 +95,6 @@
     "vuedraggable": "^2.23.2",
     "vuex-persist": "^3.1.0",
     "webpack": "^4.44.0",
-    "webpack-node-externals": "^2.5.0",
-    "worker-loader": "^3.0.6"
+    "webpack-node-externals": "^2.5.0"
   }
 }
