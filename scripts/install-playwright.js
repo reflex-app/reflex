@@ -127,15 +127,13 @@ async function copyDir(src, dest) {
 async function ls(path) {
   try {
     const tempArr = []
-    const dir = await fs.opendir(path)
+    const dir = await fs.opendir(path) // Opens a stream https://nodejs.org/api/fs.html#fs_class_fs_dir
 
     for await (const dirent of dir) {
-      // console.log(dirent.name)
       tempArr.push(dirent.name)
     }
 
-    // Close the directory!
-    dir.close()
+    await dir.close() // Close the stream https://nodejs.org/api/fs.html#fs_dir_close
 
     return tempArr // return all the files & directories at the output dir
   } catch (err) {
