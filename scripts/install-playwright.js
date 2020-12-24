@@ -13,37 +13,25 @@ const { PROJECT_ROOT, RESOURCES_DIR } = require('../.electron-nuxt/config') // I
   // Check if is installed
   const isInstalled = await ls(input)
 
-  try {
-    // Check if Playwright's .local-browsers exist...
-    if (isInstalled) {
-      console.log('Playwright is correctly installed')
-    } else {
-      // if not, re-install Playwright
-      console.log('.local-browsers not found in Playwright. Re-installing.')
+  // Check if Playwright's .local-browsers exist...
+  if (isInstalled) {
+    console.log('Playwright is correctly installed')
+  } else {
+    // if not, re-install Playwright
+    console.log('.local-browsers not found in Playwright. Re-installing.')
 
-      // Install Playwright
-      console.log(`Installing Playwright properly... (this may take a while)`)
-      await runExec(
-        `npx cross-env PLAYWRIGHT_BROWSERS_PATH=0 yarn add playwright -S`
-      ).catch((err) => {
-        errorHandler(err)
-        process.exit(1)
-      })
-    }
-  } catch (err) {
-    if (err.code === 'ENOENT') return false
-    errorHandler(err)
-    process.exit(1)
+    // Install Playwright
+    console.log(`Installing Playwright properly... (this may take a while)`)
+    await runExec(
+      `npx cross-env PLAYWRIGHT_BROWSERS_PATH=0 yarn add playwright -S`
+    )
   }
 
   // Copy the contents of node_modules/playwright/.local-browsers into the app's resources directory
   // https://stackoverflow.com/a/64255382/1114901
   // await copyDir(input, output).catch(errorHandler)
   // shx https://stackoverflow.com/a/59823713/1114901
-  await runExec(`npx shx cp ${input} ${output}`).catch((err) => {
-    errorHandler(err)
-    process.exit(1)
-  })
+  await runExec(`npx shx cp ${input} ${output}`)
 
   // Get an array of files & directories in the resources path
   // Expect to see a folder for chromium, firefox, and webkit
@@ -66,19 +54,24 @@ function runExec(fnString) {
   return new Promise((resolve, reject) => {
     if (typeof fnString !== 'string') fnString = fnString.toString()
 
-    const child = exec(fnString)
+    try {
+      const child = exec(fnString)
 
-    // Log the process
-    child.stdout.pipe(process.stdout)
+      // Log the process
+      child.stdout.pipe(process.stdout)
 
-    child.on('error', function (err) {
-      reject(new Error(err))
+      child.on('error', function (err) {
+        reject(new Error(err))
+        errorHandler(err)
+      })
+
+      child.on('exit', function () {
+        resolve(true)
+      })
+    } catch (err) {
       errorHandler(err)
-    })
-
-    child.on('exit', function () {
-      resolve(true)
-    })
+      process.exit(1)
+    }
   })
 }
 
