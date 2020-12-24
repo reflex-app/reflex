@@ -57,11 +57,11 @@ module.exports = {
   // default files: https://www.electron.build/configuration/contents
   files: [
     'package.json',
-    {
-      from: 'node_modules/playwright/.local-browsers', // TEMPORARY WORKAROUND
-      to: 'node_modules/playwright/.local-browsers',
-      filter: ['**/*'],
-    },
+    // {
+    //   from: 'node_modules/playwright/.local-browsers', // TEMPORARY WORKAROUND
+    //   to: 'node_modules/playwright/.local-browsers',
+    //   filter: ['**/*'],
+    // },
     {
       from: 'dist/main/',
       to: 'dist/main/',

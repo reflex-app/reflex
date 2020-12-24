@@ -26,9 +26,6 @@ const { PROJECT_ROOT, RESOURCES_DIR } = require('../.electron-nuxt/config') // I
       await runExec(
         `npx cross-env PLAYWRIGHT_BROWSERS_PATH=0 yarn add playwright -S`
       )
-
-      // This script will be re-run! We should exit the process so the new one can run properly
-      process.exit(1)
     }
   }
 
