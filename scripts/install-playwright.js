@@ -17,6 +17,8 @@ const { PROJECT_ROOT, RESOURCES_DIR } = require('../.electron-nuxt/config') // I
     // Check if Playwright's .local-browsers exist...
     if (isInstalled) {
       console.log('Playwright is correctly installed')
+      // Don't continue any further!
+      return true
     } else {
       // if not, re-install Playwright
       console.log('.local-browsers not found in Playwright. Re-installing.')
