@@ -17,46 +17,54 @@ const { PROJECT_ROOT, RESOURCES_DIR } = require('../.electron-nuxt/config') // I
     // Check if Playwright's .local-browsers exist...
     if (isInstalled) {
       console.log('Playwright is correctly installed')
-      // Don't continue any further!
-      return true
+      return true // Tell the listener it was installed properly
     } else {
       // if not, re-install Playwright
-      console.log('.local-browsers not found in Playwright. Re-installing.')
-
-      // Install Playwright
-      console.log(`Installing Playwright properly... (this may take a while)`)
-      await runExec(
-        `npx cross-env PLAYWRIGHT_BROWSERS_PATH=0 yarn add playwright -S`
-      )
+      console.log(`.local-browsers not found in ${input}.`)
+      return false
     }
   }
 
   // Run to check if installed as expected
   // Note: We don't check multipled times, because this whole script
   // is automatically re-run on postinstall (which is triggered by "yarn add playwright")
-  await checkInstall()
+  const installed = await checkInstall()
 
-  // TEMPORARILY DISABLED BUT SHOULD BE RE-ENABLED IF NO LONGER USING NODE_MODULES
-  // Copy the contents of node_modules/playwright/.local-browsers into the app's resources directory
-  // https://stackoverflow.com/a/64255382/1114901
-  // await copyDir(input, output).catch(errorHandler)
-  // shx https://stackoverflow.com/a/59823713/1114901
-  // await runExec(`npx shx cp ${input} ${output}`)
-
-  // Get an array of files & directories in the resources path
-  // Expect to see a folder for chromium, firefox, and webkit
-  const dir = await ls(output).catch(errorHandler)
-
-  // Check to see if there's a folder with the name of each browser we expect
-  const browsers = ['chromium', 'firefox', 'webkit']
-  const sanityCheck = browsers.every((v) => dir.find((x) => x.includes(v)))
-
-  if (sanityCheck) {
-    console.log(
-      `Browser binaries for ${browsers} successfully copied to resources.`
-    )
+  if (installed) {
+    // Installed! Exit now.
+    console.log('Installed. Returning from install script.')
+    return true
   } else {
-    console.error(`Missing a browser binary! Found: ${dir}`)
+    // The .local-browsers needs to be installed
+
+    // Install Playwright
+    console.log(`Installing Playwright properly... (this may take a while)`)
+    await runExec(
+      `npx cross-env PLAYWRIGHT_BROWSERS_PATH=0 yarn add playwright -S`
+    )
+
+    // TEMPORARILY DISABLED BUT SHOULD BE RE-ENABLED IF NO LONGER USING NODE_MODULES
+    // Copy the contents of node_modules/playwright/.local-browsers into the app's resources directory
+    // https://stackoverflow.com/a/64255382/1114901
+    // await copyDir(input, output).catch(errorHandler)
+    // shx https://stackoverflow.com/a/59823713/1114901
+    // await runExec(`npx shx cp ${input} ${output}`)
+
+    // Get an array of files & directories in the resources path
+    // Expect to see a folder for chromium, firefox, and webkit
+    const dir = await ls(output).catch(errorHandler)
+
+    // Check to see if there's a folder with the name of each browser we expect
+    const browsers = ['chromium', 'firefox', 'webkit']
+    const sanityCheck = browsers.every((v) => dir.find((x) => x.includes(v)))
+
+    if (sanityCheck) {
+      console.log(
+        `Browser binaries for ${browsers} successfully copied to resources.`
+      )
+    } else {
+      console.error(`Missing a browser binary! Found: ${dir}`)
+    }
   }
 })()
 
