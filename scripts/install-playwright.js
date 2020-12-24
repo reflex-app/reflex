@@ -88,7 +88,7 @@ function runExec(fnString) {
       })
     } catch (err) {
       errorHandler(err)
-      process.exit(1)
+      // process.exit(1)
     }
   })
 }
@@ -133,6 +133,9 @@ async function ls(path) {
       // console.log(dirent.name)
       tempArr.push(dirent.name)
     }
+
+    // Close the directory!
+    dir.close()
 
     return tempArr // return all the files & directories at the output dir
   } catch (err) {
