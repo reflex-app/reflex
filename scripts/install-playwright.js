@@ -36,9 +36,10 @@ const { PROJECT_ROOT, RESOURCES_DIR } = require('../.electron-nuxt/config') // I
   // is automatically re-run on postinstall (which is triggered by "yarn add playwright")
   await checkInstall()
 
+  // TEMPORARILY DISABLED BUT SHOULD BE RE-ENABLED IF NO LONGER USING NODE_MODULES
   // Copy the contents of node_modules/playwright/.local-browsers into the app's resources directory
   // https://stackoverflow.com/a/64255382/1114901
-  await copyDir(input, output).catch(errorHandler)
+  // await copyDir(input, output).catch(errorHandler)
   // shx https://stackoverflow.com/a/59823713/1114901
   // await runExec(`npx shx cp ${input} ${output}`)
 
@@ -84,6 +85,8 @@ function runExec(fnString) {
   })
 }
 
+// Recursively copy a directory to another location
+// via https://stackoverflow.com/a/64255382/1114901
 async function copyDir(src, dest) {
   try {
     await fs.mkdir(dest, { recursive: true })
