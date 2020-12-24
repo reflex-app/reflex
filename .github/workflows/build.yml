@@ -19,11 +19,11 @@ jobs:
       - name: Check out Git repository
         uses: actions/checkout@v2
 
-      - name: Checkout Github Actions
+      - name: Checkout Github Action repository
         uses: actions/checkout@v2
         with:
-          # repository: my-org/my-tools
-          path: .github/actions/action-electron-builder
+          repository: .github/actions/action-electron-builder # Where the repo is
+          path: actions/action-electron-builder # The Github Workspace path
 
       - name: Install Node.js, NPM and Yarn
         uses: actions/setup-node@v1
@@ -31,7 +31,7 @@ jobs:
           node-version: 12
 
       - name: Build/release Electron app
-        uses: ./.github/actions/action-electron-builder
+        uses: actions/action-electron-builder
         # uses: nwittwer/action-electron-builder@v1.6
         # uses: samuelmeuli/action-electron-builder@v1
         # uses: michalzaq12/action-electron-nuxt@v1
