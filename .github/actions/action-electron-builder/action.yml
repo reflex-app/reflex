@@ -25,7 +25,7 @@ inputs:
   package_root:
     description: Directory where NPM/Yarn commands should be run
     required: false
-    default: '.'
+    default: "."
   build_script_name:
     description: Name of the optional NPM build script which is executed before `electron-builder`
     required: false
@@ -41,11 +41,11 @@ inputs:
   args:
     description: Other arguments to pass to the `electron-builder` command, e.g. configuration overrides
     required: false
-    default: ''
+    default: ""
   max_attempts:
     description: Maximum number of attempts for completing the build and release step
     required: false
-    default: '1'
+    default: "1"
 
   # Deprecated
   app_root:
@@ -53,7 +53,7 @@ inputs:
     required: false
 
 runs:
-  using: node14 # Versions available: https://github.com/actions/node-versions/blob/main/versions-manifest.json
+  using: node12 # Versions available: https://github.com/actions/node-versions/blob/main/versions-manifest.json
   main: index.js
 
 branding:
