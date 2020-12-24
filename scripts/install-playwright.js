@@ -7,31 +7,41 @@ const { PROJECT_ROOT, RESOURCES_DIR } = require('../.electron-nuxt/config') // I
   // This will copy the .local-browsers binaries that Playwright installed for us
   // into the resources directory for the final app
   const input = `${PROJECT_ROOT}/node_modules/playwright/.local-browsers/` // Don't forget the last '/' or terminal may think its a file
-  const output = input // Waiting on https://github.com/electron-userland/electron-builder/issues/5500
+  const output = `${PROJECT_ROOT}/node_modules/playwright/.local-browsers/` // Waiting on https://github.com/electron-userland/electron-builder/issues/5500
   // const output = `${RESOURCES_DIR}/.local-browsers/` // Should be this! // Waiting on https://github.com/electron-userland/electron-builder/issues/5500
 
-  // Check if is installed
-  const isInstalled = await ls(input)
+  const checkInstall = async () => {
+    // Check if input directory exists
+    const isInstalled = await ls(input)
 
-  // Check if Playwright's .local-browsers exist...
-  if (isInstalled) {
-    console.log('Playwright is correctly installed')
-  } else {
-    // if not, re-install Playwright
-    console.log('.local-browsers not found in Playwright. Re-installing.')
+    // Check if Playwright's .local-browsers exist...
+    if (isInstalled) {
+      console.log('Playwright is correctly installed')
+    } else {
+      // if not, re-install Playwright
+      console.log('.local-browsers not found in Playwright. Re-installing.')
 
-    // Install Playwright
-    console.log(`Installing Playwright properly... (this may take a while)`)
-    await runExec(
-      `npx cross-env PLAYWRIGHT_BROWSERS_PATH=0 yarn add playwright -S`
-    )
+      // Install Playwright
+      console.log(`Installing Playwright properly... (this may take a while)`)
+      await runExec(
+        `npx cross-env PLAYWRIGHT_BROWSERS_PATH=0 yarn add playwright -S`
+      )
+
+      // This script will be re-run! We should exit the process so the new one can run properly
+      process.exit(1)
+    }
   }
+
+  // Run to check if installed as expected
+  // Note: We don't check multipled times, because this whole script
+  // is automatically re-run on postinstall (which is triggered by "yarn add playwright")
+  await checkInstall()
 
   // Copy the contents of node_modules/playwright/.local-browsers into the app's resources directory
   // https://stackoverflow.com/a/64255382/1114901
-  // await copyDir(input, output).catch(errorHandler)
+  await copyDir(input, output).catch(errorHandler)
   // shx https://stackoverflow.com/a/59823713/1114901
-  await runExec(`npx shx cp ${input} ${output}`)
+  // await runExec(`npx shx cp ${input} ${output}`)
 
   // Get an array of files & directories in the resources path
   // Expect to see a folder for chromium, firefox, and webkit
