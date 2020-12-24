@@ -79,19 +79,12 @@ Please note: The `dev` branch represents the latest works-in-progress, and shoul
 
 ### Release
 
-<!-- Workflow: PR to `master` branch -> TravisCI -> Build app -> Codesign & Notarize (Mac only) -> Github Release
-
-1. Create a PR to `master` branch
-   - TravisCI will run `yarn run release`
-   - This adds a `process.env.RELEASE` env variable.
-   - The presence of the `RELEASE` flag will allow notarization of the Mac app with `scripts/notarize.js`.
-   - The presence of the `RELEASE` flag will publish artifacts to Github. It will draft new release or update existing artifacts.
-2. If everything worked, merge PR into `master` and publish Github Release -->
-
-1. Update the version in your project's package.json file (e.g. 1.2.3)
+1. Update the version in the project's package.json file (e.g. 1.2.3)
 2. Commit that change (git commit -am v1.2.3)
 3. Tag your commit (git tag v1.2.3). Make sure your tag name's format is v*.*.\*. Your workflow will use this tag to detect when to create a release
 4. Push your changes to GitHub (git push && git push --tags)
+5. Github Actions will run the build only for commits to `master` and `dev` branches
+6. If the build is successful and a Github Release is in draft for the same version, the Github Action will notarize (Mac only) and upload the build artifacts to the Github Release directly.
 
 https://github.com/samuelmeuli/action-electron-builder#releasing
 
