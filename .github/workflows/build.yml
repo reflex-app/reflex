@@ -19,11 +19,8 @@ jobs:
       - name: Check out Git repository
         uses: actions/checkout@v2
 
-      - name: Checkout Github Action repository
-        uses: actions/checkout@v2
-        with:
-          repository: .github/actions/action-electron-builder # Where the repo is
-          path: .github/actions/action-electron-builder # The Github Workspace path
+      - name: Use local Github Action
+        uses: .github/actions/action-electron-builder # https://docs.github.com/en/free-pro-team@latest/actions/reference/workflow-syntax-for-github-actions#example-using-action-in-the-same-repository-as-the-workflow
 
       - name: Install Node.js, NPM and Yarn
         uses: actions/setup-node@v1
