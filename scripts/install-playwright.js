@@ -6,18 +6,12 @@ const { PROJECT_ROOT, RESOURCES_DIR } = require('../.electron-nuxt/config') // I
 ;(async () => {
   // This will copy the .local-browsers binaries that Playwright installed for us
   // into the resources directory for the final app
-  const input = `${PROJECT_ROOT}/node_modules/playwright/.local-browsers`
+  const input = `${PROJECT_ROOT}/node_modules/playwright/.local-browsers/` // Don't forget the last '/' or terminal may think its a file
   const output = input // Waiting on https://github.com/electron-userland/electron-builder/issues/5500
   // const output = `${RESOURCES_DIR}/.local-browsers/` // Should be this! // Waiting on https://github.com/electron-userland/electron-builder/issues/5500
 
   // Check if is installed
-  const isInstalled = await ls(input).catch((err) => {
-    if (err.code === 'ENOENT') {
-      console.log('Missing', err)
-      return false
-    }
-    errorHandler(err)
-  })
+  const isInstalled = await ls(input)
 
   try {
     // Check if Playwright's .local-browsers exist...
@@ -27,8 +21,11 @@ const { PROJECT_ROOT, RESOURCES_DIR } = require('../.electron-nuxt/config') // I
       // if not, re-install Playwright
       console.log('.local-browsers not found in Playwright. Re-installing.')
 
-      // Install
-      await installPlaywright().catch((err) => {
+      // Install Playwright
+      console.log(`Installing Playwright properly... (this may take a while)`)
+      await runExec(
+        `npx cross-env PLAYWRIGHT_BROWSERS_PATH=0 yarn add playwright -S`
+      ).catch((err) => {
         errorHandler(err)
         process.exit(1)
       })
@@ -41,7 +38,12 @@ const { PROJECT_ROOT, RESOURCES_DIR } = require('../.electron-nuxt/config') // I
 
   // Copy the contents of node_modules/playwright/.local-browsers into the app's resources directory
   // https://stackoverflow.com/a/64255382/1114901
-  await copyDir(input, output).catch(errorHandler)
+  // await copyDir(input, output).catch(errorHandler)
+  // shx https://stackoverflow.com/a/59823713/1114901
+  await runExec(`npx shx cp ${input} ${output}`).catch((err) => {
+    errorHandler(err)
+    process.exit(1)
+  })
 
   // Get an array of files & directories in the resources path
   // Expect to see a folder for chromium, firefox, and webkit
@@ -60,13 +62,11 @@ const { PROJECT_ROOT, RESOURCES_DIR } = require('../.electron-nuxt/config') // I
   }
 })()
 
-function installPlaywright() {
+function runExec(fnString) {
   return new Promise((resolve, reject) => {
-    console.log('Installing Playwright... (this may take a while)')
+    if (typeof fnString !== 'string') fnString = fnString.toString()
 
-    const child = exec(
-      `npx cross-env PLAYWRIGHT_BROWSERS_PATH=0 yarn add playwright -S`
-    )
+    const child = exec(fnString)
 
     // Log the process
     child.stdout.pipe(process.stdout)
@@ -115,8 +115,7 @@ async function ls(path) {
 
     return tempArr // return all the files & directories at the output dir
   } catch (err) {
-    console.log(err)
-    // errorHandler(err)
+    errorHandler(err)
     return false
   }
 }
