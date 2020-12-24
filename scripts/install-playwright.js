@@ -95,7 +95,15 @@ async function copyDir(src, dest) {
 
       entry.isDirectory()
         ? await copyDir(srcPath, destPath)
-        : await fs.copyFile(srcPath, destPath)
+        : await fs.copyFile(srcPath, destPath).catch(async (err) => {
+            if (err.code === 'EISDIR') {
+              // If it is actually a directory
+              await copyDir(srcPath, destPath)
+            } else {
+              // Otherwise throw the error
+              throw new Error(err)
+            }
+          })
     }
   } catch (err) {
     errorHandler(err)
