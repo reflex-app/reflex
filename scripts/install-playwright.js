@@ -3,19 +3,21 @@ const path = require('path')
 const { exec } = require('child_process')
 const { PROJECT_ROOT, RESOURCES_DIR } = require('../.electron-nuxt/config') // Import from Electron-Nuxt
 
+const input = `${PROJECT_ROOT}/node_modules/playwright/.local-browsers` // Don't forget the last '/' or terminal may think its a file
+const output = `${PROJECT_ROOT}/node_modules/playwright/.local-browsers` // Waiting on https://github.com/electron-userland/electron-builder/issues/5500
+const browsers = ['chromium', 'firefox', 'webkit']
+
 ;(async () => {
   // This will copy the .local-browsers binaries that Playwright installed for us
   // into the resources directory for the final app
-  const input = `${PROJECT_ROOT}/node_modules/playwright/.local-browsers` // Don't forget the last '/' or terminal may think its a file
-  const output = `${PROJECT_ROOT}/node_modules/playwright/.local-browsers` // Waiting on https://github.com/electron-userland/electron-builder/issues/5500
   // const output = `${RESOURCES_DIR}/.local-browsers/` // Should be this! // Waiting on https://github.com/electron-userland/electron-builder/issues/5500
 
   // Check if input directory exists
-  const isInstalled = await ls(input)
+  const dirExists = await ls(input)
 
   // Check if Playwright's .local-browsers exist...
-  if (isInstalled) {
-    console.log('Playwright is correctly installed')
+  if (dirExists) {
+    console.log('Playwright directory exists')
 
     // Call the other functions
     // TEMPORARILY DISABLED BUT SHOULD BE RE-ENABLED IF NO LONGER USING NODE_MODULES
@@ -25,37 +27,23 @@ const { PROJECT_ROOT, RESOURCES_DIR } = require('../.electron-nuxt/config') // I
     // shx https://stackoverflow.com/a/59823713/1114901
     // await runExec(`npx shx cp ${input} ${output}`)
 
-    // Get an array of files & directories in the resources path
-    // Expect to see a folder for chromium, firefox, and webkit
-    const dir = await ls(output)
-
-    // Check to see if there's a folder with the name of each browser we expect
-    const browsers = ['chromium', 'firefox', 'webkit']
-    const sanityCheck = browsers.every((v) => dir.find((x) => x.includes(v)))
+    // STEP: Check to make sure the browser binaries exist
+    const sanityCheck = await checkIfDirHasBinaries(output)
 
     if (sanityCheck) {
-      console.log(
-        `Browser binaries for ${browsers} successfully copied to resources.`
-      )
+      console.log(`Browser binaries for ${browsers} exist at: ${output}.`)
+      return true // Done
     } else {
-      console.error(`Missing a browser binary! Found: ${dir}`)
+      console.error(`Missing a browser binary! Found: ${dirExists}`)
+      return await reInstall() // Re-install
     }
-
-    return true // Done
   } else {
     // if not, re-install Playwright
     // NOTE: This will end the execution of the code
-    console.log(`.local-browsers not found at ${input}`)
-
-    // The .local-browsers needs to be installed
-
-    // Install Playwright
-    console.log(`Installing Playwright properly... (this may take a while)`)
+    console.log(`.local-browsers directory not found at ${input}`)
 
     // Finish after the next script
-    return await runExec(
-      `npx cross-env PLAYWRIGHT_BROWSERS_PATH=0 yarn add playwright -S`
-    )
+    return await reInstall()
   }
 
   // Run to check if installed as expected
@@ -92,11 +80,50 @@ const { PROJECT_ROOT, RESOURCES_DIR } = require('../.electron-nuxt/config') // I
   // }
 })()
 
+// Re-install script
+async function reInstall() {
+  console.log(`Installing Playwright properly... (this may take a while)`)
+
+  // NOTE: Node 14.0 had issues when installing packages. Using Node >14.x seems to work.
+  // See: https://github.com/microsoft/playwright/issues/4033#issuecomment-702325569
+
+  process.env.PLAYWRIGHT_BROWSERS_PATH = 0 // Set the environment
+
+  if (process.env.PLAYWRIGHT_BROWSERS_PATH !== '0') {
+    console.error(
+      'Env is not configured correctly. PLAYWRIGHT_BROWSERS_PATH is not 0.'
+    )
+    process.exit(0)
+  }
+
+  // Install dependency (default for Yarn)
+  // --no-bin-links: Prevent symlinks to binaries
+  // await runExec(`yarn add playwright`)
+  await runExec(`npx cross-env PLAYWRIGHT_BROWSERS_PATH=0 yarn add playwright`)
+
+  // Check to see if it worked
+  const installed = await checkIfDirHasBinaries(output)
+  if (!installed) {
+    console.error('Not installed, attempting manual install')
+    await runExec(`node ./node_modules/playwright/install.js`)
+  }
+}
+
+async function checkIfDirHasBinaries(dir) {
+  // Get an array of files & directories in the resources path
+  // Expect to see a folder for chromium, firefox, and webkit
+  const results = await ls(dir)
+
+  // Check to see if there's a folder with the name of each browser we expect
+  return browsers.every((v) => results.find((x) => x.includes(v)))
+}
+
 function runExec(fnString) {
   return new Promise((resolve, reject) => {
     if (typeof fnString !== 'string') fnString = fnString.toString()
 
     try {
+      console.log(`Running ${fnString}`)
       const child = exec(fnString)
 
       // Log the process

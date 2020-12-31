@@ -5,11 +5,12 @@ const macOS = {
   mac: {
     target: 'dmg',
     icon: ICONS_DIR + 'icon.icns',
-    hardenedRuntime: true, // Required for MacOS Catalina
-    gatekeeperAssess: false, // Required for MacOS Catalina
+    // hardenedRuntime: true, // Required for MacOS Catalina. Now defaults to true.
+    // gatekeeperAssess: false, // Required for MacOS Catalina. Now defaults to false.
     entitlements: 'build/entitlements.mac.plist', // Required for MacOS Catalina
     entitlementsInherit: 'build/entitlements.mac.plist', // Required for MacOS Catalina
-    // ignore: '<resources>/.local-browsers', // Waiting for a way to manually ignore Playwright's browser binaries https://github.com/electron-userland/electron-builder/issues/5500
+    // signIgnore: '/node_modules/playwright/.local-browsers', // Waiting for a way to manually ignore Playwright's browser binaries https://github.com/electron-userland/electron-builder/issues/5500
+    signIgnore: ['.*\\.app$'], // https://github.com/electron-userland/electron-builder/pull/5262
     // publish: isRelease ? ['github'] : null, //  Publish artifacts to Github (release)
   },
   afterSign: 'scripts/notarize.js', // Notarize Mac (ONLY for deploys)
@@ -45,7 +46,6 @@ const windowsOS = {
 }
 
 module.exports = {
-  asar: false, // Should be false
   productName: require('./package.json').productName,
   appId: 'com.reflex.app',
   // eslint-disable-next-line no-template-curly-in-string
@@ -75,6 +75,23 @@ module.exports = {
       to: 'dist/resources/',
     },
   ],
+  // asar: {
+  //   unpack: ['**/node_modules/playwright/.local-browsers/**/*']
+  // },
+  // asar: true, // Whether or not to package
+  // asarUnpack: ['**/node_modules/playwright/**/*'], // Unpack the browser binaries
+  asar: true,
+  asarUnpack: ['node_modules/playwright/.local-browsers/**/*'], // Unpack the browser binaries
+  // asarUnpack: ['node_modules/playwright/.local-browsers/'], // Unpack the browser binaries
+  // Extra Resources see: https://stackoverflow.com/a/53011325/1114901
+  // asar: false,
+  // extraResources: [
+  //   {
+  //     from: 'node_modules/playwright/.local-browsers',
+  //     to: 'node_modules/playwright/.local-browsers',
+  //     filter: ['**/*'],
+  //   },
+  // ],
   ...macOS,
   ...windowsOS,
 }

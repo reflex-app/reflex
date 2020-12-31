@@ -33,6 +33,7 @@ winHandler.onCreated((browserWindow) => {
   // https://github.com/microsoft/playwright/blob/master/docs/api.md#environment-variables
   if (isDev) {
     process.env.PLAYWRIGHT_BROWSERS_PATH = 0
+    log.info(`Set browser path: ${process.env.PLAYWRIGHT_BROWSERS_PATH}`)
   } else {
     // When compiled, we are accessing Playwright via a Web Worker
     // and the Web Worker's path is not
@@ -41,6 +42,8 @@ winHandler.onCreated((browserWindow) => {
       app.getAppPath(),
       '/node_modules/playwright/.local-browsers'
     )
+
+    log.info(`Set browser path: ${process.env.PLAYWRIGHT_BROWSERS_PATH}`)
 
     // Waiting on https://github.com/electron-userland/electron-builder/issues/5500
     // if (!__resources)
