@@ -8,18 +8,20 @@
   "homepage": "https://reflexapp.nickwittwer.com",
   "main": "./dist/main/index.js",
   "scripts": {
-    "dev": "node .electron-nuxt/dev.js",
-    "build": "node .electron-nuxt/build.js",
+    "dev": "npx cross-env PLAYWRIGHT_BROWSERS_PATH=0 node .electron-nuxt/dev.js",
+    "build": "npx rimraf ./node_modules/electron-playwright-browser-installer/dist/.local-browsers/* && npx cross-env PLAYWRIGHT_BROWSERS_PATH=0 FULL_BUILD node .electron-nuxt/build.js",
+    "build:fast": "npx rimraf ./node_modules/electron-playwright-browser-installer/dist/.local-browsers/* && npx cross-env PLAYWRIGHT_BROWSERS_PATH=0 CSC_IDENTITY_AUTO_DISCOVERY=false node .electron-nuxt/build.js",
     "test": "jest",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
     "lint:fix": "eslint --fix --ext .js,.vue --ignore-path .gitignore .",
-    "preinstall": "npx cross-env PLAYWRIGHT_BROWSERS_PATH=0 && node .electron-nuxt/check-engines.js",
+    "preinstall": "npx cross-env PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 node .electron-nuxt/check-engines.js",
     "postinstall": "electron-builder install-app-deps",
     "postinstall_OLD": "yarn run install:playwright && electron-builder install-app-deps",
     "install:playwright": "node ./scripts/install-playwright.js",
     "install:github-action": "cd ./.github/actions && yarn install",
     "storybook": "start-storybook",
-    "debug:playwright": "npx cross-env DEBUG=pw:browser* yarn run dev"
+    "debug:playwright": "npx cross-env DEBUG=pw:browser* yarn run dev",
+    "debug:build:mac": "yarn build:fast && open ./build/mac/Reflex.app --args --debug=5858 --remote-debugging-port=8315 & open -a \"Google Chrome\" http://localhost:8315 & open -a \"Google Chrome\" http://localhost:8080/debug?ws=localhost:8080&port=5858"
   },
   "engines": {
     "node": ">=12.13.0"
@@ -38,6 +40,9 @@
       "^@/(.*)$": "<rootDir>/src/renderer/$1",
       "^~/(.*)$": "<rootDir>/src/renderer/$1"
     }
+  },
+  "dependencies": {
+    "electron-playwright-browser-installer": "file:../electron-playwright-browser-installer"
   },
   "devDependencies": {
     "@babel/runtime-corejs2": "7.12.5",
@@ -62,13 +67,13 @@
     "browser-env": "3.3.0",
     "comlink": "^4.3.0",
     "comlink-loader": "^2.0.0",
-    "core-js": "3.8.1",
+    "core-js": "3.8.2",
     "cross-env": "^7.0.3",
     "deepmerge": "4.2.2",
     "devtron": "^1.4.0",
     "dotenv": "^8.2.0",
     "electron": "^11.0.0",
-    "electron-builder": "^22.9.0",
+    "electron-builder": "^22.9.1",
     "electron-debug": "3.2.0",
     "electron-is-dev": "1.2",
     "electron-log": "^4.3.0",
