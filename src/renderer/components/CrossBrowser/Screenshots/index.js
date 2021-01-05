@@ -3,6 +3,8 @@ import { reactive, watchEffect } from '@vue/composition-api'
 // https://github.com/GoogleChromeLabs/comlink-loader#singleton-mode
 import { CrossBrowserScreenshot } from '@/workers/playwright.worker'
 
+import { remote } from 'electron'
+
 // Keep track of all the open browser contexts
 // This data can be accessed reactively
 export const browserContexts = reactive({
@@ -106,6 +108,7 @@ export async function takeScreenshots(
       width,
       x,
       y,
+      isPackaged: remote.app.isPackaged,
     })
     const { contextId } = instance
 
