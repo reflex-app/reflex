@@ -1,6 +1,6 @@
 const { promises: fs } = require('fs')
 const path = require('path')
-const { spawn } = require('child_process')
+const { spawnSync, spawn } = require('child_process')
 const { PROJECT_ROOT, RESOURCES_DIR } = require('../.electron-nuxt/config') // Import from Electron-Nuxt
 
 const input = `${PROJECT_ROOT}/node_modules/playwright/.local-browsers` // Don't forget the last '/' or terminal may think its a file
@@ -10,32 +10,46 @@ const browsers = ['chromium', 'firefox', 'webkit']
 ;(async () => {
   // This will copy the .local-browsers binaries that Playwright installed for us
   // into the resources directory for the final app
-  // const output = `${RESOURCES_DIR}/.local-browsers/` // Should be this! // Waiting on https://github.com/electron-userland/electron-builder/issues/5500
 
   // Check if input directory exists
   const dirExists = await ls(input)
 
-  // Check if Playwright's .local-browsers exist...
+  // Check if Playwright's node_modules/playwright/.local-browsers exist...
   if (dirExists) {
     console.log('Playwright directory exists')
-
-    // Call the other functions
-    // TEMPORARILY DISABLED BUT SHOULD BE RE-ENABLED IF NO LONGER USING NODE_MODULES
-    // Copy the contents of node_modules/playwright/.local-browsers into the app's resources directory
-    // https://stackoverflow.com/a/64255382/1114901
-    // await copyDir(input, output).catch(errorHandler)
-    // shx https://stackoverflow.com/a/59823713/1114901
-    // await runExec(`npx shx cp ${input} ${output}`)
 
     // STEP: Check to make sure the browser binaries exist
     const sanityCheck = await checkIfDirHasBinaries(output)
 
     if (sanityCheck) {
       console.log(`Browser binaries for ${browsers} exist at: ${output}.`)
+
+      // WORKAROUND
+      // via https://github.com/bitwarden/desktop/issues/320#issuecomment-540775836
+      // Manually sign all the browser binaries
+      const signBinaries = async (dirPath) => {
+        await runExec(`sudo xattr -cr ${dirPath}`)
+
+        const allFiles = await rreaddir(path)
+        console.log(allFiles)
+
+        // Sign each thing
+        await runExec(`codesign --force --deep --sign - ${dirPath}`)
+
+        // Check to see if it worked
+        await runExec(`codesign --verify --verbose ${dirPath}`)
+      }
+
+      // Firefox
+      await signBinaries(`${input}/firefox-1221/firefox/Nightly.app`)
+      await signBinaries(`${input}/webkit-1402/`)
+      // await signBinaries(`${input}/firefox-1221/firefox/Nightly.app`)
+      // await signBinaries(`${input}/webkit-1402/Playwright.app`)
+
       return true // Done
     } else {
       console.error(`Missing a browser binary! Found: ${dirExists}`)
-      return await reInstall() // Re-install
+      return false
     }
   } else {
     // if not, re-install Playwright
@@ -43,41 +57,9 @@ const browsers = ['chromium', 'firefox', 'webkit']
     console.log(`.local-browsers directory not found at ${input}`)
 
     // Finish after the next script
-    return await reInstall()
+    return false
   }
 })()
-
-// Re-install script
-async function reInstall() {
-  console.log(`Installing Playwright properly... (this may take a while)`)
-
-  // NOTE: Node 14.0 had issues when installing packages. Using Node >14.x seems to work.
-  // See: https://github.com/microsoft/playwright/issues/4033#issuecomment-702325569
-
-  process.env.PLAYWRIGHT_BROWSERS_PATH = 0 // Set the environment
-
-  if (process.env.PLAYWRIGHT_BROWSERS_PATH !== '0') {
-    console.error(
-      'Env is not configured correctly. PLAYWRIGHT_BROWSERS_PATH is not 0.'
-    )
-    process.exit(0)
-  }
-
-  // Install dependency (default for Yarn)
-  // --no-bin-links: Prevent symlinks to binaries
-  // await runExec(`yarn add playwright`)
-  await runExec(`npx cross-env PLAYWRIGHT_BROWSERS_PATH=0 yarn add playwright`)
-
-  // Check to see if it worked
-  const installed = await checkIfDirHasBinaries(output)
-  if (!installed) {
-    console.error(
-      `Not installed. Make sure that the env variable exists (PLAYWRIGHT_BROWSERS_PATH=0) and there wasn't any issues with the download.`
-    )
-    process.exit(0)
-    // await runExec(`node ./node_modules/playwright/install.js`)
-  }
-}
 
 async function checkIfDirHasBinaries(dir) {
   // Get an array of files & directories in the resources path
@@ -159,14 +141,33 @@ async function copyDir(src, dest) {
   }
 }
 
+// Get all the sub-directories and files, individually sign them
+// https://gist.github.com/timoxley/0cb5053dec107499c8aabad8dfd651ea#file-1-rreaddir-js
+async function rreaddir(dir, allFiles = []) {
+  const files = (await fs.readdir(dir)).map((f) => path.join(dir, f))
+  allFiles.push(...files)
+  await Promise.all(
+    files.map(
+      async (f) => (await fs.stat(f)).isDirectory() && rreaddir(f, allFiles)
+    )
+  )
+  return allFiles
+}
+
 // Find all files & folders at a path
 // https://stackoverflow.com/a/59042581/1114901
-async function ls(path) {
+async function ls(filePath) {
   try {
     const tempArr = []
-    const dir = await fs.opendir(path) // Opens a stream https://nodejs.org/api/fs.html#fs_class_fs_dir
+
+    const dir = await fs.opendir(filePath) // Opens a stream https://nodejs.org/api/fs.html#fs_class_fs_dir
 
     for await (const dirent of dir) {
+      // if (dirent.isDirectory) {
+      //   // The entry is a Directory! Let's iterate through it!
+      //   console.log(path.join(dir.path, dirent.name))
+      //   await ls(path.join(dir.path, dirent.name)) // Pass in the path to the directory
+      // }
       tempArr.push(dirent.name)
     }
 
