@@ -1,4 +1,4 @@
-const isFullBuild = !!process.env.FULL_BUILD // true or false
+const isFullBuild = !!process.env.FULLBUILD // true or false
 const ICONS_DIR = 'build/icons/'
 
 console.log('Is release?', isFullBuild)

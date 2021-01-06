@@ -1,9 +1,15 @@
 // This all runs within a Web Worker
 // ... but it's special because it has access to the Node modules because of Electron!
+
 import path from 'path'
-import playwright from 'playwright'
 import { v1 as uuid } from 'uuid'
 import log from 'electron-log'
+import { getPackagedPlaywrightExecPath } from 'electron-playwright-browser-installer'
+import playwright from 'playwright-core'
+// const { chromium, webkit, firefox } = require('playwright-core')
+
+process.env.PLAYWRIGHT_BROWSERS_PATH = 0
+log.info(getPackagedPlaywrightExecPath)
 
 export class CrossBrowserScreenshot {
   constructor(options) {
@@ -88,31 +94,4 @@ export class CrossBrowserScreenshot {
       return false
     }
   }
-}
-
-// Amend the Playwright executable path when packaged
-// via https://github.com/puppeteer/puppeteer/issues/2134#issuecomment-408221446
-function getPackagedPlaywrightExecPath(browser) {
-  function replaceAll(str, mapObj) {
-    const re = new RegExp(Object.keys(mapObj).join('|'), 'gi')
-
-    return str.replace(re, function (matched) {
-      return mapObj[matched.toLowerCase()]
-    })
-  }
-
-  const mapObj = {
-    playwright: 'electron-playwright-browser-installer',
-    'app.asar': 'app.asar.unpacked',
-  }
-
-  const initialPath = playwright[browser].executablePath()
-  const updatedPath = replaceAll(initialPath, mapObj)
-  console.log(
-    'Is the path the same as initially?',
-    initialPath === updatedPath,
-    `Changed to: ${updatedPath}`
-  )
-
-  return updatedPath
 }

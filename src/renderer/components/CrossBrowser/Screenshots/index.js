@@ -109,6 +109,8 @@ export async function takeScreenshots(
       x,
       y,
       isPackaged: remote.app.isPackaged,
+    }).catch((err) => {
+      console.error(err)
     })
     const { contextId } = instance
 

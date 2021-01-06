@@ -9,8 +9,8 @@
   "main": "./dist/main/index.js",
   "scripts": {
     "dev": "npx cross-env PLAYWRIGHT_BROWSERS_PATH=0 node .electron-nuxt/dev.js",
-    "build": "npx rimraf ./node_modules/electron-playwright-browser-installer/dist/.local-browsers/* && npx cross-env PLAYWRIGHT_BROWSERS_PATH=0 FULL_BUILD node .electron-nuxt/build.js",
-    "build:fast": "npx rimraf ./node_modules/electron-playwright-browser-installer/dist/.local-browsers/* && npx cross-env PLAYWRIGHT_BROWSERS_PATH=0 CSC_IDENTITY_AUTO_DISCOVERY=false node .electron-nuxt/build.js",
+    "build": "yarn clean:local-browsers && npx cross-env PLAYWRIGHT_BROWSERS_PATH=0 FULLBUILD=1 node .electron-nuxt/build.js",
+    "build:fast": "yarn clean:local-browsers && npx cross-env PLAYWRIGHT_BROWSERS_PATH=0 CSC_IDENTITY_AUTO_DISCOVERY=false node .electron-nuxt/build.js",
     "test": "jest",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
     "lint:fix": "eslint --fix --ext .js,.vue --ignore-path .gitignore .",
@@ -21,7 +21,8 @@
     "install:github-action": "cd ./.github/actions && yarn install",
     "storybook": "start-storybook",
     "debug:playwright": "npx cross-env DEBUG=pw:browser* yarn run dev",
-    "debug:build:mac": "yarn build:fast && open ./build/mac/Reflex.app --args --debug=5858 --remote-debugging-port=8315 & open -a \"Google Chrome\" http://localhost:8315 & open -a \"Google Chrome\" http://localhost:8080/debug?ws=localhost:8080&port=5858"
+    "debug:build:mac": "./build/mac/Reflex.app/Contents/MacOS/Reflex --args --remote-debugging-port=8315 & open -a \"Google Chrome\" http://localhost:8315",
+    "clean:local-browsers": "npx rimraf ./node_modules/electron-playwright-browser-installer/dist/.local-browsers/*"
   },
   "engines": {
     "node": ">=12.13.0"
@@ -42,7 +43,9 @@
     }
   },
   "dependencies": {
-    "electron-playwright-browser-installer": "file:../electron-playwright-browser-installer"
+    "electron-playwright-browser-installer": "file:../electron-playwright-browser-installer",
+    "playwright": "^1.7.1",
+    "playwright-core": "^1.7.1"
   },
   "devDependencies": {
     "@babel/runtime-corejs2": "7.12.5",
@@ -91,7 +94,6 @@
     "native-ext-loader": "2.3.0",
     "node-sass": "5.0.0",
     "nuxt": ">2.14.1",
-    "playwright": "^1.7.1",
     "prettier": "^2.0.4",
     "sass-loader": "10.1.0",
     "uuid": "8.3.2",
