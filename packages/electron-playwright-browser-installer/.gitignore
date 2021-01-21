@@ -1,0 +1,5 @@
+node_modules
+.local-browsers
+.log
+.cache
+dist
