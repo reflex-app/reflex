@@ -3,6 +3,7 @@
   "version": "1.4.2",
   "description": "",
   "main": "dist/main.js",
+  "repository": "github:nwittwer/electron-playwright-browser-installer",
   "scripts": {
     "dev": "yarn clean && webpack --watch --mode development",
     "build": "yarn clean && webpack --mode production",
