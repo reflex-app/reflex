@@ -15,39 +15,42 @@
  * limitations under the License.
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ffmpegExecutable = exports.printDepsWindowsExecutable = void 0;
-const fs = require("fs");
-const os = require("os");
-const path = require("path");
+const _ffmpegExecutable = (exports.printDepsWindowsExecutable = void 0);
+export { _ffmpegExecutable as ffmpegExecutable };
+import { existsSync } from "fs";
+import { arch } from "os";
+import { join, dirname } from "path";
+
 function printDepsWindowsExecutable() {
-    return pathToExecutable(['bin', 'PrintDeps.exe']);
+  return pathToExecutable(["bin", "PrintDeps.exe"]);
 }
-exports.printDepsWindowsExecutable = printDepsWindowsExecutable;
+
+const _printDepsWindowsExecutable = printDepsWindowsExecutable;
+export { _printDepsWindowsExecutable as printDepsWindowsExecutable };
+
 function ffmpegExecutable() {
-    let ffmpegName;
-    if (process.platform === 'win32')
-        ffmpegName = os.arch() === 'x64' ? 'ffmpeg-win64.exe' : 'ffmpeg-win32.exe';
-    else if (process.platform === 'darwin')
-        ffmpegName = 'ffmpeg-mac';
-    else
-        ffmpegName = 'ffmpeg-linux';
-    return pathToExecutable(['third_party', 'ffmpeg', ffmpegName]);
+  let ffmpegName;
+  if (process.platform === "win32")
+    ffmpegName = arch() === "x64" ? "ffmpeg-win64.exe" : "ffmpeg-win32.exe";
+  else if (process.platform === "darwin") ffmpegName = "ffmpeg-mac";
+  else ffmpegName = "ffmpeg-linux";
+  return pathToExecutable(["third_party", "ffmpeg", ffmpegName]);
 }
-exports.ffmpegExecutable = ffmpegExecutable;
+
+const _ffmpegExecutable = ffmpegExecutable;
+export { _ffmpegExecutable as ffmpegExecutable };
+
 function pathToExecutable(relative) {
-    const defaultPath = path.join(__dirname, '..', '..', ...relative);
-    const localPath = path.join(path.dirname(process.argv[0]), relative[relative.length - 1]);
-    try {
-        if (fs.existsSync(defaultPath))
-            return defaultPath;
-    }
-    catch (e) {
-    }
-    try {
-        if (fs.existsSync(localPath))
-            return localPath;
-    }
-    catch (e) {
-    }
+  const defaultPath = join(__dirname, "..", "..", ...relative);
+  const localPath = join(
+    dirname(process.argv[0]),
+    relative[relative.length - 1]
+  );
+  try {
+    if (existsSync(defaultPath)) return defaultPath;
+  } catch (e) {}
+  try {
+    if (existsSync(localPath)) return localPath;
+  } catch (e) {}
 }
 //# sourceMappingURL=binaryPaths.js.map
