@@ -1,8 +1,7 @@
 import { reactive, watchEffect } from '@vue/composition-api'
-// Exposes the Web Worker using Comlink
+// Expose the Web Worker using Comlink (via webpack-loader)
 // https://github.com/GoogleChromeLabs/comlink-loader#singleton-mode
 import { CrossBrowserScreenshot } from '@/workers/playwright.worker'
-
 import { remote } from 'electron'
 
 // Keep track of all the open browser contexts
@@ -13,6 +12,75 @@ export const browserContexts = reactive({
 
 // Log changes to the browser contextss
 watchEffect(() => console.log('browser contexts', browserContexts.active))
+
+export async function takeScreenshots(
+  { url = '', browsers = [], height = 0, width = 0, x = 0, y = 0 },
+  callback = () => {}
+) {
+  const screenshotPromiseGenerator = async (browserName) => {
+    // NOTE: The following NEEDS to have the await beforehand
+    // It is communicating with a Web Worker via Comlink
+    const instance = await new CrossBrowserScreenshot({
+      url,
+      browser: browserName,
+      height,
+      width,
+      x,
+      y,
+      isPackaged: remote.app.isPackaged,
+    }).catch((err) => {
+      console.error(err)
+    })
+    const { contextId } = instance
+
+    try {
+      // Track the context
+      browserContexts.active.push({ id: contextId, type: browserName })
+
+      // Take the screenshot
+      const screenshots = await instance.takeScreenshot()
+
+      // Stop tracking this context
+      removeBrowserContext(contextId)
+
+      return { type: browserName, img: screenshots }
+    } catch (err) {
+      removeBrowserContext(contextId)
+      console.error(err)
+    }
+
+    // Remove this ID from the list of active
+    function removeBrowserContext(id) {
+      browserContexts.active = browserContexts.active.filter(
+        (i) => !i.id === id
+      )
+    }
+  }
+
+  // Loop through each browser
+  // Store a promise for each browser
+  const promises = browsers.map(screenshotPromiseGenerator)
+
+  // Trigger callback (optional) every time one finishes
+  promises.forEach((promise) => {
+    promise.then((d) => {
+      if (!d) return false
+      console.log('browser finished', d)
+      callback(d)
+    })
+  })
+
+  // Wait until they all complete
+  const data = await Promise.all(promises)
+  console.log(data)
+  return data
+}
+
+// Convert an image buffer into base64
+export function toBase64Image(image) {
+  const output = image.toString('base64')
+  return `data:image/png;base64, ${output}`
+}
 
 // A single browser's screenshot
 // class CrossBrowserScreenshot {
@@ -92,74 +160,3 @@ watchEffect(() => console.log('browser contexts', browserContexts.active))
 //     }
 //   }
 // }
-
-export async function takeScreenshots(
-  { url = '', browsers = [], height = 0, width = 0, x = 0, y = 0 },
-  callback = () => {}
-) {
-  // Loop through each browser
-  const screenshotPromiseGenerator = async (browserName) => {
-    // NOTE: The following NEEDS to have the await beforehand
-    // It is communicating with a Web Worker via Comlink
-    const instance = await new CrossBrowserScreenshot({
-      url,
-      browser: browserName,
-      height,
-      width,
-      x,
-      y,
-      isPackaged: remote.app.isPackaged,
-    }).catch((err) => {
-      console.error(err)
-    })
-    const { contextId } = instance
-
-    try {
-      // Track the context
-      browserContexts.active.push({ id: contextId, type: browserName })
-
-      // Take the screenshot
-      const screenshots = await instance.takeScreenshot()
-
-      // Stop tracking this context
-      removeBrowserContext(contextId)
-
-      return { type: browserName, img: screenshots }
-    } catch (err) {
-      removeBrowserContext(contextId)
-      console.error(err)
-    }
-
-    // Remove this ID from the list of active
-    function removeBrowserContext(id) {
-      browserContexts.active = browserContexts.active.filter(
-        (i) => !i.id === id
-      )
-    }
-  }
-
-  // Loop through each browser
-  // Store a promise for each browser
-  const promises = browsers.map(screenshotPromiseGenerator)
-
-  //  Trigger callback (optional) every time one finishes
-  promises.forEach((promise) => {
-    // Return the result
-    promise.then((d) => {
-      if (!d) return false
-      console.log('browser finished', d)
-      callback(d)
-    })
-  })
-
-  // Wait until they all complete
-  const data = await Promise.all(promises)
-  console.log(data)
-  return data
-}
-
-// Convert an image buffer into base64
-export function toBase64Image(image) {
-  const output = image.toString('base64')
-  return `data:image/png;base64, ${output}`
-}
