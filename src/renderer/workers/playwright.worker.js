@@ -1,15 +1,32 @@
 // This all runs within a Web Worker
 // ... but it's special because it has access to the Node modules because of Electron!
+// We have access to the process.env
+// We can use Node packages
 
-import path from 'path'
+// import path from 'path'
 import { v1 as uuid } from 'uuid'
 import log from 'electron-log'
-import { getPackagedPlaywrightExecPath } from 'electron-playwright-browser-installer'
-import playwright from 'playwright-core'
+// import {
+//   getPackagedPlaywrightExecPath,
+// } from 'electron-playwright-browser-installer'
+
+log.info('Hi!!!', [process, process.env, process.env.PLAYWRIGHT_BROWSERS_PATH])
+
+// log.info('core', require('playwright-core'))
+const playwright = require('playwright-core')
+log.info('still going!', playwright)
+
+// const {
+//   getPackagedPlaywrightExecPath,
+// } = require('electron-playwright-browser-installer')
+
+// const getPackagedPlaywrightExecPath = ''
+// const lib = require('electron-playwright-browser-installer')
+
+// import playwright from 'playwright-core'
 // const { chromium, webkit, firefox } = require('playwright-core')
 
-process.env.PLAYWRIGHT_BROWSERS_PATH = 0
-log.info(getPackagedPlaywrightExecPath)
+// process.env.PLAYWRIGHT_BROWSERS_PATH = 0
 
 export class CrossBrowserScreenshot {
   constructor(options) {
@@ -24,30 +41,21 @@ export class CrossBrowserScreenshot {
     this.y = options.y || 0
     this.isLoading = false // Initial state
     this.contextId = uuid() // the ID of this context
-    this.isPackaged = options.isPackaged || false
+    this.isPackaged = options.isPackaged || false // Whether or not the app is packaged or in dev
+    // this.browserExecPath = options.browserExecPath || '' // Where the browsers are stored
   }
 
   async takeScreenshot() {
     log.info(
       `Preparing to launch ${this.browser}, ${this.contextId}`,
-      `Packaged? ${this.isPackaged}`,
-      {
-        browsers:
-          process.env.PLAYWRIGHT_BROWSERS_PATH === '0'
-            ? path.join(
-                '/path/to/project',
-                '/node_modules/electron-playwright-browser-installer/dist/.local-browsers'
-              ) // It's using the node_modules
-            : process.env.PLAYWRIGHT_BROWSERS_PATH, // Otherwise should be a defined path
-      }
+      `Packaged? ${this.isPackaged}`
     )
+
     this.isLoading = true // Update loading state
 
     const browser = await playwright[this.browser].launch({
       /* headless: false */
-      executablePath: this.isPackaged
-        ? getPackagedPlaywrightExecPath(this.browser)
-        : '', // Replace the path when packaged (ASAR)
+      executablePath: getPlaywrightExecPath(this.isPackaged, this.browser), // Replace the path when packaged (ASAR)
     })
 
     const context = await browser.newContext({
@@ -94,4 +102,49 @@ export class CrossBrowserScreenshot {
       return false
     }
   }
+}
+
+// Amend the Playwright executable path when run locally and packaged
+// It does not actually get installed at playwright-core
+// via https://github.com/puppeteer/puppeteer/issues/2134#issuecomment-408221446
+function getPlaywrightExecPath(isPackaged, browser) {
+  if (!browser) console.error('No browser name given.')
+
+  function replaceAll(str, mapObj) {
+    const re = new RegExp(Object.keys(mapObj).join('|'), 'gi')
+    return str.replace(re, function (matched) {
+      return mapObj[matched.toLowerCase()]
+    })
+  }
+
+  let mapObj = {}
+
+  switch (isPackaged) {
+    case true:
+      // packaged version
+      mapObj = {
+        'playwright-core': 'electron-playwright-browser-installer/dist',
+        'app.asar': 'app.asar.unpacked',
+      }
+      break
+
+    case false:
+      // dev version
+      mapObj = {
+        'playwright-core': 'electron-playwright-browser-installer/dist',
+      }
+      break
+  }
+
+  // Generate the correct paths
+  // console.log("Playwright module", !!playwright);
+  const initialPath = playwright[browser].executablePath()
+  const updatedPath = replaceAll(initialPath, mapObj)
+  console.log(
+    'Is the path the same as initially?',
+    initialPath === updatedPath,
+    `Changed to: ${updatedPath}`
+  )
+
+  return updatedPath
 }

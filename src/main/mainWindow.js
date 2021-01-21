@@ -40,9 +40,9 @@ winHandler.onCreated((browserWindow) => {
   // just in case there was a fatal bug
   // with their current release
   autoUpdater(browserWindow)
-
+ 
   // Check for browser installations
-  browserInstaller()
+  browserInstaller(winHandler)
 
   // Log the version
   log.info(`Version ${app.getVersion()}`)

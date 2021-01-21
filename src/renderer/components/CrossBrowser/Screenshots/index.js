@@ -2,8 +2,26 @@ import { reactive, watchEffect } from '@vue/composition-api'
 // Exposes the Web Worker using Comlink
 // https://github.com/GoogleChromeLabs/comlink-loader#singleton-mode
 import { CrossBrowserScreenshot } from '@/workers/playwright.worker'
+import { remote, ipcRenderer } from 'electron'
 
-import { remote } from 'electron'
+// // Expose the browser paths
+// // These are filled in later
+// let browserExecPaths = {
+//   chromium: null,
+//   webkit: null,
+//   firefox: null,
+// }
+
+// ipcRenderer.on('PLAYWRIGHT_BROWSER_EXEC_PATHS', (e, obj) => {
+//   // Replace each matching key's value
+//   for (const [key, value] of Object.entries(obj)) {
+//     browserExecPaths[key] = value // Set to a new value
+//   }
+//   console.log('PLAYWRIGHT_BROWSER_EXEC_PATHS', browserExecPaths)
+
+//   // Replace
+//   browserExecPaths = JSON.parse(JSON.stringify(obj))
+// })
 
 // Keep track of all the open browser contexts
 // This data can be accessed reactively
@@ -13,6 +31,78 @@ export const browserContexts = reactive({
 
 // Log changes to the browser contextss
 watchEffect(() => console.log('browser contexts', browserContexts.active))
+
+export async function takeScreenshots(
+  { url = '', browsers = [], height = 0, width = 0, x = 0, y = 0 },
+  callback = () => {}
+) {
+  // Loop through each browser
+  const screenshotPromiseGenerator = async (browserName) => {
+    // NOTE: The following NEEDS to have the await beforehand
+    // It is communicating with a Web Worker via Comlink
+    const instance = await new CrossBrowserScreenshot({
+      url,
+      browser: browserName,
+      height,
+      width,
+      x,
+      y,
+      isPackaged: remote.app.isPackaged,
+      // browserExecPaths: browserExecPaths[browserName],
+    }).catch((err) => {
+      console.error(err)
+    })
+    const { contextId } = instance
+
+    try {
+      // Track the context
+      browserContexts.active.push({ id: contextId, type: browserName })
+
+      // Take the screenshot
+      const screenshots = await instance.takeScreenshot()
+
+      // Stop tracking this context
+      removeBrowserContext(contextId)
+
+      return { type: browserName, img: screenshots }
+    } catch (err) {
+      removeBrowserContext(contextId)
+      console.error(err)
+    }
+
+    // Remove this ID from the list of active
+    function removeBrowserContext(id) {
+      browserContexts.active = browserContexts.active.filter(
+        (i) => !i.id === id
+      )
+    }
+  }
+
+  // Loop through each browser
+  // Store a promise for each browser
+  const promises = browsers.map(screenshotPromiseGenerator)
+
+  //  Trigger callback (optional) every time one finishes
+  promises.forEach((promise) => {
+    // Return the result
+    promise.then((d) => {
+      if (!d) return false
+      console.log('browser finished', d)
+      callback(d)
+    })
+  })
+
+  // Wait until they all complete
+  const data = await Promise.all(promises)
+  console.log(data)
+  return data
+}
+
+// Convert an image buffer into base64
+export function toBase64Image(image) {
+  const output = image.toString('base64')
+  return `data:image/png;base64, ${output}`
+}
 
 // A single browser's screenshot
 // class CrossBrowserScreenshot {
@@ -92,74 +182,3 @@ watchEffect(() => console.log('browser contexts', browserContexts.active))
 //     }
 //   }
 // }
-
-export async function takeScreenshots(
-  { url = '', browsers = [], height = 0, width = 0, x = 0, y = 0 },
-  callback = () => {}
-) {
-  // Loop through each browser
-  const screenshotPromiseGenerator = async (browserName) => {
-    // NOTE: The following NEEDS to have the await beforehand
-    // It is communicating with a Web Worker via Comlink
-    const instance = await new CrossBrowserScreenshot({
-      url,
-      browser: browserName,
-      height,
-      width,
-      x,
-      y,
-      isPackaged: remote.app.isPackaged,
-    }).catch((err) => {
-      console.error(err)
-    })
-    const { contextId } = instance
-
-    try {
-      // Track the context
-      browserContexts.active.push({ id: contextId, type: browserName })
-
-      // Take the screenshot
-      const screenshots = await instance.takeScreenshot()
-
-      // Stop tracking this context
-      removeBrowserContext(contextId)
-
-      return { type: browserName, img: screenshots }
-    } catch (err) {
-      removeBrowserContext(contextId)
-      console.error(err)
-    }
-
-    // Remove this ID from the list of active
-    function removeBrowserContext(id) {
-      browserContexts.active = browserContexts.active.filter(
-        (i) => !i.id === id
-      )
-    }
-  }
-
-  // Loop through each browser
-  // Store a promise for each browser
-  const promises = browsers.map(screenshotPromiseGenerator)
-
-  //  Trigger callback (optional) every time one finishes
-  promises.forEach((promise) => {
-    // Return the result
-    promise.then((d) => {
-      if (!d) return false
-      console.log('browser finished', d)
-      callback(d)
-    })
-  })
-
-  // Wait until they all complete
-  const data = await Promise.all(promises)
-  console.log(data)
-  return data
-}
-
-// Convert an image buffer into base64
-export function toBase64Image(image) {
-  const output = image.toString('base64')
-  return `data:image/png;base64, ${output}`
-}
