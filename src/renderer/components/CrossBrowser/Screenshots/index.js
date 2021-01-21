@@ -1,27 +1,8 @@
 import { reactive, watchEffect } from '@vue/composition-api'
-// Exposes the Web Worker using Comlink
+// Expose the Web Worker using Comlink (via webpack-loader)
 // https://github.com/GoogleChromeLabs/comlink-loader#singleton-mode
 import { CrossBrowserScreenshot } from '@/workers/playwright.worker'
-import { remote, ipcRenderer } from 'electron'
-
-// // Expose the browser paths
-// // These are filled in later
-// let browserExecPaths = {
-//   chromium: null,
-//   webkit: null,
-//   firefox: null,
-// }
-
-// ipcRenderer.on('PLAYWRIGHT_BROWSER_EXEC_PATHS', (e, obj) => {
-//   // Replace each matching key's value
-//   for (const [key, value] of Object.entries(obj)) {
-//     browserExecPaths[key] = value // Set to a new value
-//   }
-//   console.log('PLAYWRIGHT_BROWSER_EXEC_PATHS', browserExecPaths)
-
-//   // Replace
-//   browserExecPaths = JSON.parse(JSON.stringify(obj))
-// })
+import { remote } from 'electron'
 
 // Keep track of all the open browser contexts
 // This data can be accessed reactively
@@ -36,7 +17,6 @@ export async function takeScreenshots(
   { url = '', browsers = [], height = 0, width = 0, x = 0, y = 0 },
   callback = () => {}
 ) {
-  // Loop through each browser
   const screenshotPromiseGenerator = async (browserName) => {
     // NOTE: The following NEEDS to have the await beforehand
     // It is communicating with a Web Worker via Comlink
@@ -48,7 +28,6 @@ export async function takeScreenshots(
       x,
       y,
       isPackaged: remote.app.isPackaged,
-      // browserExecPaths: browserExecPaths[browserName],
     }).catch((err) => {
       console.error(err)
     })
@@ -82,9 +61,8 @@ export async function takeScreenshots(
   // Store a promise for each browser
   const promises = browsers.map(screenshotPromiseGenerator)
 
-  //  Trigger callback (optional) every time one finishes
+  // Trigger callback (optional) every time one finishes
   promises.forEach((promise) => {
-    // Return the result
     promise.then((d) => {
       if (!d) return false
       console.log('browser finished', d)

@@ -39,22 +39,10 @@ module.exports = {
 
       // Using WebPack to bundle Playwright/Puppeteer
       // https://stackoverflow.com/a/53744505/1114901
-      if (!config.externals) config.externals = {}
-      config.externals = {
-        'playwright-core': 'playwright-core',
-      }
-      // const useExternals = require('webpack-node-externals') // https://stackoverflow.com/a/53744505/1114901
-      // config.externals = useExternals({
-      //   // allowlist: ['/^comlink/'],
-      // })
-      // config.externals.push(
-      //   useExternals({
-      //     allowlist: ['/^comlink/'],
-      //   }),
-      //   {
-      //     playwright: "require('playwright')")
-      //   }
-      // )
+      // if (!config.externals) config.externals = {}
+      // config.externals = {
+      //   'playwright-core': 'playwright-core',
+      // }
     },
   },
 }
