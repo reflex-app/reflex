@@ -1,0 +1,148 @@
+"use strict";
+/**
+ * Copyright Microsoft Corporation. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+Object.defineProperty(exports, "__esModule", { value: true });
+// exports.installBrowsersWithProgressBar = void 0;
+const crypto = require("crypto");
+const fs = require("fs");
+const path = require("path");
+const util = require("util");
+const removeFolder = require("rimraf");
+const lockfile = require("proper-lockfile");
+const browserPaths = require("../utils/browserPaths");
+const browserFetcher = require("./browserFetcher");
+const utils_1 = require("../utils/utils");
+const fsMkdirAsync = util.promisify(fs.mkdir.bind(fs));
+const fsReaddirAsync = util.promisify(fs.readdir.bind(fs));
+const fsReadFileAsync = util.promisify(fs.readFile.bind(fs));
+const fsExistsAsync = (filePath) =>
+  fsReadFileAsync(filePath)
+    .then(() => true)
+    .catch((e) => false);
+const fsUnlinkAsync = util.promisify(fs.unlink.bind(fs));
+const fsWriteFileAsync = util.promisify(fs.writeFile.bind(fs));
+const removeFolderAsync = util.promisify(removeFolder);
+
+export async function installBrowsersWithProgressBar(packagePath) {
+  if (process.env.PLAYWRIGHT_BROWSERS_PATH !== "0") {
+    console.error("Missing or incorrect PLAYWRIGHT_BROWSERS_PATH env");
+  }
+
+  // PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD should have a value of 0 or 1
+  if (utils_1.getAsBooleanFromENV("PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD")) {
+    browserFetcher.logPolitely(
+      "Skipping browsers download because `PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD` env variable is set"
+    );
+    return false;
+  }
+  const browsersPath = browserPaths.browsersPath(packagePath);
+  await fsMkdirAsync(browsersPath, { recursive: true });
+  const lockfilePath = path.join(browsersPath, "__dirlock");
+  const releaseLock = await lockfile.lock(browsersPath, {
+    retries: {
+      retries: 10,
+      // Retry 20 times during 10 minutes with
+      // exponential back-off.
+      // See documentation at: https://www.npmjs.com/package/retry#retrytimeoutsoptions
+      factor: 1.27579,
+    },
+    onCompromised: (err) => {
+      throw new Error(`${err.message} Path: ${lockfilePath}`);
+    },
+    lockfilePath,
+  });
+  const linksDir = path.join(browsersPath, ".links");
+  await fsMkdirAsync(linksDir, { recursive: true });
+  await fsWriteFileAsync(path.join(linksDir, sha1(packagePath)), packagePath);
+  await validateCache(packagePath, browsersPath, linksDir);
+  await releaseLock();
+}
+// exports.installBrowsersWithProgressBar = installBrowsersWithProgressBar;
+
+export async function validateCache(packagePath, browsersPath, linksDir) {
+  // 1. Collect used downloads and package descriptors.
+  const usedBrowserPaths = new Set();
+  for (const fileName of await fsReaddirAsync(linksDir)) {
+    const linkPath = path.join(linksDir, fileName);
+    let linkTarget = "";
+    try {
+      linkTarget = (await fsReadFileAsync(linkPath)).toString();
+      const browsersToDownload = await readBrowsersToDownload(linkTarget);
+      for (const browser of browsersToDownload) {
+        const usedBrowserPath = browserPaths.browserDirectory(
+          browsersPath,
+          browser
+        );
+        const browserRevision = parseInt(browser.revision, 10);
+        // Old browser installations don't have marker file.
+        const shouldHaveMarkerFile =
+          (browser.name === "chromium" && browserRevision >= 786218) ||
+          (browser.name === "firefox" && browserRevision >= 1128) ||
+          (browser.name === "webkit" && browserRevision >= 1307);
+        if (
+          !shouldHaveMarkerFile ||
+          (await fsExistsAsync(
+            browserPaths.markerFilePath(browsersPath, browser)
+          ))
+        )
+          usedBrowserPaths.add(usedBrowserPath);
+      }
+    } catch (e) {
+      if (linkTarget)
+        browserFetcher.logPolitely(
+          "Failed to process descriptor at " + linkTarget
+        );
+      await fsUnlinkAsync(linkPath).catch((e) => {});
+    }
+  }
+  // 2. Delete all unused browsers.
+  let downloadedBrowsers = (await fsReaddirAsync(browsersPath)).map((file) =>
+    path.join(browsersPath, file)
+  );
+  downloadedBrowsers = downloadedBrowsers.filter((file) =>
+    browserPaths.isBrowserDirectory(file)
+  );
+  const directories = new Set(downloadedBrowsers);
+  for (const browserPath of usedBrowserPaths) directories.delete(browserPath);
+  for (const directory of directories) {
+    browserFetcher.logPolitely("Removing unused browser at " + directory);
+    await removeFolderAsync(directory).catch((e) => {});
+  }
+  // 3. Install missing browsers for this package.
+  const myBrowsersToDownload = await readBrowsersToDownload(packagePath);
+  for (const browser of myBrowsersToDownload) {
+    await browserFetcher.downloadBrowserWithProgressBar(browsersPath, browser);
+    await fsWriteFileAsync(
+      browserPaths.markerFilePath(browsersPath, browser),
+      ""
+    );
+  }
+}
+
+export async function readBrowsersToDownload(packagePath) {
+  const browsers = JSON.parse(
+    (await fsReadFileAsync(path.join(packagePath, "browsers.json"))).toString()
+  )["browsers"];
+  // Older versions do not have "download" field. We assume they need all browsers
+  // from the list. So we want to skip all browsers that are explicitly marked as "download: false".
+  return browsers.filter((browser) => browser.download !== false);
+}
+function sha1(data) {
+  const sum = crypto.createHash("sha1");
+  sum.update(data);
+  return sum.digest("hex");
+}
+//# sourceMappingURL=installer.js.map
