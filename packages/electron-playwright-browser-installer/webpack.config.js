@@ -106,12 +106,7 @@ module.exports = (env, argv) => {
     //   electron: true,
     // },
     // Build for a Node environment https://webpack.js.org/configuration/target/
-    // NOTE:
     target: "node",
-    // node: {
-    //   __dirname: false,
-    //   __filename: false,
-    // },
     output: {
       // https://stackoverflow.com/a/65452278/1114901
       path: path.resolve(__dirname, "dist/"),
