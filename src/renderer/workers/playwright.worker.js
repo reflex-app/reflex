@@ -6,27 +6,7 @@
 // import path from 'path'
 import { v1 as uuid } from 'uuid'
 import log from 'electron-log'
-// import {
-//   getPackagedPlaywrightExecPath,
-// } from 'electron-playwright-browser-installer'
-
-log.info('Hi!!!', [process, process.env, process.env.PLAYWRIGHT_BROWSERS_PATH])
-
-// log.info('core', require('playwright-core'))
 const playwright = require('playwright-core')
-log.info('still going!', playwright)
-
-// const {
-//   getPackagedPlaywrightExecPath,
-// } = require('electron-playwright-browser-installer')
-
-// const getPackagedPlaywrightExecPath = ''
-// const lib = require('electron-playwright-browser-installer')
-
-// import playwright from 'playwright-core'
-// const { chromium, webkit, firefox } = require('playwright-core')
-
-// process.env.PLAYWRIGHT_BROWSERS_PATH = 0
 
 export class CrossBrowserScreenshot {
   constructor(options) {
@@ -42,7 +22,6 @@ export class CrossBrowserScreenshot {
     this.isLoading = false // Initial state
     this.contextId = uuid() // the ID of this context
     this.isPackaged = options.isPackaged || false // Whether or not the app is packaged or in dev
-    // this.browserExecPath = options.browserExecPath || '' // Where the browsers are stored
   }
 
   async takeScreenshot() {
