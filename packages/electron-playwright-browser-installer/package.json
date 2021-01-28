@@ -1,12 +1,12 @@
 {
   "name": "electron-playwright-browser-installer",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "description": "",
   "main": "dist/main.js",
   "repository": "github:nwittwer/electron-playwright-browser-installer",
   "scripts": {
-    "dev": "yarn clean && webpack --watch --mode development",
-    "build": "yarn clean && webpack --mode production",
+    "dev": "yarn clean && yarn playwright-var && webpack --watch --mode development",
+    "build": "yarn clean && yarn playwright-var && webpack --mode production",
     "browsers": "yarn playwright-var && node .src/index.js",
     "test": "yarn playwright-var && node ./src/test.js",
     "clean": "rm -rf dist/*",
@@ -19,11 +19,8 @@
   ],
   "author": "",
   "license": "ISC",
-  "peerDependencies": {
-    "playwright-core": ">1.6.0"
-  },
   "dependencies": {
-    "core-js": "^3.8.2"
+    "playwright-core": "^1.7.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.12.10",
@@ -34,6 +31,7 @@
     "@babel/preset-env": "^7.12.11",
     "babel-loader": "^8.2.2",
     "copy-webpack-plugin": "^7.0.0",
+    "core-js": "^3.8.2",
     "debug": "^4.1.1",
     "esm": "^3.2.25",
     "extract-zip": "^2.0.1",
@@ -41,7 +39,6 @@
     "jpeg-js": "^0.4.2",
     "mime": "^2.4.6",
     "node-polyfill-webpack-plugin": "^1.0.2",
-    "playwright-core": "^1.7.1",
     "pngjs": "^5.0.0",
     "progress": "^2.0.3",
     "proper-lockfile": "^4.1.1",
