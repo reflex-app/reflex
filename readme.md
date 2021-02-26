@@ -128,6 +128,17 @@ Env vars required:
 
 ---
 
+We use Git Subtree to manage electron-playwright-browser-installer.
+
+Pull in new subtree commits: `git pull --prefix packages/electron-playwright-browser-installer https://github.com/nwittwer/electron-playwright-browser-installer master --squash`
+
+Updating / Pushing to the subtree remote repository: `git subtree push --prefix packages/electron-playwright-browser-installer https://github.com/nwittwer/electron-playwright-browser-installer master`
+
+Learn more:
+https://gist.github.com/SKempin/b7857a6ff6bddb05717cc17a44091202
+
+---
+
 ## License
 
 [MIT](LICENSE)
