@@ -76,16 +76,20 @@ module.exports = {
   // https://stackoverflow.com/a/56814459/1114901
   // extraResources: [
   //   {
-  //     from: 'node_modules/playwright/.local-browsers',
-  //     to: 'app/node_modules/playwright/.local-browsers',
+  //     from: 'node_modules/playwright-core/',
+  //     to: 'node_modules/playwright-core/', // We'll then let the electron-playwright-browser-installer use this as a require() dependency
   //     filter: ['**/*'], // Copy all the sub-directories and sub-files
   //   },
   // ],
   // Using ASAR
   // https://github.com/puppeteer/puppeteer/issues/2134#issuecomment-408221446
   // asar: false,
-  asar: true, // Whether or not to package
-  asarUnpack: 'node_modules/electron-playwright-browser-installer/dist/', // Unpack dir where browser binaries will be installed
+  asar: false, // Whether or not to package
+  // asarUnpack: [
+  //   'node_modules/electron-playwright-browser-installer/dist/', // binaries installed here
+  //   'node_modules/playwright-core', // dependency
+  // ], // Unpack dir where browser binaries will be installed
+
   // asarUnpack: ['**/node_modules/playwright/**/*'], // Unpack the browser binaries
   // asarUnpack: ['node_modules/playwright/.local-browsers/'], // Unpack the browser binaries
 

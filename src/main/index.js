@@ -1,6 +1,5 @@
 /* globals INCLUDE_RESOURCES_PATH */
 import { app } from 'electron'
-
 import { version } from '../../package.json'
 
 // Set the version

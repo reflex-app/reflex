@@ -86,7 +86,7 @@ export class CrossBrowserScreenshot {
 // Amend the Playwright executable path when run locally and packaged
 // It does not actually get installed at playwright-core
 // via https://github.com/puppeteer/puppeteer/issues/2134#issuecomment-408221446
-function getPlaywrightExecPath(isPackaged, browser) {
+function getPlaywrightExecPath(isPackaged = false, browser) {
   if (!browser) console.error('No browser name given.')
 
   function replaceAll(str, mapObj) {
@@ -96,34 +96,28 @@ function getPlaywrightExecPath(isPackaged, browser) {
     })
   }
 
-  let mapObj = {}
-
-  switch (isPackaged) {
-    case true:
-      // packaged version
-      mapObj = {
-        'playwright-core': 'electron-playwright-browser-installer/dist',
-        'app.asar': 'app.asar.unpacked',
+  // Replace based on environment
+  // When packaged, the app path gets packaged in ASAR and is unpacked
+  // Packaged example: /Users/Jon/Sites/reflex/build/mac/Reflex.app/Contents/Resources/app.asar/dist/renderer/_nuxt/.local-browsers/webkit-1402/pw_run.sh
+  const envReplacements = isPackaged
+    ? {
+        'app.asar/dist/renderer/_nuxt/':
+          'app.asar.unpacked/node_modules/electron-playwright-browser-installer/dist/',
       }
-      break
-
-    case false:
-      // dev version
-      mapObj = {
+    : {
         'playwright-core': 'electron-playwright-browser-installer/dist',
       }
-      break
-  }
+
+  console.log(envReplacements)
 
   // Generate the correct paths
-  // console.log("Playwright module", !!playwright);
   const initialPath = playwright[browser].executablePath()
-  const updatedPath = replaceAll(initialPath, mapObj)
-  console.log(
-    'Is the path the same as initially?',
-    initialPath === updatedPath,
-    `Changed to: ${updatedPath}`
-  )
+  const updatedPath = replaceAll(initialPath, envReplacements)
+  initialPath === updatedPath
+    ? console.error(
+        `Exec. path was NOT changed: ${updatedPath}. Env: ${process.env.PLAYWRIGHT_BROWSERS_PATH}`
+      )
+    : console.info(`Exec. path changed`, { initialPath, updatedPath })
 
   return updatedPath
 }

@@ -9,6 +9,11 @@ import log from 'electron-log'
 
 if (!PlaywrightBrowserInstaller) log.error('Module not defined!')
 
+// The following is essential:
+// Tells PLaywright to look inside of ./node_modules/playwright-* for
+// the browser binaries
+process.env.PLAYWRIGHT_BROWSERS_PATH = '0'
+
 // Run the installer
 // If the applications are already installed at the given path,
 // they won't be reinstalled
