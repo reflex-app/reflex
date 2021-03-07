@@ -4,6 +4,7 @@
 // We can use Node packages
 
 // import path from 'path'
+import path from 'path'
 import { v1 as uuid } from 'uuid'
 import log from 'electron-log'
 const playwright = require('playwright-core')
@@ -90,10 +91,10 @@ function getPlaywrightExecPath(isPackaged = false, browser) {
   if (!browser) console.error('No browser name given.')
 
   function replaceAll(str, mapObj) {
-    const re = new RegExp(Object.keys(mapObj).join('|'), 'gi')
-    return str.replace(re, function (matched) {
-      return mapObj[matched.toLowerCase()]
-    })
+    const strToReplace = new RegExp(Object.keys(mapObj).join('|'))
+    return str.replace(strToReplace, (matched) =>
+      path.normalize(mapObj[matched.toLowerCase()])
+    )
   }
 
   // Replace based on environment
@@ -107,8 +108,6 @@ function getPlaywrightExecPath(isPackaged = false, browser) {
     : {
         'playwright-core': 'electron-playwright-browser-installer/dist',
       }
-
-  console.log(envReplacements)
 
   // Generate the correct paths
   const initialPath = playwright[browser].executablePath()

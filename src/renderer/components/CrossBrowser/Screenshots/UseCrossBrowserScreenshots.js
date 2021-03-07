@@ -1,5 +1,5 @@
 // This file handles the state and features of the UI for taking screenshots
-import { reactive, watchEffect } from '@vue/composition-api'
+import { reactive } from '@vue/composition-api'
 import {
   takeScreenshots,
   toBase64Image,
@@ -12,17 +12,6 @@ export default function useCrossBrowserScreenshots() {
     screenshots: [],
     browsers: ['firefox', 'webkit'],
   })
-
-  // class paramsInterface {
-  //   constructor(params) {
-  //     this.url = params.url || ''
-  //     this.browsers = params.browsers || ['firefox', 'webkit']
-  //     this.height = params.height || 0
-  //     this.width = params.width || 0
-  //     this.x = params.x || 0
-  //     this.y = params.y || 0
-  //   }
-  // }
 
   const defaultParams = () => {
     return {

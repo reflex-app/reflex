@@ -37,8 +37,15 @@ const fsWriteFileAsync = util.promisify(fs.writeFile.bind(fs))
 const removeFolderAsync = util.promisify(removeFolder)
 
 export async function installBrowsersWithProgressBar(packagePath) {
-  if (process.env.PLAYWRIGHT_BROWSERS_PATH !== '0') {
-    console.error('Missing or incorrect PLAYWRIGHT_BROWSERS_PATH env')
+  // PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD should have a value of 0 or 1
+  if (process.env.PLAYWRIGHT_BROWSERS_PATH === 0) {
+    browserFetcher.logPolitely(
+      `Browser installation path set to hermetic, because 'PLAYWRIGHT_BROWSERS_PATH' env variable is set to ${process.env.PLAYWRIGHT_BROWSERS_PATH}`
+    )
+  } else {
+    browserFetcher.logPolitely(
+      `WARNING: Browser installation path set to default. 'PLAYWRIGHT_BROWSERS_PATH' env var was ${process.env.PLAYWRIGHT_BROWSERS_PATH}.`
+    )
   }
 
   // PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD should have a value of 0 or 1

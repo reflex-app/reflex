@@ -1,18 +1,16 @@
 {
   "name": "electron-playwright-browser-installer",
   "version": "1.4.3",
-  "description": "",
   "main": "dist/main.js",
   "repository": "github:nwittwer/electron-playwright-browser-installer",
   "scripts": {
-    "dev": "yarn clean && yarn playwright-var && webpack --watch --mode development",
-    "build": "yarn clean && yarn playwright-var && webpack --mode production",
-    "browsers": "yarn playwright-var && node .src/index.js",
-    "test": "yarn playwright-var && node ./src/test.js",
+    "dev": "yarn run clean && yarn run playwright-var webpack --watch --mode development",
+    "build": "yarn run clean && yarn run playwright-var webpack --mode production",
+    "test": "yarn run playwright-var node -r esm ./src/test.js",
     "clean": "rm -rf dist/*",
     "release": "node ./scripts/release.js",
-    "playwright-var": "npx cross-env PLAYWRIGHT_BROWSERS_PATH=0",
-    "preinstall": "npx cross-env PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1"
+    "preinstall": "yarn run playwright-var && npx cross-env PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1",
+    "playwright-var": "npx cross-env PLAYWRIGHT_BROWSERS_PATH=0"
   },
   "files": [
     "dist"

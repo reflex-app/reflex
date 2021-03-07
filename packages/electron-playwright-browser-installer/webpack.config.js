@@ -54,7 +54,8 @@ module.exports = (env, argv) => {
       new CopyPlugin({
         patterns: [{ from: './src/browsers.json', to: './' }], // dist/
       }),
-      // Set the environment variables
+      // Set Webpack variables
+      // https://webpack.js.org/plugins/define-plugin/
       new webpack.DefinePlugin({
         'process.env.PLAYWRIGHT_BROWSERS_PATH': '0',
       }),
