@@ -1,4 +1,5 @@
 import { promises as fs } from 'fs'
+import path from 'path'
 import playwright from 'playwright-core'
 
 // We'll prepend console.log messages for this library
@@ -14,7 +15,7 @@ import { downloadEmitter } from './emitter'
 
 const packageName = 'electron-playwright-browser-installer'
 
-const logTypes = ['log', 'error', 'info']
+const logTypes = ['log', 'error', 'info', 'warn']
 if (console.log) {
   const generator = (type) => {
     const old = console[type]
@@ -46,16 +47,35 @@ export class Installer {
       console.log('Browsers are installed.')
     } else {
       // Not installed yet
-      console.log('Browsers are NOT installed!')
+      console.log('Browsers are NOT installed. Attempting to install...')
       await this.install()
     }
   }
 
-  checkIfInstalled(dirPath) {
+  async checkIfInstalled() {
     // Check for installed browsers in a directory
     console.log('Checking if browsers are installed...')
 
-    return false // TODO Actually check a directory...
+    // Verify that there is a directory for each of the browsers
+    const checkInstallDir = async () => {
+      // List of files/folders at path in user's filesystem
+      const results = await ls(path.join(__dirname, '/.local-browsers'))
+      console.log('Found at install directory:', results)
+      if (!results) return false // Case: no folders/files found at directory
+
+      // Validation
+      return this.browsers.every((v) => results.find((x) => x.includes(v)))
+    }
+
+    const isInstalled = (await checkInstallDir()) === true
+
+    if (isInstalled) {
+      console.log('Browsers are installed.')
+      return true
+    } else {
+      console.error('Browsers are NOT installed!')
+      return false
+    }
   }
 
   async install(
@@ -63,18 +83,11 @@ export class Installer {
       browsers: this.browsers,
     }
   ) {
-    // Ensure the the user has configured the expected environment variable
-    if (process.env.PLAYWRIGHT_BROWSERS_PATH !== '0') {
-      console.warn('Env var PLAYWRIGHT_BROWSERS_PATH is missing or incorrect')
-      // return false
-    }
-
-    if (options.browsers.length) {
-      for (const browser of options.browsers) {
-        console.log(`Path: ${playwright[browser].executablePath()}`)
-      }
-    } else {
-      console.error('No browsers were passed in to install')
+    // Require browers to be defined
+    if (!options.browsers.length) {
+      console.error(
+        `No browsers were passed in to install. Setting defaults: ${this.browsers}`
+      )
       return false
     }
 
@@ -94,23 +107,19 @@ export class Installer {
     // https://github.com/microsoft/playwright/blob/master/install-from-github.js#L29
     await installBrowsersWithProgressBar(__dirname).catch((err) => {
       console.error(`Failed to install browsers, caused by\n${err.stack}`)
-      process.exit(1)
+      // process.exit(1)
     })
 
-    // Verify that there is a directory for each of the browsers
-    const checkInstallDir = async () => {
-      const results = await ls(`${__dirname}/.local-browsers`)
-      const { browsers } = options
-      return browsers.every((v) => results.find((x) => x.includes(v)))
+    // Inform about the installation paths
+    if (options.browsers.length >= 1) {
+      console.log(
+        'Browser paths:',
+        options.browsers.map((browser) => playwright[browser].executablePath())
+      )
     }
 
-    if ((await checkInstallDir()) === true) {
-      console.log('Browsers are installed.')
-      return true
-    } else {
-      console.error('Browsers are NOT installed!')
-      return false
-    }
+    // Final check
+    return this.checkIfInstalled()
   }
 }
 
@@ -151,7 +160,6 @@ export function getPackagedPlaywrightExecPath(browser) {
   }
 
   // Generate the correct paths
-  // console.log("Playwright module", !!playwright);
   const initialPath = playwright[browser].executablePath()
   const updatedPath = replaceAll(initialPath, mapObj)
   console.log(
