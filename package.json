@@ -4,9 +4,9 @@
   "description": "Make responsive websites without the guesswork.",
   "version": "0.7.0-beta.5",
   "author": "Nick Wittwer",
-  "license": "MIT",
-  "homepage": "https://reflexapp.nickwittwer.com",
   "main": "./dist/main/index.js",
+  "homepage": "https://reflexapp.nickwittwer.com",
+  "private": "true",
   "scripts": {
     "dev": "npx cross-env PLAYWRIGHT_BROWSERS_PATH=0 node .electron-nuxt/dev.js",
     "build": "yarn clean:local-browsers && npx cross-env PLAYWRIGHT_BROWSERS_PATH=0 FULLBUILD=1 node .electron-nuxt/build.js",
@@ -27,6 +27,9 @@
   "engines": {
     "node": ">=12.13.0"
   },
+  "workspaces": [
+    "packages/*"
+  ],
   "jest": {
     "moduleFileExtensions": [
       "js",
@@ -41,9 +44,6 @@
       "^@/(.*)$": "<rootDir>/src/renderer/$1",
       "^~/(.*)$": "<rootDir>/src/renderer/$1"
     }
-  },
-  "dependencies": {
-    "electron-playwright-browser-installer": "./packages/electron-playwright-browser-installer"
   },
   "devDependencies": {
     "@babel/runtime-corejs2": "7.12.5",
@@ -94,6 +94,7 @@
     "nuxt": ">2.14.1",
     "playwright-core": "^1.7.1",
     "prettier": "^2.0.4",
+    "reflex-browser-installer": "^1.0.0",
     "sass-loader": "10.1.0",
     "uuid": "8.3.2",
     "vue-devtools": "5.1.4",
