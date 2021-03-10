@@ -22,7 +22,7 @@
     "storybook": "start-storybook",
     "debug:playwright": "npx cross-env DEBUG=pw:browser* yarn run dev",
     "debug:build:mac": "./build/mac/Reflex.app/Contents/MacOS/Reflex --args --remote-debugging-port=8315 & open -a \"Google Chrome\" http://localhost:8315",
-    "clean:local-browsers": "npx rimraf ./node_modules/electron-playwright-browser-installer/dist/.local-browsers/*"
+    "clean:local-browsers": "npx rimraf ./node_modules/reflex-browser-installer/dist/.local-browsers/*"
   },
   "engines": {
     "node": ">=12.13.0"
@@ -43,7 +43,7 @@
     }
   },
   "dependencies": {
-    "electron-playwright-browser-installer": "./packages/electron-playwright-browser-installer",
+    "reflex-browser-installer": "./packages/reflex-browser-installer",
     "playwright-core": "^1.7.1"
   },
   "devDependencies": {

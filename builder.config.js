@@ -77,7 +77,7 @@ module.exports = {
   // extraResources: [
   //   {
   //     from: 'node_modules/playwright-core/',
-  //     to: 'node_modules/playwright-core/', // We'll then let the electron-playwright-browser-installer use this as a require() dependency
+  //     to: 'node_modules/playwright-core/', // We'll then let the reflex-browser-installer use this as a require() dependency
   //     filter: ['**/*'], // Copy all the sub-directories and sub-files
   //   },
   // ],
@@ -86,7 +86,7 @@ module.exports = {
   // asar: false,
   asar: false, // Whether or not to package
   // asarUnpack: [
-  //   'node_modules/electron-playwright-browser-installer/dist/', // binaries installed here
+  //   'node_modules/reflex-browser-installer/dist/', // binaries installed here
   //   'node_modules/playwright-core', // dependency
   // ], // Unpack dir where browser binaries will be installed
 

@@ -1,4 +1,3 @@
-'use strict'
 /**
  * Copyright Microsoft Corporation. All rights reserved.
  *
@@ -14,17 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-Object.defineProperty(exports, '__esModule', { value: true })
-// exports.installBrowsersWithProgressBar = void 0;
-const crypto = require('crypto')
-const fs = require('fs')
-const path = require('path')
-const util = require('util')
-const removeFolder = require('rimraf')
-const lockfile = require('proper-lockfile')
-const browserPaths = require('../utils/browserPaths')
-const utils_1 = require('../utils/utils')
-const browserFetcher = require('./browserFetcher')
+import fs from 'fs'
+import path from 'path'
+import util from 'util'
+import removeFolder from 'rimraf'
+import lockfile from 'proper-lockfile'
+import {
+  Registry,
+  allBrowserNames,
+  isBrowserDirectory,
+  registryDirectory,
+} from '../utils/registry'
+import { getAsBooleanFromENV, calculateSha1 } from '../utils/utils'
+import * as browserFetcher from './browserFetcher'
 const fsMkdirAsync = util.promisify(fs.mkdir.bind(fs))
 const fsReaddirAsync = util.promisify(fs.readdir.bind(fs))
 const fsReadFileAsync = util.promisify(fs.readFile.bind(fs))
@@ -35,8 +36,10 @@ const fsExistsAsync = (filePath) =>
 const fsUnlinkAsync = util.promisify(fs.unlink.bind(fs))
 const fsWriteFileAsync = util.promisify(fs.writeFile.bind(fs))
 const removeFolderAsync = util.promisify(removeFolder)
-
-export async function installBrowsersWithProgressBar(packagePath) {
+const PACKAGE_PATH = path.join(__dirname, '..', '..')
+export async function installBrowsersWithProgressBar(
+  browserNames = allBrowserNames
+) {
   // PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD should have a value of 0 or 1
   if (process.env.PLAYWRIGHT_BROWSERS_PATH === 0) {
     browserFetcher.logPolitely(
@@ -49,16 +52,15 @@ export async function installBrowsersWithProgressBar(packagePath) {
   }
 
   // PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD should have a value of 0 or 1
-  if (utils_1.getAsBooleanFromENV('PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD')) {
+  if (getAsBooleanFromENV('PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD')) {
     browserFetcher.logPolitely(
       'Skipping browsers download because `PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD` env variable is set'
     )
     return false
   }
-  const browsersPath = browserPaths.browsersPath(packagePath)
-  await fsMkdirAsync(browsersPath, { recursive: true })
-  const lockfilePath = path.join(browsersPath, '__dirlock')
-  const releaseLock = await lockfile.lock(browsersPath, {
+  await fsMkdirAsync(registryDirectory, { recursive: true })
+  const lockfilePath = path.join(registryDirectory, '__dirlock')
+  const releaseLock = await lockfile.lock(registryDirectory, {
     retries: {
       retries: 10,
       // Retry 20 times during 10 minutes with
@@ -71,15 +73,19 @@ export async function installBrowsersWithProgressBar(packagePath) {
     },
     lockfilePath,
   })
-  const linksDir = path.join(browsersPath, '.links')
-  await fsMkdirAsync(linksDir, { recursive: true })
-  await fsWriteFileAsync(path.join(linksDir, sha1(packagePath)), packagePath)
-  await validateCache(packagePath, browsersPath, linksDir)
-  await releaseLock()
+  const linksDir = path.join(registryDirectory, '.links')
+  try {
+    await fsMkdirAsync(linksDir, { recursive: true })
+    await fsWriteFileAsync(
+      path.join(linksDir, calculateSha1(PACKAGE_PATH)),
+      PACKAGE_PATH
+    )
+    await validateCache(linksDir, browserNames)
+  } finally {
+    await releaseLock()
+  }
 }
-// exports.installBrowsersWithProgressBar = installBrowsersWithProgressBar;
-
-export async function validateCache(packagePath, browsersPath, linksDir) {
+async function validateCache(linksDir, browserNames) {
   // 1. Collect used downloads and package descriptors.
   const usedBrowserPaths = new Set()
   for (const fileName of await fsReaddirAsync(linksDir)) {
@@ -87,69 +93,61 @@ export async function validateCache(packagePath, browsersPath, linksDir) {
     let linkTarget = ''
     try {
       linkTarget = (await fsReadFileAsync(linkPath)).toString()
-      const browsersToDownload = await readBrowsersToDownload(linkTarget)
-      for (const browser of browsersToDownload) {
-        const usedBrowserPath = browserPaths.browserDirectory(
-          browsersPath,
-          browser
-        )
-        const browserRevision = parseInt(browser.revision, 10)
+      const linkRegistry = new Registry(linkTarget)
+      for (const browserName of allBrowserNames) {
+        if (!linkRegistry.shouldDownload(browserName)) continue
+        const usedBrowserPath = linkRegistry.browserDirectory(browserName)
+        const browserRevision = linkRegistry.revision(browserName)
         // Old browser installations don't have marker file.
         const shouldHaveMarkerFile =
-          (browser.name === 'chromium' && browserRevision >= 786218) ||
-          (browser.name === 'firefox' && browserRevision >= 1128) ||
-          (browser.name === 'webkit' && browserRevision >= 1307)
+          (browserName === 'chromium' && browserRevision >= 786218) ||
+          (browserName === 'firefox' && browserRevision >= 1128) ||
+          (browserName === 'webkit' && browserRevision >= 1307) ||
+          // All new applications have a marker file right away.
+          (browserName !== 'firefox' &&
+            browserName !== 'chromium' &&
+            browserName !== 'webkit')
         if (
           !shouldHaveMarkerFile ||
-          (await fsExistsAsync(
-            browserPaths.markerFilePath(browsersPath, browser)
-          ))
+          (await fsExistsAsync(markerFilePath(usedBrowserPath)))
         )
           usedBrowserPaths.add(usedBrowserPath)
       }
     } catch (e) {
-      if (linkTarget)
-        browserFetcher.logPolitely(
-          'Failed to process descriptor at ' + linkTarget
-        )
       await fsUnlinkAsync(linkPath).catch((e) => {})
     }
   }
   // 2. Delete all unused browsers.
-  let downloadedBrowsers = (await fsReaddirAsync(browsersPath)).map((file) =>
-    path.join(browsersPath, file)
-  )
+  let downloadedBrowsers = (
+    await fsReaddirAsync(registryDirectory)
+  ).map((file) => path.join(registryDirectory, file))
   downloadedBrowsers = downloadedBrowsers.filter((file) =>
-    browserPaths.isBrowserDirectory(file)
+    isBrowserDirectory(file)
   )
   const directories = new Set(downloadedBrowsers)
-  for (const browserPath of usedBrowserPaths) directories.delete(browserPath)
+  for (const browserDirectory of usedBrowserPaths)
+    directories.delete(browserDirectory)
   for (const directory of directories) {
     browserFetcher.logPolitely('Removing unused browser at ' + directory)
     await removeFolderAsync(directory).catch((e) => {})
   }
   // 3. Install missing browsers for this package.
-  const myBrowsersToDownload = await readBrowsersToDownload(packagePath)
-  for (const browser of myBrowsersToDownload) {
-    await browserFetcher.downloadBrowserWithProgressBar(browsersPath, browser)
+  const myRegistry = new Registry(PACKAGE_PATH)
+  for (const browserName of browserNames) {
+    if (!myRegistry.shouldDownload(browserName)) continue
+    await browserFetcher
+      .downloadBrowserWithProgressBar(myRegistry, browserName)
+      .catch((e) => {
+        throw new Error(
+          `Failed to download ${browserName}, caused by\n${e.stack}`
+        )
+      })
     await fsWriteFileAsync(
-      browserPaths.markerFilePath(browsersPath, browser),
+      markerFilePath(myRegistry.browserDirectory(browserName)),
       ''
     )
   }
 }
-
-export async function readBrowsersToDownload(packagePath) {
-  const browsers = JSON.parse(
-    (await fsReadFileAsync(path.join(packagePath, 'browsers.json'))).toString()
-  ).browsers
-  // Older versions do not have "download" field. We assume they need all browsers
-  // from the list. So we want to skip all browsers that are explicitly marked as "download: false".
-  return browsers.filter((browser) => browser.download !== false)
+function markerFilePath(browserDirectory) {
+  return path.join(browserDirectory, 'INSTALLATION_COMPLETE')
 }
-function sha1(data) {
-  const sum = crypto.createHash('sha1')
-  sum.update(data)
-  return sum.digest('hex')
-}
-// # sourceMappingURL=installer.js.map

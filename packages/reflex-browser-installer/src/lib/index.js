@@ -13,7 +13,7 @@ import { downloadEmitter } from './emitter'
 // import "core-js/stable";
 // import "regenerator-runtime/runtime";
 
-const packageName = 'electron-playwright-browser-installer'
+const packageName = 'reflex-browser-installer'
 
 const logTypes = ['log', 'error', 'info', 'warn']
 if (console.log) {
@@ -155,7 +155,7 @@ export function getPackagedPlaywrightExecPath(browser) {
   }
 
   const mapObj = {
-    playwright: 'electron-playwright-browser-installer',
+    playwright: 'reflex-browser-installer',
     'app.asar': 'app.asar.unpacked',
   }
 

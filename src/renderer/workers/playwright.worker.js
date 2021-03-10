@@ -103,10 +103,10 @@ function getPlaywrightExecPath(isPackaged = false, browser) {
   const envReplacements = isPackaged
     ? {
         'app.asar/dist/renderer/_nuxt/':
-          'app.asar.unpacked/node_modules/electron-playwright-browser-installer/dist/',
+          'app.asar.unpacked/node_modules/reflex-browser-installer/dist/',
       }
     : {
-        'playwright-core': 'electron-playwright-browser-installer/dist',
+        'playwright-core': 'reflex-browser-installer/dist',
       }
 
   // Generate the correct paths
