@@ -24,25 +24,7 @@ https://stackoverflow.com/a/14387210/1114901
 
 To refresh the package dependency, run `yarn upgrade`
 
----
-
-## Install (Production)
-
-You can use this in your own Electron app by installing the repository itself. The main branch will be installed. [Learn more](https://dev.to/paul_melero/how-to-npm-install-from-github-repositories-or-gists-directly-6og).
-
-Make sure to add a `GITHUB_TOKEN` to your environment or .env file.
-
-```json
-"dependencies": {
-  "playwright-browser-installer": "git+https://${GITHUB_TOKEN}:x-oauth-basic@github.com/nwittwer/electron-playwright-browser-installer.git"
-}
-
-```
-
-## Development
-
-Terminal 1: `yarn dev`. It will watch and re-build on changes.
-Terminal 2: `yarn test` This will output the results.
+## Configuration
 
 ## Troubleshooting
 
