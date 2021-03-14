@@ -25,6 +25,7 @@ const winHandler = new BrowserWinHandler({
     nodeIntegration: true, // Required
     enableRemoteModule: true,
     nodeIntegrationInWorker: true, // Enable Web Workers https://www.electronjs.org/docs/tutorial/multithreading
+    contextIsolation: false, // Required Electron 12
   },
   titleBarStyle: 'hiddenInset', // Hide the bar
 })
@@ -40,7 +41,7 @@ winHandler.onCreated((browserWindow) => {
   // just in case there was a fatal bug
   // with their current release
   autoUpdater(browserWindow)
- 
+
   // Check for browser installations
   browserInstaller(winHandler)
 

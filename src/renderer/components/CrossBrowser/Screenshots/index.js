@@ -2,7 +2,7 @@ import { reactive, watchEffect } from '@vue/composition-api'
 // Expose the Web Worker using Comlink (via webpack-loader)
 // https://github.com/GoogleChromeLabs/comlink-loader#singleton-mode
 import { CrossBrowserScreenshot } from '@/workers/playwright.worker'
-import { remote } from 'electron'
+// import { remote } from 'electron'
 
 // Keep track of all the open browser contexts
 // This data can be accessed reactively
@@ -27,7 +27,7 @@ export async function takeScreenshots(
       width,
       x,
       y,
-      isPackaged: remote.app.isPackaged,
+      // isPackaged: remote.app.isPackaged,
     }).catch((err) => {
       console.error(err)
     })

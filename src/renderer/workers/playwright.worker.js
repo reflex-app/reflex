@@ -21,7 +21,7 @@ export class CrossBrowserScreenshot {
     this.y = options.y || 0
     this.isLoading = false // Initial state
     this.contextId = uuid() // the ID of this context
-    this.isPackaged = options.isPackaged || false // Whether or not the app is packaged or in dev
+    this.isPackaged = options.isPackaged || false // Whether or not the app is packaged or in dev TODO Deprecate this and handle without needing Remote
   }
 
   async takeScreenshot() {

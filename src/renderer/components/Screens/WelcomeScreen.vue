@@ -95,15 +95,15 @@
 </template>
 
 <script>
-import { remote } from 'electron'
+import { app } from '@electron/remote'
 export default {
   computed: {
     appName() {
       // Return the name of the Electron app
       // From package.json (name or productName)
       // TODO this if check is required in case of tests
-      if (remote) {
-        return remote.app.name
+      if (app) {
+        return app.name // TODO confirm this is working in Electron 12+
       } else {
         const pkgJson = require('../../../../package.json')
         return pkgJson.productName

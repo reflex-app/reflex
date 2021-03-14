@@ -4,7 +4,7 @@
  * functionalities.
  */
 
-import { Installer as PlaywrightBrowserInstaller } from 'electron-playwright-browser-installer'
+import { Installer as PlaywrightBrowserInstaller } from 'reflex-browser-installer'
 import log from 'electron-log'
 
 if (!PlaywrightBrowserInstaller) log.error('Module not defined!')

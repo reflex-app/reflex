@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import { remote, ipcRenderer } from 'electron'
+import { remote, ipcRenderer } from 'electron' // TODO Migrate to @electron/remote
 import isElectron from 'is-electron'
 import ToolBar from '@/components/ToolBar'
 

@@ -3,8 +3,6 @@
 </template>
 
 <script>
-import { remote } from 'electron'
-
 export default {
   mounted() {
     this.$nextTick(() => {
