@@ -4,8 +4,6 @@
  * See: lib/install/browserFetcher.js
  */
 import { EventEmitter } from 'events'
-console.log('hi')
-console.log(EventEmitter)
 export const downloadEmitter = new EventEmitter()
 
 /**

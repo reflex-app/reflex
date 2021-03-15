@@ -14,14 +14,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import { execSync } from 'child_process'
-import fs from 'fs'
+import * as fs from 'fs'
 import * as os from 'os'
-import path from 'path'
+import * as path from 'path'
 import * as util from 'util'
 import { getUbuntuVersionSync } from './ubuntuVersion'
 import { assert, getFromENV } from './utils'
-export const allBrowserNames = ['chromium', 'webkit', 'firefox', 'ffmpeg']
+
+export type BrowserName = 'chromium' | 'webkit' | 'firefox' | 'ffmpeg'
+export const allBrowserNames: BrowserName[] = [
+  'chromium',
+  'webkit',
+  'firefox',
+  'ffmpeg',
+]
+
+type BrowserPlatform =
+  | 'win32'
+  | 'win64'
+  | 'mac10.13'
+  | 'mac10.14'
+  | 'mac10.15'
+  | 'mac11'
+  | 'mac11-arm64'
+  | 'ubuntu18.04'
+  | 'ubuntu20.04'
+type BrowserDescriptor = {
+  name: BrowserName
+  revision: string
+  download: boolean
+}
+
 const EXECUTABLE_PATHS = {
   chromium: {
     'ubuntu18.04': ['chrome-linux', 'chrome'],
@@ -74,6 +99,7 @@ const EXECUTABLE_PATHS = {
     win64: ['ffmpeg-win64.exe'],
   },
 }
+
 const DOWNLOAD_URLS = {
   chromium: {
     'ubuntu18.04': '%s/builds/chromium/%s/chromium-linux.zip',
@@ -120,7 +146,8 @@ const DOWNLOAD_URLS = {
     win64: '%s/builds/ffmpeg/%s/ffmpeg-win64.zip',
   },
 }
-export const hostPlatform = (() => {
+
+export const hostPlatform = ((): BrowserPlatform => {
   const platform = os.platform()
   if (platform === 'darwin') {
     const [major, minor] = execSync('sw_vers -productVersion', {
@@ -144,7 +171,7 @@ export const hostPlatform = (() => {
     // since they don't change core APIs so far.
     const macVersion = major === 10 ? `${major}.${minor}` : `${major}`
     const archSuffix = arm64 ? '-arm64' : ''
-    return `mac${macVersion}${archSuffix}`
+    return `mac${macVersion}${archSuffix}` as BrowserPlatform
   }
   if (platform === 'linux') {
     const ubuntuVersion = getUbuntuVersionSync()
@@ -152,17 +179,19 @@ export const hostPlatform = (() => {
     return 'ubuntu20.04'
   }
   if (platform === 'win32') return os.arch() === 'x64' ? 'win64' : 'win32'
-  return platform
+  return platform as BrowserPlatform
 })()
+
 export const registryDirectory = (() => {
-  let result
+  let result: string
+
   const envDefined = getFromENV('PLAYWRIGHT_BROWSERS_PATH')
   if (envDefined === '0') {
     result = path.join(__dirname, '..', '..', '.local-browsers')
   } else if (envDefined) {
     result = envDefined
   } else {
-    let cacheDirectory
+    let cacheDirectory: string
     if (process.platform === 'linux')
       cacheDirectory =
         process.env.XDG_CACHE_HOME || path.join(os.homedir(), '.cache')
@@ -174,6 +203,7 @@ export const registryDirectory = (() => {
     else throw new Error('Unsupported platform: ' + process.platform)
     result = path.join(cacheDirectory, 'ms-playwright')
   }
+
   if (!path.isAbsolute(result)) {
     // It is important to resolve to the absolute path:
     //   - for unzipping to work correctly;
@@ -184,22 +214,28 @@ export const registryDirectory = (() => {
   }
   return result
 })()
-export function isBrowserDirectory(browserDirectory) {
+
+export function isBrowserDirectory(browserDirectory: string): boolean {
   const baseName = path.basename(browserDirectory)
   for (const browserName of allBrowserNames) {
     if (baseName.startsWith(browserName + '-')) return true
   }
   return false
 }
+
 export class Registry {
-  constructor(packagePath) {
+  private _descriptors: BrowserDescriptor[]
+
+  constructor(packagePath: string) {
+    console.log('package path', packagePath)
+
     const browsersJSON = JSON.parse(
       fs.readFileSync(path.join(packagePath, 'browsers.json'), 'utf8')
     )
-    this._descriptors = browsersJSON.browsers
+    this._descriptors = browsersJSON['browsers']
   }
 
-  browserDirectory(browserName) {
+  browserDirectory(browserName: BrowserName): string {
     const browser = this._descriptors.find(
       (browser) => browser.name === browserName
     )
@@ -207,7 +243,7 @@ export class Registry {
     return path.join(registryDirectory, `${browser.name}-${browser.revision}`)
   }
 
-  revision(browserName) {
+  revision(browserName: BrowserName): number {
     const browser = this._descriptors.find(
       (browser) => browser.name === browserName
     )
@@ -215,7 +251,7 @@ export class Registry {
     return parseInt(browser.revision, 10)
   }
 
-  linuxLddDirectories(browserName) {
+  linuxLddDirectories(browserName: BrowserName): string[] {
     const browserDirectory = this.browserDirectory(browserName)
     if (browserName === 'chromium')
       return [path.join(browserDirectory, 'chrome-linux')]
@@ -234,7 +270,7 @@ export class Registry {
     return []
   }
 
-  windowsExeAndDllDirectories(browserName) {
+  windowsExeAndDllDirectories(browserName: BrowserName): string[] {
     const browserDirectory = this.browserDirectory(browserName)
     if (browserName === 'chromium')
       return [path.join(browserDirectory, 'chrome-win')]
@@ -244,18 +280,18 @@ export class Registry {
     return []
   }
 
-  executablePath(browserName) {
+  executablePath(browserName: BrowserName): string | undefined {
     const browserDirectory = this.browserDirectory(browserName)
     const tokens = EXECUTABLE_PATHS[browserName][hostPlatform]
     return tokens ? path.join(browserDirectory, ...tokens) : undefined
   }
 
-  downloadURL(browserName) {
+  downloadURL(browserName: BrowserName): string {
     const browser = this._descriptors.find(
       (browser) => browser.name === browserName
     )
     assert(browser, `ERROR: Playwright does not support ${browserName}`)
-    const envDownloadHost = {
+    const envDownloadHost: { [key: string]: string } = {
       chromium: 'PLAYWRIGHT_CHROMIUM_DOWNLOAD_HOST',
       firefox: 'PLAYWRIGHT_FIREFOX_DOWNLOAD_HOST',
       webkit: 'PLAYWRIGHT_WEBKIT_DOWNLOAD_HOST',
@@ -273,7 +309,7 @@ export class Registry {
     return util.format(urlTemplate, downloadHost, browser.revision)
   }
 
-  shouldDownload(browserName) {
+  shouldDownload(browserName: BrowserName): boolean {
     // Older versions do not have "download" field. We assume they need all browsers
     // from the list. So we want to skip all browsers that are explicitly marked as "download: false".
     const browser = this._descriptors.find(

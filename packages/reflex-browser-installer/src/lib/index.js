@@ -10,9 +10,6 @@ import playwright from 'playwright-core'
  */
 import { downloadEmitter } from './emitter'
 
-// import "core-js/stable";
-// import "regenerator-runtime/runtime";
-
 const packageName = 'reflex-browser-installer'
 
 const logTypes = ['log', 'error', 'info', 'warn']

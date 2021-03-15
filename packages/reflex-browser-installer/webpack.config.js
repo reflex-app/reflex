@@ -1,17 +1,22 @@
 const path = require('path')
 const webpack = require('webpack')
-const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
 const CopyPlugin = require('copy-webpack-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
-const nodeExternals = require('webpack-node-externals')
+// const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
+// const nodeExternals = require('webpack-node-externals')
 
 module.exports = (env, argv) => {
   const isProduction = argv.mode === 'production'
 
   return {
-    entry: ['./src/index.js'],
+    entry: ['./src/index.ts'],
     module: {
       rules: [
+        {
+          test: /\.(tsx|ts)?$/,
+          use: 'ts-loader',
+          exclude: /node_modules/,
+        },
         {
           test: /\.(js|jsx)$/,
           exclude: /(node_modules)/,
@@ -42,17 +47,16 @@ module.exports = (env, argv) => {
             ],
           },
         },
-        // {
-        //   test: /\.exe$/i,
-        //   use: 'raw-loader',
-        // },
       ],
     },
 
     plugins: [
       // Copy browsers.json to dist/
       new CopyPlugin({
-        patterns: [{ from: './src/browsers.json', to: './' }], // dist/
+        patterns: [
+          { from: './src/browsers.json', to: './' },
+          { from: './src/bin', to: './bin' },
+        ],
       }),
       // Set Webpack variables
       // https://webpack.js.org/plugins/define-plugin/
@@ -74,7 +78,7 @@ module.exports = (env, argv) => {
       ],
     },
     resolve: {
-      extensions: ['.js', '.jsx'],
+      extensions: ['.ts', '.tsx', '.js', '.jsx'],
     },
 
     // What should be included in the bundle and what is required externally?
@@ -84,14 +88,8 @@ module.exports = (env, argv) => {
     // target: 'node',
     // externalsPresets: { electronMain: true }, // Replaces 'target' in Webpack 5+
     externals: [{ 'playwright-core': 'playwright-core' }], // https://github.com/puppeteer/puppeteer/issues/3466#issuecomment-513478584]
-    // externals: [
-    //   nodeExternals({
-    //     allowlist: ['events'],
-    //   }),
-    // ],
     // externals: { 'playwright-core': 'playwright-core' }, // https://github.com/puppeteer/puppeteer/issues/3466#issuecomment-513478584]
     // https://github.com/liady/webpack-node-externals
-    // nodeExternals(),
 
     output: {
       path: path.resolve(__dirname, 'dist/'),
@@ -103,11 +101,6 @@ module.exports = (env, argv) => {
       // libraryExport: 'default', // Export the default Object
       // umdNamedDefine: true,
     },
-    devtool: 'source-map',
-    // devServer: {
-    //   contentBase: path.join(__dirname, "public/"),
-    //   port: 3000,
-    //   publicPath: "http://localhost:3000/dist/",
-    // },
+    devtool: 'inline-source-map',
   }
 }
