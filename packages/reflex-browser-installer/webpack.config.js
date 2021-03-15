@@ -5,16 +5,11 @@ const CopyPlugin = require('copy-webpack-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
 const nodeExternals = require('webpack-node-externals')
 
-// "@babel/plugin-transform-runtime": "^7.12.10",
-
 module.exports = (env, argv) => {
   const isProduction = argv.mode === 'production'
 
   return {
-    entry: [
-      // "regenerator-runtime/runtime", // https://github.com/facebook/regenerator/tree/master/packages/regenerator-runtime
-      './src/index.js',
-    ],
+    entry: ['./src/index.js'],
     module: {
       rules: [
         {
@@ -27,7 +22,7 @@ module.exports = (env, argv) => {
                 '@babel/preset-env',
                 {
                   targets: {
-                    node: '12',
+                    node: 'current',
                   },
                 },
               ],
@@ -47,8 +42,13 @@ module.exports = (env, argv) => {
             ],
           },
         },
+        // {
+        //   test: /\.exe$/i,
+        //   use: 'raw-loader',
+        // },
       ],
     },
+
     plugins: [
       // Copy browsers.json to dist/
       new CopyPlugin({
@@ -59,71 +59,51 @@ module.exports = (env, argv) => {
       new webpack.DefinePlugin({
         'process.env.PLAYWRIGHT_BROWSERS_PATH': '0',
       }),
-      new NodePolyfillPlugin(), // Polyfill
-      // Runtime
-      // https://babeljs.io/docs/en/babel-plugin-transform-runtime
-      // [
-      //   "@babel/plugin-transform-runtime",
-      //   {
-      //     absoluteRuntime: false,
-      //     corejs: false,
-      //     helpers: true,
-      //     regenerator: true,
-      //     useESModules: false,
-      //     version: "7.0.0-beta.0",
-      //   },
-      // ],
+      // new NodePolyfillPlugin(), // Polyfill plugins in Webpack (Required in 5+)
     ],
+
     optimization: {
       minimize: isProduction, // Minimize only for production builds
       minimizer: [
         new TerserPlugin({
           parallel: true,
-          terserOptions: {
-            keep_fnames: true, // Prevent too much mangling (https://github.com/puppeteer/puppeteer/issues/2245#issuecomment-410735923)
-          },
+          // terserOptions: {
+          //   keep_fnames: true, // Prevent too much mangling (https://github.com/puppeteer/puppeteer/issues/2245#issuecomment-410735923)
+          // },
         }),
       ],
     },
     resolve: {
-      extensions: ['*', '.js', '.jsx'],
+      extensions: ['.js', '.jsx'],
     },
+
     // What should be included in the bundle and what is required externally?
     // We expect Playwright to be inclueded in the parent project
     // https://webpack.js.org/configuration/externals/#object
-    // externals: require("webpack-node-externals")(),
-    // externals: {
-    //   'playwright-core': 'playwright-core', // This is directly injected in the build
-    //   bufferutil: 'bufferutil', // Avoid error message (https://github.com/websockets/ws/issues/1126#issuecomment-631605589)
-    //   'utf-8-validate': 'utf-8-validate', // Avoid error message (https://github.com/websockets/ws/issues/1126#issuecomment-631605589)
-    // },
-    // https://stackoverflow.com/a/48768423/1114901
-    externals: nodeExternals(),
-    // const nodeExternals = require("webpack-node-externals"); // https://stackoverflow.com/a/53744505/1114901
-    // externals: {
-    //   nodeExternals()
-    //   // playwright: "playwright-core",
-    // },
-    // externalsPresets: {
-    //   electron: true,
-    // },
-    // Build for a Node environment https://webpack.js.org/configuration/target/
-    target: 'node',
+    target: 'electron-main',
+    // target: 'node',
+    // externalsPresets: { electronMain: true }, // Replaces 'target' in Webpack 5+
+    externals: [{ 'playwright-core': 'playwright-core' }], // https://github.com/puppeteer/puppeteer/issues/3466#issuecomment-513478584]
+    // externals: [
+    //   nodeExternals({
+    //     allowlist: ['events'],
+    //   }),
+    // ],
+    // externals: { 'playwright-core': 'playwright-core' }, // https://github.com/puppeteer/puppeteer/issues/3466#issuecomment-513478584]
+    // https://github.com/liady/webpack-node-externals
+    // nodeExternals(),
+
     output: {
-      // https://stackoverflow.com/a/65452278/1114901
       path: path.resolve(__dirname, 'dist/'),
       publicPath: 'dist/',
       filename: '[name].js',
       globalObject: 'this',
       libraryTarget: 'umd', // Universal Module (module.export, ES6, AMD)
-      library: 'electronPlaywrightBrowserInstaller', // Expose the library under this global variable https://webpack.js.org/guides/author-libraries/#expose-the-library
+      library: 'browserInstaller', // Expose the library under this global variable https://webpack.js.org/guides/author-libraries/#expose-the-library
       // libraryExport: 'default', // Export the default Object
       // umdNamedDefine: true,
     },
     devtool: 'source-map',
-    // optimization: {
-    //   runtimeChunk: true,
-    // },
     // devServer: {
     //   contentBase: path.join(__dirname, "public/"),
     //   port: 3000,
