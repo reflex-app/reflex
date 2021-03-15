@@ -6,9 +6,9 @@
   "scripts": {
     "dev": "yarn clean && webpack --watch --mode development",
     "build": "yarn clean && webpack --mode production",
-    "browsers": "yarn playwright-var node .src/index.js",
-    "test": "yarn playwright-var node ./src/test.js",
-    "clean": "rm -rf dist/*",
+    "browsers": "yarn run playwright-var node .src/index.js",
+    "test": "yarn run playwright-var node ./src/test.js",
+    "clean": "rimraf dist/*",
     "release": "node ./scripts/release.js",
     "preinstall": "yarn run playwright-var && npx cross-env PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1",
     "playwright-var": "npx cross-env PLAYWRIGHT_BROWSERS_PATH=0"
@@ -19,7 +19,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "playwright-core": "^1.7.1"
+    "playwright-core": "^1.10.0-next-alpha-mar-8-2021"
   },
   "devDependencies": {
     "@babel/cli": "^7.12.10",
@@ -38,7 +38,6 @@
     "jpeg-js": "^0.4.2",
     "mime": "^2.4.6",
     "node-polyfill-webpack-plugin": "^1.0.2",
-    "playwright-core": "^1.10.0-next-alpha-mar-8-2021",
     "pngjs": "^5.0.0",
     "progress": "^2.0.3",
     "proper-lockfile": "^4.1.1",
