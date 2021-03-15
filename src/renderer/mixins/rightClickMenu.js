@@ -1,7 +1,7 @@
 /**
  * Creates a generic right-click menu
  */
-import { remote } from 'electron'
+import { remote, getCurrentWindow } from 'electron' // TODO Migrate to @electron/remote and move this logic to main process
 import isElectron from 'is-electron'
 import Trigger from '~/components/CrossBrowser/Screenshots/Trigger.vue'
 const { Menu, MenuItem } = remote

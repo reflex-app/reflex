@@ -2,6 +2,11 @@
 import { app } from 'electron'
 import { version } from '../../package.json'
 
+// Setup workaround for Remote module
+// https://github.com/electron/remote#migrating-from-remote
+// TODO Migrate away from Remote module
+require('@electron/remote/main').initialize()
+
 // Set the version
 app.getVersion = () => version
 

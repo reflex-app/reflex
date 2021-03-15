@@ -13,7 +13,7 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex'
-import Selection from '@simonwep/selection-js'
+import SelectionArea from '@simonwep/selection-js'
 import Artboard from '@/components/Screens/Artboard'
 
 export default {
@@ -66,7 +66,7 @@ export default {
     // Start automatically if saved in localStorage
     if (this.discoMode === true) this.startDisco()
 
-    this.selectionInstance = new Selection({
+    this.selectionInstance = new SelectionArea({
       class: 'selection-area', // Class for the selection-area
       selectedClass: 'is-selected',
       selectables: ['#artboards > .artboard'], // All elements in this container can be selected
@@ -91,24 +91,34 @@ export default {
           value: true,
         })
       })
-      .on('move', (evt) => {
-        /**
-         * Only add / remove selected class to increase selection performance.
-         */
+      .on(
+        'move',
+        ({
+          store: {
+            changed: { removed, added },
+          },
+        }) => {
+          /**
+           * Only add / remove selected class to increase selection performance.
+           */
 
-        // Add
-        evt.changed.added.forEach((item) => {
-          const id = item.getAttribute('artboard-id')
-          this.$store.dispatch('selectedArtboards/selectedArtboardsAdd', id)
-        })
+          // Add
+          added.forEach((item) => {
+            const id = item.getAttribute('artboard-id')
+            this.$store.dispatch('selectedArtboards/selectedArtboardsAdd', id)
+          })
 
-        // Remove
-        evt.changed.removed.forEach((item) => {
-          const id = item.getAttribute('artboard-id')
-          this.$store.dispatch('selectedArtboards/selectedArtboardsRemove', id)
-        })
-      })
-      .on('stop', (evt) => {
+          // Remove
+          removed.forEach((item) => {
+            const id = item.getAttribute('artboard-id')
+            this.$store.dispatch(
+              'selectedArtboards/selectedArtboardsRemove',
+              id
+            )
+          })
+        }
+      )
+      .on('stop', ({ store: { selected } }) => {
         /**
          * Every element has a artboard-id property which is used
          * to find the selected nodes. Find these and append they
@@ -124,7 +134,7 @@ export default {
         })
 
         // Push the new IDs
-        evt.selected.forEach((item) => {
+        selected.forEach((item) => {
           const id = item.getAttribute('artboard-id')
           this.$store.dispatch('selectedArtboards/selectedArtboardsAdd', id) // Add these items to the Store
         })

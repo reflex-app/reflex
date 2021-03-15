@@ -20,7 +20,7 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex'
-import Selection from '@simonwep/selection-js'
+import SelectionArea from '@simonwep/selection-js'
 import Artboard from './Artboard'
 import WelcomeScreen from './WelcomeScreen'
 
@@ -51,7 +51,7 @@ export default {
     // }
   },
   mounted() {
-    this.selectionInstance = new Selection({
+    this.selectionInstance = new SelectionArea({
       selectables: ['.artboard'], // All elements in this container can be selected
       boundaries: ['#canvas'], // The boundary
       // startareas: ['#canvas'],
@@ -78,24 +78,34 @@ export default {
           value: true,
         })
       })
-      .on('move', ({ changed: { removed, added } }) => {
-        /**
-         * Only add / remove selected class to increase selection performance.
-         */
+      .on(
+        'move',
+        ({
+          store: {
+            changed: { removed, added },
+          },
+        }) => {
+          /**
+           * Only add / remove selected class to increase selection performance.
+           */
 
-        // Add
-        added.forEach((item) => {
-          const id = item.getAttribute('artboard-id')
-          this.$store.dispatch('selectedArtboards/selectedArtboardsAdd', id)
-        })
+          // Add
+          added.forEach((item) => {
+            const id = item.getAttribute('artboard-id')
+            this.$store.dispatch('selectedArtboards/selectedArtboardsAdd', id)
+          })
 
-        // Remove
-        removed.forEach((item) => {
-          const id = item.getAttribute('artboard-id')
-          this.$store.dispatch('selectedArtboards/selectedArtboardsRemove', id)
-        })
-      })
-      .on('stop', ({ selected }) => {
+          // Remove
+          removed.forEach((item) => {
+            const id = item.getAttribute('artboard-id')
+            this.$store.dispatch(
+              'selectedArtboards/selectedArtboardsRemove',
+              id
+            )
+          })
+        }
+      )
+      .on('stop', ({ store: { selected } }) => {
         /**
          * Every element has a artboard-id property which is used
          * to find the selected nodes. Find these and append they
