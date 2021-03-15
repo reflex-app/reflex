@@ -1,10 +1,4 @@
 /**
- * Attach to the EventEmitter
- * This allows us to stream the download progress
- */
-import { downloadEmitter } from '../emitter'
-;('use strict')
-/**
  * Copyright 2017 Google Inc. All rights reserved.
  * Modifications copyright (c) Microsoft Corporation.
  *
@@ -20,19 +14,16 @@ import { downloadEmitter } from '../emitter'
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-Object.defineProperty(exports, '__esModule', { value: true })
-exports.logPolitely = exports.downloadBrowserWithProgressBar = void 0
-
-const fs = require('fs')
-const os = require('os')
-const path = require('path')
-const URL = require('url')
-const util = require('util')
-const ProgressBar = require('progress')
-const proxy_from_env_1 = require('proxy-from-env')
-const extract = require('extract-zip')
-const ProxyAgent = require('https-proxy-agent')
-const browserPaths = require('../utils/browserPaths')
+import fs from 'fs'
+import os from 'os'
+import path from 'path'
+import * as URL from 'url'
+import * as util from 'util'
+import ProgressBar from 'progress'
+import { getProxyForUrl } from 'proxy-from-env'
+import extract from 'extract-zip'
+import { hostPlatform } from '../utils/registry'
+import { downloadEmitter } from '../emitter' // CUSTOM: Reflex
 // `https-proxy-agent` v5 is written in Typescript and exposes generated types.
 // However, as of June 2020, its types are generated with tsconfig that enables
 // `esModuleInterop` option.
@@ -40,158 +31,39 @@ const browserPaths = require('../utils/browserPaths')
 // As a result, we can't depend on the package unless we enable the option
 // for our codebase. Instead of doing this, we abuse "require" to import module
 // without types.
-const utils_1 = require('../utils/utils')
+const ProxyAgent = require('https-proxy-agent')
 const unlinkAsync = util.promisify(fs.unlink.bind(fs))
 const chmodAsync = util.promisify(fs.chmod.bind(fs))
 const existsAsync = (path) =>
   new Promise((resolve) => fs.stat(path, (err) => resolve(!err)))
-const CHROMIUM_MOVE_TO_AZURE_CDN_REVISION = 792639
-function getDownloadHost(browserName, revision) {
-  // Only old chromium revisions are downloaded from gbucket.
-  const defaultDownloadHost =
-    browserName === 'chromium' && revision < CHROMIUM_MOVE_TO_AZURE_CDN_REVISION
-      ? 'https://storage.googleapis.com'
-      : 'https://playwright.azureedge.net'
-  const envDownloadHost = {
-    chromium: 'PLAYWRIGHT_CHROMIUM_DOWNLOAD_HOST',
-    firefox: 'PLAYWRIGHT_FIREFOX_DOWNLOAD_HOST',
-    webkit: 'PLAYWRIGHT_WEBKIT_DOWNLOAD_HOST',
-  }
-  return (
-    utils_1.getFromENV(envDownloadHost[browserName]) ||
-    utils_1.getFromENV('PLAYWRIGHT_DOWNLOAD_HOST') ||
-    defaultDownloadHost
-  )
-}
-function getDownloadUrl(browserName, revision, platform) {
-  if (browserName === 'chromium') {
-    return revision < CHROMIUM_MOVE_TO_AZURE_CDN_REVISION
-      ? new Map([
-          [
-            'ubuntu18.04',
-            '%s/chromium-browser-snapshots/Linux_x64/%d/chrome-linux.zip',
-          ],
-          [
-            'ubuntu20.04',
-            '%s/chromium-browser-snapshots/Linux_x64/%d/chrome-linux.zip',
-          ],
-          ['mac10.13', '%s/chromium-browser-snapshots/Mac/%d/chrome-mac.zip'],
-          ['mac10.14', '%s/chromium-browser-snapshots/Mac/%d/chrome-mac.zip'],
-          ['mac10.15', '%s/chromium-browser-snapshots/Mac/%d/chrome-mac.zip'],
-          ['mac11.0', '%s/chromium-browser-snapshots/Mac/%d/chrome-mac.zip'],
-          ['mac11.1', '%s/chromium-browser-snapshots/Mac/%d/chrome-mac.zip'],
-          ['win32', '%s/chromium-browser-snapshots/Win/%d/chrome-win.zip'],
-          ['win64', '%s/chromium-browser-snapshots/Win_x64/%d/chrome-win.zip'],
-        ]).get(platform)
-      : new Map([
-          ['ubuntu18.04', '%s/builds/chromium/%s/chromium-linux.zip'],
-          ['ubuntu20.04', '%s/builds/chromium/%s/chromium-linux.zip'],
-          ['mac10.13', '%s/builds/chromium/%s/chromium-mac.zip'],
-          ['mac10.14', '%s/builds/chromium/%s/chromium-mac.zip'],
-          ['mac10.15', '%s/builds/chromium/%s/chromium-mac.zip'],
-          ['mac11.0', '%s/builds/chromium/%s/chromium-mac.zip'],
-          ['mac11.0-arm64', '%s/builds/chromium/%s/chromium-mac-arm64.zip'],
-          ['mac11.1', '%s/builds/chromium/%s/chromium-mac.zip'],
-          ['mac11.1-arm64', '%s/builds/chromium/%s/chromium-mac-arm64.zip'],
-          ['win32', '%s/builds/chromium/%s/chromium-win32.zip'],
-          ['win64', '%s/builds/chromium/%s/chromium-win64.zip'],
-        ]).get(platform)
-  }
-  if (browserName === 'firefox') {
-    const FIREFOX_NORMALIZE_CDN_NAMES_REVISION = 1140
-    return revision < FIREFOX_NORMALIZE_CDN_NAMES_REVISION
-      ? new Map([
-          ['ubuntu18.04', '%s/builds/firefox/%s/firefox-linux.zip'],
-          ['ubuntu20.04', '%s/builds/firefox/%s/firefox-linux.zip'],
-          ['mac10.13', '%s/builds/firefox/%s/firefox-mac.zip'],
-          ['mac10.14', '%s/builds/firefox/%s/firefox-mac.zip'],
-          ['mac10.15', '%s/builds/firefox/%s/firefox-mac.zip'],
-          ['mac11.0', '%s/builds/firefox/%s/firefox-mac.zip'],
-          ['mac11.1', '%s/builds/firefox/%s/firefox-mac.zip'],
-          ['win32', '%s/builds/firefox/%s/firefox-win32.zip'],
-          ['win64', '%s/builds/firefox/%s/firefox-win64.zip'],
-        ]).get(platform)
-      : new Map([
-          ['ubuntu18.04', '%s/builds/firefox/%s/firefox-ubuntu-18.04.zip'],
-          ['ubuntu20.04', '%s/builds/firefox/%s/firefox-ubuntu-18.04.zip'],
-          ['mac10.13', '%s/builds/firefox/%s/firefox-mac-10.14.zip'],
-          ['mac10.14', '%s/builds/firefox/%s/firefox-mac-10.14.zip'],
-          ['mac10.15', '%s/builds/firefox/%s/firefox-mac-10.14.zip'],
-          ['mac11.0', '%s/builds/firefox/%s/firefox-mac-10.14.zip'],
-          ['mac11.0-arm64', '%s/builds/firefox/%s/firefox-mac-10.14.zip'],
-          ['mac11.1', '%s/builds/firefox/%s/firefox-mac-10.14.zip'],
-          ['mac11.1-arm64', '%s/builds/firefox/%s/firefox-mac-10.14.zip'],
-          ['win32', '%s/builds/firefox/%s/firefox-win32.zip'],
-          ['win64', '%s/builds/firefox/%s/firefox-win64.zip'],
-        ]).get(platform)
-  }
-  if (browserName === 'webkit') {
-    const WEBKIT_NORMALIZE_CDN_NAMES_REVISION = 1317
-    return revision < WEBKIT_NORMALIZE_CDN_NAMES_REVISION
-      ? new Map([
-          ['ubuntu18.04', '%s/builds/webkit/%s/minibrowser-gtk-wpe.zip'],
-          ['ubuntu20.04', '%s/builds/webkit/%s/minibrowser-gtk-wpe.zip'],
-          ['mac10.13', undefined],
-          ['mac10.14', '%s/builds/webkit/%s/minibrowser-mac-10.14.zip'],
-          ['mac10.15', '%s/builds/webkit/%s/minibrowser-mac-10.15.zip'],
-          ['mac11.0', '%s/builds/webkit/%s/minibrowser-mac-10.15.zip'],
-          ['mac11.1', '%s/builds/webkit/%s/minibrowser-mac-10.15.zip'],
-          ['win32', '%s/builds/webkit/%s/minibrowser-win64.zip'],
-          ['win64', '%s/builds/webkit/%s/minibrowser-win64.zip'],
-        ]).get(platform)
-      : new Map([
-          ['ubuntu18.04', '%s/builds/webkit/%s/webkit-ubuntu-18.04.zip'],
-          ['ubuntu20.04', '%s/builds/webkit/%s/webkit-ubuntu-20.04.zip'],
-          ['mac10.13', undefined],
-          ['mac10.14', '%s/builds/webkit/%s/webkit-mac-10.14.zip'],
-          ['mac10.15', '%s/builds/webkit/%s/webkit-mac-10.15.zip'],
-          ['mac11.0', '%s/builds/webkit/%s/webkit-mac-10.15.zip'],
-          ['mac11.0-arm64', '%s/builds/webkit/%s/webkit-mac-11.0-arm64.zip'],
-          ['mac11.1', '%s/builds/webkit/%s/webkit-mac-10.15.zip'],
-          ['mac11.1-arm64', '%s/builds/webkit/%s/webkit-mac-11.0-arm64.zip'],
-          ['win32', '%s/builds/webkit/%s/webkit-win64.zip'],
-          ['win64', '%s/builds/webkit/%s/webkit-win64.zip'],
-        ]).get(platform)
-  }
-}
-function revisionURL(browser, platform = browserPaths.hostPlatform) {
-  const revision = parseInt(browser.revision, 10)
-  const serverHost = getDownloadHost(browser.name, revision)
-  const urlTemplate = getDownloadUrl(browser.name, revision, platform)
-  utils_1.assert(
-    urlTemplate,
-    `ERROR: Playwright does not support ${browser.name} on ${platform}`
-  )
-  return util.format(urlTemplate, serverHost, browser.revision)
-}
-
-export async function downloadBrowserWithProgressBar(browsersPath, browser) {
-  const browserPath = browserPaths.browserDirectory(browsersPath, browser)
-  const progressBarName = `${browser.name} v${browser.revision}`
-  if (await existsAsync(browserPath)) {
+export async function downloadBrowserWithProgressBar(registry, browserName) {
+  const browserDirectory = registry.browserDirectory(browserName)
+  const progressBarName = `${browserName} v${registry.revision(browserName)}`
+  if (await existsAsync(browserDirectory)) {
     // Already downloaded.
     return false
   }
-  // let progressBar
-  const lastDownloadedBytes = 0
+  let progressBar
+  let lastDownloadedBytes = 0
   function progress(downloadedBytes, totalBytes) {
+    if (!progressBar) {
+      progressBar = new ProgressBar(
+        `Downloading ${progressBarName} - ${toMegabytes(
+          totalBytes
+        )} [:bar] :percent :etas `,
+        {
+          complete: '=',
+          incomplete: ' ',
+          width: 20,
+          total: totalBytes,
+        }
+      )
+    }
     const delta = downloadedBytes - lastDownloadedBytes
-    // if (!progressBar) {
-    //   progressBar = new ProgressBar(
-    //     `Downloading ${progressBarName} - ${toMegabytes(
-    //       totalBytes
-    //     )} [:bar] :percent :etas `,
-    //     {
-    //       complete: "=",
-    //       incomplete: " ",
-    //       width: 20,
-    //       total: totalBytes,
-    //     }
-    //   );
-    // }
-    // lastDownloadedBytes = downloadedBytes;
-    // progressBar.tick(delta);
+    lastDownloadedBytes = downloadedBytes
+    progressBar.tick(delta)
 
+    // CUSTOM: Reflex
     // Emit the progress
     // This function is called whenever there's new bytes downloaded
     downloadEmitter.emit('progress', {
@@ -200,7 +72,6 @@ export async function downloadBrowserWithProgressBar(browsersPath, browser) {
       current: toMegabytes(downloadedBytes),
       total: toMegabytes(totalBytes),
     })
-
     // Done!
     if (downloadedBytes === totalBytes) {
       const finalMsg = `${progressBarName} installed.`
@@ -208,38 +79,54 @@ export async function downloadBrowserWithProgressBar(browsersPath, browser) {
       console.log(finalMsg)
     }
   }
-  const url = revisionURL(browser)
+  const url = registry.downloadURL(browserName)
   const zipPath = path.join(
     os.tmpdir(),
-    `playwright-download-${browser.name}-${browserPaths.hostPlatform}-${browser.revision}.zip`
+    `playwright-download-${browserName}-${hostPlatform}-${registry.revision(
+      browserName
+    )}.zip`
   )
   try {
-    await downloadFile(url, zipPath, progress)
-    await extract(zipPath, { dir: browserPath })
-    await chmodAsync(browserPaths.executablePath(browserPath, browser), 0o755)
+    for (let attempt = 1, N = 3; attempt <= N; ++attempt) {
+      const { error } = await downloadFile(url, zipPath, progress)
+      if (!error) break
+      const errorMessage =
+        typeof error === 'object' && typeof error.message === 'string'
+          ? error.message
+          : ''
+      if (
+        attempt < N &&
+        (errorMessage.includes('ECONNRESET') ||
+          errorMessage.includes('ETIMEDOUT'))
+      ) {
+        // Maximum delay is 3rd retry: 1337.5ms
+        const millis = Math.random() * 200 + 250 * Math.pow(1.5, attempt)
+        await new Promise((c) => setTimeout(c, millis))
+      } else {
+        throw error
+      }
+    }
+    await extract(zipPath, { dir: browserDirectory })
+    await chmodAsync(registry.executablePath(browserName), 0o755)
   } catch (e) {
     process.exitCode = 1
     throw e
   } finally {
     if (await existsAsync(zipPath)) await unlinkAsync(zipPath)
   }
-  logPolitely(`${progressBarName} downloaded to ${browserPath}`)
+  logPolitely(`${progressBarName} downloaded to ${browserDirectory}`)
   return true
 }
-// exports.downloadBrowserWithProgressBar = downloadBrowserWithProgressBar;
-
 function toMegabytes(bytes) {
   const mb = bytes / 1024 / 1024
   return `${Math.round(mb * 10) / 10} Mb`
 }
 function downloadFile(url, destinationPath, progressCallback) {
-  let fulfill = () => {}
-  let reject = () => {}
+  let fulfill = ({ error }) => {}
   let downloadedBytes = 0
   let totalBytes = 0
-  const promise = new Promise((x, y) => {
+  const promise = new Promise((x) => {
     fulfill = x
-    reject = y
   })
   const request = httpRequest(url, 'GET', (response) => {
     if (response.statusCode !== 200) {
@@ -248,17 +135,17 @@ function downloadFile(url, destinationPath, progressCallback) {
       )
       // consume response data to free up memory
       response.resume()
-      reject(error)
+      fulfill({ error })
       return
     }
     const file = fs.createWriteStream(destinationPath)
-    file.on('finish', () => fulfill())
-    file.on('error', (error) => reject(error))
+    file.on('finish', () => fulfill({ error: null }))
+    file.on('error', (error) => fulfill({ error }))
     response.pipe(file)
     totalBytes = parseInt(response.headers['content-length'], 10)
     if (progressCallback) response.on('data', onData)
   })
-  request.on('error', (error) => reject(error))
+  request.on('error', (error) => fulfill({ error }))
   return promise
   function onData(chunk) {
     downloadedBytes += chunk.length
@@ -268,7 +155,7 @@ function downloadFile(url, destinationPath, progressCallback) {
 function httpRequest(url, method, response) {
   let options = URL.parse(url)
   options.method = method
-  const proxyURL = proxy_from_env_1.getProxyForUrl(url)
+  const proxyURL = getProxyForUrl(url)
   if (proxyURL) {
     if (url.startsWith('http:')) {
       const proxy = URL.parse(proxyURL)
@@ -296,11 +183,8 @@ function httpRequest(url, method, response) {
   request.end()
   return request
 }
-
 export function logPolitely(toBeLogged) {
   const logLevel = process.env.npm_config_loglevel
   const logLevelDisplay = ['silent', 'error', 'warn'].includes(logLevel || '')
   if (!logLevelDisplay) console.log(toBeLogged) // eslint-disable-line no-console
 }
-// exports.logPolitely = logPolitely;
-// # sourceMappingURL=browserFetcher.js.map
