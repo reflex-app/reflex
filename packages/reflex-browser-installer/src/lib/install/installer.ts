@@ -58,8 +58,8 @@ export async function installBrowsersWithProgressBar(
       )
       return false
     }
-
     await fsMkdirAsync(registryDirectory, { recursive: true })
+
     const lockfilePath = path.join(registryDirectory, '__dirlock')
     const releaseLock = await lockfile.lock(registryDirectory, {
       retries: {

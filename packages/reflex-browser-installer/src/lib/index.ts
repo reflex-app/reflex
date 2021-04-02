@@ -1,5 +1,4 @@
 import { promises as fs } from 'fs'
-import path from 'path'
 import playwright from 'playwright-core'
 
 // We'll prepend console.log messages for this library
@@ -31,10 +30,21 @@ if (console.log) {
  */
 const { installBrowsersWithProgressBar } = require('./install/installer')
 
+interface InstallerOptions {
+  browsers: string[] // ['chromium', 'firefox', 'webkit']
+  installPath: string
+}
+
 export class Installer {
-  constructor(options = {}) {
-    options = options || {}
-    this.browsers = options.browsers || ['chromium', 'firefox', 'webkit']
+  public browsers?: string[] = ['chromium', 'firefox', 'webkit']
+  public installPath: string
+
+  constructor(options: InstallerOptions) {
+    ;({ browsers: this.browsers, installPath: this.installPath } = options)
+
+    if (!this.installPath) {
+      console.error('installPath not set')
+    }
   }
 
   async run() {
@@ -56,9 +66,10 @@ export class Installer {
     // Verify that there is a directory for each of the browsers
     const checkInstallDir = async () => {
       // List of files/folders at path in user's filesystem
-      const results = await ls(path.join(__dirname, '/.local-browsers'))
-      console.log('Found at install directory:', results)
+      // const results = await ls(path.join(__dirname, '/.local-browsers'))
+      const results = await ls(this.installPath)
       if (!results) return false // Case: no folders/files found at directory
+      console.log('Found at install directory:', results)
 
       // Validation
       return this.browsers.every((v) => results.find((x) => x.includes(v)))
