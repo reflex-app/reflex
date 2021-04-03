@@ -11,25 +11,25 @@ import ProgressIndicator from './ProgressIndicator'
 
 export default {
   components: {
-    ProgressIndicator,
+    ProgressIndicator
   },
-  data() {
+  data () {
     return {
-      progress: null,
+      progress: null
     }
   },
   computed: {
-    percentage() {
+    percentage () {
       return `${this.progress}%`
     },
-    readyToInstallUpdate() {
+    readyToInstallUpdate () {
       if (this.progress && this.progress === 100) {
         return true
       }
       return false
-    },
+    }
   },
-  mounted() {
+  mounted () {
     if (isElectron()) {
       ipcRenderer.on('DOWNLOAD_PROGRESS', (event, progress) => {
         this.progress = Number(progress)
@@ -37,10 +37,10 @@ export default {
     }
   },
   methods: {
-    triggerInstall() {
+    triggerInstall () {
       ipcRenderer.send('TRIGGER_INSTALL')
-    },
-  },
+    }
+  }
 }
 </script>
 

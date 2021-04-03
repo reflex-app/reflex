@@ -33,8 +33,8 @@ export default {
     SidePanel,
     Screenshots,
     DiscoSwitch,
-    SizeShifter,
-  },
+    SizeShifter
+  }
 }
 </script>
 

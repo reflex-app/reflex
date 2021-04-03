@@ -1,14 +1,9 @@
+/* eslint-disable */
 import { Menu, MenuItem, app } from 'electron'
+import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
+import { ELECTRON_RELAUNCH_CODE } from '../../../.electron-nuxt/config'
 import electronDebug from 'electron-debug'
-import vueDevtools from 'vue-devtools'
-import { ELECTRON_RELAUNCH_CODE } from '../../.electron-nuxt/config'
-import mainWinHandler from './mainWindow'
 process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = 'true'
-
-electronDebug({
-  showDevTools: false,
-  devToolsMode: 'right',
-})
 
 app.on('ready', () => {
   const menu = Menu.getApplicationMenu()
@@ -21,11 +16,23 @@ app.on('ready', () => {
   })
   menu.append(refreshButton)
   Menu.setApplicationMenu(menu)
+
+  installExtension(VUEJS_DEVTOOLS)
+
+  electronDebug({
+    showDevTools: false,
+    devToolsMode: 'right',
+  })
 })
 
-mainWinHandler.onCreated((browserWindow) => {
-  vueDevtools.install() // Add Vue devtools
-})
+const handleProcessExit = () => {
+  app.exit(0)
+  process.exit(0)
+}
+
+process.on('SIGINT', handleProcessExit)
+process.on('SIGQUIT', handleProcessExit)
+process.on('SIGTERM', handleProcessExit)
 
 // Require `main` process to boot app
-require('./index')
+require('../index')

@@ -13,25 +13,25 @@
 import SwitchButton from '@/components/Shared/Switch.vue'
 export default {
   components: {
-    SwitchButton,
+    SwitchButton
   },
   props: {
     instance: {
       type: Object,
-      required: true,
-    },
+      required: true
+    }
   },
   data: () => ({
-    enabled: true,
+    enabled: true
   }),
   methods: {
-    zoomIn() {
+    zoomIn () {
       this.instance.zoomIn()
     },
-    zoomOut() {
+    zoomOut () {
       this.instance.zoomOut()
     },
-    reset() {
+    reset () {
       this.instance.reset()
     },
     /**
@@ -39,16 +39,16 @@ export default {
      * When on, users can pan and zoom
      * When off, users can only interact inside of Screens
      */
-    toggleCanvas(state) {
+    toggleCanvas (state) {
       // Update local state
       this.enabled = state
 
       // Update Store
       this.$store.commit('interactions/setPanzoomState', {
-        value: state,
+        value: state
       })
-    },
-  },
+    }
+  }
 }
 </script>
 

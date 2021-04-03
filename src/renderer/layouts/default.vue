@@ -12,9 +12,9 @@ import ToolBar from '@/components/ToolBar'
 
 export default {
   components: {
-    ToolBar,
+    ToolBar
   },
-  mounted() {
+  mounted () {
     // Global listeners
     if (isElectron()) {
       ipcRenderer.on('menu_reset-app', () => {
@@ -31,7 +31,7 @@ export default {
         }
       })
     }
-  },
+  }
 }
 </script>
 

@@ -25,14 +25,15 @@ const winHandler = new BrowserWinHandler({
     nodeIntegration: true, // Required
     enableRemoteModule: true,
     nodeIntegrationInWorker: true, // Enable Web Workers https://www.electronjs.org/docs/tutorial/multithreading
-    contextIsolation: false, // Required Electron 12
+    contextIsolation: false // Required Electron 12
   },
-  titleBarStyle: 'hiddenInset', // Hide the bar
+  titleBarStyle: 'hiddenInset' // Hide the bar
 })
 
-winHandler.onCreated((browserWindow) => {
-  if (isDev) browserWindow.loadURL(DEV_SERVER_URL)
-  else browserWindow.loadFile(INDEX_PATH)
+winHandler.onCreated(browserWindow => {
+  winHandler.loadPage('/')
+  // if (isDev) browserWindow.loadURL(DEV_SERVER_URL)
+  // else browserWindow.loadFile(INDEX_PATH)
 
   // Do stuff...
 

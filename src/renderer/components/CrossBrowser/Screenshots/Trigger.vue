@@ -29,19 +29,19 @@ import { browserContexts } from '~/components/CrossBrowser/Screenshots'
 export default {
   props: {
     data: {
-      type: Object,
-    },
+      type: Object
+    }
   },
-  setup(props, { emit, root: { $store } }) {
+  setup (props, { emit, root: { $store } }) {
     const { state } = useCrossBrowserScreenshots()
 
     return {
       emit,
       props,
       state,
-      browserContexts,
+      browserContexts
     }
-  },
+  }
 }
 </script>
 

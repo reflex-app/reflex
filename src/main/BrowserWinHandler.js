@@ -1,6 +1,9 @@
+/* eslint-disable */
 import { EventEmitter } from 'events'
 import { BrowserWindow, app } from 'electron'
+const DEV_SERVER_URL = process.env.DEV_SERVER_URL
 const isProduction = process.env.NODE_ENV === 'production'
+const isDev = process.env.NODE_ENV === 'development'
 
 export default class BrowserWinHandler {
   /**
@@ -36,7 +39,7 @@ export default class BrowserWinHandler {
         ...this.options.webPreferences,
         webSecurity: isProduction, // disable on dev to allow loading local resources
         nodeIntegration: true, // allow loading modules via the require () function
-        devTools: !process.env.SPECTRON, // disable on e2e test environment
+        contextIsolation: false, // https://github.com/electron/electron/issues/18037#issuecomment-806320028
       },
     })
     this.browserWindow.on('closed', () => {
@@ -60,9 +63,23 @@ export default class BrowserWinHandler {
    * @param callback {onReadyCallback}
    */
   onCreated(callback) {
+    if (this.browserWindow !== null) return callback(this.browserWindow)
     this._eventEmitter.once('created', () => {
       callback(this.browserWindow)
+      // TODO https://github.com/michalzaq12/electron-nuxt/issues/654
+      // if (isDev && BrowserWindow.getAllWindows().length === 1)
+      //   this.browserWindow.webContents.openDevTools()
     })
+  }
+
+  async loadPage(pagePath) {
+    if (!this.browserWindow)
+      return Promise.reject(
+        new Error("The page could not be loaded before win 'created' event")
+      )
+    const serverUrl = isDev ? DEV_SERVER_URL : 'app://./index.html'
+    const fullPath = serverUrl + '#' + pagePath
+    await this.browserWindow.loadURL(fullPath)
   }
 
   /**
@@ -71,9 +88,7 @@ export default class BrowserWinHandler {
    */
   created() {
     return new Promise((resolve) => {
-      this._eventEmitter.once('created', () => {
-        resolve(this.browserWindow)
-      })
+      this.onCreated(() => resolve(this.browserWindow))
     })
   }
 }

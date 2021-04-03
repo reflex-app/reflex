@@ -12,8 +12,9 @@
         icon="plus"
         class="artboard-tabs__button"
         @click="add"
-        >New Screen</Button
       >
+        New Screen
+      </Button>
     </div>
 
     <!-- Show a tip if there's no artboards -->
@@ -40,36 +41,36 @@ import artboardEditable from '@/components/SidePanel/artboardEditable'
 export default {
   name: 'ScreensPanel',
   components: {
-    artboardEditable,
+    artboardEditable
   },
 
-  data() {
+  data () {
     return {
-      defaultSizeSelection: '',
+      defaultSizeSelection: ''
     }
   },
 
   computed: {
     // Bind to our Vuex Store's URL value
     artboards: {
-      get() {
+      get () {
         return this.$store.state.artboards.list
       },
-      set(value) {
+      set (value) {
         this.$store.dispatch('artboards/setArtboards', value)
-      },
-    },
+      }
+    }
   },
 
   methods: {
-    add() {
+    add () {
       this.$store.dispatch('artboards/addArtboard', {
         title: 'Untitled',
         width: 375,
-        height: 667,
+        height: 667
       })
     },
-    addDefaultSizes() {
+    addDefaultSizes () {
       if (!this.defaultSizeSelection) return false
 
       let sizes // This will contain the size data
@@ -78,86 +79,86 @@ export default {
         small: {
           title: 'Small',
           width: 375,
-          height: 667,
+          height: 667
         },
         medium: {
           title: 'Medium',
           width: 768,
-          height: 1024,
+          height: 1024
         },
         large: {
           title: 'Large',
           width: 1024,
-          height: 720,
-        },
+          height: 720
+        }
       }
 
       const bootstrap = {
         xsmall: {
           title: 'XS',
           width: 375,
-          height: 500,
+          height: 500
         },
         small: {
           title: 'S',
           width: 576,
-          height: 800,
+          height: 800
         },
         medium: {
           title: 'M',
           width: 768,
-          height: 1000,
+          height: 1000
         },
         large: {
           title: 'MD',
           width: 992,
-          height: 1200,
+          height: 1200
         },
         xlarge: {
           title: 'LG',
           width: 1200,
-          height: 1400,
-        },
+          height: 1400
+        }
       }
 
       const foundation = {
         small: {
           title: 'Small',
           width: 400,
-          height: 600,
+          height: 600
         },
         medium: {
           title: 'Medium',
           width: 640,
-          height: 800,
+          height: 800
         },
         large: {
           title: 'Large',
           width: 1024,
-          height: 1200,
-        },
+          height: 1200
+        }
       }
 
       switch (this.defaultSizeSelection) {
-        case 'basic':
-          sizes = defaults
-          break
-        case 'bootstrap':
-          sizes = bootstrap
-          break
-        case 'foundation':
-          sizes = foundation
-          break
+      case 'basic':
+        sizes = defaults
+        break
+      case 'bootstrap':
+        sizes = bootstrap
+        break
+      case 'foundation':
+        sizes = foundation
+        break
       }
 
       this.$store.dispatch('artboards/addMultipleArtboards', {
-        data: sizes,
+        data: sizes
       })
 
       // Empty selected value
       this.defaultSizeSelection = ''
-    },
-  },
+    }
+  }
 }
 </script>
 

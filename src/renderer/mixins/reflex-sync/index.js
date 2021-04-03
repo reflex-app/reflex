@@ -4,9 +4,9 @@
 import { reactive, watchEffect } from '@vue/composition-api'
 
 export const state = reactive({
-  publisher: '', // Will be an ID of the artboard that is currently the source of events
+  publisher: '' // Will be an ID of the artboard that is currently the source of events
 })
 
-export function setPublisher(id) {
+export function setPublisher (id) {
   state.publisher = id
 }

@@ -60,9 +60,9 @@ module.exports = (env, argv) => {
       }),
       // Set Webpack variables
       // https://webpack.js.org/plugins/define-plugin/
-      new webpack.DefinePlugin({
-        'process.env.PLAYWRIGHT_BROWSERS_PATH': '0',
-      }),
+      // new webpack.DefinePlugin({
+      //   'process.env.PLAYWRIGHT_BROWSERS_PATH': '0',
+      // }),
       // new NodePolyfillPlugin(), // Polyfill plugins in Webpack (Required in 5+)
     ],
 

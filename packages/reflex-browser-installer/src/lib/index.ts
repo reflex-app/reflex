@@ -1,4 +1,4 @@
-import { promises as fs } from 'fs'
+import fs, { promises as fsPromises } from 'fs'
 import playwright from 'playwright-core'
 
 // We'll prepend console.log messages for this library
@@ -67,12 +67,26 @@ export class Installer {
     const checkInstallDir = async () => {
       // List of files/folders at path in user's filesystem
       // const results = await ls(path.join(__dirname, '/.local-browsers'))
-      const results = await ls(this.installPath)
-      if (!results) return false // Case: no folders/files found at directory
-      console.log('Found at install directory:', results)
 
-      // Validation
-      return this.browsers.every((v) => results.find((x) => x.includes(v)))
+      // Create the dir if it doesn't exist
+      if (!fs.existsSync(this.installPath)) {
+        fs.mkdirSync(this.installPath)
+      }
+
+      // Check if dir contains anything (e.g. previous installs)
+      const results = await ls(this.installPath)
+
+      if (results) {
+        console.log(
+          `Found at install directory (${this.installPath}):`,
+          results
+        )
+
+        // Validation
+        return this.browsers.every((v) => results.find((x) => x.includes(v)))
+      } else {
+        return false // Case: no folders/files found at directory
+      }
     }
 
     const isInstalled = (await checkInstallDir()) === true
@@ -133,10 +147,10 @@ export class Installer {
 
 // Find all files & folders at a path
 // https://stackoverflow.com/a/59042581/1114901
-async function ls(path) {
+async function ls(path: string) {
   try {
     const tempArr = []
-    const dir = await fs.opendir(path) // Opens a stream https://nodejs.org/api/fs.html#fs_class_fs_dir
+    const dir = await fsPromises.opendir(path) // Opens a stream https://nodejs.org/api/fs.html#fs_class_fs_dir
 
     for await (const dirent of dir) {
       tempArr.push(dirent.name)

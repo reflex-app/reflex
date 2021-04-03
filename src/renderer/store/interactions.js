@@ -4,9 +4,9 @@ export const state = () => ({
   internal: {
     isPanzooming: false,
     isSelectingArea: false,
-    isResizingArtboard: false,
+    isResizingArtboard: false
   },
-  panzoomEnabled: true,
+  panzoomEnabled: true
 })
 
 export const getters = {
@@ -14,7 +14,7 @@ export const getters = {
    * Getter to check if any states are true
    * Is Interacting = true when any internal state is true
    */
-  isInteracting: (state) => {
+  isInteracting: state => {
     let isOn = false
 
     for (const s in state.internal) {
@@ -26,7 +26,7 @@ export const getters = {
     }
 
     return isOn
-  },
+  }
 }
 
 export const mutations = {
@@ -37,5 +37,5 @@ export const mutations = {
   },
   setPanzoomState: (state, { value }) => {
     state.panzoomEnabled = value
-  },
+  }
 }

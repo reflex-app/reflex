@@ -116,7 +116,7 @@ function getPlaywrightExecPath(isPackaged = false, browser) {
     ? console.error(
         `Exec. path was NOT changed: ${updatedPath}. Env: ${process.env.PLAYWRIGHT_BROWSERS_PATH}`
       )
-    : console.info(`Exec. path changed`, { initialPath, updatedPath })
+    : console.info('Exec. path changed', { initialPath, updatedPath })
 
   return updatedPath
 }

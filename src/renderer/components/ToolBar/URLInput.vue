@@ -13,7 +13,7 @@
         @keyup.enter="triggerSiteLoad($event.target.value)"
         @keyup.esc="blur()"
         @blur="$emit('toggle-input')"
-      />
+      >
     </div>
     <!-- State: Initial -->
     <span v-else @click="$emit('toggle-input')">
@@ -32,16 +32,16 @@ export default {
     state: {
       type: Boolean,
       required: true,
-      default: false,
-    },
+      default: false
+    }
   },
   computed: {
-    url() {
+    url () {
       return this.$store.state.history.currentPage.url
-    },
+    }
   },
   watch: {
-    state() {
+    state () {
       const vm = this
       if (this.state === true) {
         // When clicked, select the text in the input
@@ -51,14 +51,14 @@ export default {
         })
       }
     },
-    url() {
+    url () {
       // When the URL changes...
       // update notBrowserSyncURL
       console.log('url changed')
-    },
+    }
   },
   methods: {
-    async triggerSiteLoad(url) {
+    async triggerSiteLoad (url) {
       if (!url) return false
 
       // Validate URL
@@ -66,22 +66,22 @@ export default {
       this.$emit('url-changed', newURL)
       this.blur()
     },
-    blur() {
+    blur () {
       // Blur the input
       const vm = this
       vm.$nextTick(() => {
         vm.$refs.input.blur()
       })
     },
-    validateURL(url) {
+    validateURL (url) {
       try {
         // @TODO: Refactor/simplify the URL corrector
         return autoCorrectURL(url)
       } catch (e) {
         return false
       }
-    },
-  },
+    }
+  }
 }
 </script>
 

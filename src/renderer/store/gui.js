@@ -1,7 +1,7 @@
 export const state = () => ({
   sidebar: true,
   focusMode: false,
-  discoMode: false,
+  discoMode: false
 })
 
 export const mutations = {
@@ -9,7 +9,7 @@ export const mutations = {
    * @param  {} state
    * @param  {Boolean} bool
    */
-  toggleSidebar(state, bool) {
+  toggleSidebar (state, bool) {
     if (!bool) bool = ''
 
     if (bool === true) {
@@ -20,7 +20,7 @@ export const mutations = {
       state.sidebar = !state.sidebar
     }
   },
-  toggleGui(state, key) {
+  toggleGui (state, key) {
     state[key] = !state[key]
-  },
+  }
 }

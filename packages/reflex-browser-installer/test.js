@@ -2,9 +2,7 @@
 // import BrowserIntaller from "../dist/main.js";
 // const playwright = require('playwright-core')
 
-import path from 'path'
-
-// const { Installer: BrowserInstaller } = require("../dist/main.js");
+const path = require('path')
 const { Installer: BrowserInstaller } = require('./dist/main.js')
 
 // Run the installer
@@ -12,7 +10,7 @@ const { Installer: BrowserInstaller } = require('./dist/main.js')
 // they won't be reinstalled
 const inst = new BrowserInstaller({
   browsers: ['firefox', 'webkit'],
-  installPath: path.join(__dirname, './dist/demo'), // Temporary demo folder
+  installPath: path.join(__dirname, './dist/browsers'), // Temporary demo folder
 })
 // console.log('Instance', inst)
 

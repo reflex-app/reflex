@@ -5,5 +5,5 @@ const SCROLL = 'scroll'
 module.exports = {
   CLICK,
   DBLCLICK,
-  SCROLL,
+  SCROLL
 }

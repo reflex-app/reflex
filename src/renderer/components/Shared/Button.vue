@@ -2,7 +2,7 @@
   <div class="button" :class="containerStyles" @click="onClick($event)">
     <Icon v-if="icon" :name="icon" :color="iconColor" class="button__icon" />
     <span class="button__text">
-      <slot></slot>
+      <slot />
     </span>
   </div>
 </template>
@@ -12,43 +12,43 @@ export default {
   props: {
     role: {
       type: String,
-      default: 'secondary',
+      default: 'secondary'
     },
     icon: {
-      type: String,
+      type: String
     },
     rounded: {
       type: Boolean,
-      default: false,
+      default: false
     },
     tight: {
       type: Boolean,
-      default: false,
+      default: false
     },
     isPressed: {
       type: Boolean,
-      default: false,
-    },
+      default: false
+    }
   },
   computed: {
-    containerStyles() {
+    containerStyles () {
       // Returns a class name based on
       // some logic w/ props
       const classNames = []
 
       // Set primary/secondary
       switch (this.role) {
-        case 'primary':
-          classNames.push('button--primary')
-          break
+      case 'primary':
+        classNames.push('button--primary')
+        break
 
-        case 'secondary':
-          classNames.push('button--secondary')
-          break
+      case 'secondary':
+        classNames.push('button--secondary')
+        break
 
-        case 'ghost':
-          classNames.push('button--ghost')
-          break
+      case 'ghost':
+        classNames.push('button--ghost')
+        break
       }
 
       // Check for button content + icon
@@ -75,33 +75,33 @@ export default {
 
       return classNames
     },
-    iconColor() {
+    iconColor () {
       if (!this.icon) return false
 
       switch (this.role) {
-        // Dark BG
-        case 'primary':
-          return 'light'
+      // Dark BG
+      case 'primary':
+        return 'light'
 
         // Light BG
-        case 'secondary':
-        case 'ghost':
-          return 'dark'
+      case 'secondary':
+      case 'ghost':
+        return 'dark'
 
-        default:
-          return false
+      default:
+        return false
       }
-    },
+    }
   },
   methods: {
     /**
      * Emits a 'click' event
      * Can be listened via @click
      */
-    onClick(event) {
+    onClick (event) {
       this.$emit('click', event)
-    },
-  },
+    }
+  }
 }
 </script>
 

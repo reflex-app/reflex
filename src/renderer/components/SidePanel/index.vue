@@ -34,25 +34,25 @@ import PanelComponent from './PanelComponent.vue'
 export default {
   name: 'SidePanel',
   components: {
-    PanelComponent,
+    PanelComponent
   },
-  data() {
+  data () {
     return {
-      activeStation: 'Screens',
+      activeStation: 'Screens'
     }
   },
   computed: {
     // Bind to our Vuex Store's URL value
-    artboards() {
+    artboards () {
       return this.$store.state.artboards.list
     },
-    sidebar() {
+    sidebar () {
       return this.$store.state.gui.sidebar
-    },
+    }
   },
 
   methods: {
-    setActive(val) {
+    setActive (val) {
       // Handle hide/show side panel
       if (this.sidebar && this.activeStation !== val) {
         // Normal State
@@ -71,7 +71,7 @@ export default {
         this.activeStation = val
       }
     },
-    isActive(val) {
+    isActive (val) {
       // Make sure to open the sidebar
       // if it was open in last session
       // Otherwise, don't set an active state
@@ -81,10 +81,10 @@ export default {
         return ''
       }
     },
-    toggleSidebar() {
+    toggleSidebar () {
       this.$store.commit('gui/toggleSidebar')
-    },
-  },
+    }
+  }
 }
 </script>
 

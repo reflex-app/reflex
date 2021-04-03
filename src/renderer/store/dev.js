@@ -1,5 +1,5 @@
 export const state = () => ({
-  showCanvasDebugger: false,
+  showCanvasDebugger: false
 })
 
 export const mutations = {
@@ -7,7 +7,7 @@ export const mutations = {
    * @param  {} state
    * @param  {Boolean} bool
    */
-  toggleCanvasDebugger(state) {
+  toggleCanvasDebugger (state) {
     state.showCanvasDebugger = !state.showCanvasDebugger
-  },
+  }
 }

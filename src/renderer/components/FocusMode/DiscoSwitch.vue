@@ -5,10 +5,10 @@
 <script>
 export default {
   methods: {
-    toggleDisco() {
+    toggleDisco () {
       this.$store.commit('gui/toggleGui', 'discoMode')
-    },
-  },
+    }
+  }
 }
 </script>
 

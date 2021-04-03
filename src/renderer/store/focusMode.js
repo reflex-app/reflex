@@ -8,8 +8,8 @@ export const state = () => ({
     id: uuid(),
     title: 'Reflex',
     height: 300,
-    width: 400,
-  },
+    width: 400
+  }
   // screens: [{
   //   id: uuid(),
   //   title: 'Test',
@@ -33,7 +33,7 @@ export const mutations = {
    * @param  {} state
    * @param  {Object} payload {id, height, width}
    */
-  focusResizeArtboard(state, payload) {
+  focusResizeArtboard (state, payload) {
     state.activeScreen.height = payload.height
     state.activeScreen.width = payload.width
   },
@@ -44,7 +44,7 @@ export const mutations = {
    * @param {*} state
    * @param {*} options
    */
-  focusSetRandomSize(state, options) {
+  focusSetRandomSize (state, options) {
     const artboard = state.activeScreen
     if (options.height) artboard.height = options.height
     if (options.width) artboard.width = options.width
@@ -56,9 +56,9 @@ export const mutations = {
    * @param {*} state
    * @param {*} id
    */
-  focusChangeActiveScreen(state, id) {
+  focusChangeActiveScreen (state, id) {
     const artboards = this.state.artboards.list // TODO This is accessing another Vuex module; not obvious
-    const index = artboards.findIndex((obj) => obj.id === id)
+    const index = artboards.findIndex(obj => obj.id === id)
     state.activeScreen = Object.assign(state.activeScreen, artboards[index])
-  },
+  }
 }

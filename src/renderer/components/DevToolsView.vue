@@ -1,10 +1,10 @@
 <template>
-  <webview id="devtools"></webview>
+  <webview id="devtools" />
 </template>
 
 <script>
 export default {
-  mounted() {
+  mounted () {
     this.$nextTick(() => {
       const browserView = document.querySelector('webview.frame')
       // const devtoolsView = this.$el
@@ -18,7 +18,7 @@ export default {
         // browser.openDevTools({mode: right});
       })
     })
-  },
+  }
 }
 </script>
 

@@ -3,7 +3,7 @@
     class="icon"
     :style="{ maskImage: `url(${iconHandler}` }"
     :class="iconColorHandler"
-  ></div>
+  />
 </template>
 
 <script>
@@ -11,37 +11,37 @@ export default {
   props: {
     name: {
       type: String,
-      required: true,
+      required: true
     },
     color: {
       type: String,
-      default: 'dark',
-    },
+      default: 'dark'
+    }
   },
   computed: {
-    iconHandler() {
+    iconHandler () {
       try {
         return require(`@/assets/icons/${this.name}.svg`)
       } catch (e) {
         throw new Error(`Icon not found: ${this.name}`)
       }
     },
-    iconColorHandler() {
+    iconColorHandler () {
       switch (this.color) {
-        case 'dark':
-          return 'icon--dark'
+      case 'dark':
+        return 'icon--dark'
 
-        case 'light':
-          return 'icon--light'
+      case 'light':
+        return 'icon--light'
 
-        case 'accent':
-          return 'icon--accent'
+      case 'accent':
+        return 'icon--accent'
 
-        default:
-          throw new Error('Color not found')
+      default:
+        throw new Error('Color not found')
       }
-    },
-  },
+    }
+  }
 }
 </script>
 
