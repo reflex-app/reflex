@@ -5,7 +5,7 @@ export default ({ store }) => {
   window.onNuxtReady(() => {
     new VuexPersistence({
       key: 'reflex-store',
-      storage: window.localStorage,
+      storage: window.localStorage
     }).plugin(store)
   })
 }

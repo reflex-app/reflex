@@ -53,25 +53,12 @@ module.exports = (env, argv) => {
       new CopyPlugin({
         patterns: [{ from: "./src/browsers.json", to: "./" }], // dist/
       }),
-      new NodePolyfillPlugin(), // Polyfill
-      // Inject an environment variable
-      // For Playwright!
-      new webpack.EnvironmentPlugin({
-        PLAYWRIGHT_BROWSERS_PATH: "0",
-      }),
-      // Runtime
-      // https://babeljs.io/docs/en/babel-plugin-transform-runtime
-      // [
-      //   "@babel/plugin-transform-runtime",
-      //   {
-      //     absoluteRuntime: false,
-      //     corejs: false,
-      //     helpers: true,
-      //     regenerator: true,
-      //     useESModules: false,
-      //     version: "7.0.0-beta.0",
-      //   },
-      // ],
+      // Set Webpack variables
+      // https://webpack.js.org/plugins/define-plugin/
+      // new webpack.DefinePlugin({
+      //   'process.env.PLAYWRIGHT_BROWSERS_PATH': '0',
+      // }),
+      // new NodePolyfillPlugin(), // Polyfill plugins in Webpack (Required in 5+)
     ],
     optimization: {
       minimize: isProduction ? true : false, // Minimize only for production builds

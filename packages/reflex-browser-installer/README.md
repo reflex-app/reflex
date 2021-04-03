@@ -42,3 +42,10 @@ Make sure to add a `GITHUB_TOKEN` to your environment or .env file.
 ## Troubleshooting
 
 1. Make sure you're importing correctly. https://stackoverflow.com/a/60893655/1114901
+
+## How it works
+
+1. We use `playwright` package to generate a current browsers.json file
+2. We store the `browsers.json` file in this repo
+3. This library exports functions which can be used at Node runtime, and will install the versions of browsers defined in `browsers.jon` to the `installPath` defined by the library user
+4. The browsers are locally installed

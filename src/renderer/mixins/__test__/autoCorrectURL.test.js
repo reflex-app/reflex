@@ -29,7 +29,7 @@ describe('Smart URLs', function () {
     '://example.com/file/path-dash.html', // no protocol provided
     '/example.com', // no protocol provided
     'example', // no protocol or domain
-    ' ', // empty space
+    ' ' // empty space
   ]
 
   it('should return only valid URLs', async () => {

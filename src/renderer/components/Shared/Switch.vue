@@ -1,8 +1,8 @@
 <template>
   <div class="switch-mode-container" @click.stop="toggle">
     <label for="switch">{{ label }}</label>
-    <input type="checkbox" :checked="isChecked" />
-    <div class="switch" :class="{ 'is-active': isChecked }"></div>
+    <input type="checkbox" :checked="isChecked">
+    <div class="switch" :class="{ 'is-active': isChecked }" />
   </div>
 </template>
 
@@ -16,27 +16,27 @@ export default {
      */
     value: {
       type: Boolean,
-      default: false,
+      default: false
     },
     /**
      * Text label
      */
     label: {
       type: String,
-      default: 'Label',
-    },
+      default: 'Label'
+    }
   },
-  data() {
+  data () {
     return {
-      checked: false,
+      checked: false
     }
   },
   computed: {
-    isChecked() {
+    isChecked () {
       return this.checked
-    },
+    }
   },
-  mounted() {
+  mounted () {
     // Set the initial value
     this.checked = this.value
   },
@@ -44,11 +44,11 @@ export default {
     /**
      * Toggle the boolean value
      */
-    toggle() {
+    toggle () {
       this.checked = !this.checked
       this.$emit('onToggle', this.checked) // Emit event and Boolean
-    },
-  },
+    }
+  }
 }
 </script>
 

@@ -7,7 +7,7 @@
       :is-pressed="sidebar"
       title="Screens"
       @click="toggleSidebar"
-    ></Button>
+    />
     <div v-if="artboards.length" id="toolbar__url-container">
       <HistoryControls />
       <div class="bar">
@@ -33,12 +33,12 @@
         </div>
       </div>
     </div>
-    <div id="toolbar__recentURLs"></div>
+    <div id="toolbar__recentURLs" />
     <div v-if="artboards.length" class="toolbar__right">
       <SwitchMode />
     </div>
     <InstallUpdateButton />
-    <div id="draggable" @dblclick="toggleWindowMaximize"></div>
+    <div id="draggable" @dblclick="toggleWindowMaximize" />
   </div>
 </template>
 
@@ -61,33 +61,33 @@ export default {
     HistoryControls,
     SyncButton,
     InstallUpdateButton,
-    SwitchMode,
+    SwitchMode
   },
-  data() {
+  data () {
     return {
       inputStateActive: false,
       isFullScreen: false,
-      currentWindow: null,
+      currentWindow: null
     }
   },
   computed: {
     ...mapState({
-      artboards: (state) => state.artboards.list,
-      title: (state) => state.history.currentPage.title,
-      url: (state) => state.history.currentPage.url,
-      favicon: (state) => state.history.currentPage.favicon,
-      sidebar: (state) => state.gui.sidebar,
+      artboards: state => state.artboards.list,
+      title: state => state.history.currentPage.title,
+      url: state => state.history.currentPage.url,
+      favicon: state => state.history.currentPage.favicon,
+      sidebar: state => state.gui.sidebar
     }),
-    isMac() {
+    isMac () {
       return process.platform === 'darwin'
-    },
+    }
   },
   methods: {
     changeURL: debounce(function (url) {
       // Change the URL
       // TODO Check if it's a valid URL
       this.$store.commit('history/changeSiteData', {
-        url,
+        url
       })
 
       console.log('change url triggered')
@@ -98,10 +98,10 @@ export default {
       // Off
       this.inputStateActive = false
     }, 100),
-    toggleSidebar() {
+    toggleSidebar () {
       this.$store.commit('gui/toggleSidebar')
     },
-    toggleWindowMaximize() {
+    toggleWindowMaximize () {
       const window = getCurrentWindow()
       const isMaximized = window.isMaximized()
       // Do the opposite
@@ -111,7 +111,7 @@ export default {
         window.maximize()
       }
     },
-    toggleFullscreen() {
+    toggleFullscreen () {
       // TODO Error about calling a window that has
       // already been closed
       // To avoid this problem, ensure you clean up any references to renderer callbacks passed to the main process.
@@ -119,9 +119,9 @@ export default {
       // See: https://electronjs.org/docs/api/remote#passing-callbacks-to-the-main-process
       const window = getCurrentWindow()
       this.isFullScreen = !!window.isFullScreen()
-    },
+    }
   },
-  mounted() {
+  mounted () {
     if (isElectron()) {
       // Check if already in fullscreen
       this.toggleFullscreen()
@@ -131,7 +131,7 @@ export default {
       currentWindow.on('enter-full-screen', this.toggleFullscreen)
       currentWindow.on('leave-full-screen', this.toggleFullscreen)
     }
-  },
+  }
 }
 </script>
 

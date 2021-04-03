@@ -5,7 +5,7 @@
       type="text"
       placeholder="Title"
       @keyup="$emit('keyup')"
-    />
+    >
   </div>
 </template>
 
@@ -14,9 +14,9 @@ export default {
   props: {
     placeholder: {
       type: String,
-      default: 'Enter something...',
-    },
-  },
+      default: 'Enter something...'
+    }
+  }
 }
 </script>
 

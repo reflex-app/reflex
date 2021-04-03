@@ -8,7 +8,7 @@
       icon="arrow-left"
       title="Back"
       @click="back"
-    ></Button>
+    />
     <Button
       v-if="canGoForward"
       role="ghost"
@@ -17,7 +17,7 @@
       icon="arrow-right"
       title="Forward"
       @click="forward"
-    ></Button>
+    />
     <Button
       role="ghost"
       :rounded="true"
@@ -25,7 +25,7 @@
       icon="reload"
       title="Forward"
       @click="reload"
-    ></Button>
+    />
   </div>
 </template>
 
@@ -34,32 +34,32 @@ import { mapActions, mapState } from 'vuex'
 export default {
   computed: {
     ...mapState({
-      pages: (state) => state.history.pages,
-      currentPage: (state) => state.history.currentPage.index,
-      history: (state) => state.history,
+      pages: state => state.history.pages,
+      currentPage: state => state.history.currentPage.index,
+      history: state => state.history
     }),
-    canGoBack() {
+    canGoBack () {
       return this.checkHistory('back')
     },
-    canGoForward() {
+    canGoForward () {
       return this.checkHistory('forward')
-    },
+    }
   },
   methods: {
     ...mapActions('history', ['reload', 'forward', 'back']),
-    checkHistory(direction) {
+    checkHistory (direction) {
       if (!direction || !this.pages) throw new Error('Missing inputs')
 
       let nextPageIndex
 
       switch (direction) {
-        case 'back':
-          nextPageIndex = this.pages[this.currentPage - 1]
-          break
+      case 'back':
+        nextPageIndex = this.pages[this.currentPage - 1]
+        break
 
-        case 'forward':
-          nextPageIndex = this.pages[this.currentPage + 1]
-          break
+      case 'forward':
+        nextPageIndex = this.pages[this.currentPage + 1]
+        break
       }
 
       if (
@@ -71,8 +71,8 @@ export default {
       } else {
         return false
       }
-    },
-  },
+    }
+  }
 }
 </script>
 

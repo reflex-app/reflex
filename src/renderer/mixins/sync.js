@@ -5,7 +5,7 @@ let SITE_URL = ''
 let PROXY_SERVER_URL = ''
 
 // Initialize a BrowserSync Server
-export function startServer(url) {
+export function startServer (url) {
   return new Promise((resolve, reject) => {
     SITE_URL = url || 'https://shift.nickwittwer.com/'
     const needsHTTPS = SITE_URL.includes('https://')
@@ -13,7 +13,7 @@ export function startServer(url) {
     bs.init(
       {
         proxy: {
-          target: SITE_URL,
+          target: SITE_URL
         },
         https: needsHTTPS, // Only set if it contains https
         notify: true,
@@ -28,13 +28,13 @@ export function startServer(url) {
 
               resolve({
                 site: SITE_URL,
-                proxy: PROXY_SERVER_URL,
+                proxy: PROXY_SERVER_URL
               })
             } catch (e) {
               console.log('Sync Server Error: ', e)
             }
-          },
-        },
+          }
+        }
       },
       function (err, instance) {
         if (err) throw new Error(err)
@@ -59,17 +59,17 @@ export function startServer(url) {
   })
 }
 
-export function sendServerDetails() {
+export function sendServerDetails () {
   return {
     url: SITE_URL,
-    proxy: PROXY_SERVER_URL,
+    proxy: PROXY_SERVER_URL
   }
 }
 
 // Change the Proxy URL
-export async function changeURL(newURL) {
-  async function checkServerStatus() {
-    function exitServer() {
+export async function changeURL (newURL) {
+  async function checkServerStatus () {
+    function exitServer () {
       bs.exit() // Exit current instance
     }
 
@@ -92,6 +92,6 @@ export async function changeURL(newURL) {
   // Send back the new site and Proxy
   return {
     site: SITE_URL,
-    proxy: PROXY_SERVER_URL,
+    proxy: PROXY_SERVER_URL
   }
 }

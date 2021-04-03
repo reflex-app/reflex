@@ -20,15 +20,15 @@ export default {
     Artboards,
     SidePanel,
     Screenshots,
-    Panzoom,
+    Panzoom
   },
-  data() {
+  data () {
     return {}
   },
-  mounted() {
+  mounted () {
     this.panzoomInstance = this.$root.$panzoom
   },
-  methods: {},
+  methods: {}
 }
 </script>
 

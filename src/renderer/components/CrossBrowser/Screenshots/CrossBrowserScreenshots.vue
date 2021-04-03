@@ -8,7 +8,7 @@
           class="loading-skeleton"
           :style="{ height: props.height + 'px', width: props.width + 'px' }"
         >
-          <img :src="require(`~/assets/browsers/${browserName}.svg`)" />
+          <img :src="require(`~/assets/browsers/${browserName}.svg`)">
           {{ browserName }}
         </div>
       </div>
@@ -25,7 +25,7 @@
               :height="height"
               :width="width"
               alt="Cross-browser screenshot"
-            />
+            >
           </template>
         </div>
       </template>
@@ -44,22 +44,22 @@ export default {
   props: {
     height: {
       type: Number,
-      default: 100,
+      default: 100
     },
     width: {
       type: Number,
-      default: 100,
+      default: 100
     },
     x: {
       type: Number,
-      default: 0,
+      default: 0
     },
     y: {
       type: Number,
-      default: 0,
-    },
+      default: 0
+    }
   },
-  setup(props, { emit, root: { $store } }) {
+  setup (props, { emit, root: { $store } }) {
     const { state, takeCrossBrowserScreenshot } = useCrossBrowserScreenshots()
 
     // function showSkeletonLoader(count) {
@@ -75,7 +75,7 @@ export default {
     // }
 
     const loadingSorted = computed(() => {
-      function compare(a, b) {
+      function compare (a, b) {
         if (a < b) return -1
         if (a > b) return 1
         return 0
@@ -85,7 +85,7 @@ export default {
     })
 
     const screenshotsSorted = computed(() => {
-      function compare(a, b) {
+      function compare (a, b) {
         if (a.type < b.type) return -1
         if (a.type > b.type) return 1
         return 0
@@ -94,7 +94,7 @@ export default {
       return state.screenshots.sort(compare)
     })
 
-    async function getScreenshots() {
+    async function getScreenshots () {
       const url = $store.state.history.currentPage.url
 
       const payload = { ...props, browsers: ['firefox', 'webkit'], url }
@@ -110,9 +110,9 @@ export default {
       loadingSorted,
       screenshotsSorted,
       props,
-      getScreenshots,
+      getScreenshots
     }
-  },
+  }
 }
 </script>
 

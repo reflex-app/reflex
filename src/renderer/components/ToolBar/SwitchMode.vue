@@ -8,7 +8,7 @@
           :tight="true"
           title="Single Screen"
           :is-pressed="isRouteActive('/focus')"
-        ></Button>
+        />
       </nuxt-link>
     </div>
     <nuxt-link to="/">
@@ -18,7 +18,7 @@
         :tight="true"
         title="All Screens"
         :is-pressed="isRouteActive('/')"
-      ></Button>
+      />
     </nuxt-link>
 
     <!-- <input type="checkbox" id="switch" :checked="toggleState" /> -->
@@ -31,21 +31,21 @@ import { mapState } from 'vuex'
 export default {
   computed: {
     ...mapState({
-      toggleState: (state) => state.gui.focusMode,
-    }),
+      toggleState: state => state.gui.focusMode
+    })
   },
   methods: {
-    toggle() {
+    toggle () {
       this.$store.commit('toggleGui', 'focusMode')
     },
-    isRouteActive(id) {
+    isRouteActive (id) {
       if (this.$route.path === id) {
         return true
       } else {
         return false
       }
-    },
-  },
+    }
+  }
 }
 </script>
 

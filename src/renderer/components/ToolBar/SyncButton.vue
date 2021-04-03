@@ -17,16 +17,16 @@ const sync = () => {} // stubbed
 
 export default {
   name: 'SyncButton',
-  data() {
+  data () {
     return {
-      syncServer: '',
+      syncServer: ''
     }
   },
   computed: {
     ...mapState({
-      url: (state) => state.history.currentPage.url,
+      url: state => state.history.currentPage.url
     }),
-    canSyncURL() {
+    canSyncURL () {
       // Not available when on http
       // if (this.url.includes("http://")) {
       //   return false;
@@ -35,7 +35,7 @@ export default {
       // }
       return true
     },
-    isOnSyncURL() {
+    isOnSyncURL () {
       // Show "active" state of button
       // when on the synced URL
       const siteHost = this.returnHost(this.url)
@@ -46,9 +46,9 @@ export default {
       } else {
         return false
       }
-    },
+    }
   },
-  mounted() {
+  mounted () {
     const vm = this
 
     vm.$nextTick().then(async function () {
@@ -59,10 +59,10 @@ export default {
     })
   },
   methods: {
-    async syncSite() {
+    async syncSite () {
       if (this.compareHosts(this.url, this.syncServer) === true) {
         alert(
-          `You're currently viewing the synced server URL. If your screens are out of sync, visit the original URL and sync it again.`
+          'You\'re currently viewing the synced server URL. If your screens are out of sync, visit the original URL and sync it again.'
         )
         return false
       } else {
@@ -73,14 +73,14 @@ export default {
         // Update the global URL to the proxy URL
         // This will navigate to synced site via the proxy url
         this.$store.commit('history/changeSiteData', {
-          url: data.proxy,
+          url: data.proxy
         })
 
         // Update the sync server url locally
         this.syncServer = data.proxy
       }
     },
-    compareHosts(url1, url2) {
+    compareHosts (url1, url2) {
       const host1 = this.returnHost(url1)
       const host2 = this.returnHost(url2)
 
@@ -90,13 +90,13 @@ export default {
         return false
       }
     },
-    returnHost(url) {
+    returnHost (url) {
       const pathArray = url.split('/')
       // const protocol = pathArray[0]
       const host = pathArray[2]
       return host
-    },
-  },
+    }
+  }
 }
 </script>
 

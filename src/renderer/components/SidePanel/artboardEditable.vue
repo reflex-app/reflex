@@ -15,7 +15,7 @@
             type="text"
             placeholder="Title"
             @keyup.enter="save(artboard), (editMode = false)"
-          />
+          >
         </div>
         <div class="group group--two-up">
           <label>Dimensions</label>
@@ -26,7 +26,7 @@
                 type="number"
                 placeholder="Width"
                 @keyup.enter="save(artboard), (editMode = false)"
-              />
+              >
               <label>W</label>
             </div>
             <div class="group__input-with-right-label">
@@ -35,16 +35,16 @@
                 type="number"
                 placeholder="Height"
                 @keyup.enter="save(artboard), (editMode = false)"
-              />
+              >
               <label>H</label>
             </div>
           </div>
 
           <div class="buttons">
             <!-- TODO Cancel button doesn't really cancel/undo... -->
-            <Button role="secondary" @click="cancelEdit(), (editMode = false)"
-              >Cancel</Button
-            >
+            <Button role="secondary" @click="cancelEdit(), (editMode = false)">
+              Cancel
+            </Button>
             <Button role="primary" @click="save(artboard)">Save</Button>
           </div>
         </div>
@@ -88,38 +88,38 @@ import rightClickMenu from '@/mixins/rightClickMenu.js'
 export default {
   name: 'ArtboardEditable',
   components: {
-    draggable,
+    draggable
   },
   props: ['data'],
-  data() {
+  data () {
     return {
       editMode: false,
       editID: null,
       localFormData: {
         title: '',
         width: 0,
-        height: 0,
-      },
+        height: 0
+      }
     }
   },
   computed: {
     ...mapState({
-      artboards: (state) => state.artboards.list,
+      artboards: state => state.artboards.list
     }),
     artboardsGetSet: {
-      get() {
+      get () {
         return this.$store.state.artboards.list
       },
-      set(value) {
+      set (value) {
         this.$store.dispatch('artboards/setArtboards', value)
-      },
+      }
     },
-    artboardVisibility(bool) {
+    artboardVisibility (bool) {
       return bool ? 'visible' : 'hidden'
-    },
+    }
   },
   methods: {
-    save(artboard) {
+    save (artboard) {
       // Disable editing mode
       this.editMode = false
       this.editID = null
@@ -129,17 +129,17 @@ export default {
         ...artboard,
         width: Number(this.localFormData.width),
         height: Number(this.localFormData.height),
-        title: this.localFormData.title,
+        title: this.localFormData.title
       })
     },
-    edit(id) {
+    edit (id) {
       // Udpate the state
       this.editMode = true
       this.editID = id
 
       // Fill in the latest data
       const currentArtboard = () => {
-        const obj = this.artboards.find((artboard) => artboard.id === id)
+        const obj = this.artboards.find(artboard => artboard.id === id)
         // Return a clone of the Store object
         return JSON.parse(JSON.stringify(obj))
       }
@@ -153,11 +153,11 @@ export default {
         this.$refs.input[0].select()
       })
     },
-    cancelEdit() {
+    cancelEdit () {
       // Reset to Vuex store state
       this.localFormData = this.artboards
     },
-    remove(name, id) {
+    remove (name, id) {
       // TODO Custom prompts?
       if (
         confirm(
@@ -167,7 +167,7 @@ export default {
         this.$store.commit('artboards/removeArtboard', id)
       }
     },
-    goToArtboard(id) {
+    goToArtboard (id) {
       // Find the artboard (DOM)
       const artboard = document.querySelector(`[artboard-id="${id}"]`)
 
@@ -175,30 +175,30 @@ export default {
       // TODO factor in the size of the artboard... Panzoom should scale down to fith the screen
       this.$root.$panzoom.pan(-artboard.offsetLeft, artboard.offsetTop)
     },
-    rightClickMenu(e, artboard) {
+    rightClickMenu (e, artboard) {
       rightClickMenu(this.$store, {
         title: artboard.title,
         id: artboard.id,
         width: artboard.width,
         height: artboard.height,
-        isVisible: artboard.isVisible,
+        isVisible: artboard.isVisible
       })
     },
-    hoverStart(id) {
+    hoverStart (id) {
       this.$store.dispatch('hoverArtboards/hoverArtboardsAdd', id)
     },
-    hoverEnd(id) {
+    hoverEnd (id) {
       this.$store.dispatch('hoverArtboards/hoverArtboardsRemove', id)
     },
-    selectArtboard(id) {
+    selectArtboard (id) {
       // Move screen to the selected artboard
       this.goToArtboard(id)
       // Remove all previous selections
       this.$store.dispatch('selectedArtboards/selectedArtboardsEmpty', id)
       // Add the new artboard to selection
       this.$store.dispatch('selectedArtboards/selectedArtboardsAdd', id)
-    },
-  },
+    }
+  }
 }
 </script>
 

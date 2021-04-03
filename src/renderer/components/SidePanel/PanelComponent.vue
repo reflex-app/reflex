@@ -15,19 +15,19 @@ import ScreensPanel from './ScreensPanel.vue'
 export default {
   name: 'PanelComponent',
   components: {
-    ScreensPanel,
+    ScreensPanel
   },
   props: ['title'],
   computed: {},
   methods: {
-    isChildPanel(val) {
+    isChildPanel (val) {
       if (this.title === val) {
         return true
       } else {
         return false
       }
-    },
-  },
+    }
+  }
 }
 </script>
 
