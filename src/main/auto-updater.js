@@ -6,11 +6,11 @@ const isDev = require('electron-is-dev')
 autoUpdater.logger = log
 autoUpdater.logger.transports.file.level = 'info'
 
-export default function init(window) {
+export default function init (window) {
   let UPDATE_AVAILABLE = null
   const win = window.webContents
 
-  function sendStatusToWindow(text) {
+  function sendStatusToWindow (text) {
     win.send('message', text)
   }
 
@@ -46,14 +46,14 @@ export default function init(window) {
     sendStatusToWindow('Checking for update...')
   })
 
-  autoUpdater.on('update-not-available', (info) => {
+  autoUpdater.on('update-not-available', info => {
     log.info('update not available')
     sendStatusToWindow('Update not available.')
     UPDATE_AVAILABLE = false
   })
 
   // We can now know if there's an available update
-  autoUpdater.on('update-available', (info) => {
+  autoUpdater.on('update-available', info => {
     log.info('update available')
     sendStatusToWindow('Update available.')
     UPDATE_AVAILABLE = true
@@ -61,7 +61,7 @@ export default function init(window) {
 
   // Tracking the progress
   // (All of this is sent to the renderer)
-  autoUpdater.on('download-progress', (progressObj) => {
+  autoUpdater.on('download-progress', progressObj => {
     let logMessage = 'Download speed: ' + progressObj.bytesPerSecond
     logMessage = logMessage + ' - Downloaded ' + progressObj.percent + '%'
     logMessage =
@@ -80,7 +80,7 @@ export default function init(window) {
   /**
    * Downloaded!
    */
-  autoUpdater.on('update-downloaded', (info) => {
+  autoUpdater.on('update-downloaded', info => {
     log.info('update downloaded')
     sendStatusToWindow('Update downloaded')
   })
@@ -104,7 +104,7 @@ export default function init(window) {
   /**
    * Handle errors
    */
-  autoUpdater.on('error', (err) => {
+  autoUpdater.on('error', err => {
     log.info('error in auto-updater')
     sendStatusToWindow('Error in auto-updater. ' + err)
   })
@@ -115,7 +115,7 @@ export default function init(window) {
  * Make sure Electron quits properly
  * https://github.com/electron-userland/electron-builder/issues/1604#issuecomment-372091881
  */
-function ensureSafeQuitAndInstall() {
+function ensureSafeQuitAndInstall () {
   app.removeAllListeners('window-all-closed')
   const browserWindows = BrowserWindow.getAllWindows()
   browserWindows.forEach(function (browserWindow) {

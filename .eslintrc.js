@@ -5,35 +5,29 @@ module.exports = {
     node: true,
   },
   parserOptions: {
-    parser: 'babel-eslint',
+    sourceType: 'module',
   },
-  extends: [
-    '@nuxtjs',
-    'prettier',
-    'prettier/vue',
-    'plugin:prettier/recommended',
-    'plugin:nuxt/recommended',
-  ],
-  plugins: ['prettier'],
+  extends: ['@nuxtjs/eslint-config-typescript'],
   // add your custom rules here
   rules: {
-    'prettier/prettier': [
-      'error',
-      {
-        endOfLine: 'auto',
-      },
-    ],
-    'nuxt/no-cjs-in-config': 'off',
-    // allow paren-less arrow functions
-    'arrow-parens': 0,
-    // stop being annoying about spaces before parameters
-    'space-before-function-paren': 0,
-    // allow async-await
-    'generator-star-spacing': 0,
-    // allow new()
-    'no-new': 0,
-    // allow debugger during development
+    // StandardJS — The Rules
+    indent: ['error', 2], // 2 spaces – for indentation
+    'max-len': ['error', { code: 120 }],
+    'no-console': 'off',
+    'arrow-parens': ['error', 'as-needed'],
+    curly: ['error', 'multi-line'],
+    'import/no-extraneous-dependencies': 'off',
+    'require-await': 0,
+
+    'global-require': 0,
+    'import/no-unresolved': 0,
+    'import/newline-after-import': 0,
+    'no-underscore-dangle': 0,
+    'no-unused-vars': 'off',
+
     'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0,
-    eqeqeq: ['error', 'smart'],
+
+    'vue/max-attributes-per-line': 'off',
+    'vue/singleline-html-element-content-newline': 0,
   },
 }

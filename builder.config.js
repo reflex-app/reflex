@@ -70,6 +70,12 @@ module.exports = {
       to: 'dist/resources/',
     },
   ],
+  extraResources: [
+    {
+      from: 'src/extraResources/',
+      to: '',
+    },
+  ],
   // Copying Playwright's browser binaries (Chromium, Firefox, Webkit) to
   // the final build AND making sure it can be notarized.
   // Extra Resources see: https://stackoverflow.com/a/53011325/1114901

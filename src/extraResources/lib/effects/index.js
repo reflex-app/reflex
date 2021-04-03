@@ -8,7 +8,7 @@ const clickHandler = require('./click')
  * @param {*} event Event data
  * @param {*} args Options and details
  */
-function setDOMEffect(event, args) {
+function setDOMEffect (event, args) {
   console.log('Setting DOM effect', event, args)
 
   if (args.event.type === eventTypes.CLICK) {

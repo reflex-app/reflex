@@ -1,4 +1,4 @@
-function click(event) {
+function click (event) {
   console.log('click event')
 
   // event.target.{element, index}
