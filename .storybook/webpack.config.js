@@ -1,10 +1,7 @@
-const path = require('path');
+const path = require('path')
 
 // Export a function. Accept the base config as the only param.
-module.exports = async ({
-  config,
-  mode
-}) => {
+module.exports = async ({ config, mode }) => {
   // `mode` has a value of 'DEVELOPMENT' or 'PRODUCTION'
   // You can change the configuration based on that.
   // 'PRODUCTION' is used when building the static version of storybook.
@@ -14,7 +11,7 @@ module.exports = async ({
     test: /\.scss$/,
     use: ['style-loader', 'css-loader', 'sass-loader'],
     include: path.resolve(__dirname, '../'), // path to node_modules
-  });
+  })
 
   // Configure to allow Electron
   config.module.rules.push({
@@ -25,29 +22,26 @@ module.exports = async ({
       cacheDirectory: true,
       babelrc: false,
       presets: [
-        ['@babel/preset-env', {
-          'targets': {
-            'electron': '6.1.2'
-          }
-        }]
-      ]
-    }
-  }, )
+        [
+          '@babel/preset-env',
+          {
+            targets: {
+              electron: '12.0.0',
+            },
+          },
+        ],
+      ],
+    },
+  })
 
   config.resolve = {
     alias: {
       '@': path.join(__dirname, '../src/renderer'),
-      'vue$': 'vue/dist/vue.esm.js'
+      vue$: 'vue/dist/vue.esm.js',
     },
-    extensions: ['.js', '.vue', '.json', '.css', '.node']
+    extensions: ['.js', '.vue', '.json', '.css', '.node'],
   }
 
-  // Fix issues with FS module (relating to Electron)
-  // config.node = {
-  //   fs: 'empty',
-  //   // electron: 'empty'
-  // };
-
   // Return the altered config
-  return config;
-};
+  return config
+}
