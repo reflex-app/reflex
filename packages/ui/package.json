@@ -1,14 +1,28 @@
 {
   "name": "@reflex/ui",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "storybook": "start-storybook"
-  },
   "author": "",
   "license": "ISC",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/my-lib.umd.js",
+  "module": "./dist/my-lib.es.js",
+  "exports": {
+    ".": {
+      "import": "./dist/my-lib.es.js",
+      "require": "./dist/my-lib.umd.js"
+    }
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "storybook": "start-storybook"
+  },
   "dependencies": {
+    "vue": "^3.0.4"
+  },
+  "devDependencies": {
     "@storybook/addon-actions": "^6.2.2",
     "@storybook/addon-essentials": "^6.2.2",
     "@storybook/addon-knobs": "^6.2.2",
@@ -17,7 +31,9 @@
     "css-loader": "^5.2.0",
     "node-sass": "4.14.1",
     "sass-loader": "10.0.2",
+    "vue-loader": "^15.9.6",
+    "vite": "^1.0.0-rc.13",
     "webpack": "^4.45.0",
-    "vue-loader": "^15.9.6"
+    "@vue/compiler-sfc": "^3.0.4"
   }
 }

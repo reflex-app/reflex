@@ -1,5 +1,6 @@
 const path = require('path')
-const PROJECT_ROOT = path.resolve(__dirname, '../../')
+const PROJECT_ROOT = path.resolve(__dirname, '../src')
+const { VueLoaderPlugin } = require('vue-loader')
 
 // Export a function. Accept the base config as the only param.
 module.exports = async ({ config, mode }) => {
@@ -7,7 +8,6 @@ module.exports = async ({ config, mode }) => {
   // You can change the configuration based on that.
   // 'PRODUCTION' is used when building the static version of storybook.
 
-  // Make whatever fine-grained changes you need
   config.module.rules.push({
     test: /\.scss$/,
     use: ['style-loader', 'css-loader', 'sass-loader'],
@@ -35,9 +35,18 @@ module.exports = async ({ config, mode }) => {
     },
   })
 
+  // Vue loader
+  // Required since vue-loader v15: https://stackoverflow.com/a/50280764/1114901
+  config.module.rules.push({
+    test: /\.vue$/,
+    loader: 'vue-loader',
+  })
+  config.plugins.push(new VueLoaderPlugin())
+
+  // Resolver
   config.resolve = {
     alias: {
-      '@': path.join(__dirname, '../src/renderer'),
+      '@': path.join(__dirname, '../components/'), // Resolve to local /components dir
       vue$: 'vue/dist/vue.esm.js',
     },
     extensions: ['.js', '.vue', '.json', '.css', '.node'],
