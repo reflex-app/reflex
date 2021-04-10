@@ -8,15 +8,16 @@ module.exports = {
   ssr: false, // https://nuxtjs.org/docs/2.x/configuration-glossary/configuration-ssr
   target: 'static',
   head: {
-    title: 'Reflex'
+    title: 'Reflex',
   },
   loading: false,
   plugins: [
+    { src: '~/plugins/vueCompositionApi.js', ssr: false },
     { src: '~/plugins/vuex-persist.js', ssr: false },
     { src: '~/plugins/eventBus.js', ssr: false },
     { src: '~/plugins/globalComponents.js', ssr: false },
     { src: '~/plugins/featureFlipping.js', ssr: false },
-    { src: '~/plugins/vueCompositionApi.js', ssr: false }
+    { src: '~/plugins/reflex-ui.js', ssr: false },
   ],
   /*
    ** Nuxt.js dev-modules
@@ -24,10 +25,10 @@ module.exports = {
   buildModules: [
     // Doc: https://github.com/nuxt-community/eslint-module
     // '@nuxtjs/eslint-module',
-    '@nuxt/typescript-build'
+    '@nuxt/typescript-build',
   ],
   build: {
-    extend (config, { isDev, isClient }) {
+    extend(config, { isDev, isClient }) {
       // ..
       // Comlink loader
       // https://github.com/GoogleChromeLabs/comlink-loader#singleton-mode
@@ -35,8 +36,8 @@ module.exports = {
         test: /\.worker\.(js|ts)$/i,
         loader: 'comlink-loader',
         options: {
-          singleton: true
-        }
+          singleton: true,
+        },
       })
 
       // Using WebPack to bundle Playwright/Puppeteer
@@ -45,6 +46,6 @@ module.exports = {
       // config.externals = {
       //   'playwright-core': 'playwright-core',
       // }
-    }
-  }
+    },
+  },
 }

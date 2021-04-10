@@ -7,17 +7,17 @@ import { CrossBrowserScreenshot } from '@/workers/playwright.worker'
 // Keep track of all the open browser contexts
 // This data can be accessed reactively
 export const browserContexts = reactive({
-  active: []
+  active: [],
 })
 
 // Log changes to the browser contextss
 watchEffect(() => console.log('browser contexts', browserContexts.active))
 
-export async function takeScreenshots (
+export async function takeScreenshots(
   { url = '', browsers = [], height = 0, width = 0, x = 0, y = 0 },
   callback = () => {}
 ) {
-  const screenshotPromiseGenerator = async browserName => {
+  const screenshotPromiseGenerator = async (browserName) => {
     // NOTE: The following NEEDS to have the await beforehand
     // It is communicating with a Web Worker via Comlink
     const instance = await new CrossBrowserScreenshot({
@@ -26,9 +26,9 @@ export async function takeScreenshots (
       height,
       width,
       x,
-      y
+      y,
       // isPackaged: remote.app.isPackaged,
-    }).catch(err => {
+    }).catch((err) => {
       console.error(err)
     })
     const { contextId } = instance
@@ -50,9 +50,9 @@ export async function takeScreenshots (
     }
 
     // Remove this ID from the list of active
-    function removeBrowserContext (id) {
+    function removeBrowserContext(id) {
       browserContexts.active = browserContexts.active.filter(
-        i => !i.id === id
+        (i) => !i.id === id
       )
     }
   }
@@ -62,8 +62,8 @@ export async function takeScreenshots (
   const promises = browsers.map(screenshotPromiseGenerator)
 
   // Trigger callback (optional) every time one finishes
-  promises.forEach(promise => {
-    promise.then(d => {
+  promises.forEach((promise) => {
+    promise.then((d) => {
       if (!d) return false
       console.log('browser finished', d)
       callback(d)
@@ -77,7 +77,7 @@ export async function takeScreenshots (
 }
 
 // Convert an image buffer into base64
-export function toBase64Image (image) {
+export function toBase64Image(image) {
   const output = image.toString('base64')
   return `data:image/png;base64, ${output}`
 }

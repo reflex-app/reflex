@@ -1,5 +1,6 @@
 // Import components
-import Button from '@/components/button'
+// TODO Get relative @/components/* alias working
+import Button from './components/button'
 
 // Import any CSS styles
 // import './styles/index.scss'
@@ -21,4 +22,4 @@ export default function install(Vue: App) {
 }
 
 // Export each component as a module
-export { default as Button } from '@/components/button'
+export { default as Button } from './components/button'

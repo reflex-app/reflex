@@ -1,14 +1,12 @@
 <template>
-  <h1>{{ msg }}</h1>
-  <button @click="count++">count is: {{ count }}</button>
-  <p>
-    Edit <code>components/HelloWorld.vue</code> to test hot module replacement.
-  </p>
+  <h1>Hi there!</h1>
 </template>
 
-<script>
-export default {
-  name: 'HelloWorld',
+<script lang="ts">
+import { defineComponent } from 'vue'
+
+export default defineComponent({
+  name: 'rfx-button',
   props: {
     msg: String,
   },
@@ -17,5 +15,5 @@ export default {
       count: 0,
     }
   },
-}
+})
 </script>

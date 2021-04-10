@@ -3,7 +3,7 @@ import { app, shell } from 'electron'
 import BrowserWinHandler from './BrowserWinHandler'
 
 import autoUpdater from './auto-updater'
-import browserInstaller from './browser-installer'
+// import browserInstaller from './browser-installer'
 
 import { setMenu } from './menu'
 const log = require('electron-log')
@@ -25,12 +25,12 @@ const winHandler = new BrowserWinHandler({
     nodeIntegration: true, // Required
     enableRemoteModule: true,
     nodeIntegrationInWorker: true, // Enable Web Workers https://www.electronjs.org/docs/tutorial/multithreading
-    contextIsolation: false // Required Electron 12
+    contextIsolation: false, // Required Electron 12
   },
-  titleBarStyle: 'hiddenInset' // Hide the bar
+  titleBarStyle: 'hiddenInset', // Hide the bar
 })
 
-winHandler.onCreated(browserWindow => {
+winHandler.onCreated((browserWindow) => {
   winHandler.loadPage('/')
   // if (isDev) browserWindow.loadURL(DEV_SERVER_URL)
   // else browserWindow.loadFile(INDEX_PATH)
@@ -44,7 +44,8 @@ winHandler.onCreated(browserWindow => {
   autoUpdater(browserWindow)
 
   // Check for browser installations
-  browserInstaller(winHandler)
+  // TODO Fix errors
+  // browserInstaller(winHandler)
 
   // Log the version
   log.info(`Version ${app.getVersion()}`)

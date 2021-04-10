@@ -1,23 +1,25 @@
 import vue from '@vitejs/plugin-vue'
-import type { UserConfig } from 'vite'
-const path = require('path')
+import { defineConfig } from 'vite'
+import path from 'path'
 
 // Vite's Library Mode
 // https://vitejs.dev/guide/build.html#library-mode
 // https://github.com/quatrochan/Equal/blob/master/vite.config.ts
 
-const config: UserConfig = {
-  alias: [
-    {
-      find: '@',
-      replacement: path.resolve(__dirname, 'src'),
-    },
-  ],
+export default defineConfig({
+  resolve: {
+    alias: [
+      {
+        find: '@',
+        replacement: path.resolve(__dirname, 'src'),
+      },
+    ],
+  },
   plugins: [vue()],
   build: {
     lib: {
       entry: path.resolve(__dirname, 'src/index.ts'),
-      name: 'Equal',
+      name: 'ReflexInterface', // The name for the default function
     },
     rollupOptions: {
       // make sure to externalize deps that shouldn't be bundled
@@ -32,6 +34,4 @@ const config: UserConfig = {
       },
     },
   },
-}
-
-export default config
+})

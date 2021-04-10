@@ -6,12 +6,12 @@
   "files": [
     "dist"
   ],
-  "main": "./dist/reflex-ui.umd.js",
-  "module": "./dist/reflex-ui.es.js",
+  "main": "./dist/ui.umd.js",
+  "module": "./dist/ui.es.js",
   "exports": {
     ".": {
-      "import": "./dist/reflex-ui.es.js",
-      "require": "./dist/reflex-ui.umd.js"
+      "import": "./dist/ui.es.js",
+      "require": "./dist/ui.umd.js"
     }
   },
   "scripts": {
@@ -33,7 +33,8 @@
     "css-loader": "^5.2.0",
     "node-sass": "4.14.1",
     "sass-loader": "10.0.2",
-    "vite": "^1.0.0-rc.13",
+    "typescript": "^4.2.4",
+    "vite": "^2.1.5",
     "vue-loader": "^15.9.6",
     "webpack": "^4.45.0"
   }
