@@ -1,4 +1,5 @@
 const path = require('path')
+const PROJECT_ROOT = path.resolve(__dirname, '../../')
 
 // Export a function. Accept the base config as the only param.
 module.exports = async ({ config, mode }) => {
@@ -10,7 +11,7 @@ module.exports = async ({ config, mode }) => {
   config.module.rules.push({
     test: /\.scss$/,
     use: ['style-loader', 'css-loader', 'sass-loader'],
-    include: path.resolve(__dirname, '../'), // path to node_modules
+    include: PROJECT_ROOT, // path to node_modules
   })
 
   // Configure to allow Electron

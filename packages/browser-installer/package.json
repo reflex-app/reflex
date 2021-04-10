@@ -1,5 +1,5 @@
 {
-  "name": "reflex-browser-installer",
+  "name": "@reflex/browser-installer",
   "version": "1.4.3",
   "main": "dist/main.js",
   "repository": "github:reflex-app/reflex-browser-installer",

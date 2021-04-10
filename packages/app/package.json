@@ -1,5 +1,5 @@
 {
-  "name": "reflex",
+  "name": "@reflex/app",
   "productName": "Reflex",
   "description": "Make responsive websites without the guesswork.",
   "version": "0.7.0-beta.5",
@@ -8,17 +8,22 @@
   "homepage": "https://reflexapp.nickwittwer.com",
   "private": "true",
   "scripts": {
+    "dev": "npx cross-env PLAYWRIGHT_BROWSERS_PATH=0 node .electron-nuxt/dev.js",
+    "build": "yarn clean:local-browsers && npx cross-env PLAYWRIGHT_BROWSERS_PATH=0 FULLBUILD=1 node .electron-nuxt/build.js",
+    "build:fast": "yarn clean:local-browsers && npx cross-env PLAYWRIGHT_BROWSERS_PATH=0 CSC_IDENTITY_AUTO_DISCOVERY=false node .electron-nuxt/build.js",
     "test": "jest",
-    "lint": "node_modules/.bin/eslint --ext .js,.vue,.ts -f ./node_modules/eslint-friendly-formatter ./packages/**/*",
-    "lint:fix": "yarn run lint --fix",
-    "storybook": "cd ./packages/ui/ start-storybook"
+    "lint": "eslint --ext .js,.vue,.ts -f eslint-friendly-formatter ./src",
+    "lint:fix": "yarn run lint -- --fix",
+    "preinstall": "node .electron-nuxt/check-engines.js",
+    "postinstall": "electron-builder install-app-deps",
+    "storybook": "start-storybook",
+    "debug:playwright": "npx cross-env DEBUG=pw:browser* yarn run dev",
+    "debug:build:mac": "./build/mac/Reflex.app/Contents/MacOS/Reflex --args --remote-debugging-port=8315 & open -a \"Google Chrome\" http://localhost:8315",
+    "clean:local-browsers": "npx rimraf reflex-browser-installer/dist/.local-browsers/*"
   },
   "engines": {
     "node": ">=12.13.0"
   },
-  "workspaces": [
-    "packages/*"
-  ],
   "jest": {
     "moduleFileExtensions": [
       "js",
@@ -47,11 +52,6 @@
     "@nuxtjs/eslint-module": "^3.0.2",
     "@panzoom/panzoom": "^4.1.0",
     "@simonwep/selection-js": "^2.0.0",
-    "@storybook/addon-actions": "^6.2.2",
-    "@storybook/addon-essentials": "^6.2.2",
-    "@storybook/addon-knobs": "^6.2.2",
-    "@storybook/addons": "^6.2.2",
-    "@storybook/vue": "^6.2.2",
     "@vue/composition-api": "^1.0.0-beta.21",
     "@vue/test-utils": "^1.0.0-beta.32",
     "@xpda-dev/core": "^0.1.5",

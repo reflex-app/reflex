@@ -1,0 +1,23 @@
+{
+  "name": "@reflex/ui",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "storybook": "start-storybook"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@storybook/addon-actions": "^6.2.2",
+    "@storybook/addon-essentials": "^6.2.2",
+    "@storybook/addon-knobs": "^6.2.2",
+    "@storybook/addons": "^6.2.2",
+    "@storybook/vue": "^6.2.2",
+    "css-loader": "^5.2.0",
+    "node-sass": "4.14.1",
+    "sass-loader": "10.0.2",
+    "webpack": "^4.45.0",
+    "vue-loader": "^15.9.6"
+  }
+}
