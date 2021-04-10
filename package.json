@@ -4,12 +4,8 @@
   "version": "1.0.0",
   "author": "Nick Wittwer",
   "homepage": "https://reflexapp.nickwittwer.com",
-  "private": "true",
-  "workspaces": {
-    "packages": [
-      "app",
-      "packages/*"
-    ],
-    "nohoist": ["**/*"]
-  }
+  "workspaces": [
+    "app",
+    "packages/*"
+  ]
 }

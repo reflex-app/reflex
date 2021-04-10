@@ -6,12 +6,12 @@
   "files": [
     "dist"
   ],
-  "main": "./dist/my-lib.umd.js",
-  "module": "./dist/my-lib.es.js",
+  "main": "./dist/reflex-ui.umd.js",
+  "module": "./dist/reflex-ui.es.js",
   "exports": {
     ".": {
-      "import": "./dist/my-lib.es.js",
-      "require": "./dist/my-lib.umd.js"
+      "import": "./dist/reflex-ui.es.js",
+      "require": "./dist/reflex-ui.umd.js"
     }
   },
   "scripts": {
@@ -28,12 +28,13 @@
     "@storybook/addon-knobs": "^6.2.2",
     "@storybook/addons": "^6.2.2",
     "@storybook/vue": "^6.2.2",
+    "@vitejs/plugin-vue": "^1.2.1",
+    "@vue/compiler-sfc": "^3.0.6",
     "css-loader": "^5.2.0",
     "node-sass": "4.14.1",
     "sass-loader": "10.0.2",
-    "vue-loader": "^15.9.6",
     "vite": "^1.0.0-rc.13",
-    "webpack": "^4.45.0",
-    "@vue/compiler-sfc": "^3.0.4"
+    "vue-loader": "^15.9.6",
+    "webpack": "^4.45.0"
   }
 }

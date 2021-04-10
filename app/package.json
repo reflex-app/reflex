@@ -6,7 +6,6 @@
   "author": "Nick Wittwer",
   "main": "./dist/main/index.js",
   "homepage": "https://reflexapp.nickwittwer.com",
-  "private": "true",
   "scripts": {
     "dev": "npx cross-env PLAYWRIGHT_BROWSERS_PATH=0 node .electron-nuxt/dev.js",
     "build": "yarn clean:local-browsers && npx cross-env PLAYWRIGHT_BROWSERS_PATH=0 FULLBUILD=1 node .electron-nuxt/build.js",
@@ -54,6 +53,7 @@
     "@nuxtjs/eslint-config-typescript": "6.0.0",
     "@nuxtjs/eslint-module": "^3.0.2",
     "@panzoom/panzoom": "^4.1.0",
+    "@reflex/browser-installer": "^1.0.0",
     "@simonwep/selection-js": "^2.0.0",
     "@vue/composition-api": "^1.0.0-beta.21",
     "@vue/test-utils": "^1.0.0-beta.32",
@@ -100,7 +100,6 @@
     "postcss-loader": "4.1.0",
     "postcss-url": "10.1.1",
     "prettier": "^2.0.4",
-    "@reflex/browser-installer": "^1.0.0",
     "sass-loader": "10.0.2",
     "uuid": "8.3.2",
     "vue-devtools": "5.1.4",
