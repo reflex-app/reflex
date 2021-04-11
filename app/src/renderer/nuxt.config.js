@@ -12,7 +12,7 @@ module.exports = {
   },
   loading: false,
   plugins: [
-    { src: '~/plugins/vueCompositionApi.js', ssr: false },
+    // { src: '~/plugins/vueCompositionApi.js', ssr: false },
     { src: '~/plugins/vuex-persist.js', ssr: false },
     { src: '~/plugins/eventBus.js', ssr: false },
     { src: '~/plugins/globalComponents.js', ssr: false },
@@ -26,6 +26,7 @@ module.exports = {
     // Doc: https://github.com/nuxt-community/eslint-module
     // '@nuxtjs/eslint-module',
     '@nuxt/typescript-build',
+    '@nuxtjs/composition-api',
   ],
   build: {
     extend(config, { isDev, isClient }) {

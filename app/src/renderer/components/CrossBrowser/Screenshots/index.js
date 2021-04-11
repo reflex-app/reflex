@@ -1,4 +1,5 @@
-import { reactive, watchEffect } from '@vue/composition-api'
+import { reactive, watchEffect } from '@nuxtjs/composition-api'
+
 // Expose the Web Worker using Comlink (via webpack-loader)
 // https://github.com/GoogleChromeLabs/comlink-loader#singleton-mode
 import { CrossBrowserScreenshot } from '@/workers/playwright.worker'
