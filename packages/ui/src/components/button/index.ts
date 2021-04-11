@@ -1,4 +1,4 @@
-import { App } from 'vue'
+import { App } from 'vue-demi'
 import Button from './button.vue'
 
 Button.install = (Vue: App) => {

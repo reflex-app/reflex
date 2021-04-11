@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
+import { defineComponent, computed } from 'vue-demi'
 // import ItIcon from '../icon'
 // import ItLoading from '../loading'
 // import { Sizes, Colors } from '@/models/enums'
@@ -69,6 +69,3 @@ export default defineComponent({
   },
 })
 </script>
-
-import { App } from 'vue' import Button from './ItButton.vue' Button.install =
-(Vue: App) => { Vue.component(Button.name, Button) } export default Button

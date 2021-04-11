@@ -1,6 +1,7 @@
 <template>
   <div id="toolbar" :class="{ 'is-fullscreen': isFullScreen, 'is-mac': isMac }">
-    <!-- <rfx-button></rfx-button> -->
+    <rfx-button>hi</rfx-button>
+    <p>button to the left?</p>
     <Button
       role="ghost"
       icon="screens"

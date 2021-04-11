@@ -3,17 +3,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent } from 'vue-demi'
 
 export default defineComponent({
   name: 'rfx-button',
-  props: {
-    msg: String,
-  },
-  data() {
-    return {
-      count: 0,
-    }
-  },
 })
 </script>
