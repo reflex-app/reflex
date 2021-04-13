@@ -22,26 +22,26 @@
 </template>
 
 <script>
-// import { reactive, toRefs } from '@vue/composition-api'
+// import { reactive, toRefs } from '@nuxtjs/composition-api'
 import useCrossBrowserScreenshots from './UseCrossBrowserScreenshots'
 import { browserContexts } from '~/components/CrossBrowser/Screenshots'
 
 export default {
   props: {
     data: {
-      type: Object
-    }
+      type: Object,
+    },
   },
-  setup (props, { emit, root: { $store } }) {
+  setup(props, { emit, root: { $store } }) {
     const { state } = useCrossBrowserScreenshots()
 
     return {
       emit,
       props,
       state,
-      browserContexts
+      browserContexts,
     }
-  }
+  },
 }
 </script>
 

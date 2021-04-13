@@ -17,7 +17,7 @@ module.exports = {
     { src: '~/plugins/eventBus.js', ssr: false },
     { src: '~/plugins/globalComponents.js', ssr: false },
     { src: '~/plugins/featureFlipping.js', ssr: false },
-    { src: '~/plugins/reflex-ui.js', ssr: false },
+    // { src: '~/plugins/reflex-ui.js', ssr: false }, // Disabled until Nuxt v3 (w/ Vue 3)
   ],
   /*
    ** Nuxt.js dev-modules
@@ -26,7 +26,7 @@ module.exports = {
     // Doc: https://github.com/nuxt-community/eslint-module
     // '@nuxtjs/eslint-module',
     '@nuxt/typescript-build',
-    '@nuxtjs/composition-api',
+    '@nuxtjs/composition-api/module',
   ],
   build: {
     extend(config, { isDev, isClient }) {
