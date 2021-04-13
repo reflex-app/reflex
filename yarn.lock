@@ -2775,6 +2775,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@reflex/ui@workspace:packages/ui"
   dependencies:
+    "@stitches/core": ^0.1.6
     "@storybook/addon-actions": next
     "@storybook/addon-essentials": next
     "@storybook/addon-knobs": next
@@ -2830,6 +2831,13 @@ __metadata:
   dependencies:
     "@sinonjs/commons": ^1.7.0
   checksum: bc5ded83a4a2197b7e1de23e27dc5141929d5b28bf3313ec16f16bb57649f0cfebdaf6abec811969dd207d6aec14e8489f539a4fe178204f66faf5aaec129d0d
+  languageName: node
+  linkType: hard
+
+"@stitches/core@npm:^0.1.6":
+  version: 0.1.6
+  resolution: "@stitches/core@npm:0.1.6"
+  checksum: 8fc944e3799517c37dc738539feb3749f76e44790b361e498b4e1c44d76c4fa910cc3d3086d0f83159bb63003cf927f58e57c7fad9871e37518954c9926affbc
   languageName: node
   linkType: hard
 

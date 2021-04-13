@@ -28,6 +28,7 @@
     }
   },
   "devDependencies": {
+    "@stitches/core": "^0.1.6",
     "@storybook/addon-actions": "next",
     "@storybook/addon-essentials": "next",
     "@storybook/addon-knobs": "next",

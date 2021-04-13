@@ -11,7 +11,9 @@ $ yarn add @reflex/ui -D
 ```
 
 ### Nuxt.js
+
 Create a new plugin file:
+
 ```bash
 import Vue from 'vue'
 import ReflexUI from '@reflex/ui'
@@ -20,7 +22,6 @@ Vue.use(ReflexUI)
 ```
 
 Add the plugin to the `plugins: [{ src: '~/plugins/reflex-ui.js', ssr: false }]` in your `nuxt.config.js`
-
 
 ## Setup
 
@@ -57,7 +58,6 @@ We are happy to accept accessibility and bug fixes via PRs.
 - Vue 3 as front-end framework
 - Vite for lightning-fast Vue builds
 - StoryBook for UI experimentation
-- [Vue-Demi](https://github.com/vueuse/vue-demi) for Vue 2/3 interoperability 
 
 # Credits
 
