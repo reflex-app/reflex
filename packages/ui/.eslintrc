@@ -10,7 +10,8 @@
     "eslint:recommended",
     "@vue/typescript/recommended",
     "@vue/prettier",
-    "@vue/prettier/@typescript-eslint"
+    "@vue/prettier/@typescript-eslint",
+    "plugin:mdx/recommended"
   ],
   "parser": "vue-eslint-parser",
   "parserOptions": {
