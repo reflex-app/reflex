@@ -22,4 +22,5 @@ export default function install(Vue: App) {
 }
 
 // Export each component as a module
-export { default as Button } from './components/button'
+// Consumer usage: import { Button } from "@reflex/ui"
+// export { default as Button } from './components/button'

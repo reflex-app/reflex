@@ -14,43 +14,51 @@ module.exports = async ({ config, mode }) => {
     include: PROJECT_ROOT, // path to node_modules
   })
 
+  config.resolve.alias = {
+    ...config.resolve.alias,
+    '@': path.resolve(__dirname, '../src/'),
+  }
+
+  // keep this if you're doing typescript
+  config.resolve.extensions.push('.ts', '.tsx')
+
   // Configure to allow Electron
-  config.module.rules.push({
-    test: /\.js$/,
-    exclude: /node_modules/,
-    loader: 'babel-loader',
-    options: {
-      cacheDirectory: true,
-      babelrc: false,
-      presets: [
-        [
-          '@babel/preset-env',
-          {
-            targets: {
-              electron: '12.0.0',
-            },
-          },
-        ],
-      ],
-    },
-  })
+  // config.module.rules.push({
+  //   test: /\.js$/,
+  //   exclude: /node_modules/,
+  //   loader: 'babel-loader',
+  //   options: {
+  //     cacheDirectory: true,
+  //     babelrc: false,
+  //     presets: [
+  //       [
+  //         '@babel/preset-env',
+  //         {
+  //           targets: {
+  //             electron: '12.0.0',
+  //           },
+  //         },
+  //       ],
+  //     ],
+  //   },
+  // })
 
   // Vue loader
   // Required since vue-loader v15: https://stackoverflow.com/a/50280764/1114901
-  config.module.rules.push({
-    test: /\.vue$/,
-    loader: 'vue-loader',
-  })
-  config.plugins.push(new VueLoaderPlugin())
+  // config.module.rules.push({
+  //   test: /\.vue$/,
+  //   loader: 'vue-loader',
+  // })
+  // config.plugins.push(new VueLoaderPlugin())
 
   // Resolver
-  config.resolve = {
-    alias: {
-      '@': path.join(__dirname, '../components/'), // Resolve to local /components dir
-      vue$: 'vue/dist/vue.esm.js',
-    },
-    extensions: ['.js', '.vue', '.json', '.css', '.node'],
-  }
+  // config.resolve = {
+  //   alias: {
+  //     '@': path.join(__dirname, '../components/'), // Resolve to local /components dir
+  //     vue$: 'vue/dist/vue.esm.js',
+  //   },
+  //   extensions: ['.js', '.vue', '.json', '.css', '.node'],
+  // }
 
   // Return the altered config
   return config
