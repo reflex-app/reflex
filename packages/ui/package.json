@@ -15,9 +15,8 @@
     }
   },
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "storybook": "start-storybook"
+    "storybook": "start-storybook",
+    "build": "vite build"
   },
   "peerDependencies": {
     "@vue/composition-api": "^1.0.0-beta.1",
