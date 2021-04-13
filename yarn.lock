@@ -2549,22 +2549,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nuxtjs/composition-api@npm:^0.22.4":
-  version: 0.22.4
-  resolution: "@nuxtjs/composition-api@npm:0.22.4"
+"@nuxtjs/composition-api@npm:^0.23.0":
+  version: 0.23.0
+  resolution: "@nuxtjs/composition-api@npm:0.23.0"
   dependencies:
-    "@vue/composition-api": 1.0.0-rc.5
+    "@vue/composition-api": 1.0.0-rc.6
     defu: ^3.2.2
     estree-walker: ^2.0.2
     magic-string: ^0.25.7
-    ufo: ^0.6.10
+    ufo: ^0.6.11
     upath: ^2.0.1
   peerDependencies:
     "@nuxt/vue-app": ^2.15
     fs-extra: ^8.1.0
     nuxt: ^2.15
     vue: ^2
-  checksum: 9822d4ce5a0746ef1f87f57c9f1ede4761e19d65ca29344579f861f38a868bfb8aec411731c07ed7538a6a4674d7a55759c75d329f708801911af9d7da186107
+  checksum: 9c03932a19f6d40621f418c100c55c1a4cbc13bdc9f10efc2938c433c39932c7b8a752bb9aa463b495397fe81e5f6bd8a6a8c4158c7212e2f7cdc9254c918638
   languageName: node
   linkType: hard
 
@@ -2664,7 +2664,7 @@ __metadata:
     "@electron/remote": ^1.1.0
     "@nuxt/types": ^2.15.4
     "@nuxt/typescript-build": ^2.1.0
-    "@nuxtjs/composition-api": ^0.22.4
+    "@nuxtjs/composition-api": ^0.23.0
     "@nuxtjs/eslint-config": ^6.0.0
     "@nuxtjs/eslint-config-typescript": 6.0.0
     "@nuxtjs/eslint-module": ^3.0.2
@@ -2673,7 +2673,7 @@ __metadata:
     "@reflex/ui": ^1.0.0
     "@simonwep/selection-js": ^2.0.3
     "@vue/composition-api": ^1.0.0-rc.6
-    "@vue/test-utils": ^1.1.3
+    "@vue/test-utils": ^1.1.4
     "@xpda-dev/core": ^0.1.6
     "@xpda-dev/electron-builder": ^0.2.1
     "@xpda-dev/electron-launcher": ^0.3.0
@@ -2720,6 +2720,7 @@ __metadata:
     prettier: ^2.2.1
     sass-loader: 10.1.1
     uuid: 8.3.2
+    vue: ^2.6.12
     vue-devtools: 5.1.4
     vue-feature-flipping: ^3.0.0
     vue-jest: ^3.0.7
@@ -4766,18 +4767,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vue/composition-api@npm:1.0.0-rc.5":
-  version: 1.0.0-rc.5
-  resolution: "@vue/composition-api@npm:1.0.0-rc.5"
-  dependencies:
-    tslib: ^2.1.0
-  peerDependencies:
-    vue: ">= 2.5 < 3"
-  checksum: 1efa754249e976b03958cc9aa33e71be98c5a5643911903b17cb8c359c1b395cb7f0b39dc48d2baa67d47c9716352decab8765ecf5893d3e4abcb30bb6f4a4cf
-  languageName: node
-  linkType: hard
-
-"@vue/composition-api@npm:^1.0.0-rc.6":
+"@vue/composition-api@npm:1.0.0-rc.6, @vue/composition-api@npm:^1.0.0-rc.6":
   version: 1.0.0-rc.6
   resolution: "@vue/composition-api@npm:1.0.0-rc.6"
   dependencies:
@@ -4825,7 +4815,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vue/test-utils@npm:^1.1.3":
+"@vue/test-utils@npm:^1.1.4":
   version: 1.1.4
   resolution: "@vue/test-utils@npm:1.1.4"
   dependencies:
@@ -21542,7 +21532,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"ufo@npm:^0.6.10":
+"ufo@npm:^0.6.10, ufo@npm:^0.6.11":
   version: 0.6.11
   resolution: "ufo@npm:0.6.11"
   checksum: e7c38b4c96c4595bf3b7898bd7a8d52d6b7458b74e123257bf1f519b03e5f15a6143caa5b726e163627d0738f6b4519ebadfa075286c218320a6712ac59aaa99
