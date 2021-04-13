@@ -4,7 +4,7 @@ import Button from './components/button'
 
 // Import any CSS styles
 // import './styles/index.scss'
-import { App } from 'vue-demi'
+import { App } from 'vue'
 
 // Declare components
 const components = {

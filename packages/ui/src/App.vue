@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue-demi'
+import { defineComponent, computed } from 'vue'
 // import ItIcon from '../icon'
 // import ItLoading from '../loading'
 // import { Sizes, Colors } from '@/models/enums'
