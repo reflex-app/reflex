@@ -1,12 +1,11 @@
 <template lang="pug"> 
-div(class="btn" :class="computedClasses")
-  //- User can insert clickable content in here
-  // - via a Vue <Slot/>
+button(class="btn" :class="[variantClasses]" v-bind="$attrs")
   slot Click me!
 </template>
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 
 export default defineComponent({
   name: 'rfx-button',
@@ -22,8 +21,8 @@ export default defineComponent({
       },
     },
   },
-  setup(props) {
-    const computedClasses = computed(() => {
+  setup(props, ctx) {
+    const variantClasses = computed(() => {
       return {
         'btn--default': props.kind === 'default',
         'btn--primary': props.kind === 'primary',
@@ -33,7 +32,7 @@ export default defineComponent({
 
     return {
       props,
-      computedClasses,
+      variantClasses,
     }
   },
 })
@@ -41,18 +40,22 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .btn {
-  @apply px-4 py-2 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75;
+  @apply px-4 py-2 text-black font-semibold rounded-lg shadow-md;
 
   &:hover {
     @apply bg-red-500;
   }
+
+  &:focus {
+    @apply outline-none ring-2 ring-red-500 ring-opacity-75;
+  }
 }
 
 .btn--primary {
-  @apply bg-blue-500;
+  @apply text-white bg-blue-500;
 }
 
 .btn--secondary {
-  @apply bg-gray-500;
+  @apply text-black bg-gray-200;
 }
 </style>

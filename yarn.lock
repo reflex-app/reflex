@@ -2809,6 +2809,7 @@ __metadata:
     vite: ^2.1.5
     vue: ^3.0.11
     vue-loader: ^16.2.0
+    vue-router: next
     webpack: 5.32.0
   peerDependencies:
     "@vue/composition-api": ^1.0.0-beta.1
@@ -23176,6 +23177,15 @@ fsevents@^1.2.7:
   version: 3.5.1
   resolution: "vue-router@npm:3.5.1"
   checksum: cd3276153173c9b6f576efa57704bbd8f1b82a528cdf6af3ee1ebc5619b762efd3a719bc3d4d175d531dae86a228d5bc7cab8edc91f201987e6d50e4f58d02c4
+  languageName: node
+  linkType: hard
+
+"vue-router@npm:next":
+  version: 4.0.6
+  resolution: "vue-router@npm:4.0.6"
+  peerDependencies:
+    vue: ^3.0.0
+  checksum: 625e3796dc186d713f0cf9c9291d90406d8518883ab2d21be379bbda9c6833629f04b4baa6b20d731c6630fe95d6b1cd528ceff5b7147c29c479d688e233a1ed
   languageName: node
   linkType: hard
 

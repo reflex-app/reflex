@@ -31,3 +31,22 @@ This is the Reflex button.
 ## Props
 
 <ArgsTable story="Button" />
+
+## Usage
+
+A Button can be used to trigger an event or `router` event.
+
+<Canvas>
+  <Story name="Button usage" args={{ kind: 'primary' }}>
+    {{
+      components: { RfxButton },
+      methods: {
+        alert() {
+          alert('Clicked!')
+        },
+      },
+      template:
+        '<rfx-button v-bind="$props" @click="alert">Click me!</rfx-button>',
+    }}
+  </Story>
+</Canvas>
