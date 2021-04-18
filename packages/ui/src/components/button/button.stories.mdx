@@ -5,29 +5,29 @@ import RfxButton from './button.vue'
   title="Button"
   component={RfxButton}
   argTypes={{
-    kind: { control: { type: 'radio', options: ['primary', 'secondary'] } },
+    kind: {
+      control: { type: 'radio' },
+      options: ['default', 'primary', 'secondary'],
+    },
   }}
 />
 
 export const Template = (args, { argTypes }) => ({
   props: Object.keys(argTypes),
   components: { RfxButton },
-  template: '<rfx-button>Click me!</rfx-button>',
+  template: '<rfx-button v-bind="$props">Click me!</rfx-button>',
 })
 
 # Button
 
-This is the Reflex button
+This is the Reflex button.
 
 <Canvas>
-  <Story
-    name="Rounded"
-    args={{
-      rounded: true,
-      color: '#f00',
-      label: 'A Button with rounded edges',
-    }}
-  >
+  <Story name="Button" args={{}}>
     {Template.bind({})}
   </Story>
 </Canvas>
+
+## Props
+
+<ArgsTable story="Button" />
