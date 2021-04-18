@@ -17,6 +17,10 @@ export default defineConfig({
   },
   plugins: [vue()],
   build: {
+    // TODO Enable watch mode w/ Vite and Rollup
+    // based on unreleased documentation: https://github.com/ygj6/vite/commit/d185ac3665e3186f04b655128389c094211eebd3
+    // Should drop in >2.1.5
+    // watch: {},
     lib: {
       entry: path.resolve(__dirname, 'src/index.ts'),
       name: 'ReflexInterface', // The name for the default function

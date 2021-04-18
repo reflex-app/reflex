@@ -11,7 +11,9 @@ $ yarn add @reflex/ui -D
 ```
 
 ### Nuxt.js
+
 Create a new plugin file:
+
 ```bash
 import Vue from 'vue'
 import ReflexUI from '@reflex/ui'
@@ -20,7 +22,6 @@ Vue.use(ReflexUI)
 ```
 
 Add the plugin to the `plugins: [{ src: '~/plugins/reflex-ui.js', ssr: false }]` in your `nuxt.config.js`
-
 
 ## Setup
 
@@ -36,9 +37,11 @@ yarn install
 yarn run storybook
 ```
 
+While running this command, the library will be built automatically, no need to run the `yarn run build` command!
+
 ### Build library
 
-NOTE: This is a work-in-progress. The idea is that this `/ui` folder will export a portable component library which will be imported by the Reflex project.
+The `/dist` directory contains the portable component library, which can be imported into Vue projects.
 
 ```bash
 yarn run build
@@ -57,8 +60,16 @@ We are happy to accept accessibility and bug fixes via PRs.
 - Vue 3 as front-end framework
 - Vite for lightning-fast Vue builds
 - StoryBook for UI experimentation
-- [Vue-Demi](https://github.com/vueuse/vue-demi) for Vue 2/3 interoperability 
+- TailwindCSS for design system foundations
+- [Headless UI](https://github.com/tailwindlabs/headlessui/tree/main/packages/%40headlessui-vue) for some components w/ Tailwind integration
+- [Pug syntax](https://pugjs.org/api/getting-started.html) for simple component templating
+- [TailwindCSS VSCode plugin](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss)
 
 # Credits
 
 The Vite setup is heavily based on [Equal](https://github.com/quatrochan/Equal/)
+
+# Storybook w/ Webpack 5 (prerelease)
+
+Refer to this:
+https://gist.github.com/shilman/8856ea1786dcd247139b47b270912324

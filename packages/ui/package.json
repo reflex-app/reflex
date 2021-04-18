@@ -16,6 +16,7 @@
   },
   "scripts": {
     "storybook": "start-storybook",
+    "dev": "vite build --watch",
     "build": "vite build"
   },
   "peerDependencies": {
@@ -28,22 +29,31 @@
     }
   },
   "devDependencies": {
-    "@storybook/addon-actions": "next",
-    "@storybook/addon-essentials": "next",
-    "@storybook/addon-knobs": "next",
-    "@storybook/addons": "next",
-    "@storybook/builder-webpack5": "next",
-    "@storybook/vue3": "next",
+    "@storybook/addon-actions": "^6.3.0-alpha.9",
+    "@storybook/addon-essentials": "^6.3.0-alpha.9",
+    "@storybook/addon-knobs": "^6.3.0-alpha.9",
+    "@storybook/addon-postcss": "^2.0.0",
+    "@storybook/addons": "^6.3.0-alpha.9",
+    "@storybook/builder-webpack5": "^6.3.0-alpha.9",
+    "@storybook/vue3": "^6.3.0-alpha.9",
     "@vitejs/plugin-vue": "^1.2.1",
     "@vue/compiler-sfc": "^3.0.11",
-    "css-loader": "^5.2.1",
+    "autoprefixer": "^10.2.5",
+    "css-loader": "^5.2.2",
     "eslint-plugin-mdx": "^1.12.0",
     "node-sass": "5.0.0",
+    "postcss": "^8.2.10",
+    "postcss-loader": "^5.2.0",
+    "postcss-scss": "^3.0.5",
+    "pug": "^3.0.2",
+    "pug-plain-loader": "^1.1.0",
+    "sass": "^1.32.10",
     "sass-loader": "10.1.1",
+    "tailwindcss": "^2.1.1",
     "typescript": "^4.2.4",
     "vite": "^2.1.5",
     "vue": "^3.0.11",
-    "vue-loader": "next",
-    "webpack": "^5.32.0"
+    "vue-loader": "^16.2.0",
+    "webpack": "5.32.0"
   }
 }
