@@ -1,5 +1,5 @@
 <template lang="pug">
-component.w-icon(
+component.rfx-icon(
   :is="tag || 'i'"
   :class="classes"
   v-bind="$attrs"
@@ -14,7 +14,7 @@ component.w-icon(
 
 <script lang="ts">
 // {/* import config from '../utils/config' */}
-import { ref, computed, defineAsyncComponent, toRefs } from 'vue'
+import { computed } from 'vue'
 
 export default {
   name: 'rfx-icon',
@@ -48,16 +48,8 @@ export default {
         [props.color]: props.color,
         [`${props.bgColor}--bg`]: props.bgColor,
         [`size--${props.size}`]: props.size,
-        // 'w-icon--spin': props.spin,
-        // 'w-icon--rotate45': props.rotate45,
-        // 'w-icon--rotate90': props.rotate90,
-        // 'w-icon--rotate135': props.rotate135,
-        // 'w-icon--rotate180': props.rotate180,
-        // 'w-icon--rotate-45': props.rotate45a,
-        // 'w-icon--rotate-90': props.rotate90a,
-        // 'w-icon--rotate-135': props.rotate135a,
-        'w-icon--flip-x': props.flipX,
-        'w-icon--flip-y': props.flipY,
+        'rfx-icon--flip-x': props.flipX,
+        'rfx-icon--flip-y': props.flipY,
       }
     })
 
@@ -111,7 +103,7 @@ svg.feather {
   }
 }
 
-.w-icon {
+.rfx-icon {
   // position: relative;
   // display: inline-flex;
   // border-radius: 100%;
@@ -162,7 +154,7 @@ svg.feather {
     font-size: 2 * $base-font-size;
   }
   &--spin:before {
-    animation: w-icon--spin 2s infinite linear;
+    animation: rfx-icon--spin 2s infinite linear;
   }
   &--rotate45:before {
     transform: rotate(45deg);
@@ -192,7 +184,7 @@ svg.feather {
     transform: scaleY(-1);
   }
 }
-@keyframes w-icon--spin {
+@keyframes rfx-icon--spin {
   0% {
     transform: rotate(0deg);
   }

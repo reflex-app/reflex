@@ -3,7 +3,7 @@ div(class="btn" :class="[variantClasses]" v-bind="$attrs")
   template(v-if="hasIcon && iconPosition === 'left'")
     div.icon(:class="[iconClasses]")
       slot(name="icon")
-  slot Click me!
+  slot(name="default")
   template(v-if="hasIcon && iconPosition === 'right'")
     div.icon(:class="[iconClasses]")
       slot(name="icon")
@@ -38,7 +38,7 @@ export default defineComponent({
     /**
      * Should the button be fully rounded?
      */
-    rounded: {
+    oval: {
       type: Boolean,
       default: false,
     },
@@ -64,15 +64,15 @@ export default defineComponent({
         'btn--primary': props.kind === 'primary',
         'btn--secondary': props.kind === 'secondary',
         'btn--loading': props.loading,
-        'btn--rounded': props.rounded,
+        'btn--oval': props.oval,
         'justify-between': props.iconPosition === 'right', // Justify when icon is on the right TODO make this less hacky
       }
     })
 
     const iconClasses = computed(() => {
       return {
-        'icon--left': props.iconPosition === 'left',
-        'icon--right': props.iconPosition === 'right',
+        'icon--left': props.iconPosition === 'left' && !props.oval,
+        'icon--right': props.iconPosition === 'right' && !props.oval,
       }
     })
 
@@ -95,7 +95,8 @@ $spinner-size: 1rem;
 .btn {
   position: relative;
   cursor: pointer;
-  @apply px-4 py-2 text-black font-semibold rounded-lg shadow-md;
+  line-height: 1rem;
+  @apply px-4 py-2 text-black font-semibold bg-white rounded-lg shadow-md;
   @apply flex space-x-4 items-center;
   @apply transition-all duration-100 ease-out;
   @apply select-none; // Disable text selection
@@ -112,8 +113,17 @@ $spinner-size: 1rem;
     @apply outline-none ring-2 ring-red-500 ring-opacity-75;
   }
 
-  &--rounded {
-    border-radius: 10rem;
+  &--oval {
+    border-radius: 50%;
+    width: 1rem;
+    display: inline-block;
+    line-height: 1rem;
+    justify-content: center;
+    align-items: center;
+
+    .icon {
+      @apply flex items-center justify-center;
+    }
   }
 
   &--loading {

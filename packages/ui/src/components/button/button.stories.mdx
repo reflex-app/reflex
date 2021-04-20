@@ -10,7 +10,7 @@ import RfxIcon from '@/components/icon'
       control: { type: 'radio' },
       options: ['default', 'primary', 'secondary'],
     },
-    rounded: {
+    oval: {
       control: { type: 'boolean' },
       defaultValue: false,
     },
@@ -101,6 +101,23 @@ With an Icon
             Click me!
           </rfx-button>
         </div>
+      `,
+    }}
+  </Story>
+</Canvas>
+
+Icon-only rounded
+
+<Canvas>
+  <Story name="Button with icon rounded">
+    {{
+      components: { RfxButton, RfxIcon },
+      template: `
+          <rfx-button :oval="true">
+            <template v-slot:icon>
+              <rfx-icon icon="star"/>
+            </template>
+          </rfx-button>
       `,
     }}
   </Story>
