@@ -2804,6 +2804,8 @@ __metadata:
     pug-plain-loader: ^1.1.0
     sass: ^1.32.10
     sass-loader: 10.1.1
+    svg-inline-loader: ^0.8.2
+    svgo-loader: ^3.0.0
     tailwindcss: ^2.1.1
     typescript: ^4.2.4
     vite: ^2.1.5
@@ -3870,6 +3872,13 @@ __metadata:
   version: 1.1.2
   resolution: "@tootallnate/once@npm:1.1.2"
   checksum: 3d4d3fdc3b560d284a800960d04c9fc8b866b6d27bd7345b6f8dd3d2749a496ef4dd9bbc6ff5022bb63a5f4a308e7ffe78f19f89de7070a1b235b7f620337242
+  languageName: node
+  linkType: hard
+
+"@trysound/sax@npm:0.1.1":
+  version: 0.1.1
+  resolution: "@trysound/sax@npm:0.1.1"
+  checksum: 991fc763f58f68d46117a56346fbb405c384aaef56c071e63e7435b844d8daf27506056539ff79b2bc283f74ff5c66c76c4c43a33f79f18ce948ffc3e5b12a26
   languageName: node
   linkType: hard
 
@@ -7943,7 +7952,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"commander@npm:^7.0.0":
+"commander@npm:^7.0.0, commander@npm:^7.1.0":
   version: 7.2.0
   resolution: "commander@npm:7.2.0"
   checksum: ac4536eb92e5c6e5c18e8703c337d602e27427151d0d78fe52bf2f2728de4d8d3eb4a1654d12d9fbbc819f89cd97f24ba86d0693f078d8f4d0709cbf7f98c8dc
@@ -8783,7 +8792,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"csso@npm:^4.0.2":
+"csso@npm:^4.0.2, csso@npm:^4.2.0":
   version: 4.2.0
   resolution: "csso@npm:4.2.0"
   dependencies:
@@ -14860,7 +14869,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"loader-utils@npm:^1.0.0, loader-utils@npm:^1.0.2, loader-utils@npm:^1.1.0, loader-utils@npm:^1.2.3, loader-utils@npm:^1.4.0":
+"loader-utils@npm:^1.0.0, loader-utils@npm:^1.0.2, loader-utils@npm:^1.0.3, loader-utils@npm:^1.1.0, loader-utils@npm:^1.2.3, loader-utils@npm:^1.4.0":
   version: 1.4.0
   resolution: "loader-utils@npm:1.4.0"
   dependencies:
@@ -20646,6 +20655,13 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"simple-html-tokenizer@npm:^0.1.1":
+  version: 0.1.1
+  resolution: "simple-html-tokenizer@npm:0.1.1"
+  checksum: b31804b445d7db6c1e0fc8e61535bf3f231cb9b2e3e330fa9e522c2a416937ed97691e3a3edf1ca359eb951356e7b5ac5cacbbf335224c42639a46e7cd59ed0e
+  languageName: node
+  linkType: hard
+
 "simple-swizzle@npm:^0.2.2":
   version: 0.2.2
   resolution: "simple-swizzle@npm:0.2.2"
@@ -21528,10 +21544,31 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"svg-inline-loader@npm:^0.8.2":
+  version: 0.8.2
+  resolution: "svg-inline-loader@npm:0.8.2"
+  dependencies:
+    loader-utils: ^1.1.0
+    object-assign: ^4.0.1
+    simple-html-tokenizer: ^0.1.1
+  checksum: 52bf4c79c4118dd334b02a5da50cc4f32fe184062a55b922c611c27ad5e0f60ad257dca5c8bcc25108fbca8df86567c0b5174e578250b2768decb367e45fc371
+  languageName: node
+  linkType: hard
+
 "svg-tags@npm:^1.0.0":
   version: 1.0.0
   resolution: "svg-tags@npm:1.0.0"
   checksum: b4665ae8e3d93ced8450eac1d0f2d308494f47f664c4370d451ec3bc1dd48eb755c7263ee803b9e88d5e16447ebc15205f95ff240c1c7ae2ed9462f9731c99d2
+  languageName: node
+  linkType: hard
+
+"svgo-loader@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "svgo-loader@npm:3.0.0"
+  dependencies:
+    loader-utils: ^1.0.3
+    svgo: ^2.2.0
+  checksum: da5d30f5281967bb5de982988e104bd057b0b56ad8906f42cc977e349c0cbc046986e1d7f8700e091efabfde5da2e852c2057e98124aacbf0fbedc502d8f13a4
   languageName: node
   linkType: hard
 
@@ -21555,6 +21592,23 @@ fsevents@^1.2.7:
   bin:
     svgo: ./bin/svgo
   checksum: a48525166099cca11faee0064dbc908f6de8d47e886a778bed60d8cb4f2eb499a5ee6425787ad9c79fea6668aba2bc84dc04db7772d63b6df8ae58be9f4747cc
+  languageName: node
+  linkType: hard
+
+"svgo@npm:^2.2.0":
+  version: 2.3.0
+  resolution: "svgo@npm:2.3.0"
+  dependencies:
+    "@trysound/sax": 0.1.1
+    chalk: ^4.1.0
+    commander: ^7.1.0
+    css-select: ^3.1.2
+    css-tree: ^1.1.2
+    csso: ^4.2.0
+    stable: ^0.1.8
+  bin:
+    svgo: bin/svgo
+  checksum: e9242ae3591f4ed722b9922f3938e6afa059c240654781c33e0cff469e7972d53e79180008dcc401b0a6cbb39f276a6c67441ea68687ef3f90d73524c0188804
   languageName: node
   linkType: hard
 

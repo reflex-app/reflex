@@ -10,6 +10,24 @@ module.exports = async ({ config, mode }) => {
   // NOTE: You do NOT need to add rules for vue-loader!
   // These are handled by Storybook automatically
 
+  // Loading SVGs
+  // https://stackoverflow.com/a/57074973/1114901
+  let rule = config.module.rules.find(
+    (r) =>
+      // it can be another rule with file loader
+      // we should get only svg related
+      r.test &&
+      r.test.toString().includes('svg') &&
+      // file-loader might be resolved to js file path so "endsWith" is not reliable enough
+      r.loader &&
+      r.loader.includes('file-loader')
+  )
+  rule.test = /\.(ico|jpg|jpeg|png|gif|eot|otf|webp|ttf|woff|woff2|cur|ani)(\?.*)?$/
+
+  // Webpack 5 file names for assets
+  // https://dev.to/smelukov/webpack-5-asset-modules-2o3h
+  config.output['assetModuleFilename'] = 'assets/[hash][ext]'
+
   config.module.rules.push(
     {
       // CSS, SCSS
@@ -23,13 +41,19 @@ module.exports = async ({ config, mode }) => {
       // it is pre-included with Vite
       test: /\.pug$/,
       use: [{ loader: 'pug-plain-loader' }],
+    },
+    {
+      // Webpack 5 SVG loader
+      // Answer: https://stackoverflow.com/questions/44695560/how-can-i-import-a-svg-file-to-a-vue-component/67174666#67174666
+      // https://webpack.js.org/guides/asset-modules/
+      // https://dev.to/smelukov/webpack-5-asset-modules-2o3h
+      test: /\.svg$/,
+      type: 'asset',
+      use: 'svgo-loader',
     }
   )
 
-  config.resolve.alias = {
-    ...config.resolve.alias,
-    '@': path.resolve(__dirname, '../src/'),
-  }
+  config.resolve.alias['@'] = PROJECT_ROOT
 
   // Typescript
   config.resolve.extensions.push('.ts', '.tsx')
