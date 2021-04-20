@@ -67,7 +67,8 @@ We are happy to accept accessibility and bug fixes via PRs.
 
 # Credits
 
-The Vite setup is heavily based on [Equal](https://github.com/quatrochan/Equal/)
+- Vue 3 component library heavily based on [Wave UI](https://antoniandre.github.io/wave-ui)
+- Vite setup is heavily based on [Equal](https://github.com/quatrochan/Equal/)
 
 # Storybook w/ Webpack 5 (prerelease)
 

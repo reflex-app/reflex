@@ -1,0 +1,81 @@
+import { Meta, Story, Canvas, ArgsTable } from '@storybook/addon-docs/blocks'
+import RfxInput from './input.vue'
+
+<Meta
+  title="Input"
+  component={RfxInput}
+  argTypes={{
+    type: {
+      control: { type: 'radio' },
+      options: [
+        'date',
+        'email',
+        'file',
+        'password',
+        'search',
+        'tel',
+        'text',
+        'time',
+        'url',
+      ],
+    },
+  }}
+/>
+
+export const Template = (args, { argTypes }) => ({
+  props: Object.keys(argTypes),
+  components: { RfxInput },
+  template: '<rfx-input v-bind="$props">Label</rfx-input>',
+})
+
+# Input
+
+This is the Reflex text input.
+
+### Default (underline)
+
+The default text input comes with an underline and a label which moves up if a value is entered or the component gains the `:focus` state.
+
+<Canvas>
+  <Story name="Input" args={{}}>
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+### In a form
+
+<Canvas>
+  <Story
+    name="Form example"
+    args={{ placeholder: 'Placeholder here', underline: false }}
+  >
+    {{
+      components: { RfxInput },
+      template: `
+        <form>
+          <rfx-input v-bind="args"></rfx-input>
+        </form>
+      `,
+    }}
+  </Story>
+</Canvas>
+
+<!-- ### Placeholder without underline
+
+Sometimes you may not want to show the label above the input box. Just use the `placeholder: "example placeholder"` prop.
+
+<Canvas>
+  <Story
+    name="Placeholder example"
+    args={{ placeholder: 'Placeholder here', underline: false }}
+  >
+    {{
+      components: { RfxInput },
+      template: '<rfx-input v-bind="$props"></rfx-input>',
+    }}
+  </Story>
+</Canvas> -->
+
+## Props
+
+<ArgsTable story="Input" />
