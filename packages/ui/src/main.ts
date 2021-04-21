@@ -1,8 +1,8 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-import DesignSystem from './index'
+import ReflexUI from './index'
 import './index.scss'
 
 const app = createApp(App)
-app.use(DesignSystem)
+app.use(ReflexUI)
 app.mount('#app')

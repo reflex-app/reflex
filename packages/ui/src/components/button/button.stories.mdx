@@ -1,6 +1,5 @@
 import { Meta, Story, Canvas, ArgsTable } from '@storybook/addon-docs/blocks'
-import RfxButton from './button.vue'
-import RfxIcon from '@/components/icon'
+import { RfxButton, RfxIcon } from '@reflex/ui'
 
 <Meta
   title="Button"
@@ -34,9 +33,7 @@ export const Template = (args, { argTypes }) => ({
   components: { RfxButton, RfxIcon },
   template: `
   <rfx-button v-bind="$props">
-    <template v-slot:icon>
-      <rfx-icon :icon="icon"/> 
-    </template>
+    <rfx-icon :icon="icon"/> 
     Click me!
   </rfx-button>
   `,
@@ -89,15 +86,11 @@ With an Icon
       template: `
         <div class="space-y-4">
           <rfx-button kind="primary">
-            <template v-slot:icon>
-              <rfx-icon icon="star"/>
-            </template>
+            <rfx-icon icon="star"/>
             Click me!
           </rfx-button>
           <rfx-button iconPosition="right">
-            <template v-slot:icon>
-              <rfx-icon icon="star"/>
-            </template>
+            <rfx-icon icon="star"/>
             Click me!
           </rfx-button>
         </div>
@@ -114,9 +107,7 @@ Icon-only rounded
       components: { RfxButton, RfxIcon },
       template: `
           <rfx-button :oval="true">
-            <template v-slot:icon>
               <rfx-icon icon="star"/>
-            </template>
           </rfx-button>
       `,
     }}
