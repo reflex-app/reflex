@@ -53,7 +53,9 @@ module.exports = async ({ config, mode }) => {
     }
   )
 
+  // Aliases
   config.resolve.alias['@'] = PROJECT_ROOT
+  config.resolve.alias['@reflex/ui'] = PROJECT_ROOT + '/components/index.ts' // Hard-coded workaround to simulate how production will work
 
   // Typescript
   config.resolve.extensions.push('.ts', '.tsx')
