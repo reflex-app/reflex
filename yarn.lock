@@ -2804,11 +2804,10 @@ __metadata:
     pug-plain-loader: ^1.1.0
     sass: ^1.32.10
     sass-loader: 10.1.1
-    svg-inline-loader: ^0.8.2
     svgo-loader: ^3.0.0
     tailwindcss: ^2.1.1
     typescript: ^4.2.4
-    vite: ^2.1.5
+    vite: ^2.2.1
     vue: ^3.0.11
     vue-loader: ^16.2.0
     vue-router: next
@@ -20655,13 +20654,6 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"simple-html-tokenizer@npm:^0.1.1":
-  version: 0.1.1
-  resolution: "simple-html-tokenizer@npm:0.1.1"
-  checksum: b31804b445d7db6c1e0fc8e61535bf3f231cb9b2e3e330fa9e522c2a416937ed97691e3a3edf1ca359eb951356e7b5ac5cacbbf335224c42639a46e7cd59ed0e
-  languageName: node
-  linkType: hard
-
 "simple-swizzle@npm:^0.2.2":
   version: 0.2.2
   resolution: "simple-swizzle@npm:0.2.2"
@@ -21541,17 +21533,6 @@ fsevents@^1.2.7:
     has-flag: ^4.0.0
     supports-color: ^7.0.0
   checksum: 001e411f30f44324033200283d49788da7bae416ec51716b2289bc90b4289ba7ce93e746f047317748b1bcd7748928379eb8bf56378e3ffe281b2cca5f79433e
-  languageName: node
-  linkType: hard
-
-"svg-inline-loader@npm:^0.8.2":
-  version: 0.8.2
-  resolution: "svg-inline-loader@npm:0.8.2"
-  dependencies:
-    loader-utils: ^1.1.0
-    object-assign: ^4.0.1
-    simple-html-tokenizer: ^0.1.1
-  checksum: 52bf4c79c4118dd334b02a5da50cc4f32fe184062a55b922c611c27ad5e0f60ad257dca5c8bcc25108fbca8df86567c0b5174e578250b2768decb367e45fc371
   languageName: node
   linkType: hard
 
@@ -23019,9 +23000,9 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"vite@npm:^2.1.5":
-  version: 2.1.5
-  resolution: "vite@npm:2.1.5"
+"vite@npm:^2.2.1":
+  version: 2.2.1
+  resolution: "vite@npm:2.2.1"
   dependencies:
     esbuild: ^0.9.3
     fsevents: ~2.3.1
@@ -23033,7 +23014,7 @@ fsevents@^1.2.7:
       optional: true
   bin:
     vite: bin/vite.js
-  checksum: cb3dfafd66f4061da8db7c3ce91a86075391cc3a7f51916d4029329e6a6810e38d86f431f890a455d004b3378be7db5e465a734934fc474c8993409a9593a5f0
+  checksum: 501a655dbdc2b105bbbf098790e1029fd24ba9e92aca091a39be868b7801955edfcc062a1a970998ddbae525da586f6fba5decfba177b8332855214177affdaf
   languageName: node
   linkType: hard
 
