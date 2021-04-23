@@ -22,9 +22,12 @@ export default class BrowserWinHandler {
     // This method will be called when Electron has finished
     // initialization and is ready to create browser windows.
     // Some APIs can only be used after this event occurs.
-    app.on('ready', () => {
-      this._create()
-    })
+    if (app.isReady()) this._create()
+    else {
+      app.once('ready', () => {
+        this._create()
+      })
+    }
 
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
@@ -66,9 +69,6 @@ export default class BrowserWinHandler {
     if (this.browserWindow !== null) return callback(this.browserWindow)
     this._eventEmitter.once('created', () => {
       callback(this.browserWindow)
-      // TODO https://github.com/michalzaq12/electron-nuxt/issues/654
-      // if (isDev && BrowserWindow.getAllWindows().length === 1)
-      //   this.browserWindow.webContents.openDevTools()
     })
   }
 
