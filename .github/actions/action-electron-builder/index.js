@@ -1,3 +1,5 @@
+// UPDATE BASED ON: https://github.com/cypress-io/github-action/pull/94/files
+
 const { execSync } = require("child_process");
 const { existsSync } = require("fs");
 const { join } = require("path");
