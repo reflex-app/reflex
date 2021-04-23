@@ -5,8 +5,7 @@ build/*
 !build/icons
 !build/entitlements.mac.plist
 src/resources/.local-browsers
-.nuxt-storybook
-storybook-static
+.electron-nuxt
 
 # Git & NPM
 .env
@@ -18,13 +17,8 @@ node_modules
 package-lock.json
 
 # Yarn
-.yarn/*
-!.yarn/cache
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/sdks
-!.yarn/versions
+.yarn
+.yarnrc.yml
 
 # local env files
 .env.local
