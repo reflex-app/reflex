@@ -10,25 +10,6 @@ div(class="btn" :class="[variantClasses]" v-bind="$attrs")
               stroke="currentColor"
               stroke-width="4"
               stroke-linecap="round")
-
-
-  //- template(v-if="hasIcon && iconPosition === 'left'")
-  //-   div.icon(:class="[iconClasses]")
-  //-     slot(name="icon")
-  //- template(v-if="hasText")
-  //-   slot(name="default")
-  //- template(v-if="hasIcon && iconPosition === 'right'")
-  //-   div.icon(:class="[iconClasses]")
-  //-     slot(name="icon")
-  //- .btn__loader(v-if="loading")
-  //-     slot(name="loading")
-  //-       svg(viewBox="0 0 40 40")
-  //-         circle(
-  //-           cx="20" cy="20" r="18"
-  //-           fill="transparent"
-  //-           stroke="currentColor"
-  //-           stroke-width="4"
-  //-           stroke-linecap="round")
 </template>
 
 <script lang="ts">
@@ -116,9 +97,9 @@ $spinner-size: 1rem;
   cursor: pointer;
   line-height: 1rem;
   // Styles
-  @apply px-4 py-2 text-black font-semibold bg-white rounded-lg shadow-md;
-  // Flex
-  @apply flex space-x-4 items-center;
+  @apply text-black font-semibold bg-white rounded-lg shadow-md;
+  // Layout
+  @apply flex items-center space-x-4 px-4 py-2;
   // Transitions
   @apply transition-all duration-100 ease-out;
   // Prevent text selection
