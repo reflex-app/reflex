@@ -60,7 +60,7 @@ export default {
     height: 100%;
 
     // Applies style to children
-    & /deep/ .panel-section {
+    & >>> .panel-section {
       margin-bottom: 1rem;
       margin-left: 1rem;
       margin-right: 1rem;
