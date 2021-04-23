@@ -103,20 +103,6 @@ Add the following options to your workflow's existing `action-electron-builder` 
 
 The same goes for **Windows** code signing (`windows_certs` and `windows_certs_password` secrets).
 
-### Snapcraft
-
-If you are building/releasing your Linux app for Snapcraft (which is `electron-builder`'s default), you will additionally need to install and sign in to Snapcraft. This can be done using an `action-snapcraft` step before the `action-electron-builder` step:
-
-```yml
-- name: Install Snapcraft
-  uses: samuelmeuli/action-snapcraft@v1
-  # Only install Snapcraft on Ubuntu
-  if: startsWith(matrix.os, 'ubuntu')
-  with:
-    # Log in to Snap Store
-    snapcraft_token: ${{ secrets.snapcraft_token }}
-```
-
 You can read [here](https://github.com/samuelmeuli/action-snapcraft) how you can obtain a `snapcraft_token`.
 
 ### Notarization
@@ -153,10 +139,6 @@ If you've configured `electron-builder` to notarize your Electron Mac app [as de
         API_KEY_ISSUER_ID: ${{ secrets.api_key_issuer_id }}
     ```
 
-## Example
-
-For an example of the action used in production (including app notarization and publishing to Snapcraft), see [Mini Diary](https://github.com/samuelmeuli/mini-diary).
-
 ## Development
 
 Suggestions and contributions are always welcome! Please discuss larger changes via issue before submitting a pull request.
@@ -166,3 +148,7 @@ Suggestions and contributions are always welcome! Please discuss larger changes 
 - [Snapcraft Action](https://github.com/samuelmeuli/action-snapcraft) – GitHub Action for setting up Snapcraft
 - [Lint Action](https://github.com/samuelmeuli/lint-action) – GitHub Action for detecting and fixing linting errors
 - [Maven Publish Action](https://github.com/samuelmeuli/action-maven-publish) – GitHub Action for automatically publishing Maven packages
+
+## Credits
+
+- [action-electron-nuxt](https://github.com/michalzaq12/action-electron-nuxt)
