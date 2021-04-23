@@ -1,0 +1,73 @@
+import { Meta, Story, Canvas, ArgsTable } from '@storybook/addon-docs/blocks'
+import { RfxButton, RfxIcon, RfxInput } from '@reflex/ui'
+
+<Meta title="Examples/Kitchen Sink" />
+
+# Kitchen sink
+
+A bunch of practical UI combination examples for Reflex.
+
+## Main layout
+
+<Canvas>
+  <Story name="Main layout" args={{ kind: 'primary' }}>
+    {{
+      components: { RfxButton, RfxIcon, RfxInput },
+      template: `
+        <div class="bg-gray-100 p-4 h-screen relative">
+          <!-- Header -->
+          <div class="flex align-center justify-between">
+            <div class="flex space-x-3">
+              <rfx-button>
+                <rfx-icon icon="star"/>
+                Rylan's workspace
+              </rfx-button>
+              <rfx-button :oval="true">
+                <rfx-icon icon="edit-2"/>
+              </rfx-button>
+            </div>
+            <!-- Navigation -->
+            <div class="flex align-center space-x-3">
+              <rfx-button>
+                <rfx-icon icon="arrow-left"/>
+              </rfx-button>
+              <rfx-button>
+                <rfx-icon icon="arrow-right"/>
+              </rfx-button>
+              <rfx-button>
+                <rfx-icon icon="alert-circle"/>
+              </rfx-button>
+              <rfx-input placeholder="Enter a website url"></rfx-input>
+              <rfx-button>
+                <rfx-icon icon="rotate-ccw"/>
+              </rfx-button>
+            </div>
+            <!-- Right Actions Menu -->
+            <div class="flex align-center space-x-2 p-2">
+              <rfx-icon icon="camera"/>
+              <rfx-icon icon="tablet"/>
+              <rfx-icon icon="more-horizontal"/>
+              <rfx-icon icon="settings"/>
+            </div>
+          </div>
+          <!-- Left side buttons -->
+          <div class="flex flex-col space-y-3 absolute bottom-1/2 left-4">
+            <rfx-button :oval="true">
+              <rfx-icon icon="plus"/>
+            </rfx-button>
+            <rfx-button :oval="true">
+              <rfx-icon icon="edit-2"/>
+            </rfx-button>
+          </div>
+          <!-- Bottom right controls -->
+          <div class="absolute bottom-6 right-8 flex align-items space-x-3">
+            <rfx-icon icon="maximize"/>
+            <rfx-icon icon="minus"/>
+            <rfx-icon icon="plus"/>
+            <span>50%</span>
+          </div>
+        </div>
+      `,
+    }}
+  </Story>
+</Canvas>

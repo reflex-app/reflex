@@ -1,6 +1,5 @@
 const path = require('path')
 const PROJECT_ROOT = path.resolve(__dirname, '../src')
-const { VueLoaderPlugin } = require('vue-loader')
 
 // Export a function. Accept the base config as the only param.
 module.exports = async ({ config, mode }) => {

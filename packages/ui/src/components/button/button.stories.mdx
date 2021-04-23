@@ -1,33 +1,126 @@
 import { Meta, Story, Canvas, ArgsTable } from '@storybook/addon-docs/blocks'
-import RfxButton from './button.vue'
+import { RfxButton, RfxIcon } from '@reflex/ui'
 
 <Meta
   title="Button"
   component={RfxButton}
   argTypes={{
-    kind: { control: { type: 'radio', options: ['primary', 'secondary'] } },
+    kind: {
+      control: { type: 'radio' },
+      options: ['default', 'primary', 'secondary'],
+    },
+    oval: {
+      control: { type: 'boolean' },
+      defaultValue: false,
+    },
+    loading: {
+      control: { type: 'boolean' },
+      defaultValue: false,
+    },
+    icon: {
+      control: { type: 'text' },
+      defaultValue: 'star',
+    },
+    iconPosition: {
+      control: { type: 'radio' },
+      options: ['left', 'right'],
+    },
   }}
 />
 
 export const Template = (args, { argTypes }) => ({
   props: Object.keys(argTypes),
-  components: { RfxButton },
-  template: '<rfx-button>Click me!</rfx-button>',
+  components: { RfxButton, RfxIcon },
+  template: `
+  <rfx-button v-bind="$props">
+    <rfx-icon :icon="icon"/> 
+    Click me!
+  </rfx-button>
+  `,
 })
 
 # Button
 
-This is the Reflex button
+This is the Reflex button.
 
 <Canvas>
-  <Story
-    name="Rounded"
-    args={{
-      rounded: true,
-      color: '#f00',
-      label: 'A Button with rounded edges',
-    }}
-  >
+  <Story name="Button" args={{}}>
     {Template.bind({})}
+  </Story>
+</Canvas>
+
+## Props
+
+<ArgsTable story="Button" />
+
+## Usage
+
+A Button can be used to trigger an event or `router` event. Pass your event directly to the component.
+
+<Canvas>
+  <Story name="Button usage" args={{ kind: 'primary' }}>
+    {{
+      components: { RfxButton },
+      methods: {
+        alert() {
+          alert('Clicked!')
+        },
+      },
+      template:
+        '<rfx-button v-bind="$props" @click="alert()">Click me!</rfx-button>',
+    }}
+  </Story>
+</Canvas>
+
+With an Icon
+
+<Canvas>
+  <Story name="Button with icon">
+    {{
+      components: { RfxButton, RfxIcon },
+      methods: {
+        alert() {
+          alert('Clicked!')
+        },
+      },
+      template: `
+        <div class="space-y-4">
+          <rfx-button kind="primary">
+            <rfx-icon icon="star"/>
+            Click me!
+          </rfx-button>
+          <rfx-button iconPosition="right">
+            <rfx-icon icon="star"/>
+            Click me!
+          </rfx-button>
+        </div>
+      `,
+    }}
+  </Story>
+</Canvas>
+
+Icon-only rounded
+
+<Canvas>
+  <Story name="Button with icon rounded">
+    {{
+      components: { RfxButton, RfxIcon },
+      template: `
+          <rfx-button :oval="true">
+              <rfx-icon icon="star"/>
+          </rfx-button>
+      `,
+    }}
+  </Story>
+</Canvas>
+
+Loading
+
+<Canvas>
+  <Story name="Button loading" args={{ loading: true }}>
+    {{
+      components: { RfxButton },
+      template: '<rfx-button v-bind="$props">Click me!</rfx-button>',
+    }}
   </Story>
 </Canvas>

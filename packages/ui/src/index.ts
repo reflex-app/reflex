@@ -1,26 +1,13 @@
-// Import components
-// TODO Get relative @/components/* alias working
-import Button from './components/button'
+import ReflexUI from './core'
+import * as components from './components'
+import './index.scss'
 
-// Import any CSS styles
-// import './styles/index.scss'
-import { App } from 'vue'
-
-// Declare components
-const components = {
-  Button,
+const install = ReflexUI.install
+ReflexUI.install = (Vue, options = {}) => {
+  install.call(ReflexUI, Vue, { components, ...options })
 }
 
-// Export the default install function
-// which loops through each Vue component and makes it available
-export default function install(Vue: App) {
-  // tslint:disable-next-line: forin
-  for (const component in components) {
-    // @ts-expect-error
-    Vue.component(components[component].name, components[component])
-  }
-}
+// Automatic installation if Vue has been added to the global scope.
+if (typeof window !== 'undefined' && window.Vue) window.Vue.use(ReflexUI)
 
-// Export each component as a module
-// Consumer usage: import { Button } from "@reflex/ui"
-// export { default as Button } from './components/button'
+export default ReflexUI
