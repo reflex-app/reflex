@@ -8,34 +8,36 @@ on:
       - dev
       - improvement/github-action-yarn-workspace
 
+# defaults:
+#   run:
+#     working-directory: ./app # The path to the Electron app / Yarn Workspace
+
 jobs:
   release:
     strategy:
       matrix:
         os: [macos-latest, windows-latest] # The operating systems to build for
-        app:
-          - working_directory: app # The path to the Electron app / Yarn Workspace
+        node: [12]
 
     runs-on: ${{ matrix.os }}
 
     steps:
-      - name: Check out Git repository
-        uses: actions/checkout@v2
-
       - name: Install Node.js, NPM and Yarn
         uses: actions/setup-node@v2
         with:
-          node-version: 12
+          node-version: ${{ matrix.node }}
+      # TODO Cache node_modules w/ Yarn Workspaces https://gist.github.com/janicduplessis/ff4a4540f4ca24a5f556544d4a676a2a
+
+      - name: Check out Git repository
+        uses: actions/checkout@v2
 
       - name: Build/release Electron app
         uses: ./.github/actions/action-electron-builder # https://docs.github.com/en/free-pro-team@latest/actions/reference/workflow-syntax-for-github-actions#example-using-action-in-the-same-repository-as-the-workflow
         # uses: nwittwer/action-electron-builder@v1.6
         # uses: samuelmeuli/action-electron-builder@v1
         # uses: michalzaq12/action-electron-nuxt@v1
+        # Use the Yarn workspace
         with:
-          # Use the Yarn workspace
-          working-directory: ${{ matrix.app.working_directory }}
-
           # GitHub token, automatically provided to the action
           # (No need to define this secret in the repo settings)
           # type: string
