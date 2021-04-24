@@ -1,5 +1,5 @@
 name: Electron Builder Action
-author: Samuel Meuli
+author: Samuel Meuli, Michael Zarach
 description: GitHub Action for building and releasing Electron apps
 
 inputs:
@@ -26,26 +26,26 @@ inputs:
     description: Directory where NPM/Yarn commands should be run
     required: false
     default: "."
-  build_script_name:
-    description: Name of the optional NPM build script which is executed before `electron-builder`
-    required: false
-    default: build
-  skip_build:
-    description: Whether the action should execute the NPM build script before running `electron-builder`
-    required: false
-    default: false
-  use_vue_cli:
-    description: Whether to run `electron-builder` using the Vue CLI plugin instead of calling the command directly
-    required: false
-    default: false
-  args:
-    description: Other arguments to pass to the `electron-builder` command, e.g. configuration overrides
-    required: false
-    default: ""
-  max_attempts:
-    description: Maximum number of attempts for completing the build and release step
-    required: false
-    default: "1"
+  # build_script_name:
+  #   description: Name of the optional NPM build script which is executed before `electron-builder`
+  #   required: false
+  #   default: build
+  # skip_build:
+  #   description: Whether the action should execute the NPM build script before running `electron-builder`
+  #   required: false
+  #   default: false
+  # use_vue_cli:
+  #   description: Whether to run `electron-builder` using the Vue CLI plugin instead of calling the command directly
+  #   required: false
+  #   default: false
+  # args:
+  #   description: Other arguments to pass to the `electron-builder` command, e.g. configuration overrides
+  #   required: false
+  #   default: ""
+  # max_attempts:
+  #   description: Maximum number of attempts for completing the build and release step
+  #   required: false
+  #   default: "1"
 
   # Deprecated
   app_root:

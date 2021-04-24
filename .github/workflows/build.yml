@@ -7,6 +7,9 @@ on:
       - master
       - dev
       - improvement/github-action-yarn-workspace
+  pull_request:
+    branches:
+      - master
 
 # defaults:
 #   run:
@@ -31,15 +34,15 @@ jobs:
         uses: actions/checkout@v2
 
       # TODO Cache node_modules w/ Yarn Workspaces https://gist.github.com/janicduplessis/ff4a4540f4ca24a5f556544d4a676a2a
-      - name: cache node_modules
-        uses: actions/cache@v2
-        with:
-          path: node_modules
-          key: ${{ matrix.os }}-node-v${{ matrix.node }}-deps-${{ hashFiles(format('{0}{1}', github.workspace, '/yarn.lock')) }}
+      # - name: cache node_modules
+      #   uses: actions/cache@v2
+      #   with:
+      #     path: node_modules
+      #     key: ${{ matrix.os }}-node-v${{ matrix.node }}-deps-${{ hashFiles(format('{0}{1}', github.workspace, '/yarn.lock')) }}
 
-      - name: Install dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: yarn
+      # - name: Install dependencies
+      #   if: steps.cache.outputs.cache-hit != 'true'
+      #   run: yarn
 
       - name: Build/release Electron app
         uses: ./.github/actions/action-electron-builder # https://docs.github.com/en/free-pro-team@latest/actions/reference/workflow-syntax-for-github-actions#example-using-action-in-the-same-repository-as-the-workflow
