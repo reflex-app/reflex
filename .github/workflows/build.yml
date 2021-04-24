@@ -25,13 +25,13 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v2
+
       - name: Install Node.js, NPM and Yarn
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node }}
-
-      - name: Check out Git repository
-        uses: actions/checkout@v2
 
       # TODO Cache node_modules w/ Yarn Workspaces https://gist.github.com/janicduplessis/ff4a4540f4ca24a5f556544d4a676a2a
       # - name: cache node_modules
