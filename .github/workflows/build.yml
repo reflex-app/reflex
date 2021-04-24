@@ -9,11 +9,13 @@ on:
 
 jobs:
   release:
-    runs-on: ${{ matrix.os }}
-
     strategy:
       matrix:
-        os: [macos-latest, windows-latest]
+        os: [macos-latest, windows-latest] # The operating systems to build for
+        app:
+          - working_directory: app # The path to the Electron app / Yarn Workspace
+
+    runs-on: ${{ matrix.os }}
 
     steps:
       - name: Check out Git repository
@@ -30,6 +32,9 @@ jobs:
         # uses: samuelmeuli/action-electron-builder@v1
         # uses: michalzaq12/action-electron-nuxt@v1
         with:
+          # Use the Yarn workspace
+          working-directory: ${{ matrix.app.working_directory }}
+
           # GitHub token, automatically provided to the action
           # (No need to define this secret in the repo settings)
           # type: string
