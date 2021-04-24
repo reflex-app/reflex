@@ -6,7 +6,6 @@ on:
     branches:
       - master
       - dev
-      - improvement/github-action-yarn-workspace
 
 jobs:
   release:
