@@ -1,3 +1,5 @@
+// UPDATE BASED ON: https://github.com/cypress-io/github-action/pull/94/files
+
 const { execSync } = require("child_process");
 const { existsSync } = require("fs");
 const { join } = require("path");
@@ -70,6 +72,8 @@ const runAction = () => {
 
 	const pkgJsonPath = join(pkgRoot, "package.json");
 
+	console.info("Using package.json from:", pkgJsonPath);
+
 	// Make sure `package.json` file exists
 	if (!existsSync(pkgJsonPath)) {
 		exit(`\`package.json\` file not found at path "${pkgJsonPath}"`);
@@ -91,8 +95,8 @@ const runAction = () => {
 	// Disable console advertisements during install phase
 	setEnv("ADBLOCK", true);
 
-	log(`Installing dependencies using… \n`);
-	run("yarn install", pkgRoot);
+	// log(`Installing dependencies using… \n`);
+	// run("yarn install", pkgRoot);
 
 	log(`Building${release ? " and releasing" : ""} the Electron app… \n`);
 	run(`yarn run build ${release ? "-- --publish always" : ""}`, pkgRoot);
