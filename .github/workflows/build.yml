@@ -62,8 +62,7 @@ jobs:
       #       yarn-cache-folder-os-${{ runner.os }}-node-${{ env.node-version }}-
       #       yarn-cache-folder-os-${{ runner.os }}-
       - name: Install dependencies
-        if: steps.yarn-cache.outputs.cache-hit != 'true'
-        run: yarn install
+        run: yarn --prefer-offline
         # working-directory: ./app
 
       # ----- End Yarn Install and Caching ------
