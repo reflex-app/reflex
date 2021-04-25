@@ -46,11 +46,10 @@ inputs:
   #   description: Maximum number of attempts for completing the build and release step
   #   required: false
   #   default: "1"
-
   # Deprecated
-  app_root:
-    description: Directory where `electron-builder` commands should be run
-    required: false
+  # app_root:
+  #   description: Directory where `electron-builder` commands should be run
+  #   required: false
 
 runs:
   using: node12 # Versions available: https://github.com/actions/node-versions/blob/main/versions-manifest.json
