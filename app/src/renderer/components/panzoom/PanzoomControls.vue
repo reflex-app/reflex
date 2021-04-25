@@ -5,7 +5,7 @@
       <div @click="zoomIn">+</div>
       <div @click="reset">Reset</div>
     </template>
-    <SwitchButton :value="true" label="Canvas" @onToggle="toggleCanvas" />
+    <!-- <SwitchButton :value="true" label="Canvas" @onToggle="toggleCanvas" /> -->
   </div>
 </template>
 
