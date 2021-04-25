@@ -33,36 +33,25 @@ jobs:
       # Only install dependencies for the ./app
       # https://github.com/yarnpkg/berry/issues/954#issuecomment-629734719
 
-      # via https://github.com/actions/cache/blob/master/examples.md#node---lerna
+      # https://github.com/actions/cache/blob/master/examples.md#node---lerna
       # https://github.com/actions/cache/blob/main/examples.md#node---yarn-2
-      # - name: Cache
-      #   uses: actions/cache@v2
-      #   with:
-      #     path: |
-      #       node_modules
-      #       */*/node_modules
-      #     key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
 
-      - name: Cache
-        uses: actions/cache@v2
+      # Cache Yarn 2
+      # https://github.com/actions/cache/blob/main/examples.md#node---yarn-2
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn config get cacheFolder)"
+
+      - uses: actions/cache@v2
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
         with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
 
-      # - id: find-yarn-cache-folder
-      #   name: Find Yarn's cache folder
-      #   run: echo "::set-output name=path::$(yarn config get cacheFolder)"
-      # - name: Cache Yarn's cache folder
-      #   uses: actions/cache@v2
-      #   id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`) (via https://github.com/actions/cache/blob/master/examples.md#node---yarn)
-      #   with:
-      #     path: ${{ steps.find-yarn-cache-folder.outputs.path }}
-      #     key: yarn-cache-folder-os-${{ runner.os }}-node-${{ env.node-version }}-${{ hashFiles('yarn.lock') }}
-      #     restore-keys: |
-      #       yarn-cache-folder-os-${{ runner.os }}-node-${{ env.node-version }}-
-      #       yarn-cache-folder-os-${{ runner.os }}-
       - name: Install dependencies
-        run: yarn --prefer-offline
+        run: yarn
         # working-directory: ./app
 
       # ----- End Yarn Install and Caching ------
