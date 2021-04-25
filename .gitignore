@@ -1,13 +1,3 @@
-# Build
-.nuxt
-dist
-build/*
-!build/icons
-!build/entitlements.mac.plist
-src/resources/.local-browsers
-.nuxt-storybook
-storybook-static
-
 # Git & NPM
 .env
 !.gitkeep
