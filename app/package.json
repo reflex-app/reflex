@@ -6,6 +6,10 @@
   "author": "Nick Wittwer",
   "main": "./dist/main/index.js",
   "homepage": "https://reflexapp.nickwittwer.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/reflex-app/reflex.git"
+  },
   "scripts": {
     "dev": "npx cross-env PLAYWRIGHT_BROWSERS_PATH=0 node .electron-nuxt/dev.js",
     "build": "npx cross-env PLAYWRIGHT_BROWSERS_PATH=0 FULLBUILD=1 node .electron-nuxt/build.js",
