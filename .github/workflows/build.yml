@@ -35,13 +35,19 @@ jobs:
 
       # via https://github.com/actions/cache/blob/master/examples.md#node---lerna
       # https://github.com/actions/cache/blob/main/examples.md#node---yarn-2
+      # - name: Cache
+      #   uses: actions/cache@v2
+      #   with:
+      #     path: |
+      #       node_modules
+      #       */*/node_modules
+      #     key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+
       - name: Cache
         uses: actions/cache@v2
         with:
-          path: |
-            node_modules
-            */*/node_modules
-          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
       # - id: find-yarn-cache-folder
       #   name: Find Yarn's cache folder
@@ -58,7 +64,7 @@ jobs:
       #       yarn-cache-folder-os-${{ runner.os }}-
 
       - name: Install dependencies
-        working-directory: ./app
+        # working-directory: ./app
         run: yarn install
       # ----- End Yarn Install and Caching ------
 
