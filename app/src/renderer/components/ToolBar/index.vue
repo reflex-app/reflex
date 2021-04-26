@@ -37,6 +37,7 @@
     <div v-if="artboards.length" class="toolbar__right">
       <SwitchMode />
     </div>
+    <UpdateChannel />
     <InstallUpdateButton />
     <div id="draggable" @dblclick="toggleWindowMaximize" />
   </div>
@@ -52,6 +53,7 @@ import HistoryControls from '@/components/ToolBar/HistoryControls.vue'
 import InstallUpdateButton from '@/components/ToolBar/InstallUpdateButton.vue'
 import SwitchMode from '@/components/ToolBar/SwitchMode'
 import Artboard from '../Screens/Artboard.vue'
+import UpdateChannel from '@/components/Settings/UpdateChannel.vue'
 
 const debounce = require('lodash.debounce')
 
@@ -64,6 +66,7 @@ export default {
     InstallUpdateButton,
     SwitchMode,
     Artboard,
+    UpdateChannel,
   },
   data() {
     return {
