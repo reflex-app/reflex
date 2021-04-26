@@ -98,8 +98,14 @@ const runAction = () => {
 	// log(`Installing dependencies using… \n`);
 	// run("yarn install", pkgRoot);
 
-	log(`Building${release ? " and releasing" : ""} the Electron app… \n`);
-	run(`yarn run build ${release ? "-- --publish always" : ""}`, pkgRoot);
+	// Check to see 
+	if (release) {
+		log(`Building the Electron app… \n`);
+		run(`yarn run build --publish always`, pkgRoot);
+	} else {
+		log(`Building and releasing the Electron app… \n`);
+		run(`yarn run build:fast`, pkgRoot);
+	}
 };
 
 runAction();

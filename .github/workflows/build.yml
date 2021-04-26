@@ -17,9 +17,7 @@ jobs:
       matrix:
         os: [macos-latest, windows-latest] # The operating systems to build for
         node: [12]
-
     runs-on: ${{ matrix.os }}
-
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v2
@@ -30,12 +28,6 @@ jobs:
           node-version: ${{ matrix.node }}
 
       # ----- Yarn Install and Caching ------
-      # Only install dependencies for the ./app
-      # https://github.com/yarnpkg/berry/issues/954#issuecomment-629734719
-
-      # https://github.com/actions/cache/blob/master/examples.md#node---lerna
-      # https://github.com/actions/cache/blob/main/examples.md#node---yarn-2
-
       # Cache Yarn 2
       # https://github.com/actions/cache/blob/main/examples.md#node---yarn-2
       - name: Get yarn cache directory path
@@ -52,27 +44,10 @@ jobs:
 
       - name: Install dependencies
         run: yarn
-        # working-directory: ./app
-
       # ----- End Yarn Install and Caching ------
 
-      # TODO Cache node_modules w/ Yarn Workspaces https://gist.github.com/janicduplessis/ff4a4540f4ca24a5f556544d4a676a2a
-      # - name: cache node_modules
-      #   uses: actions/cache@v2
-      #   with:
-      #     path: node_modules
-      #     key: ${{ matrix.os }}-node-v${{ matrix.node }}-deps-${{ hashFiles(format('{0}{1}', github.workspace, '/yarn.lock')) }}
-
-      # - name: Install dependencies
-      #   if: steps.cache.outputs.cache-hit != 'true'
-      #   run: yarn
-
       - name: Build/release Electron app
-        uses: ./.github/actions/action-electron-builder # https://docs.github.com/en/free-pro-team@latest/actions/reference/workflow-syntax-for-github-actions#example-using-action-in-the-same-repository-as-the-workflow
-        # uses: nwittwer/action-electron-builder@v1.6
-        # uses: samuelmeuli/action-electron-builder@v1
-        # uses: michalzaq12/action-electron-nuxt@v1
-        # Use the Yarn workspace
+        uses: ./.github/actions/action-electron-builder
         with:
           # GitHub token, automatically provided to the action
           # (No need to define this secret in the repo settings)
