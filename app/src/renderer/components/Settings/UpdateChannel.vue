@@ -31,6 +31,7 @@ export default {
     // Set the init value
     ipcRenderer.on('get-autoupdate-channel-response', (event, newValue) => {
       channel.value = newValue // This is the value from Main process
+      console.info(`Update channel: ${channel.value}`)
       inputSelection.value = newValue
     })
 
