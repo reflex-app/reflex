@@ -21,15 +21,28 @@ const { ipcRenderer } = require('electron')
 export default {
   setup() {
     // The selected option in the template
-    const channel = ref(null) // Init
-    const inputSelection = ref(null)
-    const channels = ['latest', 'beta', 'alpha']
+    const channel = ref(null) // Filled w/ value from Main process
+    const channels = ['latest', 'beta', 'alpha'] // Update channels to choose from
+    const inputSelection = ref(null) // Current selection in UI
+
+    // Fetch the current setting on setup()
+    ipcRenderer.send('get-autoupdate-channel')
+
+    // Set the init value
+    ipcRenderer.on('get-autoupdate-channel-response', (event, newValue) => {
+      channel.value = newValue // This is the value from Main process
+      inputSelection.value = newValue
+    })
 
     function showConfirm(event) {
       const newChannel = event.target.value
-      const confirmation = confirm(
-        `Are you sure you want to switch to the ${newChannel} channel?`
-      )
+
+      const confirmDialog =
+        newChannel === 'latest'
+          ? `Are you sure you want to switch to downloading the latest updates?`
+          : `Are you sure you want to switch to downloading the ${newChannel} updates? This is a development mode, and there may be bugs.`
+
+      const confirmation = confirm(confirmDialog)
 
       if (confirmation) {
         // Send the message
@@ -47,14 +60,6 @@ export default {
         event.stopPropagation()
       }
     }
-
-    // Fetch the current setting
-    // Set the init value
-    ipcRenderer.send('get-autoupdate-channel')
-    ipcRenderer.on('get-autoupdate-channel-response', (event, newValue) => {
-      channel.value = newValue // This is the value from Main process
-      inputSelection.value = newValue
-    })
 
     return {
       channels,
