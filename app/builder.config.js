@@ -1,7 +1,9 @@
-const isFullBuild = !!process.env.FULLBUILD // true or false
-const ICONS_DIR = 'build/icons/'
+// Set release flag based on Yarn script OR Github Action input
+// NOTE: Github Action envs are all-caps https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#inputs
+const release = process.env.RELEASE || process.env.INPUT_RELEASE // true or false
+console.log(`Is release? ${release}`)
 
-console.log('Is release?', isFullBuild)
+const ICONS_DIR = 'build/icons/'
 
 const macOS = {
   mac: {
@@ -14,7 +16,7 @@ const macOS = {
     // signIgnore: '/node_modules/playwright/.local-browsers', // Waiting for a way to manually ignore Playwright's browser binaries https://github.com/electron-userland/electron-builder/issues/5500
     // signIgnore: ['.*/node_modules/playwright/.local-browsers'], // https://github.com/electron-userland/electron-builder/pull/5262
   },
-  afterSign: isFullBuild ? 'scripts/notarize.js' : null, // Notarize Mac (ONLY for deploys)
+  afterSign: release ? 'scripts/notarize.js' : null, // Notarize Mac (ONLY for deploys)
   dmg: {
     sign: false, // Required for MacOS Catalina
     contents: [
@@ -51,7 +53,7 @@ module.exports = {
   appId: 'com.reflex.app',
   // eslint-disable-next-line no-template-curly-in-string
   artifactName: 'Reflex-${version}.${ext}',
-  publish: isFullBuild ? ['github'] : null, //  Publish artifacts to Github (release)
+  publish: release ? ['github'] : null, //  Publish artifacts to Github (release)
   directories: {
     output: 'build',
   },
