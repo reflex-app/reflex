@@ -1,13 +1,36 @@
 // Set release flag based on Yarn script OR Github Action input
 // NOTE: Github Action envs ("INPUT_RELEASE") are all-caps https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#inputs
-const isRelease =
-  process.env.RELEASE === 'true' || process.env.INPUT_RELEASE === 'true' // true or false
+
+const getEnv = (name, expectedVal) => {
+  // Returns the value for an environment variable (or `null` if it's not defined)
+  // We assume the env vars are uppercase
+  const getEnv = (name) => process.env[name.toUpperCase()] || null
+
+  // Set the variable
+  // Try looking for the name on its own, as well as the Github Actions version ("INPUT_")
+  const value = getEnv(name) || getEnv(`INPUT_${name}`)
+  if (!value) {
+    console.log(`"${name}" variable is not defined`)
+  }
+
+  // Either return true/false if user expected a certain value
+  if (expectedVal) {
+    // Return boolean
+    return value === expectedVal
+  } else {
+    // Or, if no expectedVal is set: return the value by itself
+    return value
+  }
+}
+
+const isRelease = getEnv('RELEASE', 'true') // Controls whether the app will be codesigned, notarized, published
 console.log(`Is release? ${isRelease}`)
 
 const ICONS_DIR = 'build/icons/'
 
 const macOS = {
   mac: {
+    identity: isRelease ? null : getEnv('CSC_LINK'), // Disable signing for release
     target: 'dmg',
     icon: ICONS_DIR + 'icon.icns',
     entitlements: 'build/entitlements.mac.plist', // Required for MacOS Catalina

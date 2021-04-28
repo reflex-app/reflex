@@ -95,13 +95,10 @@ const runAction = () => {
 	// Disable console advertisements during install phase
 	setEnv("ADBLOCK", true);
 
-	// log(`Installing dependencies using… \n`);
-	// run("yarn install", pkgRoot);
-
-	// Check to see 
+	// Check to see
 	if (release) {
 		log(`Building the Electron app… \n`);
-		run(`yarn run build --publish always`, pkgRoot);
+		run(`yarn run build`, pkgRoot);
 	} else {
 		log(`Building and releasing the Electron app… \n`);
 		run(`yarn run build:fast`, pkgRoot);
