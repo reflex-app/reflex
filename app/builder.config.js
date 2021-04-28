@@ -30,7 +30,7 @@ const ICONS_DIR = 'build/icons/'
 
 const macOS = {
   mac: {
-    identity: isRelease ? null : getEnv('CSC_LINK'), // Disable signing for release
+    identity: isRelease ? getEnv('CSC_LINK') : null, // Only codesign releases
     target: 'dmg',
     icon: ICONS_DIR + 'icon.icns',
     entitlements: 'build/entitlements.mac.plist', // Required for MacOS Catalina
