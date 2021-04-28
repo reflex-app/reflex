@@ -10,7 +10,6 @@ exports.default = async function notarizing(context) {
   const appBundleId = 'com.nickwittwer.reflex'
   const appPath = `${appOutDir}/${appName}.app`
 
-  // eslint-disable-next-line no-console
   console.info('Notarizing...', {
     appBundleId,
     appPath,
