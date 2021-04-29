@@ -56,6 +56,7 @@
     "@nuxtjs/eslint-config": "^6.0.0",
     "@nuxtjs/eslint-config-typescript": "6.0.0",
     "@nuxtjs/eslint-module": "^3.0.2",
+    "@octokit/request": "^5.4.15",
     "@panzoom/panzoom": "^4.3.2",
     "@reflex/browser-installer": "^1.0.0",
     "@reflex/ui": "^1.0.0",

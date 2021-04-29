@@ -2722,6 +2722,58 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@octokit/endpoint@npm:^6.0.1":
+  version: 6.0.11
+  resolution: "@octokit/endpoint@npm:6.0.11"
+  dependencies:
+    "@octokit/types": ^6.0.3
+    is-plain-object: ^5.0.0
+    universal-user-agent: ^6.0.0
+  checksum: 0ac67743d37f1d689e1a35d994dcf26d6dedc72952bd68ef8db468dc96fe2ced3c0dcdcac8de253a322ae804d4a2be7d21dbc5f4707efc919b48b273856ecbfe
+  languageName: node
+  linkType: hard
+
+"@octokit/openapi-types@npm:^6.2.1":
+  version: 6.2.1
+  resolution: "@octokit/openapi-types@npm:6.2.1"
+  checksum: 7aa881f856e9e5b154e2ed241ca8e5eb911bbbf73c477c446df16674a6f96282f52d5727a49c7bb04d592ecfddc6f59c38c937d36667d27bf86afb90356c0c3f
+  languageName: node
+  linkType: hard
+
+"@octokit/request-error@npm:^2.0.0":
+  version: 2.0.5
+  resolution: "@octokit/request-error@npm:2.0.5"
+  dependencies:
+    "@octokit/types": ^6.0.3
+    deprecation: ^2.0.0
+    once: ^1.4.0
+  checksum: 76b5742b9afd9aa38a8b9df16f45997a4c337d32b8314d20c3af0f5d8402099abe38b8b0aba7c1f24e2e1bfd940d15b4870718804d4af700d31b0d39c2f2c71a
+  languageName: node
+  linkType: hard
+
+"@octokit/request@npm:^5.4.15":
+  version: 5.4.15
+  resolution: "@octokit/request@npm:5.4.15"
+  dependencies:
+    "@octokit/endpoint": ^6.0.1
+    "@octokit/request-error": ^2.0.0
+    "@octokit/types": ^6.7.1
+    is-plain-object: ^5.0.0
+    node-fetch: ^2.6.1
+    universal-user-agent: ^6.0.0
+  checksum: a892e18e6f46a638c9c6b4738f21a2e36af809ee13556e06ca4567b7a464deff762a0847cda2b78735528a06962af61d9440d9c51d7cc75140cdf8196ae3f14c
+  languageName: node
+  linkType: hard
+
+"@octokit/types@npm:^6.0.3, @octokit/types@npm:^6.7.1":
+  version: 6.14.1
+  resolution: "@octokit/types@npm:6.14.1"
+  dependencies:
+    "@octokit/openapi-types": ^6.2.1
+  checksum: 862d4ea2f98ea82e41da37104f213c45d02eddb7bf78421963a82e0d183c7c2824227133492b05ec9dbe4b2cbb0f5d7a085a1ed781076f7a328cf650d699a860
+  languageName: node
+  linkType: hard
+
 "@panzoom/panzoom@npm:^4.3.2":
   version: 4.3.2
   resolution: "@panzoom/panzoom@npm:4.3.2"
@@ -2770,6 +2822,7 @@ __metadata:
     "@nuxtjs/eslint-config": ^6.0.0
     "@nuxtjs/eslint-config-typescript": 6.0.0
     "@nuxtjs/eslint-module": ^3.0.2
+    "@octokit/request": ^5.4.15
     "@panzoom/panzoom": ^4.3.2
     "@reflex/browser-installer": ^1.0.0
     "@reflex/ui": ^1.0.0
@@ -9199,6 +9252,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"deprecation@npm:^2.0.0":
+  version: 2.3.1
+  resolution: "deprecation@npm:2.3.1"
+  checksum: 99d98248688506eb1820225e66be6dda5330eb86d153c4e5eb49acc1220d3d586d25a2f07c4f742e639b7ecfda4e9eed12da8060f78a721969e3dfad449a32c1
+  languageName: node
+  linkType: hard
+
 "des.js@npm:^1.0.0":
   version: 1.0.1
   resolution: "des.js@npm:1.0.1"
@@ -13569,6 +13629,13 @@ fsevents@^1.2.7:
   dependencies:
     isobject: ^3.0.1
   checksum: fd566059bfe23c88046efbf8d355af54c86ba0288764b0cba7137bb184388f5ba5b6e5637efe84b638ada826eccd0f3e85a795c1c80a5a2c69659fba1581b5dd
+  languageName: node
+  linkType: hard
+
+"is-plain-object@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "is-plain-object@npm:5.0.0"
+  checksum: 687f5516eb1f472989a1c3e58080beaae525d454ccb0cfcfca273a09c0271d3439448f371c480574ad104c1e003a0544a346af1a227d164b471b22d238156e29
   languageName: node
   linkType: hard
 
@@ -22704,6 +22771,13 @@ fsevents@^1.2.7:
     unist-util-is: ^4.0.0
     unist-util-visit-parents: ^3.0.0
   checksum: 5d6d2319f0e76ae5ec84ecb32396beb3d15c1009cb82bace9be45a8860be4afbbd1147cbea4eda82ae44288d576cc056ce4d683bce8f8c59de0e41345970ee1b
+  languageName: node
+  linkType: hard
+
+"universal-user-agent@npm:^6.0.0":
+  version: 6.0.0
+  resolution: "universal-user-agent@npm:6.0.0"
+  checksum: c0699d2eadedb0d456f4e36cad6efea7b4916f2d0825609edc1248d883d73c81348ff6cc5549492cee283a00d64841dc3d4bf3370b06ca85713c5463540510d8
   languageName: node
   linkType: hard
 
