@@ -17,8 +17,6 @@
 		"format": "prettier --ignore-path ./.gitignore --list-different \"**/*.{css,html,js,json,jsx,less,md,scss,ts,tsx,vue,yaml,yml}\"",
 		"format:fix": "yarn format --write"
 	},
-	"dependencies": {},
-	"peerDependencies": {},
 	"devDependencies": {
 		"@octokit/request": "^5.4.15",
 		"@samuelmeuli/eslint-config": "^6.0.0",
