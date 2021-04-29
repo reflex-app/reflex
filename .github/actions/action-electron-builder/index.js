@@ -2,7 +2,7 @@
 
 const { execSync } = require("child_process");
 const { existsSync } = require("fs");
-const { join } = require("path");
+const path = require("path");
 const { request } = require("@octokit/request");
 
 /**
@@ -69,9 +69,9 @@ const getInput = (name, required) => {
 const runAction = async () => {
 	const platform = getPlatform();
 	const release = getInput("release", true) === "true";
-	const pkgRoot = "./app"; // The path to the app's root
+	const pkgRoot = path.resolve(__dirname + "./app"); // The path to the app's root
 
-	const pkgJsonPath = join(pkgRoot, "package.json");
+	const pkgJsonPath = path.join(pkgRoot, "package.json");
 
 	console.info("Using package.json from:", pkgJsonPath);
 
