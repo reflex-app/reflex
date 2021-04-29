@@ -137,4 +137,4 @@ const runAction = async () => {
 	}
 };
 
-await runAction();
+runAction();

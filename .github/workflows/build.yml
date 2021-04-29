@@ -9,9 +9,12 @@ on:
     branches:
       - master
       - dev
+      - ci
   pull_request:
     branches:
       - master
+      - dev
+      - ci
 
 jobs:
   release:
