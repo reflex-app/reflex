@@ -66,7 +66,7 @@ const getInput = (name, required) => {
 /**
  * Installs NPM dependencies and builds/releases the Electron app
  */
-const runAction = () => {
+const runAction = async () => {
 	const platform = getPlatform();
 	const release = getInput("release", true) === "true";
 	const pkgRoot = "./app"; // The path to the app's root
@@ -101,7 +101,7 @@ const runAction = () => {
 		// TODO Check if a draft release exists for the current package version
 		// Try: https://github.com/octokit/request.js/
 		// If not, cancel build
-		const packageVersion = "v" + require(pkgJsonPath).version
+		const packageVersion = "v" + require(pkgJsonPath).version;
 		log(`Checking if release exists already for ${packageVersion}… \n`);
 
 		// Request
@@ -114,16 +114,16 @@ const runAction = () => {
 		});
 		console.log(`${results.data.length} releases found.`);
 
-		// Check for a Release with a Git tag that matches the current package version 
+		// Check for a Release with a Git tag that matches the current package version
 		// i.e. "v0.7.0"
 		// https://docs.github.com/en/rest/reference/repos#releases
-		const isExistingRelease = results.map(result => {
+		const isExistingRelease = results.map((result) => {
 			console.log(result);
-			return result.tag_name === packageVersion
-		})
+			return result.tag_name === packageVersion;
+		});
 
 		// If a release exists, ...
-		log(`Release exists? ${isExistingRelease}`)
+		log(`Release exists? ${isExistingRelease}`);
 
 		log(`Building and releasing the Electron app… \n`);
 		if (platform === "mac") {
@@ -137,4 +137,4 @@ const runAction = () => {
 	}
 };
 
-runAction();
+await runAction();
