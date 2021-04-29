@@ -2,14 +2,18 @@
 # (without codesign, notarization, publish artifacts)
 name: Build test
 
-# Run workflow for {action} on all branches, except...
+# Run workflow for {action} on all branches, except the branches which the full build runs on
 on:
   push:
     branches-ignore:
       - master # Ignore master branch, since that is covered by the release workflow
+      - dev
+      - ci
   pull_request:
     branches-ignore:
       - master # Ignore master branch, since that is covered by the release workflow
+      - dev
+      - ci
 
 jobs:
   release:
