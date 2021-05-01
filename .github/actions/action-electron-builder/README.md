@@ -8,7 +8,7 @@ GitHub Actions allows you to build your app on macOS, Windows and Linux without 
 
 ## Setup
 
-1. **Install and configure `electron-builder`** (v22+) in your Electron app. You can read about this in [the project's docs](https://www.electron.build) or in [my blog post](https://samuelmeuli.com/blog/2019-04-07-packaging-and-publishing-an-electron-app).
+1. **Install and configure `electron-builder`** (v22+) in your Electron app
 
 2. If you need to compile code (e.g. TypeScript to JavaScript or Sass to CSS), make sure this is done using a **`build` script in your `package.json` file**. The action will execute that script before packaging your app. However, **make sure that the `build` script does _not_ run `electron-builder`**, as this action will do that for you.
 
@@ -37,7 +37,7 @@ GitHub Actions allows you to build your app on macOS, Windows and Linux without 
              node-version: 10
 
          - name: Build/release Electron app
-           uses: samuelmeuli/action-electron-builder@v1
+           uses: ./.github/actions/action-electron-builder
            with:
              # GitHub token, automatically provided to the action
              # (No need to define this secret in the repo settings)
@@ -103,51 +103,51 @@ Add the following options to your workflow's existing `action-electron-builder` 
 
 The same goes for **Windows** code signing (`windows_certs` and `windows_certs_password` secrets).
 
-You can read [here](https://github.com/samuelmeuli/action-snapcraft) how you can obtain a `snapcraft_token`.
-
 ### Notarization
 
-If you've configured `electron-builder` to notarize your Electron Mac app [as described in this guide](https://samuelmeuli.com/blog/2019-12-28-notarizing-your-electron-app), you can use the following steps to let GitHub Actions perform the notarization for you:
+- https://kilianvalkhof.com/2019/electron/notarizing-your-electron-application/
+- https://samuelmeuli.com/blog/2019-12-28-notarizing-your-electron-app
 
-1.  Define the following secrets in your repository's settings on GitHub:
+## Development of this Github Action
 
-    - `api_key`: Content of the API key file (with the `p8` file extension)
-    - `api_key_id`: Key ID found on App Store Connect
-    - `api_key_issuer_id`: Issuer ID found on App Store Connect
+### Locally testing Github Action
 
-2.  In your workflow file, add the following step before your `action-electron-builder` step:
+This will make it slightly easier to avoid bugs at the Github Actions-level. But you'll need to install a few things and download ~7GB worth of virtual environments.
 
-    ```yml
-    - name: Prepare for app notarization
-      if: startsWith(matrix.os, 'macos')
-      # Import Apple API key for app notarization on macOS
-      run: |
-        mkdir -p ~/private_keys/
-        echo '${{ secrets.api_key }}' > ~/private_keys/AuthKey_${{ secrets.api_key_id }}.p8
-    ```
+IMPORTANT: `macos-latest` and `windows-latest` are not supported in `act` at this time. See [#97](https://github.com/nektos/act/issues/97). As a workaround, you can use Ubuntu. The available virtual environments are listed [here](https://github.com/nektos/act#runners) (see "Github Runner" column).
 
-3.  Pass the following environment variables to `action-electron-builder`:
+There's an example project for act here: https://github.com/cplee/github-actions-demo
 
-    ```yml
-    - name: Build/release Electron app
-      uses: samuelmeuli/action-electron-builder@v1
-      with:
-        # ...
-      env:
-        # macOS notarization API key
-        API_KEY_ID: ${{ secrets.api_key_id }}
-        API_KEY_ISSUER_ID: ${{ secrets.api_key_issuer_id }}
-    ```
+Requirements:
 
-## Development
+- Docker
 
-Suggestions and contributions are always welcome! Please discuss larger changes via issue before submitting a pull request.
+  1. Install [Docker](https://docs.docker.com/get-docker/) if you don't have it already. This is required to use the next step's tool, `act`.
 
-## Related
+  1. Make sure Docker is running on your computer
 
-- [Snapcraft Action](https://github.com/samuelmeuli/action-snapcraft) – GitHub Action for setting up Snapcraft
-- [Lint Action](https://github.com/samuelmeuli/lint-action) – GitHub Action for detecting and fixing linting errors
-- [Maven Publish Action](https://github.com/samuelmeuli/action-maven-publish) – GitHub Action for automatically publishing Maven packages
+Getting started:
+
+1. Install [act](https://github.com/nektos/act) CLI for locally testing the Github Action. See [Installation](https://github.com/nektos/act#installation) instructions for your OS.
+1. Run `act` from the root of this project to do the initial run.
+
+   - IMPORTANT: You will get an error if you do not run it from the root of the project, because it will be expending to find a ".github/workflows" directory structure.
+
+1. Choose the Runner you'd like to use. I use the "medium" one. Compare them [here](https://github.com/nektos/act#runners).
+
+1. Do your first run, which will also install any necessary virtual environments. `act --verbose`.
+
+   - If you use `ubuntu-latest` for example, it will download the ~7GB Docker image.
+
+1. Run `act` commands from the root of this project: `$ act [<event>][options]`
+
+IMPORTANT: `macos-latest` and `windows-latest` are not supported in `act` at this time. See [#97](https://github.com/nektos/act/issues/97). As a workaround, you can define an alternative OS, like Ubuntu, like so: `-P macos-latest=nektos/act-environments-ubuntu:act-latest`.
+
+Example: Trigger `pull_request` event
+
+```
+$ act pull_request
+```
 
 ## Credits
 
