@@ -147,20 +147,20 @@ async function checkForRelease(version) {
 
 	// List of the releases in JSON
 	const { data: releases } = r;
-
-	console.log(`${releases.length} releases found.`, releases);
+	console.log(`${releases.length} releases found.`);
 
 	// Check for a Release with a Git tag that matches the current package version
 	// i.e. "v0.7.0"
 	// https://docs.github.com/en/rest/reference/repos#releases
-	const isExistingRelease = releases.map((result) => {
-		console.log(result);
-		return result.tag_name === version;
-	});
+	const isExistingRelease = releases.find((result) => result.tag_name === version);
 
-	log(
-		`Release exists? ${isExistingRelease} \n ${isExistingRelease.tag_name} ${isExistingRelease.draft}`,
-	);
+	if (isExistingRelease) {
+		log(
+			`Release exists? ${isExistingRelease} \n ${isExistingRelease.version} ${isExistingRelease.draft}`,
+		);
+	} else {
+		log(`Release exists? ${isExistingRelease}`);
+	}
 
 	return isExistingRelease; // Return true/false
 }
