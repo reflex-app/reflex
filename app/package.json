@@ -11,9 +11,9 @@
     "url": "https://github.com/reflex-app/reflex.git"
   },
   "scripts": {
-    "dev": "npx cross-env PLAYWRIGHT_BROWSERS_PATH=0 node .electron-nuxt/dev.js",
-    "build": "npx cross-env PLAYWRIGHT_BROWSERS_PATH=0 RELEASE=true node .electron-nuxt/build.js",
-    "build:fast": "npx cross-env PLAYWRIGHT_BROWSERS_PATH=0 CSC_IDENTITY_AUTO_DISCOVERY=false node .electron-nuxt/build.js",
+    "dev": "npx cross-env node .electron-nuxt/dev.js",
+    "build": "npx cross-env RELEASE=true node .electron-nuxt/build.js",
+    "build:fast": "npx cross-env node .electron-nuxt/build.js",
     "test": "jest",
     "lint": "eslint --ext .js,.vue,.ts -f eslint-friendly-formatter ./src",
     "lint:fix": "yarn run lint -- --fix",
