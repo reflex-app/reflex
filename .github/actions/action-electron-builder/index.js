@@ -69,7 +69,7 @@ const getInput = (name, required) => {
 const runAction = async () => {
 	const platform = getPlatform();
 	const release = getInput("release", true) === "true";
-	const pkgRoot = path.resolve(__dirname + "/app"); // The path to the app's root
+	const pkgRoot = path.resolve(__dirname + "../../../app"); // The path to the app's root
 
 	const pkgJsonPath = path.join(pkgRoot, "package.json");
 
