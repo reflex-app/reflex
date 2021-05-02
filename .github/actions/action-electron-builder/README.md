@@ -58,12 +58,16 @@ Using this the workflow above, GitHub will build your app every time you push a 
 
 - NOTE: If a GH release does not exist yet for the version, it will not work.
 
+- BIG GOTCHA: Git tags are relevant only to the branch they're created in. If you create a Git tag on some branch other than the default branch your Github repo uses, the event will NOT trigger in Github Actions. See: https://stackoverflow.com/questions/18088183/do-git-tags-apply-to-all-branches
+
 When you want to create a new release, follow these steps:
 
-1. Update the version in your project's `package.json` file (e.g. `1.2.3`)
-2. Commit that change (`git commit -am v1.2.3`)
-3. Tag your commit (`git tag v1.2.3`). Make sure your tag name's format is `v*.*.*`. Your workflow will use this tag to detect when to create a release
-4. Push your changes to GitHub (`git push && git push --tags`)
+1. `cd ./app`
+1. `yarn version {major/minor/patch/prerelease}` to bump the version in the package.json (e.g. `1.2.3`). See [Yarn docs](https://yarnpkg.com/cli/version/#usage).
+
+1. Commit that change (`git commit -am v1.2.3`)
+1. Tag your commit (`git tag v1.2.3`). Make sure your tag name's format is `v*.*.*`. Your workflow will use this tag to detect when to create a release
+1. Push your changes to GitHub (`git push && git push --tags`)
 
 After building successfully, the action will publish your release artifacts. By default, a new release draft will be created on GitHub with download links for your app. If you want to change this behavior, have a look at the [`electron-builder` docs](https://www.electron.build).
 

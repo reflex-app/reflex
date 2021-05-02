@@ -25,6 +25,8 @@ jobs:
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # https://yarnpkg.com/features/release-workflow#commit-history
 
       - name: Install Node.js, NPM and Yarn
         uses: actions/setup-node@v2 # See: https://github.com/actions/setup-node
