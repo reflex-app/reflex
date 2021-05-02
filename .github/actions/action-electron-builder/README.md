@@ -56,6 +56,8 @@ Using this the workflow above, GitHub will build your app every time you push a 
 
 ### Releasing
 
+- NOTE: If a GH release does not exist yet for the version, it will not work.
+
 When you want to create a new release, follow these steps:
 
 1. Update the version in your project's `package.json` file (e.g. `1.2.3`)
