@@ -76,13 +76,13 @@ const runAction = async () => {
 	const pkgRoot = path.resolve(__dirname + "../../../../" + appDir);
 
 	const pkgJsonPath = path.join(pkgRoot, "package.json");
-
-	console.info("Using package.json from:", pkgJsonPath);
-
 	// Make sure `package.json` file exists
 	if (!existsSync(pkgJsonPath)) {
 		exit(`\`package.json\` file not found at path "${pkgJsonPath}"`);
 	}
+
+	const packageVersion = "v" + require(pkgJsonPath).version;
+	console.info(`Using package.json from: ${pkgJsonPath}. Version: ${packageVersion}`);
 
 	// Copy "github_token" input variable to "GH_TOKEN" env variable (required by `electron-builder`)
 	setEnv("GH_TOKEN", getInput("github_token", true));
@@ -105,46 +105,56 @@ const runAction = async () => {
 		// TODO Check if a draft release exists for the current package version
 		// Try: https://github.com/octokit/request.js/
 		// If not, cancel build
-		const packageVersion = "v" + require(pkgJsonPath).version;
-		log(`Checking if release exists already for ${packageVersion}… \n`);
-
-		// Request
-		const results = await request("GET /repos/reflex-app/reflex/releases", {
-			headers: {
-				authorization: `token ${getInput("github_token")}`,
-			},
-			org: "reflex-app",
-			type: "private",
-		});
-		console.log(`${results.data.length} releases found.`);
 
 		// Check for a Release with a Git tag that matches the current package version
-		// i.e. "v0.7.0"
-		// https://docs.github.com/en/rest/reference/repos#releases
-		const isExistingRelease = results.map((result) => {
-			console.log(result);
-			return result.tag_name === packageVersion;
-		});
+		const isExistingRelease = await checkForRelease();
 
-		// TODO Check if release is draft status OR does not exist for the current version
-		// TODO If no release exists for version, draft a new release
-		// TODO If is draft...
-
-		// If a release exists, ...
-		log(`Release exists? ${isExistingRelease}`);
+		if (isExistingRelease) {
+			// TODO Check if release is draft status OR does not exist for the current version
+			// TODO If is draft...
+		} else {
+			// TODO If no release exists for version, draft a new release
+		}
 
 		log(`Building and releasing the Electron app… \n`);
+
 		if (platform === "mac") {
 			log(`App will be codesigned and notarized \n`);
 		}
 
-		// Always publish to Github Release (
-		// even if
+		// Always publish to Github Release
 		run(`yarn run build -- --publish always`, pkgRoot);
 	} else {
+		await checkForRelease();
 		log(`Building the Electron app WITHOUT release… \n`);
 		run(`yarn run build:fast`, pkgRoot);
 	}
 };
 
 runAction();
+
+async function checkForRelease(version) {
+	log(`Checking if release exists already for ${packageVersion}… \n`);
+
+	// Request
+	const results = await request("GET /repos/reflex-app/reflex/releases", {
+		headers: {
+			authorization: `token ${getInput("github_token")}`,
+		},
+		org: "reflex-app",
+		type: "private",
+	});
+	console.log(`${results.data.length} releases found.`);
+
+	// Check for a Release with a Git tag that matches the current package version
+	// i.e. "v0.7.0"
+	// https://docs.github.com/en/rest/reference/repos#releases
+	const isExistingRelease = results.map((result) => {
+		console.log(result);
+		return result.tag_name === version;
+	});
+
+	log(`Release exists? ${isExistingRelease}`);
+
+	return isExistingRelease; // Return true/false
+}

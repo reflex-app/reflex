@@ -58,6 +58,8 @@ Using this the workflow above, GitHub will build your app every time you push a 
 
 When you want to create a new release, follow these steps:
 
+NOTE: If a draft Github Release exists for the tag, assets will be uploaded even if its not a release. This is due to how `electron-builder` works.
+
 1. Update the version in your project's `package.json` file (e.g. `1.2.3`)
 2. Commit that change (`git commit -am v1.2.3`)
 3. Tag your commit (`git tag v1.2.3`). Make sure your tag name's format is `v*.*.*`. Your workflow will use this tag to detect when to create a release
