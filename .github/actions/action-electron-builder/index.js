@@ -69,7 +69,11 @@ const getInput = (name, required) => {
 const runAction = async () => {
 	const platform = getPlatform();
 	const release = getInput("release", true) === "true";
-	const pkgRoot = path.resolve(__dirname + "../../../app"); // The path to the app's root
+
+	// The path to app's directory
+	// (starts relative to Github action)
+	const appDir = "app";
+	const pkgRoot = path.resolve(__dirname + "../../../../" + appDir);
 
 	const pkgJsonPath = path.join(pkgRoot, "package.json");
 
