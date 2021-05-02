@@ -13,7 +13,7 @@
   "scripts": {
     "dev": "npx cross-env node .electron-nuxt/dev.js",
     "build": "npx cross-env RELEASE=true node .electron-nuxt/build.js",
-    "build:fast": "npx cross-env node .electron-nuxt/build.js",
+    "build:fast": "node .electron-nuxt/build.js",
     "test": "jest",
     "lint": "eslint --ext .js,.vue,.ts -f eslint-friendly-formatter ./src",
     "lint:fix": "yarn run lint -- --fix",

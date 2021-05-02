@@ -31,7 +31,10 @@ const ICONS_DIR = 'build/icons/'
 const macOS = {
   mac: {
     identity: isRelease ? getEnv('CSC_LINK') : null, // Only codesign releases
-    target: 'dmg',
+    target: {
+      target: 'dmg',
+      arch: ['arm64', 'x64'], // Build for M1 chips (arm64) + Intel chips
+    },
     icon: ICONS_DIR + 'icon.icns',
     entitlements: 'build/entitlements.mac.plist', // Required for MacOS Catalina
     entitlementsInherit: 'build/entitlements.mac.plist', // Required for MacOS Catalina
@@ -75,7 +78,7 @@ const windowsOS = {
 module.exports = {
   productName: require('./package.json').productName,
   appId: 'com.reflex.app',
-  artifactName: 'Reflex-${version}.${ext}',
+  artifactName: 'Reflex-${version}-${os}-${arch}.${ext}',
   publish: isRelease ? ['github'] : null, //  Publish artifacts to Github (release)
   directories: {
     output: 'build',
