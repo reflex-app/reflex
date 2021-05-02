@@ -30,7 +30,7 @@ const ICONS_DIR = 'build/icons/'
 
 const macOS = {
   mac: {
-    identity: isRelease ? getEnv('CSC_LINK') : null, // Only codesign releases
+    // identity: isRelease ? getEnv('CSC_LINK') : null, // Only codesign releases
     target: {
       target: 'dmg',
       arch: ['arm64', 'x64'], // Build for M1 chips (arm64) + Intel chips
