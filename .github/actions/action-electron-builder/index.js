@@ -134,7 +134,7 @@ const runAction = async () => {
 runAction();
 
 async function checkForRelease(version) {
-	log(`Checking if release exists already for ${packageVersion}… \n`);
+	log(`Checking if release exists already for ${version}… \n`);
 
 	// Request
 	const results = await request("GET /repos/reflex-app/reflex/releases", {
