@@ -81,8 +81,8 @@ const runAction = async () => {
 		exit(`\`package.json\` file not found at path "${pkgJsonPath}"`);
 	}
 
-	const packageVersion = "v" + require(pkgJsonPath).version;
-	console.info(`Using package.json from: ${pkgJsonPath}. Version: ${packageVersion}`);
+	const pkgVersion = "v" + require(pkgJsonPath).version;
+	console.info(`Using package.json from: ${pkgJsonPath}. Version: ${pkgVersion}`);
 
 	// Copy "github_token" input variable to "GH_TOKEN" env variable (required by `electron-builder`)
 	setEnv("GH_TOKEN", getInput("github_token", true));
@@ -107,7 +107,7 @@ const runAction = async () => {
 		// If not, cancel build
 
 		// Check for a Release with a Git tag that matches the current package version
-		const isExistingRelease = await checkForRelease();
+		const isExistingRelease = await checkForRelease(pkgVersion);
 
 		if (isExistingRelease) {
 			// TODO Check if release is draft status OR does not exist for the current version
@@ -125,7 +125,7 @@ const runAction = async () => {
 		// Always publish to Github Release
 		run(`yarn run build -- --publish always`, pkgRoot);
 	} else {
-		await checkForRelease();
+		await checkForRelease(pkgVersion);
 		log(`Building the Electron app WITHOUT release… \n`);
 		run(`yarn run build:fast`, pkgRoot);
 	}
@@ -137,24 +137,30 @@ async function checkForRelease(version) {
 	log(`Checking if release exists already for ${version}… \n`);
 
 	// Request
-	const results = await request("GET /repos/reflex-app/reflex/releases", {
+	const r = await request("GET /repos/reflex-app/reflex/releases", {
 		headers: {
 			authorization: `token ${getInput("github_token")}`,
 		},
 		org: "reflex-app",
 		type: "private",
 	});
-	console.log(`${results.data.length} releases found.`);
+
+	// List of the releases in JSON
+	const { data: releases } = r;
+
+	console.log(`${releases.length} releases found.`, releases);
 
 	// Check for a Release with a Git tag that matches the current package version
 	// i.e. "v0.7.0"
 	// https://docs.github.com/en/rest/reference/repos#releases
-	const isExistingRelease = results.map((result) => {
+	const isExistingRelease = releases.map((result) => {
 		console.log(result);
 		return result.tag_name === version;
 	});
 
-	log(`Release exists? ${isExistingRelease}`);
+	log(
+		`Release exists? ${isExistingRelease} \n ${isExistingRelease.tag_name} ${isExistingRelease.draft}`,
+	);
 
 	return isExistingRelease; // Return true/false
 }
