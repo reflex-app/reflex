@@ -69,7 +69,7 @@ const getInput = (name, required) => {
 const runAction = async () => {
 	const platform = getPlatform();
 	const release = getInput("release", true) === "true";
-	const pkgRoot = path.resolve(__dirname + "./app"); // The path to the app's root
+	const pkgRoot = path.resolve(__dirname + "/app"); // The path to the app's root
 
 	const pkgJsonPath = path.join(pkgRoot, "package.json");
 
@@ -122,6 +122,10 @@ const runAction = async () => {
 			return result.tag_name === packageVersion;
 		});
 
+		// TODO Check if release is draft status OR does not exist for the current version
+		// TODO If no release exists for version, draft a new release
+		// TODO If is draft...
+
 		// If a release exists, ...
 		log(`Release exists? ${isExistingRelease}`);
 
@@ -130,7 +134,9 @@ const runAction = async () => {
 			log(`App will be codesigned and notarized \n`);
 		}
 
-		run(`yarn run build`, pkgRoot);
+		// Always publish to Github Release (
+		// even if
+		run(`yarn run build -- --publish always`, pkgRoot);
 	} else {
 		log(`Building the Electron app WITHOUT release… \n`);
 		run(`yarn run build:fast`, pkgRoot);
