@@ -10,7 +10,7 @@ inputs:
   release:
     description: Whether the app should be released after a successful build
     required: false
-    default: false
+    default: "false"
 
   mac_certs:
     description: Base64-encoded code signing certificate for macOS
