@@ -62,7 +62,6 @@ jobs:
           # then create a Github release
           # type: boolean
           release: ${{ startsWith(github.ref, 'refs/tags/v') }}
-          # release: true
 
           # Mac certificate info
           mac_certs: ${{ secrets.CSC_LINK }}

@@ -123,10 +123,10 @@ const runAction = async () => {
 		}
 
 		// Always publish to Github Release
-		run(`yarn run build -- --publish always`, pkgRoot);
+		run(`yarn run build --publish always`, pkgRoot);
 	} else {
 		log(`Building the Electron app WITHOUT release… \n`);
-		run(`yarn run build:fast -- --publish never`, pkgRoot);
+		run(`yarn run build:fast --publish never`, pkgRoot);
 	}
 };
 
