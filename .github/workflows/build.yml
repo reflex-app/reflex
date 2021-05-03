@@ -1,20 +1,19 @@
 ## Based on https://github.com/samuelmeuli/mini-diary/blob/master/.github/workflows/release.yml
 name: Build & release
 
-# This workflow runs for dev, master branches
-# See readme.md for instructions
+# This workflow runs for dev, master branches when a new git tag is created
+# and the tag is a version number, like "v1.0.0"
+
+# Suggested workflow:
+# Create Git tags like "v1.0.0" on origin/master
+# Create Git tags like "v1.0.0-beta.1" or "v1.0.0-alpha.1" for origin/dev
+
 # It will always codesign, notarize, and attempt to publish artifacts to a draft release
 on:
   push:
-    branches:
-      - master
-      - dev
-      - ci
-  pull_request:
-    branches:
-      - master
-      - dev
-      - ci
+    branches: [master, dev, ci]
+    tags:
+      - 'v*.*.*' # Only watch for new v- Git tags
 
 jobs:
   release:
@@ -26,6 +25,8 @@ jobs:
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # https://yarnpkg.com/features/release-workflow#commit-history
 
       - name: Install Node.js, NPM and Yarn
         uses: actions/setup-node@v2 # See: https://github.com/actions/setup-node
@@ -59,11 +60,12 @@ jobs:
           # type: string
           github_token: ${{ secrets.github_token }}
 
+          # Set release to true when a v- tag is pushed
           # If the commit is tagged with a version (e.g. "v1.0.0")
           # then create a Github release
           # type: boolean
-          # release: ${{ startsWith(github.ref, 'refs/tags/v') }}
-          release: true
+          # See `github.ref`: https://docs.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#github-context
+          release: ${{ startsWith(github.ref, 'refs/tags/v') }}
 
           # Mac certificate info
           mac_certs: ${{ secrets.CSC_LINK }}

@@ -6,6 +6,7 @@
   "homepage": "https://reflexapp.nickwittwer.com",
   "workspaces": [
     "app",
-    "packages/*"
+    "packages/*",
+    ".github/actions/*"
   ]
 }

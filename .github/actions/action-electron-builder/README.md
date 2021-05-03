@@ -58,25 +58,25 @@ Using this the workflow above, GitHub will build your app every time you push a 
 
 When you want to create a new release, follow these steps:
 
-1. Update the version in your project's `package.json` file (e.g. `1.2.3`)
-2. Commit that change (`git commit -am v1.2.3`)
-3. Tag your commit (`git tag v1.2.3`). Make sure your tag name's format is `v*.*.*`. Your workflow will use this tag to detect when to create a release
-4. Push your changes to GitHub (`git push && git push --tags`)
+1. `cd app` (from the project root directory)
+1. `yarn version {major/minor/patch/prerelease}` to bump the version in the package.json (e.g. `1.2.3`). See [Yarn docs](https://yarnpkg.com/cli/version/#usage).
+1. Commit that change (`git commit -am v1.2.3`)
+1. Tag your commit (`git tag v1.2.3`). Make sure your tag name's format is `v*.*.*`. Your workflow will use this tag to detect when to create a release
+1. Push your changes to GitHub (`git push && git push --tags`)
 
 After building successfully, the action will publish your release artifacts. By default, a new release draft will be created on GitHub with download links for your app. If you want to change this behavior, have a look at the [`electron-builder` docs](https://www.electron.build).
+
+## Need to change the Release's Git Tag?
+
+1. Remove the tag from Github (make sure to change the version): `git push origin :refs/tags/v0.7.0-beta.10`
+1. Update your local Git tags: `git tag -d $(git tag)` and then `git fetch --tags` to pull from Github
+1. Delete Github Release draft
+1. Create the tag again i.e. `git tag v0.7.0-beta.10`
+1. `git push --tags`
 
 ## Configuration
 
 ### Options
-
-You can configure the action further with the following options:
-
-- `package_root`: Directory where NPM/Yarn commands should be run (default: `"."`)
-- `build_script_name`: Name of the optional NPM build script which is executed before `electron-builder` (default: `"build"`)
-- `skip_build`: Whether the action should execute the NPM build script before running `electron-builder`
-- `use_vue_cli`: Whether to run `electron-builder` using the [Vue CLI plugin](https://nklayman.github.io/vue-cli-plugin-electron-builder) instead of calling the command directly
-- `args`: Other arguments to pass to the `electron-builder` command, e.g. configuration overrides (default: `""`)
-- `max_attempts`: Maximum number of attempts for completing the build and release step
 
 See [`action.yml`](./action.yml) for a list of all possible input variables.
 
@@ -138,16 +138,6 @@ If you've configured `electron-builder` to notarize your Electron Mac app [as de
         API_KEY_ID: ${{ secrets.api_key_id }}
         API_KEY_ISSUER_ID: ${{ secrets.api_key_issuer_id }}
     ```
-
-## Development
-
-Suggestions and contributions are always welcome! Please discuss larger changes via issue before submitting a pull request.
-
-## Related
-
-- [Snapcraft Action](https://github.com/samuelmeuli/action-snapcraft) – GitHub Action for setting up Snapcraft
-- [Lint Action](https://github.com/samuelmeuli/lint-action) – GitHub Action for detecting and fixing linting errors
-- [Maven Publish Action](https://github.com/samuelmeuli/action-maven-publish) – GitHub Action for automatically publishing Maven packages
 
 ## Credits
 
