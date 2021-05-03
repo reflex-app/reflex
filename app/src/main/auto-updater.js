@@ -34,7 +34,9 @@ export default function init(window) {
 
       // Restart with the new version
       // NOTE: Does not work in dev mode
-      autoUpdater.quitAndInstall()
+      // autoUpdater.quitAndInstall()
+      console.info(`Checking for updates...`)
+      autoUpdater.checkForUpdates()
     } else {
       console.error(
         `Incorrect autoupdate channel set or value has not changed: ${channel}`
