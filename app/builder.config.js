@@ -84,8 +84,7 @@ module.exports = {
   // Enable Release channels
   // https://www.electron.build/tutorials/release-using-channels#release-using-channels-auto-updates-with-channels
   // // Latest/beta/alpha channel https://github.com/electron-userland/electron-builder/issues/1182
-  generateUpdatesFilesForAllChannels: 'true', // This will generate update files for each channel (i.e. latest.yml, beta.yml, alpha.yml)
-  detectUpdateChannel: 'true', // This will cause the app to detect the update channel based on package.json
+  generateUpdatesFilesForAllChannels: true, // This will generate update files for each channel (i.e. latest.yml, beta.yml, alpha.yml)
 
   directories: {
     output: 'build',

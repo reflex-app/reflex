@@ -2,11 +2,11 @@
   <div class="radio-container">
     <div v-for="(channel, index) in channels" :key="index" class="radio-item">
       <input
-        type="radio"
+        :id="`radio-${index}`"
         v-model="inputSelection"
+        type="radio"
         :value="channel"
         name="radio-group"
-        :id="`radio-${index}`"
         @click="showConfirm($event)"
       />
       <label :for="`radio-${index}`">{{ channel }}</label>
@@ -17,6 +17,7 @@
 <script>
 import { ref } from '@nuxtjs/composition-api'
 const { ipcRenderer } = require('electron')
+const remote = require('@electron/remote')
 
 export default {
   setup() {
@@ -31,6 +32,7 @@ export default {
     // Set the init value
     ipcRenderer.on('get-autoupdate-channel-response', (event, newValue) => {
       channel.value = newValue // This is the value from Main process
+      console.info(`Version: ${remote.app.getVersion()}`)
       console.info(`Update channel: ${channel.value}`)
       inputSelection.value = newValue
     })
@@ -40,7 +42,7 @@ export default {
 
       const confirmDialog =
         newChannel === 'latest'
-          ? `Are you sure you want to switch to downloading the latest updates?`
+          ? 'Are you sure you want to switch to downloading the latest updates?'
           : `Are you sure you want to switch to downloading the ${newChannel} updates? This is a development mode, and there may be bugs.`
 
       const confirmation = confirm(confirmDialog)
