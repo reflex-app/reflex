@@ -5,7 +5,7 @@ const shell = require('shelljs')
 const initialPath = path.resolve(__dirname)
 
 function main() {
-  const pathToApp = path.resolve(__dirname, '../app') // Absolute path
+  const pathToApp = path.resolve(__dirname, '../') // Absolute path
   const pkg = path.join(pathToApp, 'package.json')
 
   console.info(`Local app version is: ${requireUncached(pkg).version}`)
@@ -38,21 +38,23 @@ function main() {
       ////////////////////////////////
       // Git Tag
 
-      console.log(`Tagging`)
-
       // Pull from latest tags
+      console.log(`Getting latest tags`)
       shell.exec('git fetch --tags --all --prune')
 
       // Delete existing tag
       const deleteExistingTag = () => {
-        const { stdout: tagExists } = shell.exec(`git tag`)
-        if (tagExists) {
+        const { stdout: tags, stderr } = shell.exec(`git tag`)
+        if (stderr) return false
+
+        if (tags.includes(newVersion)) {
           shell.exec(`git tag -d ${newVersion}`)
         }
       }
       deleteExistingTag()
 
       // Create Git tag
+      console.log(`Tagging`)
       shell.exec(`git tag ${newVersion}`)
 
       ////////////////////////////////
