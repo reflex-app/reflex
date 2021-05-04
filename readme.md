@@ -5,19 +5,19 @@
 
 ![Reflex Screenshot](screenshot.png)
 
-Reflex is a free, open-source Mac app that makes it easy to see how responsive websites look at different screen sizes. Made for people who are tired of manually resizing their browser.
+Reflex is an open-source desktop app that makes it easy to see how responsive websites look at different screen sizes. Made for people who are tired of manually resizing their browser.
 
 ---
 
 ## Download
 
-**[Download latest version (MacOS)](https://github.com/nwittwer/Reflex/releases/latest)**
+**[Download latest version](https://github.com/nwittwer/Reflex/releases/latest)**
 
 [Having issues installing?](#faq)
 
 ---
 
-### Features:
+### Features
 
 - Preview your website across as many sizes as you want
 - Screenshot individual screens or all at once
@@ -36,103 +36,34 @@ If you would like to add to the project, take a look at the [planned projects pa
 
 ---
 
-## Developing
-
-[![Build Status](https://travis-ci.com/nwittwer/reflex.svg?branch=dev)](https://travis-ci.com/nwittwer/reflex)
-
-Requirements:
-
-- Node
-- Yarn (1.x)
-
-Please note: The `dev` branch represents the latest works-in-progress, and should always be used for new development/pull requests. The `master` branch holds the latest public release code.
-
-### Getting Started
-
-1. Clone the project to your computer:
-
-   ```sh
-   $ git clone https://github.com/nwittwer/reflex.git
-   $ cd reflex
-   ```
-
-2. Install dependencies:
-
-   ```sh
-   $ yarn install
-   ```
-
-3. Compile and watch for changes:
-   ```sh
-   $ yarn run dev
-   ```
-
-### Building
-
-1. To compile an executable app, run the following command:
-
-   ```sh
-   $ yarn run build
-   ```
-
-   This will output several files inside of the `build/` folder. You can directly run the `.app` or `.exe` file inside of `build/`.
-
-### Release
-
-1. Update the version in the project's package.json file (e.g. 1.2.3)
-2. Commit that change (git commit -am v1.2.3)
-3. Tag your commit (git tag v1.2.3). Make sure your tag name's format is v*.*.\*. Your workflow will use this tag to detect when to create a release
-4. Push your changes to GitHub (git push && git push --tags)
-5. Github Actions will run the build only for commits to `master` and `dev` branches
-6. If the build is successful and a Github Release is in draft for the same version, the Github Action will notarize (Mac only) and upload the build artifacts to the Github Release directly.
-
-https://github.com/samuelmeuli/action-electron-builder#releasing
-
-Env vars required:
-
-- CSC_LINK: base64-encoded .p12 file
-- CSC_KEY_PASSWORD: optional password
-- GH_TOKEN: Github token
-- APPLEID: Apple ID
-- APPLEIDPASS: App-specific password for Apple ID
-
-### Debugging
-
-`CMD/CTRL + Shift + I` will open the Chrome DevTools inside of the Electron instance.
-
-#### Logs
-
-See: https://github.com/megahertz/electron-log#readme
-
-- on macOS: ~/Library/Logs/{app name}/{process type}.log
-- on Windows: %USERPROFILE%\AppData\Roaming\{app name}\logs\{process type}.log
-- on Linux: ~/.config/{app name}/logs/{process type}.log
-
-### Technologies used
-
-- [Vue 2.x](https://vuejs.org/)
-- [Electron](https://electronjs.org/)
-- [BrowserSync](https://www.browsersync.io/)
-
----
-
 ## FAQ
 
-1. Help installing for MacOS
+1. Help installing
 
-   1. Download from the [Releases](../../releases) page
-   2. Move the Application to your Applications folder
-   3. Open the application by double-clicking the icon
-   4. If asked if you would like to open the application that was downloaded from the Internet, confirm. This is a standard MacOS security feature.
+   - Mac
+      1. Download from the [Releases](../../releases) page
+         - Intel Macs: "*-mac.dmg"
+         - M1 chip Macs: "*-mac-arm64.dmg"
+      1. Move the Application to your Applications folder
+      1. Open the application by double-clicking the icon
+      1. If asked if you would like to open the application that was downloaded from the Internet, confirm. This is a standard MacOS security feature.
+      1. Done
 
-2. Does Shift work on Windows OS?
-   At the moment, only the Mac version is being supported/tested, as it requires a large amount of effort to add another OS to support. With more help, most or all of this project could work on the web, MacOS, and Windows.
+   - Windows
+      NOTE: The application is currently not "signed" on Windows, as this is still a small side project and signing is very expensive for Windows. A few steps in the install process will say things like "Running this app might put your PC at risk", and you will need to click "Run anyway" if you want to use the app.
+
+      1. Download from the [Releases](../../releases) page
+         - Select "*-win.exe"
+      1. Run the downloaded .exe file
+      1. "Run anyway"
+      1. The app will automatically install itself and open
+      1. Done
+
+2. Does it work on Windows OS?
+   Yes. But MacOS is our priority at the moment, with such a small team.
 
 3. How can I check for updates?
-   The app will automatically check for updates when it is opened. If an update is available, it will be downloaded automatically. The next time you open the app, you'll be using the latest version!
-
-4. Find a bug?
-   Please look at the [issues](../../issues), and file a new one if it hasn't already been reported.
+   The app will automatically check for updates when it is opened. If an update is available, it will be downloaded automatically.
 
 ---
 
