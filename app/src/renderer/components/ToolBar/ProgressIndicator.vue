@@ -1,7 +1,7 @@
 <template>
   <div
     class="download-progress-indicator"
-    :title="readyToInstall ? 'Click to update' : ''"
+    :title="readyToInstall ? 'Click to update' : 'Downloading update...'"
     v-on="readyToInstall ? { click: clickHandler } : {}"
   >
     <svg
@@ -33,49 +33,49 @@ export default {
   props: {
     strokeWidth: {
       type: Number,
-      default: 3
+      default: 3,
     },
     percentage: {
       type: Number,
-      default: 30
-    }
+      default: 30,
+    },
   },
 
-  data () {
+  data() {
     return {
-      size: 36
+      size: 36,
     }
   },
 
   computed: {
-    x () {
+    x() {
       return this.size / 2
     },
-    y () {
+    y() {
       return (this.size - this.diameter) / 2
     },
-    pi () {
+    pi() {
       return 3.14159
     },
-    radius () {
+    radius() {
       return 100 / (this.pi * 2)
       //      ^ magic number
     },
-    diameter () {
+    diameter() {
       return this.radius * 2
     },
-    readyToInstall () {
+    readyToInstall() {
       if (this.percentage === 100) {
         return true
       }
       return false
-    }
+    },
   },
   methods: {
-    clickHandler () {
+    clickHandler() {
       this.$emit('click')
-    }
-  }
+    },
+  },
 }
 </script>
 
