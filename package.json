@@ -8,5 +8,5 @@
     "app",
     "packages/*",
     ".github/actions/*"
-  ],
+  ]
 }
