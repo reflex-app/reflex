@@ -100,6 +100,14 @@ Env vars required:
 
 `CMD/CTRL + Shift + I` will open the Chrome DevTools inside of the Electron instance.
 
+#### Logs
+
+See: https://github.com/megahertz/electron-log#readme
+
+- on macOS: ~/Library/Logs/{app name}/{process type}.log
+- on Windows: %USERPROFILE%\AppData\Roaming\{app name}\logs\{process type}.log
+- on Linux: ~/.config/{app name}/logs/{process type}.log
+
 ### Technologies used
 
 - [Vue 2.x](https://vuejs.org/)
