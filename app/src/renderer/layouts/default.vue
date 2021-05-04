@@ -6,15 +6,18 @@
 </template>
 
 <script>
-import { remote, ipcRenderer } from 'electron' // TODO Migrate to @electron/remote
+import { ipcRenderer } from 'electron' // TODO Migrate to @electron/remote
 import isElectron from 'is-electron'
 import ToolBar from '@/components/ToolBar'
+const remote = require('@electron/remote')
 
 export default {
   components: {
-    ToolBar
+    ToolBar,
   },
-  mounted () {
+  mounted() {
+    console.info(`Version: ${remote.app.getVersion()}`)
+
     // Global listeners
     if (isElectron()) {
       ipcRenderer.on('menu_reset-app', () => {
@@ -31,7 +34,7 @@ export default {
         }
       })
     }
-  }
+  },
 }
 </script>
 

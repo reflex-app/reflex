@@ -17,7 +17,6 @@
 <script>
 import { ref } from '@nuxtjs/composition-api'
 const { ipcRenderer } = require('electron')
-const remote = require('@electron/remote')
 
 export default {
   setup() {
@@ -32,7 +31,6 @@ export default {
     // Set the init value
     ipcRenderer.on('get-autoupdate-channel-response', (event, newValue) => {
       channel.value = newValue // This is the value from Main process
-      console.info(`Version: ${remote.app.getVersion()}`)
       console.info(`Update channel: ${channel.value}`)
       inputSelection.value = newValue
     })
