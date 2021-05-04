@@ -10,9 +10,14 @@ export default function init(window) {
 
   // Configure autoupdater
   // https://www.electron.build/auto-update#api
-  autoUpdater.logger = log
+  autoUpdater.logger = log // Use electron-log
   autoUpdater.logger.transports.file.level = 'debug'
-  autoUpdater.allowPrerelease = true
+
+  // Using a prerelease version will depend on the current package.json version
+  // If the current version includes "-beta" or "-alpha", those will be searched for.
+  // Don't set this. Allow electron-builder to do the work.
+  // See: https://www.electron.build/auto-update#AppUpdater-allowPrerelease
+  // autoUpdater.allowPrerelease = true
 
   if (isDev) {
     // Useful for some dev/debugging tasks, but download can
@@ -101,8 +106,6 @@ export default function init(window) {
   // Tracking the progress
   // (All of this is sent to the renderer)
   autoUpdater.on('download-progress', (progressObj) => {
-    log.info('download-progress')
-
     let logMessage = 'Download speed: ' + progressObj.bytesPerSecond
     logMessage = logMessage + ' - Downloaded ' + progressObj.percent + '%'
     logMessage =
@@ -122,8 +125,10 @@ export default function init(window) {
    * Downloaded!
    */
   autoUpdater.on('update-downloaded', (info) => {
+    UPDATE_AVAILABLE = true
     log.info('update downloaded')
     sendStatusToWindow('Update downloaded')
+    window.webContents.send('DOWNLOAD_PROGRESS', 100) // Notify the FE if already installed
   })
 
   /**
@@ -134,7 +139,8 @@ export default function init(window) {
     if (UPDATE_AVAILABLE === true) {
       setImmediate(() => {
         ensureSafeQuitAndInstall()
-        autoUpdater.quitAndInstall(false)
+        // Windows: Install silently and restart
+        autoUpdater.quitAndInstall(false, false)
       })
     } else {
       // eslint-disable-next-line no-console
@@ -146,7 +152,7 @@ export default function init(window) {
    * Handle errors
    */
   autoUpdater.on('error', (err) => {
-    log.info('error in auto-updater')
+    log.info('error in auto-updater', err)
     sendStatusToWindow('Error in auto-updater. ' + err)
   })
 }
@@ -159,7 +165,7 @@ export default function init(window) {
 function ensureSafeQuitAndInstall() {
   app.removeAllListeners('window-all-closed')
   const browserWindows = BrowserWindow.getAllWindows()
-  browserWindows.forEach(function (browserWindow) {
-    browserWindow.removeAllListeners('close')
+  browserWindows.forEach((browserWindow) => {
+    browserWindow.removeAllListeners('close') // Remove listeners
   })
 }
