@@ -2,6 +2,7 @@
 .nuxt
 dist
 build/*
+!build/dev-app-update.yml
 !build/icons
 !build/entitlements.mac.plist
 src/resources/.local-browsers

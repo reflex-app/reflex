@@ -2,11 +2,11 @@
   <div class="radio-container">
     <div v-for="(channel, index) in channels" :key="index" class="radio-item">
       <input
-        type="radio"
+        :id="`radio-${index}`"
         v-model="inputSelection"
+        type="radio"
         :value="channel"
         name="radio-group"
-        :id="`radio-${index}`"
         @click="showConfirm($event)"
       />
       <label :for="`radio-${index}`">{{ channel }}</label>
@@ -40,7 +40,7 @@ export default {
 
       const confirmDialog =
         newChannel === 'latest'
-          ? `Are you sure you want to switch to downloading the latest updates?`
+          ? 'Are you sure you want to switch to downloading the latest updates?'
           : `Are you sure you want to switch to downloading the ${newChannel} updates? This is a development mode, and there may be bugs.`
 
       const confirmation = confirm(confirmDialog)
