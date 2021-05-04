@@ -8,5 +8,12 @@
     "app",
     "packages/*",
     ".github/actions/*"
-  ]
+  ],
+  "scripts": {
+    "updater": "node scripts/updater-cli.js"
+  },
+  "devDependencies": {
+    "inquirer": "^8.0.0",
+    "shelljs": "^0.8.4"
+  }
 }
