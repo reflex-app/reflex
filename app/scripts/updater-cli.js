@@ -5,11 +5,6 @@ const shell = require('shelljs')
 const initialPath = path.resolve(__dirname)
 
 function main() {
-  // TODO Add other packages which need to be versioned
-  updateApp()
-}
-
-function updateApp() {
   const pathToApp = path.resolve(__dirname, '../app') // Absolute path
   const pkg = path.join(pathToApp, 'package.json')
 
