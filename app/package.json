@@ -2,7 +2,7 @@
   "name": "@reflex/app",
   "productName": "Reflex",
   "description": "Make responsive websites without the guesswork.",
-  "version": "0.7.0-beta.16",
+  "version": "0.7.0-beta.17",
   "author": "Nick Wittwer",
   "main": "./dist/main/index.js",
   "homepage": "https://reflexapp.nickwittwer.com",
@@ -14,6 +14,7 @@
     "dev": "npx cross-env node .electron-nuxt/dev.js",
     "build": "npx cross-env RELEASE=true node .electron-nuxt/build.js",
     "build:fast": "node .electron-nuxt/build.js",
+    "release": "node scripts/updater-cli.js",
     "test": "jest",
     "lint": "eslint --ext .js,.vue,.ts -f eslint-friendly-formatter ./src",
     "lint:fix": "yarn run lint -- --fix",
@@ -21,7 +22,7 @@
     "postinstall": "electron-builder install-app-deps",
     "storybook": "start-storybook",
     "debug:playwright": "npx cross-env DEBUG=pw:browser* yarn run dev",
-    "debug:build:mac": "./build/mac/Reflex.app/Contents/MacOS/Reflex --args --remote-debugging-port=8315 & open -a \"Google Chrome\" http://localhost:8315"
+    "debug:build:mac": "./build/mac/Reflex.app/Contents/MacOS/Reflex --args --remote-debugging-port=8315 & open -a \"Google Chrome\" http://localhost:8315",
   },
   "engines": {
     "node": ">=12.13.0"
@@ -92,6 +93,7 @@
     "eslint-loader": "4.0.2",
     "eslint-plugin-nuxt": "^2.0.0",
     "eslint-plugin-prettier": "^3.4.0",
+    "inquirer": "^8.0.0",
     "is-electron": "^2.2.0",
     "jest": "26.6.3",
     "jest-vue-preprocessor": "^1.7.1",
@@ -102,6 +104,7 @@
     "nuxt": "^2.15.4",
     "prettier": "^2.2.1",
     "sass-loader": "10.1.1",
+    "shelljs": "^0.8.4",
     "uuid": "8.3.2",
     "vue": "^2.6.12",
     "vue-devtools": "5.1.4",
