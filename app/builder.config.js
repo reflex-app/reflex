@@ -31,8 +31,10 @@ const ICONS_DIR = 'build/icons/'
 const macOS = {
   mac: {
     // identity: isRelease ? getEnv('CSC_LINK') : null, // Only codesign releases
+    // Builds for Intel (x64) + M1 (arm64) chips
+    // https://github.com/electron-userland/electron-builder/issues/5689#issuecomment-792876001
     target: {
-      target: 'dmg',
+      target: 'default',
       arch: ['arm64', 'x64'], // Build for M1 chips (arm64) + Intel chips
     },
     icon: ICONS_DIR + 'icon.icns',
