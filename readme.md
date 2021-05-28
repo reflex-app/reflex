@@ -4,9 +4,6 @@
       <img src="https://img.shields.io/github/v/release/reflex-app/reflex?label=Latest" alt="Latest release"/>
       <img src="https://img.shields.io/github/v/release/reflex-app/reflex?include_prereleases&label=Prerelease" alt="Prerelease"/>
       <img src="https://img.shields.io/github/downloads/reflex-app/reflex/total?label=Downloads" alt="Total downloads"/>
-      <a href="https://github.com/reflex-app/reflex/actions"><img src="https://github.com/reflex-app/reflex/actions/workflows/build.yml/badge.svg?branch=dev" alt="build status" /></a>
-      <img src="https://img.shields.io/twitter/follow/reflex_app?style=social" alt="Twitter"/>
-      
    </p>
 </div>
 
