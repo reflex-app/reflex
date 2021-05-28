@@ -16,11 +16,11 @@
 - ✨ Interactions are synchronized
 - 🔍 Inspect w/ Chrome DevTools
 
-[Check out the website](https://reflexapp.nickwittwer.com/) to learn what Reflex can do, and our vision for the project.
+[Check out the website](https://reflexapp.nickwittwer.com/) to see more of what Reflex can do.
 
 ## Download
 
-[Download latest version](https://github.com/nwittwer/Reflex/releases/latest) or [see all releases](../../releases)
+[Download latest version](../../releases/latest) or [see all releases](../../releases)
 
 ## Contribute
 
