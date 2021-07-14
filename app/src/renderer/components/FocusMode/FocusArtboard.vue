@@ -19,35 +19,35 @@ import Artboard from '@/components/Screens/Artboard'
 export default {
   name: 'Artboards',
   components: {
-    Artboard
+    Artboard,
   },
-  data () {
+  data() {
     return {
       selectionInstance: null,
-      discoModeInterval: null
+      discoModeInterval: null,
     }
   },
   computed: {
     ...mapState({
-      artboards: state => state.artboards.list,
-      selectedArtboards: state => state.selectedArtboards,
-      focusModeScreens: state => state.focusMode.screens,
-      focusModeActiveScreen: state => state.focusMode.activeScreen,
-      discoMode: state => state.gui.discoMode
+      artboards: (state) => state.artboards.list,
+      selectedArtboards: (state) => state.selectedArtboards,
+      focusModeScreens: (state) => state.focusMode.screens,
+      focusModeActiveScreen: (state) => state.focusMode.activeScreen,
+      discoMode: (state) => state.gui.discoMode,
     }),
-    ...mapGetters('interactions', ['isInteracting'])
+    ...mapGetters('interactions', ['isInteracting']),
   },
   watch: {
     /**
      * Watch the VueX discoMode Store
      */
-    discoMode (newValue, oldValue) {
+    discoMode(newValue, oldValue) {
       if (newValue === true) {
         this.startDisco()
       } else {
         this.stopDisco()
       }
-    }
+    },
     /**
      * Center canvas upon changing screen size
      * TODO This is not working
@@ -62,7 +62,7 @@ export default {
     //   }
     // }
   },
-  mounted () {
+  mounted() {
     // Start automatically if saved in localStorage
     if (this.discoMode === true) this.startDisco()
 
@@ -71,15 +71,15 @@ export default {
       selectedClass: 'is-selected',
       selectables: ['#artboards > .artboard'], // All elements in this container can be selected
       boundaries: ['#canvas'], // The boundary
-      singleClick: true // Enable single-click selection
+      singleClick: true, // Enable single-click selection
     })
 
     this.selectionInstance
-      .on('beforestart', evt => {
+      .on('beforestart', (evt) => {
         // Prevent selections if the user is interacting with an artboard
         if (this.isInteracting) return false
       })
-      .on('start', evt => {
+      .on('start', (evt) => {
         // Every non-ctrlKey causes a selection reset
         if (!evt.ctrlKey) {
           this.$store.dispatch('selectedArtboards/selectedArtboardsEmpty')
@@ -88,28 +88,28 @@ export default {
         // Update state
         this.$store.commit('interactions/interactionSetState', {
           key: 'isSelectingArea',
-          value: true
+          value: true,
         })
       })
       .on(
         'move',
         ({
           store: {
-            changed: { removed, added }
-          }
+            changed: { removed, added },
+          },
         }) => {
           /**
            * Only add / remove selected class to increase selection performance.
            */
 
           // Add
-          added.forEach(item => {
+          added.forEach((item) => {
             const id = item.getAttribute('artboard-id')
             this.$store.dispatch('selectedArtboards/selectedArtboardsAdd', id)
           })
 
           // Remove
-          removed.forEach(item => {
+          removed.forEach((item) => {
             const id = item.getAttribute('artboard-id')
             this.$store.dispatch(
               'selectedArtboards/selectedArtboardsRemove',
@@ -130,24 +130,24 @@ export default {
         // Update state
         this.$store.commit('interactions/interactionSetState', {
           key: 'isSelectingArea',
-          value: false
+          value: false,
         })
 
         // Push the new IDs
-        selected.forEach(item => {
+        selected.forEach((item) => {
           const id = item.getAttribute('artboard-id')
           this.$store.dispatch('selectedArtboards/selectedArtboardsAdd', id) // Add these items to the Store
         })
       })
   },
-  beforeDestroy () {
+  beforeDestroy() {
     this.selectionInstance.destroy()
   },
   methods: {
-    resize (artboard) {
+    resize(artboard) {
       this.$store.commit('focusMode/focusResizeArtboard', artboard)
     },
-    startDisco () {
+    startDisco() {
       /**
        * getRandomInt(min, max)
        * https://stackoverflow.com/a/1527820/1114901
@@ -161,7 +161,7 @@ export default {
       const setRandomSize = () => {
         this.$store.commit('focusMode/focusSetRandomSize', {
           width: getRandomInt(200, 1920),
-          height: getRandomInt(200, 1080)
+          height: getRandomInt(200, 1080),
         })
       }
 
@@ -175,12 +175,12 @@ export default {
 
       console.log('disco start')
     },
-    stopDisco () {
+    stopDisco() {
       clearInterval(this.discoModeInterval)
       this.discoModeInterval = null
       console.log('disco stop')
-    }
-  }
+    },
+  },
 }
 </script>
 

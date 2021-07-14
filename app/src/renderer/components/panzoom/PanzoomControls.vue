@@ -6,7 +6,7 @@
       <div @click="reset">Reset</div>
     </template>
     <!-- <SwitchButton :value="true" label="Canvas" @onToggle="toggleCanvas" /> -->
-    {{ currentContext }}
+    <!-- {{ currentContext }} -->
   </div>
 </template>
 
@@ -44,20 +44,20 @@ export default {
     reset() {
       this.instance.reset()
     },
-    /**
-     * Toggles the canvas
-     * When on, users can pan and zoom
-     * When off, users can only interact inside of Screens
-     */
-    toggleCanvas(state) {
-      // Update local state
-      this.enabled = state
+    // /**
+    //  * Toggles the canvas
+    //  * When on, users can pan and zoom
+    //  * When off, users can only interact inside of Screens
+    //  */
+    // toggleCanvas(state) {
+    //   // Update local state
+    //   this.enabled = state
 
-      // Update Store
-      this.$store.commit('interactions/setPanzoomState', {
-        value: state,
-      })
-    },
+    //   // Update Store
+    //   this.$store.commit('interactions/setPanzoomState', {
+    //     value: state,
+    //   })
+    // },
   },
 }
 </script>

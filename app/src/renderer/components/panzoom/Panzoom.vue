@@ -8,7 +8,6 @@
       ref="parent"
       :class="{
         'dev-visual-debugger': showCanvasDebugger,
-        'panzoom-exclude': this.panzoomEnabled, // Allow pointer-events when panzoom is disabled
       }"
     >
       <slot />
@@ -22,6 +21,7 @@ import { mapState, mapGetters } from 'vuex'
 import { ipcRenderer } from 'electron'
 import isElectron from 'is-electron'
 import PanzoomControls from './PanzoomControls.vue'
+import { useEventListener } from '@vueuse/core'
 
 export default {
   components: {
@@ -43,8 +43,9 @@ export default {
   watch: {
     // Watch for changes and change Panzoom accordingly
     panzoomEnabled(state) {
-      state = true
+      // state = true
 
+      // Disable panzoom interactions while "CMD" is pressed or 1+ artboards are selected
       if (state === true) {
         // Enable panzoom
         this.panzoomInstance.bind() // Add event listeners
@@ -92,6 +93,10 @@ export default {
       //   console.log(event.detail); // => { x: 0, y: 0, scale: 1 }
       // });
 
+      // Enable when CMD is not pressed
+      useEventListener(window, 'keydown', this.cmdHandler)
+      useEventListener(window, 'keyup', this.cmdHandler)
+
       // TODO Add tests for these
 
       // Handle mouse & touch events
@@ -109,6 +114,31 @@ export default {
           this.$store.commit('dev/toggleCanvasDebugger')
         })
       }
+    },
+    /**
+     * Toggles the pan/zoom controls
+     * When on, users can pan and zoom
+     * When off, users can only interact inside of Screens
+     */
+    cmdHandler(e) {
+      // If user keeps holding the key down,
+      // prevent firing repetitively and only counting once
+      if (e.repeat) {
+        return
+      }
+
+      // Only check for CMD/CTRL key to be held
+      const isCtrlKeyPressed = e.ctrlKey ? true : false
+
+      // Disable panzoom when CMD/CTRL is pressed
+      const isPanzoomEnabled = isCtrlKeyPressed ? false : true
+
+      console.log(`Pressed ${isCtrlKeyPressed}`)
+
+      // Key down (pressed)
+      this.$store.commit('interactions/setPanzoomState', {
+        value: isPanzoomEnabled,
+      })
     },
     /**
      * Handles wheel events (i.e. mousewheel)

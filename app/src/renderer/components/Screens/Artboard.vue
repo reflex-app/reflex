@@ -1,5 +1,9 @@
 <template>
-  <div class="artboard-container">
+  <!-- Allow pointer-events when panzoom is disabled -->
+  <div
+    class="artboard-container"
+    :class="{ 'panzoom-exclude': this.panzoomEnabled }"
+  >
     <div
       v-show="isVisible"
       ref="artboard"
@@ -121,6 +125,7 @@ export default {
       url: (state) => state.history.currentPage.url,
       selectedArtboards: (state) => state.selectedArtboards,
       hoverArtboards: (state) => state.hoverArtboards,
+      panzoomEnabled: (state) => state.interactions.panzoomEnabled,
     }),
     ...mapGetters('interactions', ['isInteracting']),
     isHover() {
@@ -330,7 +335,7 @@ $artboard-handle-height: 1.5rem;
 .artboard-container {
   display: block;
   position: relative;
-  padding-right: 15rem;
+  margin-right: 15rem;
   width: auto;
   height: auto;
 }

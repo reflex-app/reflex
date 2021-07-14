@@ -3,7 +3,7 @@ export const state = () => ({
   // isZooming: false,
   internal: {
     isPanzooming: false,
-    isSelectingArea: false,
+    // isSelectingArea: false,
     isResizingArtboard: false,
   },
   isWebInteractionContext: false,

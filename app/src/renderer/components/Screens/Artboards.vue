@@ -23,6 +23,7 @@ import { mapState, mapGetters } from 'vuex'
 import SelectionArea from '@viselect/vanilla'
 import Artboard from './Artboard'
 import WelcomeScreen from './WelcomeScreen'
+import { useEventListener } from '@vueuse/core'
 
 export default {
   name: 'Artboards',
@@ -39,6 +40,7 @@ export default {
     ...mapState({
       artboards: (state) => state.artboards.list,
       selectedArtboards: (state) => state.selectedArtboards,
+      panzoomEnabled: (state) => state.interactions.panzoomEnabled,
     }),
     ...mapGetters('interactions', ['isInteracting', 'currentContext']),
   },
@@ -61,24 +63,37 @@ export default {
     //   }
     // }
 
+    // ONLY ALLOW DRAG SELECT WHEN "CMD/CTRL" is held
+    // Enable when CMD is not pressed
+    useEventListener(window, 'keydown', this.cmdHandler)
+    useEventListener(window, 'keyup', this.cmdHandler)
+
     this.selectionInstance = new SelectionArea({
       selectables: ['.artboard'], // All elements in this container can be selected
       boundaries: ['#canvas'], // The boundary
       // startareas: ['#canvas'],
       class: 'selection-area', // Class for the selection-area
       selectedClass: 'is-selected',
-      singleClick: true, // Enable single-click selection
+      // singleClick: true, // Enable single-click selection
+      singleTap: {
+        allow: true,
+      },
     })
-      .on('beforestart', (evt) => {
-        // Prevent selections if the user is interacting with an artboard
-        if (this.isInteracting) {
-          console.info(
-            'Cannot interact with artboard while canvas is enabled. Please disable canvas.'
-          )
-          return false
-        }
+      .on('beforestart', ({ event: evt, store }) => {
+        if (this.panzoomEnabled === true) {
+          // Prevent selections if the user is interacting with an artboard
+          console.log(evt)
 
-        // ONLY ALLOW DRAG SELECT WHEN "CMD/CTRL" is held
+          // Allow user to click or drag on an artboard even if panzoom is enabled
+          if (evt.type === 'mousedown') {
+            // Continue
+          } else {
+            console.info(
+              'Cannot interact with artboard while canvas is enabled. Please disable canvas.'
+            )
+            return false
+          }
+        }
       })
       .on('start', (evt) => {
         // Every non-ctrlKey causes a selection reset
@@ -152,6 +167,31 @@ export default {
       // TODO De-couple this call to the parent
       console.log('Artboards loaded', this.$parent)
       this.$parent.fitToScreen()
+    },
+    /**
+     * Toggles the pan/zoom controls
+     * When on, users can pan and zoom
+     * When off, users can only interact inside of Screens
+     */
+    cmdHandler(e) {
+      // If user keeps holding the key down,
+      // prevent firing repetitively and only counting once
+      if (e.repeat) {
+        return
+      }
+
+      // Only check for CMD/CTRL key to be held
+      const isCtrlKeyPressed = e.ctrlKey ? true : false
+
+      // Disable panzoom when CMD/CTRL is pressed
+      const isDragSelectionEnabled = isCtrlKeyPressed ? true : false
+
+      console.log(`Pressed ${isCtrlKeyPressed}`)
+
+      // // Key down (pressed)
+      // this.$store.commit('interactions/setPanzoomState', {
+      //   value: isPanzoomEnabled,
+      // })
     },
   },
 }
