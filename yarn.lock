@@ -1716,12 +1716,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@electron/remote@npm:^1.1.0":
-  version: 1.1.0
-  resolution: "@electron/remote@npm:1.1.0"
+"@electron/remote@npm:^1.2.0":
+  version: 1.2.0
+  resolution: "@electron/remote@npm:1.2.0"
   peerDependencies:
     electron: ">= 10.0.0-beta.1"
-  checksum: 0f9034d41770f870d75c522b2d456ee6bc4d03f8edd928cad89a89ec4e3f3983bea6cd60c98319eeb366572f44da83a3968f7f9b32a11403d82c465fb190d160
+  checksum: bf254b8d20806c211b05cd25b9213be575aacb1e026fe0e28ad239bd52b4c92d940eec45a5a844c46d0eb888cc71ea3e84347b3ccd06940b30f0c9250f61cec5
   languageName: node
   linkType: hard
 
@@ -2815,7 +2815,7 @@ __metadata:
   resolution: "@reflex/app@workspace:app"
   dependencies:
     "@babel/runtime-corejs2": ^7.13.17
-    "@electron/remote": ^1.1.0
+    "@electron/remote": ^1.2.0
     "@nuxt/types": ^2.15.4
     "@nuxt/typescript-build": ^2.1.0
     "@nuxtjs/composition-api": ^0.23.3
@@ -2844,7 +2844,7 @@ __metadata:
     deepmerge: 4.2.2
     devtron: ^1.4.0
     dotenv: ^8.2.0
-    electron: ^12.0.6
+    electron: ^12.0.10
     electron-builder: 22.10.5
     electron-debug: 3.2.0
     electron-devtools-installer: 3.2.0
@@ -9991,16 +9991,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron@npm:^12.0.6":
-  version: 12.0.6
-  resolution: "electron@npm:12.0.6"
+"electron@npm:^12.0.10":
+  version: 12.0.14
+  resolution: "electron@npm:12.0.14"
   dependencies:
     "@electron/get": ^1.0.1
     "@types/node": ^14.6.2
     extract-zip: ^1.0.3
   bin:
     electron: cli.js
-  checksum: 41a61b78bdbd22346bb4de3db2d4ab005793b71170f65e27fd3fee9c6942eb4ae2ca32c2f0085dcb96efab2f6063ddf2f6b791100efc87baddf46512e694686f
+  checksum: e6c1c96d73c5b6649c1c70978c7bf7abc7e4b4affab11d429f7b93c8fd8c780d9b5b87097f0802228129b428c72d431fcccf411276f91ad58b39e51001541460
   languageName: node
   linkType: hard
 
@@ -22764,11 +22764,11 @@ fsevents@^1.2.7:
 
 "typescript@patch:typescript@^4.2.4#builtin<compat/typescript>, typescript@patch:typescript@~4.2#builtin<compat/typescript>":
   version: 4.2.4
-  resolution: "typescript@patch:typescript@npm%3A4.2.4#builtin<compat/typescript>::version=4.2.4&hash=a45b0e"
+  resolution: "typescript@patch:typescript@npm%3A4.2.4#builtin<compat/typescript>::version=4.2.4&hash=ddfc1b"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 0f6160aa517751587b3890bcf42cada80666e44f821c1dbb947d7b364db84faee4591f9deca7c98da9d324d0cdc653cfee4293b55c0561d2b2873fcb303d4b85
+  checksum: 3c4f4b7ab18eb46d52a67b76d5365674c0334c0f49842c99c12d5286a1476f18e05dac108d0f32843354e378b8664b1bf4017fb6b27e8a541dbf55f46f8cba1b
   languageName: node
   linkType: hard
 
