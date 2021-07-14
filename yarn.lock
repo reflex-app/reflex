@@ -3750,7 +3750,8 @@ __metadata:
     "@panzoom/panzoom": ^4.4.1
     "@reflex/browser-installer": ^1.0.0
     "@reflex/ui": ^1.0.0
-    "@simonwep/selection-js": ^2.0.3
+    "@viselect/vanilla": ^3.0.0-beta.7
+    "@viselect/vue": ^3.0.0-beta.7
     "@vue/composition-api": ^1.0.0-rc.7
     "@vue/test-utils": ^1.1.4
     "@vueuse/core": ^5.0.3
@@ -3891,13 +3892,6 @@ __metadata:
       optional: true
   languageName: unknown
   linkType: soft
-
-"@simonwep/selection-js@npm:^2.0.3":
-  version: 2.1.2
-  resolution: "@simonwep/selection-js@npm:2.1.2"
-  checksum: 7f51f52b4b67af1e1542c6861856eb2c0ea4a3dcdd0dabc3f2290ec205c24aa8c584bc1137cd1c02912bbb2a97c06da51de3f0f7748ee97bbee68876e7270006
-  languageName: node
-  linkType: hard
 
 "@sindresorhus/is@npm:^0.14.0":
   version: 0.14.0
@@ -5876,6 +5870,22 @@ __metadata:
     "@typescript-eslint/types": 4.27.0
     eslint-visitor-keys: ^2.0.0
   checksum: 9042e555aa69fde5bf7552db6eb005db42a51f702b2f40da9af660515b0c0361608ca3cd60d4a19744b223b8223aacd91622c7203c521c5724b40804033a99db
+  languageName: node
+  linkType: hard
+
+"@viselect/vanilla@npm:^3.0.0-beta.7":
+  version: 3.0.0-beta.7
+  resolution: "@viselect/vanilla@npm:3.0.0-beta.7"
+  checksum: 0142e68a0cd8ad87bb590efdb84d0d1cce19200515ab10e1f31919d8ac1c5c25e22e92704038845398ae242e5be87be93822f4f96d76de80a8d1ae50797850c7
+  languageName: node
+  linkType: hard
+
+"@viselect/vue@npm:^3.0.0-beta.7":
+  version: 3.0.0-beta.7
+  resolution: "@viselect/vue@npm:3.0.0-beta.7"
+  peerDependencies:
+    vue: ">=3.0.0"
+  checksum: c7e71d67c907033b0bf3533d42c1e6c619ed7eabbc085f2aaa506ee0057fe67b2a00484b96a40fe046f65ecac4360b000db759c8f8783683820de3e7944fef9b
   languageName: node
   linkType: hard
 

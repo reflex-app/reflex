@@ -13,7 +13,7 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex'
-import SelectionArea from '@simonwep/selection-js'
+import SelectionArea from '@viselect/vanilla'
 import Artboard from '@/components/Screens/Artboard'
 
 export default {
