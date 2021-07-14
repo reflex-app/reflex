@@ -120,7 +120,7 @@ export function captureAll(vm) {
 }
 
 // Take a screenshot
-// Return the image (NativeImage)
+// Return the image (NativeImage) as a Promise
 export async function screenshot(id) {
   try {
     const webview = getWebview(id)
@@ -134,7 +134,10 @@ export async function screenshot(id) {
     // TODO bug: capturePage only captures part of the WebView that is within the window's viewport...
     // https://github.com/electron/electron/issues/8587
     // https://github.com/electron/electron/issues/8314
-    return webview.capturePage(rect)
+
+    // TODO add an option to hide scrollbars-- this is easily done by `webview.capturePage(rect)`
+    // return webview.capturePage()
+    return webview.capturePage()
   } catch (error) {
     throw new Error(error)
   }
@@ -152,7 +155,10 @@ export async function copyToClipboard(id) {
     // NativeImage in PNG format
     // https://electronjs.org/docs/api/native-image
     // via https://github.com/electron/electron/issues/8151#issuecomment-265288291
+
     const img = nativeImage.createFromBuffer(image.toPNG())
+
+    // Write to clipboard
     clipboard.writeImage(img)
 
     // Done
