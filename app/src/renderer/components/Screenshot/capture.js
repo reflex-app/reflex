@@ -130,13 +130,18 @@ export async function screenshot(id) {
       `(() => ({ x: 0, y: 0, width: document.body.offsetWidth, height: document.body.offsetHeight }) )()`
     )
 
-    // Return an image
+    // Scale based on DPI
+    const DPI = window.devicePixelRatio // TODO make this configurable rather than based on the current device's pixel density
+    rect.width = rect.width * DPI
+    rect.height = rect.width * DPI
+
     // TODO bug: capturePage only captures part of the WebView that is within the window's viewport...
     // https://github.com/electron/electron/issues/8587
     // https://github.com/electron/electron/issues/8314
 
     // TODO add an option to hide scrollbars-- this is easily done by `webview.capturePage(rect)`
-    // return webview.capturePage()
+
+    // Return an image
     return webview.capturePage()
   } catch (error) {
     throw new Error(error)
