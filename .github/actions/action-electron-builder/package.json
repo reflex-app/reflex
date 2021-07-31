@@ -18,14 +18,14 @@
 		"format:fix": "yarn format --write"
 	},
 	"devDependencies": {
-		"@octokit/request": "^5.4.15",
+		"@octokit/request": "^5.6.0",
 		"@samuelmeuli/eslint-config": "^6.0.0",
 		"@samuelmeuli/prettier-config": "^2.0.1",
-		"eslint": "6.8.0",
-		"eslint-config-airbnb-base": "14.1.0",
-		"eslint-config-prettier": "^6.10.1",
-		"eslint-plugin-import": "^2.20.2",
-		"prettier": "^2.0.4"
+		"eslint": "7.32.0",
+		"eslint-config-airbnb-base": "14.2.1",
+		"eslint-config-prettier": "^6.15.0",
+		"eslint-plugin-import": "^2.23.4",
+		"prettier": "^2.3.2"
 	},
 	"eslintConfig": {
 		"root": true,
