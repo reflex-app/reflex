@@ -81,8 +81,10 @@ export default function init(window) {
   }
 
   win.on('did-finish-load', () => {
-    // Check for updates
-    autoUpdater.checkForUpdates()
+    // Check for updates (only in non-dev environments)
+    if (!isDev) {
+      autoUpdater.checkForUpdates()
+    }
   })
 
   autoUpdater.on('checking-for-update', () => {
