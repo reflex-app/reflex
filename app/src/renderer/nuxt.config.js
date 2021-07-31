@@ -29,6 +29,7 @@ module.exports = {
     '@nuxtjs/composition-api/module',
   ],
   build: {
+    transpile: ['@simonwep/selection-js'],
     extend(config, { isDev, isClient }) {
       // ..
       // Comlink loader
