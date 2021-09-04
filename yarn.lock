@@ -2949,6 +2949,7 @@ __metadata:
     native-ext-loader: 2.3.0
     node-sass: 5.0.0
     nuxt: ^2.15.7
+    playwright: ^1.14.1
     playwright-core: ^1.13.1
     prettier: ^2.3.2
     sass-loader: 10.2.0
@@ -17730,6 +17731,30 @@ fsevents@^1.2.7:
   bin:
     playwright: lib/cli/cli.js
   checksum: 340c70457ffb90a9e40ddc6d6f718accf5e2cecb8bb116d7170ed86100e2d2a4b75b0574ef62163b41a5a5fa557976f96ff1942964a07c7c8471a345397414be
+  languageName: node
+  linkType: hard
+
+"playwright@npm:^1.14.1":
+  version: 1.14.1
+  resolution: "playwright@npm:1.14.1"
+  dependencies:
+    commander: ^6.1.0
+    debug: ^4.1.1
+    extract-zip: ^2.0.1
+    https-proxy-agent: ^5.0.0
+    jpeg-js: ^0.4.2
+    mime: ^2.4.6
+    pngjs: ^5.0.0
+    progress: ^2.0.3
+    proper-lockfile: ^4.1.1
+    proxy-from-env: ^1.1.0
+    rimraf: ^3.0.2
+    stack-utils: ^2.0.3
+    ws: ^7.4.6
+    yazl: ^2.5.1
+  bin:
+    playwright: lib/cli/cli.js
+  checksum: 56badc619fbc8693ce27dc70fd68994a8a4c254c34e51dacf677a7923073be79c8c05aedd16bb31e78afa757a5335b1064bf1ecaf6b5384a98967fccf852ab6c
   languageName: node
   linkType: hard
 
