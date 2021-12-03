@@ -19,7 +19,6 @@ const winHandler = new BrowserWinHandler({
   width: 1200,
   useContentSize: true,
   backgroundColor: '#F5F5F5',
-  // show: false, // Shown when ready-to-show event fires
   webPreferences: {
     webviewTag: true, // Required
     nodeIntegration: true, // Required
@@ -30,8 +29,9 @@ const winHandler = new BrowserWinHandler({
   titleBarStyle: 'hiddenInset', // Hide the bar
 })
 
-winHandler.onCreated((browserWindow) => {
-  winHandler.loadPage('/')
+winHandler.onCreated(async (browserWindow) => {
+  // Load the app
+  await winHandler.loadPage('/')
   // if (isDev) browserWindow.loadURL(DEV_SERVER_URL)
   // else browserWindow.loadFile(INDEX_PATH)
 
