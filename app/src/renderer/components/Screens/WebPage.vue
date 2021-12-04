@@ -43,16 +43,9 @@ export default {
     injectScript() {
       // const appPath = remote.app.getPath('appData')
       // Load the inject script
+      // TODO add a test to make sure this file exists
       const injectScriptPath =
         'file://' + path.join(process.resourcesPath, './inject.js')
-
-      // Make sure the inject file is found
-      try {
-        fs.accessSync(injectScriptPath.replace('file://', ''))
-      } catch (err) {
-        console.log(`No inject script found at: ${injectScriptPath}`)
-        throw new Error(err)
-      }
 
       return injectScriptPath
     },
