@@ -1694,14 +1694,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@electron/get@npm:^1.0.1":
-  version: 1.12.4
-  resolution: "@electron/get@npm:1.12.4"
+"@electron/get@npm:^1.13.0":
+  version: 1.13.1
+  resolution: "@electron/get@npm:1.13.1"
   dependencies:
     debug: ^4.1.1
     env-paths: ^2.2.0
     fs-extra: ^8.1.0
-    global-agent: ^2.0.2
+    global-agent: ^3.0.0
     global-tunnel-ng: ^2.7.1
     got: ^9.6.0
     progress: ^2.0.3
@@ -1712,16 +1712,16 @@ __metadata:
       optional: true
     global-tunnel-ng:
       optional: true
-  checksum: bc60743e35ddd1ab92d564a4131e23a56f3ac85aa1173a0a0123dfceb14f1ea7d72644844850bdb3ea2deaa552cff7339a4f5e21205c6249bea03b9a990a7bd5
+  checksum: 3d4cb592e07d46d1d9e1958cd8d46798e7e713f8da6dfefaa7ec462f5a910b0a863f12bfecbaf1fb26fa63a1c02c4ce4c34f221c0e78b25bd2e1ca13a8690d9a
   languageName: node
   linkType: hard
 
-"@electron/remote@npm:^1.2.0":
-  version: 1.2.0
-  resolution: "@electron/remote@npm:1.2.0"
+"@electron/remote@npm:^2.0.1":
+  version: 2.0.1
+  resolution: "@electron/remote@npm:2.0.1"
   peerDependencies:
     electron: ">= 10.0.0-beta.1"
-  checksum: bf254b8d20806c211b05cd25b9213be575aacb1e026fe0e28ad239bd52b4c92d940eec45a5a844c46d0eb888cc71ea3e84347b3ccd06940b30f0c9250f61cec5
+  checksum: ff626e624a93f315fa1ca7caee874c6df61974cb3cab5a7e0d96009f1c5f9109b7c781fd7ef535130499a366301abd93e0833859cfbff8101dcc64b105792196
   languageName: node
   linkType: hard
 
@@ -2827,7 +2827,7 @@ __metadata:
   resolution: "@reflex/app@workspace:app"
   dependencies:
     "@babel/runtime-corejs2": ^7.13.17
-    "@electron/remote": ^1.2.0
+    "@electron/remote": ^2.0.1
     "@nuxt/types": ^2.15.4
     "@nuxt/typescript-build": ^2.1.0
     "@nuxtjs/composition-api": ^0.23.3
@@ -2856,7 +2856,7 @@ __metadata:
     deepmerge: 4.2.2
     devtron: ^1.4.0
     dotenv: ^8.2.0
-    electron: ^13.1.6
+    electron: ^16.0.4
     electron-builder: 22.11.9
     electron-debug: 3.2.0
     electron-devtools-installer: 3.2.0
@@ -10076,16 +10076,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron@npm:^13.1.6":
-  version: 13.1.6
-  resolution: "electron@npm:13.1.6"
+"electron@npm:^16.0.4":
+  version: 16.0.4
+  resolution: "electron@npm:16.0.4"
   dependencies:
-    "@electron/get": ^1.0.1
+    "@electron/get": ^1.13.0
     "@types/node": ^14.6.2
     extract-zip: ^1.0.3
   bin:
     electron: cli.js
-  checksum: 74b79246b74c03cb0d82819ad38a0e14bb089b46f5010dd4156eb326e813810983254f1d71e9fde33871ba11f6a2945c67af9b788adcc341da84eae3cb3dbc09
+  checksum: bd7c5112f39b22ccd5ca478dda5cde4ece725fc8fc123f78b936031a98d3e25db79097e4c04e689eb562a7c24743c23dcaed46cd17d09783b63b2b01a21de8b0
   languageName: node
   linkType: hard
 
@@ -12234,18 +12234,17 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"global-agent@npm:^2.0.2":
-  version: 2.2.0
-  resolution: "global-agent@npm:2.2.0"
+"global-agent@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "global-agent@npm:3.0.0"
   dependencies:
     boolean: ^3.0.1
-    core-js: ^3.6.5
     es6-error: ^4.1.1
     matcher: ^3.0.0
     roarr: ^2.15.3
     semver: ^7.3.2
     serialize-error: ^7.0.1
-  checksum: 072c2e224b86f035343ca3aae0464e5a79820e476208f63b76e72631910338f78e47293bed72c4fc600012b8d41952b8965847dc806e55dc8cce6d5fca11a454
+  checksum: 1f94343ced5046bdd7185352d926bcdc5c3cb653ecd2ee1e85e69a4c22d28f6650f11e034c8c9915ec0bce6d453c88b66f217b41c91a10ace05c486b798186de
   languageName: node
   linkType: hard
 
