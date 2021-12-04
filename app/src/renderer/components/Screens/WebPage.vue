@@ -14,8 +14,7 @@
 import path from 'path'
 import { mapState } from 'vuex'
 import { state as reflexState, setPublisher } from '~/mixins/reflex-sync'
-const { remote } = require('electron')
-const fs = remote.require('fs')
+import remote from '@electron/remote'
 
 export default {
   props: {

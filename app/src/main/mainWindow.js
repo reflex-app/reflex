@@ -1,6 +1,7 @@
 import path from 'path'
 import { app, shell } from 'electron'
 import BrowserWinHandler from './BrowserWinHandler'
+const mainRemote = require('@electron/remote/main')
 
 import autoUpdater from './auto-updater'
 // import browserInstaller from './browser-installer'
@@ -19,7 +20,6 @@ const winHandler = new BrowserWinHandler({
   width: 1200,
   useContentSize: true,
   backgroundColor: '#F5F5F5',
-  // show: false, // Shown when ready-to-show event fires
   webPreferences: {
     webviewTag: true, // Required
     nodeIntegration: true, // Required
@@ -31,6 +31,8 @@ const winHandler = new BrowserWinHandler({
 })
 
 winHandler.onCreated((browserWindow) => {
+  mainRemote.enable(browserWindow.webContents)
+
   winHandler.loadPage('/')
   // if (isDev) browserWindow.loadURL(DEV_SERVER_URL)
   // else browserWindow.loadFile(INDEX_PATH)

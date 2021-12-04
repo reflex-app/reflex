@@ -9,26 +9,28 @@
 import { ipcRenderer } from 'electron' // TODO Migrate to @electron/remote
 import isElectron from 'is-electron'
 import ToolBar from '@/components/ToolBar'
-const remote = require('@electron/remote')
+import remote from '@electron/remote'
 
 export default {
   components: {
     ToolBar,
   },
   mounted() {
-    console.info(`Version: ${remote.app.getVersion()}`)
+    // TODO: get app version
+    // console.info(`Version: ${remote.app.getVersion()}`)
 
     // Global listeners
     if (isElectron()) {
       ipcRenderer.on('menu_reset-app', () => {
         if (
           confirm(
-            `Are you sure you want to reset all ${remote.app.name} data and settings? Click "OK" to reset.`
+            `Are you sure you want to reset all data and settings? Click "OK" to reset.`
           )
         ) {
           window.localStorage.clear()
 
           setTimeout(() => {
+            // TODO: replace this with IPC
             remote.getCurrentWindow().reload()
           }, 150)
         }
