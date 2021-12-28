@@ -1,8 +1,5 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-import ReflexUI from './index'
-import './index.scss'
+import './assets/tailwind.css' // Import Tailwind
 
-const app = createApp(App)
-app.use(ReflexUI)
-app.mount('#app')
+createApp(App).mount('#app')

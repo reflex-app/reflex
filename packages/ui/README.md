@@ -1,76 +1,27 @@
-# Reflex UI
+# Vue 3 + Typescript + Vite
 
-The user interface elements powering the Reflex app.
+This template should help get you started developing with Vue 3 and Typescript in Vite.
 
-Components are state-less, and "dumb" by design. Logic is handled separately by the Reflex project.
+## Recommended IDE Setup
 
-## Usage
+[VSCode](https://code.visualstudio.com/) + [Vetur](https://marketplace.visualstudio.com/items?itemName=octref.vetur). Make sure to enable `vetur.experimental.templateInterpolationService` in settings!
 
-```bash
-$ yarn add @reflex/ui -D
-```
+### If Using `<script setup>`
 
-### Nuxt.js
+[`<script setup>`](https://github.com/vuejs/rfcs/pull/227) is a feature that is currently in RFC stage. To get proper IDE support for the syntax, use [Volar](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.volar) instead of Vetur (and disable Vetur).
 
-Create a new plugin file:
+## Type Support For `.vue` Imports in TS
 
-```bash
-import Vue from 'vue'
-import ReflexUI from '@reflex/ui'
+Since TypeScript cannot handle type information for `.vue` imports, they are shimmed to be a generic Vue component type by default. In most cases this is fine if you don't really care about component prop types outside of templates. However, if you wish to get actual prop types in `.vue` imports (for example to get props validation when using manual `h(...)` calls), you can use the following:
 
-Vue.use(ReflexUI)
-```
+### If Using Volar
 
-Add the plugin to the `plugins: [{ src: '~/plugins/reflex-ui.js', ssr: false }]` in your `nuxt.config.js`
+Run `Volar: Switch TS Plugin on/off` from VSCode command palette.
 
-## Setup
+### If Using Vetur
 
-### Install
-
-```bash
-yarn install
-```
-
-### UI Development
-
-```bash
-yarn run storybook
-```
-
-While running this command, the library will be built automatically, no need to run the `yarn run build` command!
-
-### Build library
-
-The `/dist` directory contains the portable component library, which can be imported into Vue projects.
-
-```bash
-yarn run build
-```
-
-## Notes
-
-- Component namespacing: `<rfx-{component-name}/>`
-
-## Contributing
-
-We are happy to accept accessibility and bug fixes via PRs.
-
-## Stack
-
-- Vue 3 as front-end framework
-- Vite for lightning-fast Vue builds
-- StoryBook for UI experimentation
-- TailwindCSS for design system foundations
-- [Headless UI](https://github.com/tailwindlabs/headlessui/tree/main/packages/%40headlessui-vue) for some components w/ Tailwind integration
-- [Pug syntax](https://pugjs.org/api/getting-started.html) for simple component templating
-- [TailwindCSS VSCode plugin](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss)
-
-# Credits
-
-- Vue 3 component library heavily based on [Wave UI](https://antoniandre.github.io/wave-ui)
-- Vite setup is heavily based on [Equal](https://github.com/quatrochan/Equal/)
-
-# Storybook w/ Webpack 5 (prerelease)
-
-Refer to this:
-https://gist.github.com/shilman/8856ea1786dcd247139b47b270912324
+1. Install and add `@vuedx/typescript-plugin-vue` to the [plugins section](https://www.typescriptlang.org/tsconfig#plugins) in `tsconfig.json`
+2. Delete `src/shims-vue.d.ts` as it is no longer needed to provide module info to Typescript
+3. Open `src/main.ts` in VSCode
+4. Open the VSCode command palette
+5. Search and run "Select TypeScript version" -> "Use workspace version"
