@@ -8,5 +8,9 @@
     "app",
     "packages/*",
     ".github/actions/*"
-  ]
+  ],
+  "packageManager": "yarn@3.2.0-rc.8",
+  "dependencies": {
+    "node-gyp": "^8.4.1"
+  }
 }
