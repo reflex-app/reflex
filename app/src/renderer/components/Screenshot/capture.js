@@ -1,5 +1,7 @@
 import { clipboard, nativeImage, shell } from 'electron'
 import { dialog, webContents } from '@electron/remote'
+import * as htmlToImage from 'html-to-image'
+import { toPng, toJpeg, toBlob, toPixelData, toSvg } from 'html-to-image'
 
 import isElectron from 'is-electron'
 
@@ -7,10 +9,18 @@ const path = require('path')
 const fs = require('fs')
 const moment = require('moment')
 
+// Returns a WebView
 function getWebview(id) {
   // TODO add test here, selectors are brittle
   const dom = document.querySelector(`[artboard-id="${id}"] webview`)
-  return webContents.fromId(dom.getWebContentsId())
+  return dom
+  // return webContents.fromId(dom.getWebContentsId())
+}
+
+// Returns the WebContents from a given WebView
+function getWebViewContents(id) {
+  const webview = getWebview(id)
+  return webContents.fromId(webview.getWebContentsId())
 }
 
 export async function capture(id, title, screenshotPath) {
@@ -68,7 +78,7 @@ export async function capture(id, title, screenshotPath) {
   try {
     // Capture the <webview>
     // Loop through the selected Webviews
-    const webview = getWebview(id)
+    const webview = getWebViewContents(id)
     const image = await webview.capturePage()
     saveScreenshot(image.toPNG())
   } catch (error) {
@@ -121,19 +131,79 @@ export function captureAll(vm) {
 
 // Take a screenshot
 // Return the image (NativeImage) as a Promise
-export async function screenshot(id) {
+export async function screenshot(id, options = { fullPage: false }) {
   try {
-    const webview = getWebview(id)
+    // Get the ID of the WebView
+    const webviewContents = getWebViewContents(id)
 
-    // Get the dimensions of the WebView
-    const rect = await webview.executeJavaScript(
-      `(() => ({ x: 0, y: 0, width: document.body.offsetWidth, height: document.body.offsetHeight }) )()`
-    )
+    // The WebView element
+    const webviewElement = getWebview(id)
 
-    // Scale based on DPI
+    // Device Pixel Ratio
     const DPI = window.devicePixelRatio // TODO make this configurable rather than based on the current device's pixel density
+
+    // Get the dimensions of the web page content
+    const rect = await webviewContents.executeJavaScript(
+      `(() => ({ x: 0, y: 0, width: document.body.offsetWidth, height: document.body.offsetHeight, d: document.body.getBoundingClientRect() }) )()`
+    )
     rect.width = rect.width * DPI
     rect.height = rect.width * DPI
+
+    // The WebView (Artboard) dimensions
+    const artboard = {
+      width: webviewElement.scrollWidth,
+      height: webviewElement.scrollHeight,
+    }
+
+    // Wait for the image to be created (base64) and return it (nativeImage)
+    async function createScreenshot() {
+      return new Promise((resolve, reject) => {
+        try {
+          // Initiate listener
+          webviewElement.addEventListener('ipc-message', handleWebViewListener)
+
+          function handleWebViewListener(event, ...args) {
+            if (event.channel === 'REFLEX_SCREENSHOT-done') {
+              console.log(event)
+              const base64 = event?.args[0]
+              webviewElement.removeEventListener(
+                'ipc-message',
+                handleWebViewListener
+              ) // Remove listener
+              resolve(nativeImage.createFromDataURL(base64)) // Return the image
+            }
+          }
+
+          // Request the screenshot
+          webviewContents.send('REFLEX_SCREENSHOT-start', {
+            pixelRatio: DPI, // Image pixel density (i.e. )
+            // viewportHeight: artboard.height, // Viewport height
+            // viewportWidth: artboard.width, // Viewport width
+          })
+        } catch (err) {
+          reject(err)
+        }
+      })
+    }
+
+    // Request & wait for the image
+    const fullImage = await createScreenshot()
+
+    // Crop the image based on the WebView dimensions
+    const croppedImage = await cropImage(fullImage, {
+      x: 0,
+      y: 0,
+      width: artboard.width,
+      height: artboard.height,
+      pixelRatio: DPI,
+    })
+
+    // Return a base64 image
+    if (options.fullPage) {
+      return await fullImage
+    } else {
+      return await croppedImage
+    }
 
     // TODO bug: capturePage only captures part of the WebView that is within the window's viewport...
     // https://github.com/electron/electron/issues/8587
@@ -142,10 +212,28 @@ export async function screenshot(id) {
     // TODO add an option to hide scrollbars-- this is easily done by `webview.capturePage(rect)`
 
     // Return an image
-    return webview.capturePage()
+    // return webview.capturePage()
   } catch (error) {
     throw new Error(error)
   }
+}
+
+/**
+ *
+ * Creates a cropped version of an image
+ */
+async function cropImage(
+  nativeImageObject,
+  { x, y, width, height, pixelRatio }
+) {
+  // Crop the image based on the WebView dimensions
+  // Height and width are scaled based on the pixel ratio
+  return await nativeImageObject.crop({
+    x: x,
+    y: y,
+    width: width * pixelRatio,
+    height: height * pixelRatio,
+  })
 }
 
 /**
@@ -161,10 +249,14 @@ export async function copyToClipboard(id) {
     // https://electronjs.org/docs/api/native-image
     // via https://github.com/electron/electron/issues/8151#issuecomment-265288291
 
+    // const img = nativeImage.createFromBuffer(image.toPNG())
     const img = nativeImage.createFromBuffer(image.toPNG())
 
     // Write to clipboard
     clipboard.writeImage(img)
+
+    // Alert the user that the image was copied
+    console.log('Copied to clipboard!')
 
     // Done
     return true

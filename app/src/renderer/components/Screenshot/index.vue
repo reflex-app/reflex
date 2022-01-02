@@ -90,9 +90,7 @@ export default {
     },
 
     async copyToClipboard() {
-      await capture.copyToClipboard(this.selectedArtboards).catch((err) => {
-        console.error(err)
-      })
+      await capture.copyToClipboard(this.selectedArtboards)
       // TODO Notify the user when the image has been saved to clipboard
       // TODO Notify the user if there's an error copying to clipboard
     },

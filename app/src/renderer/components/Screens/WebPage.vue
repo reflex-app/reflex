@@ -323,7 +323,7 @@ export default {
         console.log('Unloading')
         // this.removeListeners();
       } else {
-        console.log('Unrecognized channel', event.args[0])
+        console.log(`Unrecognized channel: ${event.channel}`, event.args[0])
       }
     },
     loadstop() {

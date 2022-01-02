@@ -44,6 +44,29 @@ function initiateBridge() {
   })
 }
 
+// Enable html-to-image
+// https://stackoverflow.com/a/67803203
+const htmlToImage = require('html-to-image')
+console.log(htmlToImage)
+
+if (window) {
+  window.htmlToImage = htmlToImage
+}
+
+ipcRenderer.on('REFLEX_SCREENSHOT-start', (event, args) => {
+  console.log('screenshot', args)
+  htmlToImage
+    .toPng(document.body, {
+      pixelRatio: args.pixelRatio,
+      // canvasHeight: args.viewportHeight,
+      // canvasWidth: args.viewportWidth,
+    })
+    .then(function (dataUrl) {
+      ipcRenderer.sendToHost('REFLEX_SCREENSHOT-done', dataUrl)
+    })
+    .catch((err) => console.log(err))
+})
+
 /// ////////////////////////////
 /// ////////////////////////////
 /// ////////////////////////////
