@@ -55,24 +55,21 @@ export async function capture(id, title, screenshotPath) {
   // Create the file
   function makeFile(filePath, screenshot) {
     const timestamp = moment().format('YYYY-MM-D_h-mm-ssa')
+    const fullFilePath = path.join(filePath, `${title}_${timestamp}.png`)
 
     title ? (title = `_${title}_`) : (title = '')
 
-    fs.writeFile(
-      path.join(filePath, `reflex${title}${timestamp}.png`),
-      screenshot,
-      (err) => {
-        if (err) throw err
+    fs.writeFile(fullFilePath, screenshot, (err) => {
+      if (err) throw err
 
-        // Alert the user that the screenshot was saved
-        new Notification('Screenshot saved', {
-          body: filePath,
-        })
+      // Alert the user that the screenshot was saved
+      new Notification('Screenshot saved', {
+        body: filePath,
+      })
 
-        // Open in Finder
-        shell.openItem(filePath)
-      }
-    )
+      // Open in Finder
+      shell.showItemInFolder(fullFilePath)
+    })
   }
 
   try {
