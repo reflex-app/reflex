@@ -1,6 +1,7 @@
 import path from 'path'
 import { app, shell } from 'electron'
 import BrowserWinHandler from './BrowserWinHandler'
+const mainRemote = require('@electron/remote/main')
 
 import autoUpdater from './auto-updater'
 // import browserInstaller from './browser-installer'

@@ -4,7 +4,7 @@
       src="@/assets/ftu-vector.svg"
       class="empty-state__image"
       alt="Welcome graphic"
-    >
+    />
     <span class="empty-state__title">Welcome to {{ appName }}</span>
     <p class="empty-state__body">
       You’re on your way to making awesome responsive sites.
@@ -15,7 +15,7 @@
         This is a canvas, which is great for showing lots of screens. You can
         pan around, and zoom in/out.
       </p>
-      <br>
+      <br />
       <h4>Try panning and zooming now:</h4>
       <div class="keyboard-command">
         <strong>Pan:</strong>
@@ -29,7 +29,7 @@
         <span>+</span>
         <span>Scroll</span>
       </div>
-      <br>
+      <br />
       <p>Using a trackpad?</p>
       <p>Pinch to zoom in/out, and use two fingers to pan.</p>
     </section>
@@ -95,29 +95,32 @@
 </template>
 
 <script>
-import { app } from '@electron/remote'
+// import { app } from '@electron/remote'
+
 export default {
   computed: {
-    appName () {
+    appName() {
       // Return the name of the Electron app
       // From package.json (name or productName)
       // TODO this if check is required in case of tests
-      if (app) {
-        return app.name // TODO confirm this is working in Electron 12+
-      } else {
-        const pkgJson = require('../../../../package.json')
-        return pkgJson.productName
-      }
+      const pkgJson = require('../../../../package.json')
+      return pkgJson.productName
+      // if (app) {
+      //   return app.name // TODO confirm this is working in Electron 12+
+      // } else {
+      //   const pkgJson = require('../../../../package.json')
+      //   return pkgJson.productName
+      // }
     },
-    systemMetaKeyName () {
+    systemMetaKeyName() {
       // Show "CMD" or "CTRL" based on the user's OS
       if (process.platform === 'darwin') {
         return 'CMD'
       } else {
         return 'CTRL'
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

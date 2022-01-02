@@ -1,10 +1,10 @@
 /**
  * Creates a generic right-click menu
  */
-import { remote, getCurrentWindow } from 'electron' // TODO Migrate to @electron/remote and move this logic to main process
+import { Menu, MenuItem } from 'electron' // TODO Migrate to @electron/remote and move this logic to main process
+import remote from '@electron/remote'
 import isElectron from 'is-electron'
 import Trigger from '~/components/CrossBrowser/Screenshots/Trigger.vue'
-const { Menu, MenuItem } = remote
 
 /**
  * @param {Object} store The Vue component's context
@@ -21,49 +21,49 @@ export default function (store, artboard) {
   menu.append(
     new MenuItem({
       label: 'Duplicate',
-      click () {
+      click() {
         store.dispatch('artboards/duplicateArtboard', artboard)
-      }
+      },
     })
   )
   menu.append(
     new MenuItem({
       label: 'Rotate',
-      click () {
+      click() {
         store.commit('artboards/resizeArtboard', {
           id: artboard.id,
           width: artboard.height,
-          height: artboard.width
+          height: artboard.width,
         })
-      }
+      },
     })
   )
   menu.append(
     new MenuItem({
       label: artboard.isVisible ? 'Hide' : 'Show',
-      click () {
+      click() {
         store.commit('artboards/changeArtboardVisibility', artboard)
-      }
+      },
     })
   )
   menu.append(
     new MenuItem({
       label: 'Open DevTools',
-      click () {
+      click() {
         artboardFrame.openDevTools()
-      }
+      },
     })
   )
   menu.append(
     new MenuItem({
       label: 'Preview Cross-browser',
-      click () {
+      click() {
         try {
           // Emit an event to the correct artboard
           const instance = getArtboard(artboard.id).__vue__
 
           // Find the child component in which to trigger a function
-          const childCrossBrowserComponent = instance.$children.find(obj =>
+          const childCrossBrowserComponent = instance.$children.find((obj) =>
             obj.$vnode.tag.includes('CrossBrowserScreenshots')
           )
 
@@ -72,21 +72,21 @@ export default function (store, artboard) {
         } catch (err) {
           console.log(`Cross-browser error: ${err}`)
         }
-      }
+      },
     })
   )
   menu.append(
     new MenuItem({
       label: 'Delete',
-      click () {
+      click() {
         store.dispatch('artboards/deleteArtboard', artboard)
-      }
+      },
     })
   )
   menu.popup(remote.getCurrentWindow())
 }
 
-function getArtboard (id) {
+function getArtboard(id) {
   // TODO add test here, selectors are brittle
   // This could probably be a Store action
   return document.querySelector(`[artboard-id="${id}"]`)
