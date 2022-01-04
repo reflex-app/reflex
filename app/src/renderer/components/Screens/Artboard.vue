@@ -65,61 +65,65 @@ export default {
   name: 'Artboard',
   components: {
     WebPage,
-    CrossBrowserScreenshots
+    CrossBrowserScreenshots,
   },
   props: {
     title: {
       type: String,
-      default: 'Artboard'
+      default: 'Artboard',
     },
     id: {
       type: String,
-      default: '123'
+      default: '123',
     },
     height: {
       type: Number,
-      default: 0
+      default: 0,
     },
     width: {
       type: Number,
-      default: 0
+      default: 0,
     },
     selectedItems: {
       type: Array,
-      default: () => []
+      default: () => [],
     },
-    isVisible: Boolean
+    isVisible: Boolean,
+    viewportObserver: {
+      type: IntersectionObserver,
+      default: null,
+    },
   },
-  data () {
+  data() {
     return {
       state: {
         isLoading: false,
-        horizontalLayout: true
+        horizontalLayout: true,
       },
       scrollPosition: {
         x: 0,
-        y: 0
-      }
+        y: 0,
+      },
     }
   },
   computed: {
     ...mapState({
-      url: state => state.history.currentPage.url,
-      selectedArtboards: state => state.selectedArtboards,
-      hoverArtboards: state => state.hoverArtboards
+      url: (state) => state.history.currentPage.url,
+      selectedArtboards: (state) => state.selectedArtboards,
+      hoverArtboards: (state) => state.hoverArtboards,
     }),
     ...mapGetters('interactions', ['isInteracting']),
-    isHover () {
-      const isHover = this.hoverArtboards.filter(item => item === this.id)
+    isHover() {
+      const isHover = this.hoverArtboards.filter((item) => item === this.id)
       if (isHover.length) {
         return true
       } else {
         return false
       }
     },
-    isSelected () {
+    isSelected() {
       const isSelected = this.selectedArtboards.filter(
-        item => item === this.id
+        (item) => item === this.id
       )
       if (isSelected.length) {
         return true
@@ -132,7 +136,7 @@ export default {
      * artboard (WebView) when the artboard is selected
      * and the user is not dragging a selection area
      */
-    canInteractWithArtboard () {
+    canInteractWithArtboard() {
       if (this.isSelected === false) return false // Not selected!
 
       if (this.isSelected && this.isInteracting === false) {
@@ -140,33 +144,38 @@ export default {
       }
 
       return false // Otherwise, false
-    }
+    },
   },
 
-  mounted () {
+  mounted() {
     this.$nextTick(() => {
       // Remove any leftover selected artboards
       // @TODO: This should be done from VueX Store, or wiped before quitting
       this.$store.dispatch('selectedArtboards/selectedArtboardsEmpty')
+
+      // IntersectionObserver on the WebView element
+      // Helps make sure we can reliably screenshot and other features
+      // The actual Observer comes from the parent component
+      this.viewportObserver.observe(this.$refs['frame'].$el)
     })
   },
 
   methods: {
-    updateScrollPosition ({ x, y }) {
+    updateScrollPosition({ x, y }) {
       this.scrollPosition.x = x
       this.scrollPosition.y = y
     },
-    rightClickHandler () {
+    rightClickHandler() {
       rightClickMenu(this.$store, {
         title: this.title,
         id: this.id,
         width: this.width,
         height: this.height,
-        isVisible: this.isVisible
+        isVisible: this.isVisible,
       })
     },
     // Limits the size of an artboard
-    validateArtboardSizeInput (name, value) {
+    validateArtboardSizeInput(name, value) {
       // @TODO: Refactor this into the size editor
       const minSize = 50
       const maxSize = 9999
@@ -200,7 +209,7 @@ export default {
         console.log('out of range')
       }
     },
-    triggerResize (e) {
+    triggerResize(e) {
       console.log('should resize')
       const vm = this
 
@@ -227,17 +236,17 @@ export default {
       //   this.$root.$panzoom.disable() // TODO: Cleaner solution that polluting document?
       // }
 
-      function doStart () {
+      function doStart() {
         // Update global state
         vm.$store.commit('interactions/interactionSetState', {
           key: 'isResizingArtboard',
-          value: true
+          value: true,
         })
       }
 
       // Resize objects
       let isDraggingTracker
-      function doDrag (e) {
+      function doDrag(e) {
         // This event needs to be debounced, as it's called on mousemove
         // Debounce via https://gomakethings.com/debouncing-your-javascript-events/
         if (isDraggingTracker) {
@@ -257,12 +266,12 @@ export default {
           vm.$emit('resize', {
             id: vm.id,
             width: parseInt(resizable.style.width, 10),
-            height: parseInt(resizable.style.height, 10)
+            height: parseInt(resizable.style.height, 10),
           })
         })
       }
 
-      function stopDrag () {
+      function stopDrag() {
         document.documentElement.removeEventListener(
           'mousedown',
           doStart,
@@ -280,11 +289,11 @@ export default {
         // Update global state
         vm.$store.commit('interactions/interactionSetState', {
           key: 'isResizingArtboard',
-          value: false
+          value: false,
         })
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

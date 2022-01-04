@@ -11,6 +11,7 @@
         :selected-items="selectedArtboards"
         :is-visible="artboard.isVisible"
         @resize="resize"
+        :viewportObserver="viewportObserverParent"
       />
     </div>
     <!-- Show empty state if no artboards exist -->
@@ -28,19 +29,20 @@ export default {
   name: 'Artboards',
   components: {
     Artboard,
-    WelcomeScreen
+    WelcomeScreen,
   },
-  data () {
+  data() {
     return {
-      selectionInstance: {}
+      selectionInstance: {},
+      viewportObserverParent: null,
     }
   },
   computed: {
     ...mapState({
-      artboards: state => state.artboards.list,
-      selectedArtboards: state => state.selectedArtboards
+      artboards: (state) => state.artboards.list,
+      selectedArtboards: (state) => state.selectedArtboards,
     }),
-    ...mapGetters('interactions', ['isInteracting'])
+    ...mapGetters('interactions', ['isInteracting']),
   },
   watch: {
     // TODO Consider enabling this once panzoom is a Vue plugin?
@@ -50,23 +52,27 @@ export default {
     //   });
     // }
   },
-  mounted () {
+  created() {
+    // Start observing the artboards in the viewport
+    this.startViewportObserver()
+  },
+  mounted() {
     this.selectionInstance = new SelectionArea({
       selectables: ['.artboard'], // All elements in this container can be selected
       boundaries: ['#canvas'], // The boundary
       // startareas: ['#canvas'],
       class: 'selection-area', // Class for the selection-area
       selectedClass: 'is-selected',
-      singleClick: true // Enable single-click selection
+      singleClick: true, // Enable single-click selection
     })
-      .on('beforestart', evt => {
+      .on('beforestart', (evt) => {
         // Prevent selections if the user is interacting with an artboard
         console.info(
           'Cannot interact with artboard while canvas is enabled. Please disable canvas.'
         )
         if (this.isInteracting) return false
       })
-      .on('start', evt => {
+      .on('start', (evt) => {
         // Every non-ctrlKey causes a selection reset
         if (!evt.ctrlKey) {
           this.$store.dispatch('selectedArtboards/selectedArtboardsEmpty')
@@ -75,28 +81,28 @@ export default {
         // Update state
         this.$store.commit('interactions/interactionSetState', {
           key: 'isSelectingArea',
-          value: true
+          value: true,
         })
       })
       .on(
         'move',
         ({
           store: {
-            changed: { removed, added }
-          }
+            changed: { removed, added },
+          },
         }) => {
           /**
            * Only add / remove selected class to increase selection performance.
            */
 
           // Add
-          added.forEach(item => {
+          added.forEach((item) => {
             const id = item.getAttribute('artboard-id')
             this.$store.dispatch('selectedArtboards/selectedArtboardsAdd', id)
           })
 
           // Remove
-          removed.forEach(item => {
+          removed.forEach((item) => {
             const id = item.getAttribute('artboard-id')
             this.$store.dispatch(
               'selectedArtboards/selectedArtboardsRemove',
@@ -117,29 +123,58 @@ export default {
         // Update state
         this.$store.commit('interactions/interactionSetState', {
           key: 'isSelectingArea',
-          value: false
+          value: false,
         })
 
         // Push the new IDs
-        selected.forEach(item => {
+        selected.forEach((item) => {
           const id = item.getAttribute('artboard-id')
           this.$store.dispatch('selectedArtboards/selectedArtboardsAdd', id) // Add these items to the Store
         })
       })
   },
-  beforeDestroy () {
+  beforeDestroy() {
+    // Detach Select JS
     this.selectionInstance.destroy()
+
+    // Remove viewport observer
+    this.stopViewportObserver()
   },
   methods: {
-    resize (artboard) {
+    resize(artboard) {
       this.$store.commit('artboards/resizeArtboard', artboard)
     },
-    fitToScreen () {
+    fitToScreen() {
       // TODO De-couple this call to the parent
       console.log('Artboards loaded', this.$parent)
       this.$parent.fitToScreen()
-    }
-  }
+    },
+    startViewportObserver() {
+      this.viewportObserverParent = new IntersectionObserver(
+        this.onElementObserved,
+        {
+          root: this.$el,
+          threshold: 1,
+          rootMargin: '0px',
+        }
+      )
+    },
+    stopViewportObserver() {
+      this.viewportObserverParent.disconnect()
+    },
+    onElementObserved(entries) {
+      entries.forEach((entry) => {
+        console.log(entry.intersectionRatio, entry.isIntersecting)
+        // do something ...
+        if (entry.intersectionRatio <= 0) {
+          // If NOT in view, do this:
+          console.warn('Artboard not in view', entry.target)
+        } else {
+          // if in view, do this:
+        }
+      })
+    },
+  },
 }
 </script>
 
