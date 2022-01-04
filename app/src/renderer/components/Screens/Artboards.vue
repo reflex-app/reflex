@@ -163,14 +163,20 @@ export default {
       this.viewportObserverParent.disconnect()
     },
     onElementObserved(entries) {
+      // Actions for each Observer instance
       entries.forEach((entry) => {
-        console.log(entry.intersectionRatio, entry.isIntersecting)
-        // do something ...
-        if (entry.intersectionRatio <= 0) {
+        if (entry.isIntersecting === false) {
           // If NOT in view, do this:
-          console.warn('Artboard not in view', entry.target)
+          this.$store.dispatch('artboards/changeArtboardViewportVisibility', {
+            id: entry.target.getAttribute('artboard-id'),
+            isVisible: false,
+          })
         } else {
-          // if in view, do this:
+          // Not in view, do this:
+          this.$store.dispatch('artboards/changeArtboardViewportVisibility', {
+            id: entry.target.getAttribute('artboard-id'),
+            isVisible: true,
+          })
         }
       })
     },
