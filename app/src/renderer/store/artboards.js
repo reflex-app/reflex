@@ -5,6 +5,17 @@ export const state = () => ({
   list: [],
 })
 
+export const getters = {
+  isArtboardInViewport: (state) => (id) => {
+    const artboard = state.list.find((artboard) => artboard.id === id)
+    if (!artboard) {
+      console.error('Artboard not found')
+      return
+    }
+    return artboard.isInViewport
+  },
+}
+
 export const mutations = {
   /**
    * Add an Artboard
