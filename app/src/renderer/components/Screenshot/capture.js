@@ -10,7 +10,7 @@ const fs = require('fs')
 const moment = require('moment')
 
 // Returns a WebView
-function getWebview(id) {
+export function getWebview(id) {
   // TODO add test here, selectors are brittle
   const dom = document.querySelector(`[artboard-id="${id}"] webview`)
   return dom
@@ -18,7 +18,7 @@ function getWebview(id) {
 }
 
 // Returns the WebContents from a given WebView
-function getWebViewContents(id) {
+export function getWebViewContents(id) {
   const webview = getWebview(id)
   return webContents.fromId(webview.getWebContentsId())
 }
@@ -61,11 +61,6 @@ export async function capture(id, title, screenshotPath) {
 
     fs.writeFile(fullFilePath, screenshot, (err) => {
       if (err) throw err
-
-      // Alert the user that the screenshot was saved
-      new Notification('Screenshot saved', {
-        body: filePath,
-      })
 
       // Open in Finder
       shell.showItemInFolder(fullFilePath)
@@ -139,14 +134,22 @@ export async function screenshot(id, options = { fullPage: false }) {
     // Device Pixel Ratio
     const DPI = window.devicePixelRatio // TODO make this configurable rather than based on the current device's pixel density
 
+    // WebView scroll positions
+    const webviewScrollPosition = await webviewContents.executeJavaScript(
+      `(() => ({ x: window.pageXOffset, y: window.pageYOffset }))()`
+    )
+    webviewScrollPosition.x = webviewScrollPosition.x * DPI
+    webviewScrollPosition.y = webviewScrollPosition.y * DPI
+
     // Get the dimensions of the web page content
     const rect = await webviewContents.executeJavaScript(
-      `(() => ({ x: 0, y: 0, width: document.body.offsetWidth, height: document.body.offsetHeight, d: document.body.getBoundingClientRect() }) )()`
+      `(() => ({ width: document.body.offsetWidth, height: document.body.offsetHeight }))()`
     )
     rect.width = rect.width * DPI
     rect.height = rect.width * DPI
 
     // The WebView (Artboard) dimensions
+    // Measured in pixels; not scaled by DPI
     const artboard = {
       width: webviewElement.scrollWidth,
       height: webviewElement.scrollHeight,
@@ -174,8 +177,6 @@ export async function screenshot(id, options = { fullPage: false }) {
           // Request the screenshot
           webviewContents.send('REFLEX_SCREENSHOT-start', {
             pixelRatio: DPI, // Image pixel density (i.e. )
-            // viewportHeight: artboard.height, // Viewport height
-            // viewportWidth: artboard.width, // Viewport width
           })
         } catch (err) {
           reject(err)
@@ -183,23 +184,36 @@ export async function screenshot(id, options = { fullPage: false }) {
       })
     }
 
-    // Request & wait for the image
+    // Create the image
     const fullImage = await createScreenshot()
-
-    // Crop the image based on the WebView dimensions
-    const croppedImage = await cropImage(fullImage, {
-      x: 0,
-      y: 0,
-      width: artboard.width,
-      height: artboard.height,
-      pixelRatio: DPI,
-    })
 
     // Return a base64 image
     if (options.fullPage) {
-      return await fullImage
+      // Case: Full-page screenshot
+      // Request & wait for the image
+      return fullImage
     } else {
-      return await croppedImage
+      // Case: Partial screenshot
+      const cropSettings = {
+        x: 0,
+        y: 0,
+        width: artboard.width,
+        height: artboard.height,
+        pixelRatio: DPI,
+      }
+
+      // Case: User has scrolled
+      // Adjust cropping to the scroll position
+      const userDidScroll =
+        webviewScrollPosition.x > 0 || webviewScrollPosition.y > 0
+      if (userDidScroll) {
+        cropSettings.x = webviewScrollPosition.x
+        cropSettings.y = webviewScrollPosition.y
+        console.info('User scroll accounted for')
+      }
+
+      // Return the cropped image based on the WebView dimensions
+      return await cropImage(fullImage, cropSettings)
     }
 
     // TODO bug: capturePage only captures part of the WebView that is within the window's viewport...
@@ -238,9 +252,12 @@ async function cropImage(
  * https://electronjs.org/docs/api/clipboard#clipboardwriteimageimage-type
  * @param {*} id This is the unique id of an artboard, not the HTML DOM index
  */
-export async function copyToClipboard(id) {
+export async function copyToClipboard(id, { fullPage }) {
   try {
-    const image = await screenshot(id)
+    console.log(fullPage)
+    const image = await screenshot(id, {
+      fullPage: fullPage || false,
+    })
     // Convert again to the proper format
     // NativeImage in PNG format
     // https://electronjs.org/docs/api/native-image
@@ -248,6 +265,7 @@ export async function copyToClipboard(id) {
 
     // const img = nativeImage.createFromBuffer(image.toPNG())
     const img = nativeImage.createFromBuffer(image.toPNG())
+    // const img = image
 
     // Write to clipboard
     clipboard.writeImage(img)
