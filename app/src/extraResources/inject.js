@@ -54,12 +54,9 @@ if (window) {
 }
 
 ipcRenderer.on('REFLEX_SCREENSHOT-start', (event, args) => {
-  console.log('screenshot', args)
   htmlToImage
     .toPng(document.body, {
       pixelRatio: args.pixelRatio,
-      // canvasHeight: args.viewportHeight,
-      // canvasWidth: args.viewportWidth,
     })
     .then(function (dataUrl) {
       ipcRenderer.sendToHost('REFLEX_SCREENSHOT-done', dataUrl)

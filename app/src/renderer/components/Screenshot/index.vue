@@ -25,6 +25,20 @@
             @click="copyToClipboard"
             >Run Cross-browser</Button
           > -->
+          <!-- Toggle fullPage screenshots on/off -->
+          <div class="screenshot-settings">
+            <label
+              @mouseover="showFullPreviews()"
+              @mouseout="captureFullPage === false ? hideFullPreviews() : ''"
+            >
+              <input type="radio" v-model="captureFullPage" :value="true" />
+              Full page
+            </label>
+            <label>
+              <input type="radio" v-model="captureFullPage" :value="false" />
+              Visible
+            </label>
+          </div>
         </div>
         <Button
           role="secondary"
@@ -52,6 +66,10 @@ export default {
     return {
       isScreenshotMode: false,
       filePath: '',
+      captureFullPage: false,
+      prevArtboardHeights: [
+        // { height: 200, id: 'abc123' }
+      ],
     }
   },
 
@@ -69,8 +87,12 @@ export default {
   },
 
   methods: {
-    clearAllSelected() {
+    async clearAllSelected() {
+      // Clear all selected artboards
       this.$store.dispatch('selectedArtboards/selectedArtboardsEmpty')
+
+      // Revert any artboard heights to their original values
+      await this.hideFullPreviews()
     },
 
     async screenshotAll() {
@@ -90,9 +112,85 @@ export default {
     },
 
     async copyToClipboard() {
-      await capture.copyToClipboard(this.selectedArtboards)
+      await capture.copyToClipboard(this.selectedArtboards, {
+        fullPage: this.captureFullPage,
+      })
       // TODO Notify the user when the image has been saved to clipboard
       // TODO Notify the user if there's an error copying to clipboard
+    },
+
+    // TODO should show a preview for one specific artboard
+    // async showFullPreview(id) {
+    //   const webviewEl = capture.getWebview(id)
+    //   const webviewElContents = capture.getWebViewContents(id)
+    //   const tempHeight = await webviewElContents.executeJavaScript(
+    //     `(() => ( document.body.offsetHeight ))()`
+    //   )
+
+    //   // Store the previous height
+    //   this.prevArtboardHeights.push({
+    //     id,
+    //     height: parseInt(webviewEl.style.height, 10),
+    //   })
+
+    //   // Temporarily expand the height of the artboard
+    //   const artboard = this.artboards.find((artboard) => artboard.id === id)
+    //   this.$store.dispatch('artboards/resizeArtboard', {
+    //     ...artboard,
+    //     height: tempHeight,
+    //   })
+    // },
+
+    async showFullPreviews() {
+      // Loop through each artboard
+      for (const id of this.selectedArtboards) {
+        const webviewEl = capture.getWebview(id)
+        const webviewElContents = capture.getWebViewContents(id)
+        const tempHeight = await webviewElContents.executeJavaScript(
+          `(() => ( document.body.offsetHeight ))()`
+        )
+
+        // Store the previous height
+        this.prevArtboardHeights.push({
+          id,
+          height: parseInt(webviewEl.style.height, 10),
+        })
+
+        // Temporarily expand the height of the artboard
+        const artboard = this.artboards.find((artboard) => artboard.id === id)
+        this.$store.dispatch('artboards/resizeArtboard', {
+          ...artboard,
+          height: tempHeight,
+        })
+      }
+    },
+
+    async hideFullPreviews() {
+      // Loop through each artboard
+      for (const id of this.selectedArtboards) {
+        const webviewEl = capture.getWebview(id)
+        const webviewElContents = capture.getWebViewContents(id)
+        const tempHeight = await webviewElContents.executeJavaScript(
+          `(() => ( document.body.offsetHeight ))()`
+        )
+
+        // Revert to original height
+        const { height: prevHeight } = this.prevArtboardHeights.find(
+          (artboard) => artboard.id === id
+        )
+        const artboard = this.artboards.find((artboard) => artboard.id === id)
+
+        // Remove last height from array
+        this.prevArtboardHeights = this.prevArtboardHeights.filter(
+          (artboard) => artboard.id !== id
+        )
+
+        // Commit
+        this.$store.dispatch('artboards/resizeArtboard', {
+          ...artboard,
+          height: prevHeight,
+        })
+      }
     },
   },
 }
@@ -109,6 +207,10 @@ export default {
     left: 0;
     right: 0;
   }
+}
+
+.screenshot-settings {
+  padding: 0.5rem 0;
 }
 
 .modal {

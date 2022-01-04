@@ -32,6 +32,7 @@
           :id="id"
           ref="frame"
           :allow-interactions="canInteractWithArtboard"
+          class="webview"
           :style="{ height: height + 'px', width: width + 'px' }"
           @loadstart="state.isLoading = true"
           @loadend="state.isLoading = false"
@@ -348,6 +349,10 @@ $artboard-handle-height: 1rem;
     .dimension {
       color: #636363;
     }
+  }
+
+  .webview {
+    transition: all 250ms ease-out;
   }
 
   .artboard__content {
