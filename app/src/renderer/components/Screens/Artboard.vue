@@ -30,6 +30,7 @@
       >
         <WebPage
           :id="id"
+          :artboard-id="id"
           ref="frame"
           :allow-interactions="canInteractWithArtboard"
           class="webview"
