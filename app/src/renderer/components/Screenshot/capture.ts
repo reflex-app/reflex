@@ -241,120 +241,41 @@ interface ScreenshotOptions {
   fullPage: boolean
   isArtboardInViewport: boolean
 }
+
+/**
+ *
+ * @param id
+ * @param options
+ * @returns NativeImage
+ */
 export async function screenshot(id, options: ScreenshotOptions) {
-  // Check if the WebView is in the viewport
-  if (options.isArtboardInViewport) {
-    useElectronCaptureAPI(id)
-  } else {
-    // TODO improve UI for this alert; does not need to be so prominent
-    alert(
-      'The artboard is not completely within view. Please move it into view and try again for best results.'
-    )
-    useAlternativeCaptureAPI(id)
+  const isInViewport = options.isArtboardInViewport
+  const shouldCaptureFullPage = options.fullPage || false
+
+  // 1. Check if the WebView is in the viewport
+  // 2. Check if user wants fullscreen or partial screenshot
+
+  const cases = {
+    ['in-viewport-fullscreen']: isInViewport && shouldCaptureFullPage,
+    ['in-viewport-partial']: isInViewport && !shouldCaptureFullPage,
+    ['out-viewport-fullscreen']: !isInViewport && shouldCaptureFullPage,
+    ['out-viewport-partial']: !isInViewport && !shouldCaptureFullPage,
   }
 
-  //   // Get the ID of the WebView
-  //   const webviewContents = getWebViewContents(id)
+  // Find the one case
+  const useCase = Object.keys(cases).find((k) => cases[k] === true)
+  if (!useCase) throw new Error('Unexpected screenshot case found')
 
-  //   // The WebView element
-  //   const webviewElement = getWebview(id)
-
-  //   // Device Pixel Ratio
-  //   const DPI = window.devicePixelRatio // TODO make this configurable rather than based on the current device's pixel density
-
-  //   // WebView scroll positions
-  //   const webviewScrollPosition = await webviewContents.executeJavaScript(
-  //     `(() => ({ x: window.pageXOffset, y: window.pageYOffset }))()`
-  //   )
-  //   webviewScrollPosition.x = webviewScrollPosition.x * DPI
-  //   webviewScrollPosition.y = webviewScrollPosition.y * DPI
-
-  //   // Get the dimensions of the web page content
-  //   const rect = await webviewContents.executeJavaScript(
-  //     `(() => ({ width: document.body.offsetWidth, height: document.body.offsetHeight }))()`
-  //   )
-  //   rect.width = rect.width * DPI
-  //   rect.height = rect.width * DPI
-
-  //   // The WebView (Artboard) dimensions
-  //   // Measured in pixels; not scaled by DPI
-  //   const artboard = {
-  //     width: webviewElement.scrollWidth,
-  //     height: webviewElement.scrollHeight,
-  //   }
-
-  //   // Wait for the image to be created (base64) and return it (nativeImage)
-  //   async function createScreenshot() {
-  //     return new Promise((resolve, reject) => {
-  //       try {
-  //         // Initiate listener
-  //         webviewElement.addEventListener('ipc-message', handleWebViewListener)
-
-  //         function handleWebViewListener(event, ...args) {
-  //           if (event.channel === 'REFLEX_SCREENSHOT-done') {
-  //             console.log(event)
-  //             const base64 = event?.args[0]
-  //             webviewElement.removeEventListener(
-  //               'ipc-message',
-  //               handleWebViewListener
-  //             ) // Remove listener
-  //             resolve(nativeImage.createFromDataURL(base64)) // Return the image
-  //           }
-  //         }
-
-  //         // Request the screenshot
-  //         webviewContents.send('REFLEX_SCREENSHOT-start', {
-  //           pixelRatio: DPI, // Image pixel density (i.e. )
-  //         })
-  //       } catch (err) {
-  //         reject(err)
-  //       }
-  //     })
-  //   }
-
-  //   // Create the image
-  //   const fullImage = await createScreenshot()
-
-  //   // Return a base64 image
-  //   if (options.fullPage) {
-  //     // Case: Full-page screenshot
-  //     // Request & wait for the image
-  //     return fullImage
-  //   } else {
-  //     // Case: Partial screenshot
-  //     const cropSettings = {
-  //       x: 0,
-  //       y: 0,
-  //       width: artboard.width,
-  //       height: artboard.height,
-  //       pixelRatio: DPI,
-  //     }
-
-  //     // Case: User has scrolled
-  //     // Adjust cropping to the scroll position
-  //     const userDidScroll =
-  //       webviewScrollPosition.x > 0 || webviewScrollPosition.y > 0
-  //     if (userDidScroll) {
-  //       cropSettings.x = webviewScrollPosition.x
-  //       cropSettings.y = webviewScrollPosition.y
-  //       console.info('User scroll accounted for')
-  //     }
-
-  //     // Return the cropped image based on the WebView dimensions
-  //     return await cropImage(fullImage, cropSettings)
-  //   }
-
-  //   // TODO bug: capturePage only captures part of the WebView that is within the window's viewport...
-  //   // https://github.com/electron/electron/issues/8587
-  //   // https://github.com/electron/electron/issues/8314
-
-  //   // TODO add an option to hide scrollbars-- this is easily done by `webview.capturePage(rect)`
-
-  //   // Return an image
-  //   // return webview.capturePage()
-  // } catch (error) {
-  //   throw new Error(error)
-  // }
+  if (['in-viewport-partial', 'in-viewport-fullscreen'].includes(useCase)) {
+    return await useElectronCaptureAPI(id)
+  } else if (
+    ['out-viewport-partial', 'out-viewport-fullscreen'].includes(useCase)
+  ) {
+    alert(
+      'One or more of the selected artboards to screenshot are not within view. An alternative screenshot method will be used. \n\n For best results, move the artboard(s) to screenshot completely into view and try again.'
+    ) // TODO improve UI for this alert; does not need to be so prominent
+    return await useAlternativeCaptureAPI(id)
+  }
 }
 
 /**
