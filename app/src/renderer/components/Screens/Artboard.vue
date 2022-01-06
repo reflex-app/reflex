@@ -349,6 +349,7 @@ $artboard-handle-height: 1.5rem;
   margin-right: 15rem;
   width: auto;
   height: auto;
+  align-self: flex-start; // Prevent stretching to flex container height
 }
 
 .artboard {
