@@ -73,10 +73,27 @@ export default {
     this.$root.$panzoom = Panzoom(this.DOMElement, {
       canvas: true, // Allows parent to control child
       cursor: 'grab',
+      startScale: 1,
+      startX: 0,
+      // Scale to fit the content
+      handleStartEvent: (event) => {
+        // Default actions
+        event.preventDefault()
+        event.stopPropagation()
+      },
     })
 
     // Reference inside of this component
     this.panzoomInstance = this.$root.$panzoom
+
+    // Center Panzoom
+    // this.panzoomInstance.pan(
+    //   origX + (current.clientX - startClientX) / scale,
+    //   origY + (current.clientY - startClientY) / scale,
+    //   {
+    //     animate: false,
+    //   }
+    // )
 
     // Enable event listeners
     this.$nextTick(() => {
@@ -94,8 +111,8 @@ export default {
       // });
 
       // Enable when CMD is not pressed
-      useEventListener(window, 'keydown', this.cmdHandler)
-      useEventListener(window, 'keyup', this.cmdHandler)
+      // useEventListener(window, 'keydown', this.cmdHandler)
+      // useEventListener(window, 'keyup', this.cmdHandler)
 
       // TODO Add tests for these
 
@@ -114,31 +131,6 @@ export default {
           this.$store.commit('dev/toggleCanvasDebugger')
         })
       }
-    },
-    /**
-     * Toggles the pan/zoom controls
-     * When on, users can pan and zoom
-     * When off, users can only interact inside of Screens
-     */
-    cmdHandler(e) {
-      // If user keeps holding the key down,
-      // prevent firing repetitively and only counting once
-      if (e.repeat) {
-        return
-      }
-
-      // Only check for CMD/CTRL key to be held
-      const isCtrlKeyPressed = e.ctrlKey ? true : false
-
-      // Disable panzoom when CMD/CTRL is pressed
-      const isPanzoomEnabled = isCtrlKeyPressed ? false : true
-
-      console.log(`Pressed ${isCtrlKeyPressed}`)
-
-      // Key down (pressed)
-      this.$store.commit('interactions/setPanzoomState', {
-        value: isPanzoomEnabled,
-      })
     },
     /**
      * Handles wheel events (i.e. mousewheel)
