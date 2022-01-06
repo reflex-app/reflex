@@ -70,9 +70,14 @@ export async function capture(id, title, screenshotPath) {
   try {
     // Capture the <webview>
     // Loop through the selected Webviews
-    const webview = getWebViewContents(id)
-    const image = await webview.capturePage()
-    saveScreenshot(image.toPNG())
+    const image = await useElectronCaptureAPI(id)
+    await saveScreenshot(image.toPNG())
+
+    // TODO bug: capturePage only captures part of the WebView that is within the window's viewport...
+    // https://github.com/electron/electron/issues/8587
+    // https://github.com/electron/electron/issues/8314
+
+    // TODO add an option to hide scrollbars-- this is easily done by `webview.capturePage(rect)`
   } catch (error) {
     throw new Error(error)
   }
