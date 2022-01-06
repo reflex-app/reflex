@@ -3,10 +3,10 @@
     ref="frame"
     class="frame"
     :preload="injectScript"
-    allowpopups
+    allowpopups="true"
     enableremotemodule="true"
     plugins="true"
-    webpreferences="contextIsolation=yes, nodeIntegration=yes"
+    webpreferences="contextIsolation=true, nodeIntegration=true"
   />
 </template>
 
@@ -14,8 +14,7 @@
 import path from 'path'
 import { mapState } from 'vuex'
 import { state as reflexState, setPublisher } from '~/mixins/reflex-sync'
-const { remote } = require('electron')
-const fs = remote.require('fs')
+import remote from '@electron/remote'
 
 export default {
   props: {
@@ -43,16 +42,9 @@ export default {
     injectScript() {
       // const appPath = remote.app.getPath('appData')
       // Load the inject script
+      // TODO add a test to make sure this file exists
       const injectScriptPath =
         'file://' + path.join(process.resourcesPath, './inject.js')
-
-      // Make sure the inject file is found
-      try {
-        fs.accessSync(injectScriptPath.replace('file://', ''))
-      } catch (err) {
-        console.log(`No inject script found at: ${injectScriptPath}`)
-        throw new Error(err)
-      }
 
       return injectScriptPath
     },
@@ -330,7 +322,7 @@ export default {
         console.log('Unloading')
         // this.removeListeners();
       } else {
-        console.log('Unrecognized channel', event.args[0])
+        console.log(`Unrecognized channel: ${event.channel}`, event.args[0])
       }
     },
     loadstop() {

@@ -3,7 +3,8 @@
  * Communicate with renderer process (WebPage.vue) via ipcRenderer.sendToHost()
  * When this file is loaded it no longer has access to the compiled src/renderer/* files!
  */
-const { contextBridge, ipcRenderer, remote } = require('electron')
+const { contextBridge, ipcRenderer } = require('electron')
+const remote = require('@electron/remote')
 const setDOMEffect = require('./lib/effects')
 const eventTypes = require('./lib/eventTypes')
 const helpers = require('./lib/helpers')
@@ -20,11 +21,11 @@ console.log(ipcRenderer, remote)
  */
 document.addEventListener('DOMContentLoaded', initiateBridge)
 
-function initiateBridge () {
+function initiateBridge() {
   const data = {
     title: document.title,
     favicon:
-      'https://www.google.com/s2/favicons?domain=' + window.location.href
+      'https://www.google.com/s2/favicons?domain=' + window.location.href,
   }
 
   // Listen for initial connection to the frame
@@ -43,6 +44,26 @@ function initiateBridge () {
   })
 }
 
+// Enable html-to-image
+// https://stackoverflow.com/a/67803203
+const htmlToImage = require('html-to-image')
+console.log(htmlToImage)
+
+if (window) {
+  window.htmlToImage = htmlToImage
+}
+
+ipcRenderer.on('REFLEX_SCREENSHOT-start', (event, args) => {
+  htmlToImage
+    .toPng(document.body, {
+      pixelRatio: args.pixelRatio,
+    })
+    .then(function (dataUrl) {
+      ipcRenderer.sendToHost('REFLEX_SCREENSHOT-done', dataUrl)
+    })
+    .catch((err) => console.log(err))
+})
+
 /// ////////////////////////////
 /// ////////////////////////////
 /// ////////////////////////////
@@ -52,7 +73,7 @@ function initiateBridge () {
  */
 window.addEventListener('beforeunload', unload)
 
-function unload (e) {
+function unload(e) {
   // Cancel the event
   e.preventDefault()
 
@@ -81,14 +102,14 @@ function unload (e) {
 
 const state = {
   isOrigin: false,
-  id: '' // the ID of the parent - used for connection purposes
+  id: '', // the ID of the parent - used for connection purposes
 }
 
-function getState () {
+function getState() {
   return state
 }
 
-function startSync () {
+function startSync() {
   // Add listener for each event type
   for (const i in eventTypes) {
     console.log('Added listener:', eventTypes[i])
@@ -96,7 +117,7 @@ function startSync () {
   }
 
   // Fire off an event when the event occurs
-  function responder (event) {
+  function responder(event) {
     event = event || window.event
 
     const { isOrigin } = getState()
@@ -121,7 +142,7 @@ function startSync () {
         return {
           element: eventElement.outerHTML,
           elementTagName: eventElement.tagName,
-          index
+          index,
         }
       } else {
         return null
@@ -130,7 +151,7 @@ function startSync () {
 
     const eventObj = {
       type: event.type,
-      target: getEventTarget() // Only set for clicks
+      target: getEventTarget(), // Only set for clicks
     }
 
     // Send event to event bus
@@ -145,9 +166,9 @@ function startSync () {
         viewportHeight: helpers.documentHeight(),
         scrollOffset: {
           x: window.scrollX,
-          y: window.scrollY
-        }
-      }
+          y: window.scrollY,
+        },
+      },
     })
   }
 

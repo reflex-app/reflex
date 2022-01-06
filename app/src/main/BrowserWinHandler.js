@@ -38,6 +38,7 @@ export default class BrowserWinHandler {
   _create() {
     this.browserWindow = new BrowserWindow({
       ...this.options,
+      show: false, // hide until loaded
       webPreferences: {
         ...this.options.webPreferences,
         webSecurity: isProduction, // disable on dev to allow loading local resources
@@ -80,6 +81,9 @@ export default class BrowserWinHandler {
     const serverUrl = isDev ? DEV_SERVER_URL : 'app://./index.html'
     const fullPath = serverUrl + '#' + pagePath
     await this.browserWindow.loadURL(fullPath)
+
+    // After loading the web app, show the desktop app
+    this.browserWindow.show()
   }
 
   /**

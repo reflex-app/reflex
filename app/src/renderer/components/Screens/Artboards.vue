@@ -11,6 +11,7 @@
         :selected-items="selectedArtboards"
         :is-visible="artboard.isVisible"
         @resize="resize"
+        :viewportObserver="viewportObserverParent"
       />
     </div>
     <!-- Show empty state if no artboards exist -->
@@ -34,6 +35,7 @@ export default {
   data() {
     return {
       selectionInstance: {},
+      viewportObserverParent: null,
     }
   },
   computed: {
@@ -51,6 +53,10 @@ export default {
     //     this.fitToScreen();
     //   });
     // }
+  },
+  created() {
+    // Start observing the artboards in the viewport
+    this.startViewportObserver()
   },
   mounted() {
     // TODO Create shortcut listener
@@ -157,7 +163,11 @@ export default {
       })
   },
   beforeDestroy() {
+    // Detach Select JS
     this.selectionInstance.destroy()
+
+    // Remove viewport observer
+    this.stopViewportObserver()
   },
   methods: {
     resize(artboard) {
@@ -192,6 +202,37 @@ export default {
       // this.$store.commit('interactions/setPanzoomState', {
       //   value: isPanzoomEnabled,
       // })
+    },
+    startViewportObserver() {
+      this.viewportObserverParent = new IntersectionObserver(
+        this.onElementObserved,
+        {
+          root: this.$el,
+          threshold: 1,
+          rootMargin: '0px',
+        }
+      )
+    },
+    stopViewportObserver() {
+      this.viewportObserverParent.disconnect()
+    },
+    onElementObserved(entries) {
+      // Actions for each Observer instance
+      entries.forEach((entry) => {
+        if (entry.isIntersecting === false) {
+          // If NOT in view, do this:
+          this.$store.dispatch('artboards/changeArtboardViewportVisibility', {
+            id: entry.target.getAttribute('artboard-id'),
+            isVisible: false,
+          })
+        } else {
+          // Not in view, do this:
+          this.$store.dispatch('artboards/changeArtboardViewportVisibility', {
+            id: entry.target.getAttribute('artboard-id'),
+            isVisible: true,
+          })
+        }
+      })
     },
   },
 }

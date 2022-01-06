@@ -6,15 +6,12 @@ component.rfx-icon(
   role="icon"
   aria-hidden="true"
   :style="styles")
-  svg(class="feather" viewBox="0 0 24 24" :class="classes"  :style="styles")
-    use(
-      :xlink:href="require('@/assets/icons/featherSprite.svg')+`#${icon}`"
-      )
+  component(v-html="featherSVG" class="feather" :style="styles")
 </template>
 
 <script lang="ts">
-// {/* import config from '../utils/config' */}
 import { computed } from 'vue'
+import feather from 'feather-icons'
 
 export default {
   name: 'rfx-icon',
@@ -24,7 +21,7 @@ export default {
      * The name of the icon to use.
      * See: https://feathericons.com/
      */
-    icon: { type: String, required: true },
+    icon: { type: String, required: true, default: 'star' },
     /**
      * The size of the icon
      */
@@ -57,10 +54,20 @@ export default {
       return ''
     })
 
+    // Generate SVG code for the icon
+    const featherSVG = computed(() => {
+      try {
+        return feather.icons[props.icon].toSvg()
+      } catch (err) {
+        console.error(err)
+      }
+    })
+
     return {
       // props,
       classes,
       styles,
+      featherSVG,
     }
   },
 }

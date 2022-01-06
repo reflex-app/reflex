@@ -40,8 +40,10 @@
       >
         <WebPage
           :id="id"
+          :artboard-id="id"
           ref="frame"
           :allow-interactions="canInteractWithWebContext"
+          class="webview"
           :style="{ height: height + 'px', width: width + 'px' }"
           @loadstart="state.isLoading = true"
           @loadend="state.isLoading = false"
@@ -107,6 +109,10 @@ export default {
       default: () => [],
     },
     isVisible: Boolean,
+    viewportObserver: {
+      type: IntersectionObserver,
+      default: null,
+    },
   },
   data() {
     return {
@@ -167,6 +173,11 @@ export default {
       // Remove any leftover selected artboards
       // @TODO: This should be done from VueX Store, or wiped before quitting
       this.$store.dispatch('selectedArtboards/selectedArtboardsEmpty')
+
+      // IntersectionObserver on the WebView element
+      // Helps make sure we can reliably screenshot and other features
+      // The actual Observer comes from the parent component
+      this.viewportObserver.observe(this.$refs['frame'].$el)
     })
   },
 
@@ -378,6 +389,10 @@ $artboard-handle-height: 1.5rem;
     .dimension {
       color: #636363;
     }
+  }
+
+  .webview {
+    transition: all 250ms ease-out;
   }
 
   .artboard__content {

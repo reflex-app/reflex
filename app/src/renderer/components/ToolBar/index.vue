@@ -37,6 +37,7 @@
     <div v-if="artboards.length" class="toolbar__right">
       <SwitchMode />
     </div>
+    <!-- <UpdateChannel /> -->
     <InstallUpdateButton />
     <div id="draggable" @dblclick="toggleWindowMaximize" />
   </div>
@@ -44,13 +45,14 @@
 
 <script>
 import { mapState } from 'vuex'
-import { getCurrentWindow } from '@electron/remote'
+import * as remote from '@electron/remote'
 import isElectron from 'is-electron'
 import URLInput from '@/components/ToolBar/URLInput.vue'
 import SyncButton from '@/components/ToolBar/SyncButton.vue'
 import HistoryControls from '@/components/ToolBar/HistoryControls.vue'
 import InstallUpdateButton from '@/components/ToolBar/InstallUpdateButton.vue'
 import SwitchMode from '@/components/ToolBar/SwitchMode'
+import UpdateChannel from '@/components/Settings/UpdateChannel.vue'
 import Artboard from '../Screens/Artboard.vue'
 
 const debounce = require('lodash.debounce')
@@ -64,6 +66,7 @@ export default {
     InstallUpdateButton,
     SwitchMode,
     Artboard,
+    UpdateChannel,
   },
   data() {
     return {
@@ -104,7 +107,7 @@ export default {
       this.$store.commit('gui/toggleSidebar')
     },
     toggleWindowMaximize() {
-      const window = getCurrentWindow()
+      const window = remote.getCurrentWindow()
       const isMaximized = window.isMaximized()
       // Do the opposite
       if (isMaximized) {
@@ -119,7 +122,7 @@ export default {
       // To avoid this problem, ensure you clean up any references to renderer callbacks passed to the main process.
       // This involves cleaning up event handlers, or ensuring the main process is explicitly told to dereference callbacks that came from a renderer process that is exiting.
       // See: https://electronjs.org/docs/api/remote#passing-callbacks-to-the-main-process
-      const window = getCurrentWindow()
+      const window = remote.getCurrentWindow()
       this.isFullScreen = !!window.isFullScreen()
     },
   },
@@ -129,7 +132,7 @@ export default {
       this.toggleFullscreen()
 
       // Listen for fullscreen event
-      const currentWindow = getCurrentWindow()
+      const currentWindow = remote.getCurrentWindow()
       currentWindow.on('enter-full-screen', this.toggleFullscreen)
       currentWindow.on('leave-full-screen', this.toggleFullscreen)
     }

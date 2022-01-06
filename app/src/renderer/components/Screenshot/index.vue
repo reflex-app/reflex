@@ -25,6 +25,20 @@
             @click="copyToClipboard"
             >Run Cross-browser</Button
           > -->
+          <!-- Toggle fullPage screenshots on/off -->
+          <div class="screenshot-settings">
+            <label
+              @mouseover="showFullPreviews()"
+              @mouseout="captureFullPage === false ? hideFullPreviews() : ''"
+            >
+              <input type="radio" v-model="captureFullPage" :value="true" />
+              Full page
+            </label>
+            <label>
+              <input type="radio" v-model="captureFullPage" :value="false" />
+              Visible
+            </label>
+          </div>
         </div>
         <Button
           role="secondary"
@@ -43,37 +57,45 @@
 
 <script>
 import { mapState } from 'vuex'
-import * as capture from './capture.js'
+import * as capture from './capture'
 
 export default {
   name: 'Screenshots',
 
-  data () {
+  data() {
     return {
       isScreenshotMode: false,
-      filePath: ''
+      filePath: '',
+      captureFullPage: false,
+      prevArtboardHeights: [
+        // { height: 200, id: 'abc123' }
+      ],
     }
   },
 
   computed: {
     // Bind to our Vuex Store's URL value
-    artboards () {
+    artboards() {
       return this.$store.state.artboards.list
     },
-    selectedArtboards () {
+    selectedArtboards() {
       return this.$store.state.selectedArtboards
     },
     ...mapState({
-      selectedArtboards: state => state.selectedArtboards
-    })
+      selectedArtboards: (state) => state.selectedArtboards,
+    }),
   },
 
   methods: {
-    clearAllSelected () {
+    async clearAllSelected() {
+      // Clear all selected artboards
       this.$store.dispatch('selectedArtboards/selectedArtboardsEmpty')
+
+      // Revert any artboard heights to their original values
+      await this.hideFullPreviews()
     },
 
-    async screenshotAll () {
+    async screenshotAll() {
       try {
         await capture.captureAll(this)
       } catch (err) {
@@ -81,7 +103,7 @@ export default {
       }
     },
 
-    async screenshotSelected () {
+    async screenshotSelected() {
       try {
         await capture.captureMultiple(this.selectedArtboards)
       } catch (err) {
@@ -89,11 +111,94 @@ export default {
       }
     },
 
-    copyToClipboard () {
-      capture.copyToClipboard(this.selectedArtboards)
+    async copyToClipboard() {
+      // TODO This is a hacky way to handle just getting one selected artboard (which is required for clipboard image copying)
+      const isArtboardInViewport = this.$store.getters[
+        'artboards/isArtboardInViewport'
+      ](this.selectedArtboards[0])
+
+      await capture.copyToClipboard(this.selectedArtboards, {
+        fullPage: this.captureFullPage,
+        isArtboardInViewport,
+      })
       // TODO Notify the user when the image has been saved to clipboard
-    }
-  }
+      // TODO Notify the user if there's an error copying to clipboard
+    },
+
+    // TODO should show a preview for one specific artboard
+    // async showFullPreview(id) {
+    //   const webviewEl = capture.getWebview(id)
+    //   const webviewElContents = capture.getWebViewContents(id)
+    //   const tempHeight = await webviewElContents.executeJavaScript(
+    //     `(() => ( document.body.offsetHeight ))()`
+    //   )
+
+    //   // Store the previous height
+    //   this.prevArtboardHeights.push({
+    //     id,
+    //     height: parseInt(webviewEl.style.height, 10),
+    //   })
+
+    //   // Temporarily expand the height of the artboard
+    //   const artboard = this.artboards.find((artboard) => artboard.id === id)
+    //   this.$store.dispatch('artboards/resizeArtboard', {
+    //     ...artboard,
+    //     height: tempHeight,
+    //   })
+    // },
+
+    async showFullPreviews() {
+      // Loop through each artboard
+      for (const id of this.selectedArtboards) {
+        const webviewEl = capture.getWebview(id)
+        const webviewElContents = capture.getWebViewContents(id)
+        const tempHeight = await webviewElContents.executeJavaScript(
+          `(() => ( document.body.offsetHeight ))()`
+        )
+
+        // Store the previous height
+        this.prevArtboardHeights.push({
+          id,
+          height: parseInt(webviewEl.style.height, 10),
+        })
+
+        // Temporarily expand the height of the artboard
+        const artboard = this.artboards.find((artboard) => artboard.id === id)
+        this.$store.dispatch('artboards/resizeArtboard', {
+          ...artboard,
+          height: tempHeight,
+        })
+      }
+    },
+
+    async hideFullPreviews() {
+      // Loop through each artboard
+      for (const id of this.selectedArtboards) {
+        const webviewEl = capture.getWebview(id)
+        const webviewElContents = capture.getWebViewContents(id)
+        const tempHeight = await webviewElContents.executeJavaScript(
+          `(() => ( document.body.offsetHeight ))()`
+        )
+
+        // Revert to original height
+        const { height: prevHeight } = this.prevArtboardHeights.find(
+          (artboard) => artboard.id === id
+        )
+        const artboard = this.artboards.find((artboard) => artboard.id === id)
+
+        // Remove last height from array
+        this.prevArtboardHeights = this.prevArtboardHeights.filter(
+          (artboard) => artboard.id !== id
+        )
+
+        // Commit
+        this.$store.dispatch('artboards/resizeArtboard', {
+          ...artboard,
+          height: prevHeight,
+        })
+      }
+    },
+  },
 }
 </script>
 
@@ -108,6 +213,10 @@ export default {
     left: 0;
     right: 0;
   }
+}
+
+.screenshot-settings {
+  padding: 0.5rem 0;
 }
 
 .modal {
