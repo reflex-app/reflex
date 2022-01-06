@@ -57,7 +57,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import * as capture from './capture.js'
+import * as capture from './capture'
 
 export default {
   name: 'Screenshots',
@@ -112,8 +112,14 @@ export default {
     },
 
     async copyToClipboard() {
+      // TODO This is a hacky way to handle just getting one selected artboard (which is required for clipboard image copying)
+      const isArtboardInViewport = this.$store.getters[
+        'artboards/isArtboardInViewport'
+      ](this.selectedArtboards[0])
+
       await capture.copyToClipboard(this.selectedArtboards, {
         fullPage: this.captureFullPage,
+        isArtboardInViewport,
       })
       // TODO Notify the user when the image has been saved to clipboard
       // TODO Notify the user if there's an error copying to clipboard
