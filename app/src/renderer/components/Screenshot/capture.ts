@@ -1,7 +1,5 @@
 import { clipboard, nativeImage, shell } from 'electron'
 import { dialog, webContents } from '@electron/remote'
-import * as htmlToImage from 'html-to-image'
-import { toPng, toJpeg, toBlob, toPixelData, toSvg } from 'html-to-image'
 
 import isElectron from 'is-electron'
 
@@ -126,19 +124,37 @@ export function captureAll(vm) {
   )
 }
 
-async function useElectronCaptureAPI(id) {
+/**
+ *
+ * Use Electron's API to capture a WebView screenshot
+ * @param id
+ * @returns NativeImage
+ */
+async function useElectronCaptureAPI(id: string) {
   try {
     // Capture the <webview>
     // Loop through the selected Webviews
+    console.log('Taking screenshot with Electron API')
     const webview = getWebViewContents(id)
     const image = await webview.capturePage()
-    return image.toDataURL()
+    return image
   } catch (error) {
     throw new Error(error)
   }
 }
 
-async function useAlternativeCaptureAPI(id) {
+/**
+ * Uses alternative (html-to-image) to capture a WebView screenshot
+ * @param id
+ * @param options
+ * @returns NativeImage
+ */
+async function useAlternativeCaptureAPI(
+  id: string,
+  options: { fullPage?: boolean } = { fullPage: false }
+) {
+  console.log('Taking screenshot with Alternative Capture API')
+
   // Get the ID of the WebView
   const webviewContents = getWebViewContents(id)
 
@@ -229,15 +245,6 @@ async function useAlternativeCaptureAPI(id) {
     // Return the cropped image based on the WebView dimensions
     return await cropImage(fullImage, cropSettings)
   }
-
-  // TODO bug: capturePage only captures part of the WebView that is within the window's viewport...
-  // https://github.com/electron/electron/issues/8587
-  // https://github.com/electron/electron/issues/8314
-
-  // TODO add an option to hide scrollbars-- this is easily done by `webview.capturePage(rect)`
-
-  // Return an image
-  // return webview.capturePage()
 }
 
 // Take a screenshot
@@ -308,15 +315,15 @@ async function cropImage(
  */
 
 interface ClipboardOptions {
-  fullPage: boolean
   isArtboardInViewport: boolean
+  fullPage?: boolean
 }
 
 export async function copyToClipboard(id: any, options: ClipboardOptions) {
   try {
     const image = await screenshot(id, {
+      isArtboardInViewport: options.isArtboardInViewport,
       fullPage: options.fullPage || false,
-      isArtboardInViewport: options.isArtboardInViewport || false,
     })
     // Convert again to the proper format
     // NativeImage in PNG format
