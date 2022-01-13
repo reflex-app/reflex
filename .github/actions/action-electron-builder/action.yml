@@ -27,7 +27,7 @@ inputs:
     required: false
 
 runs:
-  using: node12 # Versions available: https://github.com/actions/node-versions/blob/main/versions-manifest.json
+  using: node16 # Versions available: https://github.com/actions/node-versions/blob/main/versions-manifest.json
   main: index.js
 
 branding:
