@@ -20,7 +20,7 @@ jobs:
     strategy:
       matrix:
         os: [macos-latest, windows-latest] # The operating systems to build for
-        node: [12]
+        node: [16]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Check out Git repository
