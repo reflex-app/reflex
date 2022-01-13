@@ -74,3 +74,6 @@ jobs:
           # macOS notarization
           APPLEID: ${{ secrets.APPLEID }}
           APPLEIDPASS: ${{ secrets.APPLEIDPASS }}
+          # Workaround for electron-builder error about existing file in CI
+          # https://github.com/electron-userland/electron-builder/issues/3179
+          USE_HARD_LINKS: false
