@@ -1,5 +1,6 @@
-import { clipboard, nativeImage, shell } from 'electron'
-import { dialog, webContents } from '@electron/remote'
+import { clipboard, nativeImage, shell, WebviewTag } from 'electron'
+import { dialog, webContents, getCurrentWindow } from '@electron/remote'
+import { defaultErrorHandler } from '@/utils/error'
 
 import isElectron from 'is-electron'
 
@@ -11,13 +12,16 @@ const moment = require('moment')
 export function getWebview(id) {
   // TODO add test here, selectors are brittle
   const dom = document.querySelector(`[artboard-id="${id}"] webview`)
+  if (!dom) {
+    throw new Error(`Could not find WebView with ID: ${id}`)
+  }
   return dom
-  // return webContents.fromId(dom.getWebContentsId())
 }
 
 // Returns the WebContents from a given WebView
 export function getWebViewContents(id) {
-  const webview = getWebview(id)
+  // TODO this should not require a DOM element
+  const webview: any = getWebview(id)
   return webContents.fromId(webview.getWebContentsId())
 }
 
@@ -69,6 +73,7 @@ export async function capture(id, title, screenshotPath) {
     // Capture the <webview>
     // Loop through the selected Webviews
     const image = await useElectronCaptureAPI(id)
+    if (!image) throw new Error('Could not capture screenshot')
     await saveScreenshot(image.toPNG())
 
     // TODO bug: capturePage only captures part of the WebView that is within the window's viewport...
@@ -76,8 +81,8 @@ export async function capture(id, title, screenshotPath) {
     // https://github.com/electron/electron/issues/8314
 
     // TODO add an option to hide scrollbars-- this is easily done by `webview.capturePage(rect)`
-  } catch (error) {
-    throw new Error(error)
+  } catch (err) {
+    defaultErrorHandler(err)
   }
 }
 
@@ -101,27 +106,34 @@ export async function captureMultiple(ids) {
 
       return result.filePaths[0]
     } catch (err) {
-      throw new Error(err)
+      defaultErrorHandler(err)
     }
   })
 }
 
 // Capture ALL the screens
 export function captureAll(vm) {
-  // 1. Get the file path to save all
-  dialog.showOpenDialog(
-    {
-      properties: ['openFile', 'openDirectory', 'createDirectory'],
-    },
-    async function (filePaths) {
-      // 2. Capture each & save it
-      for (let i = 0; i < vm.artboards.length; i++) {
-        await capture(i, `${vm.artboards[i].title}_${i}`, filePaths[0])
-      }
+  const mainWindow = getCurrentWindow()
 
-      return filePaths[0]
-    }
-  )
+  dialog
+    // 1. Get the file path to save all to
+    .showOpenDialog(mainWindow, {
+      properties: ['openFile', 'openDirectory', 'createDirectory'],
+    })
+    // 2. Capture each artboard & save it
+    .then(async (result) => {
+      if (result.canceled) return
+      if (result.filePaths.length) {
+        const filePath = result.filePaths[0]
+
+        for (let i = 0; i < vm.artboards.length; i++) {
+          await capture(i, `${vm.artboards[i].title}_${i}`, filePath)
+        }
+
+        return filePath
+      }
+    })
+    .catch((err) => defaultErrorHandler(err))
 }
 
 /**
@@ -138,8 +150,8 @@ async function useElectronCaptureAPI(id: string) {
     const webview = getWebViewContents(id)
     const image = await webview.capturePage()
     return image
-  } catch (error) {
-    throw new Error(error)
+  } catch (err) {
+    defaultErrorHandler(err)
   }
 }
 
@@ -343,6 +355,6 @@ export async function copyToClipboard(id: any, options: ClipboardOptions) {
     // Done
     return true
   } catch (err) {
-    throw new Error(err)
+    defaultErrorHandler(err)
   }
 }
