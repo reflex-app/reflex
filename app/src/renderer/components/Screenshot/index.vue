@@ -24,7 +24,7 @@
             role="secondary"
             @click="deleteMultiple()"
           >
-            Delete multiple
+            Delete selected
           </Button>
           <!-- <Button
             v-if="selectedArtboards.length === 1"

@@ -25,7 +25,6 @@
     <!-- Templates -->
     <div class="panel-section">
       <span>Add from template:</span>
-      'size' {{ defaultSizeSelection }}
       <select v-model="defaultSizeSelection" ref="preset-dropdown">
         <option disabled value>Select template...</option>
         <option
