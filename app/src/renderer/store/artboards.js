@@ -135,13 +135,7 @@ export const actions = {
     commit('addArtboard', artboard)
   },
   deleteArtboard({ commit }, artboard) {
-    if (
-      confirm(
-        `Are you sure you want to delete the ${artboard.title} screen size? Click "OK" to delete.`
-      )
-    ) {
-      commit('removeArtboard', artboard.id)
-    }
+    commit('removeArtboard', artboard.id)
   },
   addMultipleArtboards({ commit }, payload) {
     const artboards = payload.data
