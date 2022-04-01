@@ -4,13 +4,13 @@
       <SidePanel />
       <Screenshots />
       <div class="focus-view__content">
-        <Panzoom id="canvas">
-          <FocusArtboard ref="artboards" />
-        </Panzoom>
+        <SizeShifter />
         <div v-feature-flipping="'disco-switch'">
           <DiscoSwitch />
         </div>
-        <SizeShifter />
+        <Panzoom id="canvas">
+          <FocusArtboard ref="artboards" />
+        </Panzoom>
         <!-- <DevToolsView /> -->
       </div>
     </div>
@@ -33,8 +33,8 @@ export default {
     SidePanel,
     Screenshots,
     DiscoSwitch,
-    SizeShifter
-  }
+    SizeShifter,
+  },
 }
 </script>
 
