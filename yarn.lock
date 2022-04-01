@@ -1972,9 +1972,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@electron/get@npm:^1.0.1":
-  version: 1.13.1
-  resolution: "@electron/get@npm:1.13.1"
+"@electron/get@npm:^1.13.0":
+  version: 1.14.1
+  resolution: "@electron/get@npm:1.14.1"
   dependencies:
     debug: ^4.1.1
     env-paths: ^2.2.0
@@ -1990,7 +1990,7 @@ __metadata:
       optional: true
     global-tunnel-ng:
       optional: true
-  checksum: f8a42983fef6c34656bd1d01cf8f72f407879e218b4ffc7bb76d1ed859ab980670af724ebe25f755427bf04b2ca7649c89e1f2be565e717d835e1b3e1e75f8ed
+  checksum: 42b03f6e8134985d5d441f1a3d9e0c984ad120775ced3bbc258a9d9e2740a54a06aab35ad6280658109db456cffeb859c378c0ab28160b41e3d34d3cdfd9e9a6
   languageName: node
   linkType: hard
 
@@ -3207,7 +3207,7 @@ __metadata:
     deepmerge: 4.2.2
     devtron: ^1.4.0
     dotenv: ^16.0.0
-    electron: ^14.2.9
+    electron: ^18.0.1
     electron-builder: 22.14.13
     electron-debug: 3.2.0
     electron-devtools-installer: 3.2.0
@@ -4909,10 +4909,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^14.0.10, @types/node@npm:^14.6.2":
+"@types/node@npm:^14.0.10":
   version: 14.18.3
   resolution: "@types/node@npm:14.18.3"
   checksum: c200b3c9fdbe1a5e42d9f250327535bdd879c814c48d27eb0f83a8c7df4c0a8913b9f862aeaf7b6b40174d8bed865022b4fd3462aba6b4a18b659ff7e51da8d7
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:^16.11.26":
+  version: 16.11.26
+  resolution: "@types/node@npm:16.11.26"
+  checksum: 9e26dc087b32c2f47dcc7cc67db2ce35b44504515953ebc0c7f6c6cb030a273823dcd61e71ab0b0571e358e57315fe5aa5eb46c7aace1969c2e307a0c5b47572
   languageName: node
   linkType: hard
 
@@ -10359,16 +10366,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron@npm:^14.2.9":
-  version: 14.2.9
-  resolution: "electron@npm:14.2.9"
+"electron@npm:^18.0.1":
+  version: 18.0.1
+  resolution: "electron@npm:18.0.1"
   dependencies:
-    "@electron/get": ^1.0.1
-    "@types/node": ^14.6.2
+    "@electron/get": ^1.13.0
+    "@types/node": ^16.11.26
     extract-zip: ^1.0.3
   bin:
     electron: cli.js
-  checksum: db562bb5ff985144bec7822643c3b8d2cd629dedfa3d7186029940a744f4c4e8b4bc5a7d98caeefa05432257f921fcd685ddb0895a862c36255ecb0e4905a722
+  checksum: 76bbb1fd470a9f7d1131735d7f75f0c5d0c841c6081227329f93695b3dd0f0a883939d0fc92bded53a5909f908db978eef52e027ad8a79e31f85e184c2237bf4
   languageName: node
   linkType: hard
 
