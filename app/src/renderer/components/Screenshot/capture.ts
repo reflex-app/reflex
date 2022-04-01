@@ -1,4 +1,4 @@
-import { clipboard, nativeImage, shell, WebviewTag } from 'electron'
+import { clipboard, nativeImage, shell } from 'electron'
 import { dialog, webContents, getCurrentWindow } from '@electron/remote'
 import { defaultErrorHandler } from '@/utils/error'
 
