@@ -4,7 +4,7 @@ import { BrowserWindow, app } from 'electron'
 const DEV_SERVER_URL = process.env.DEV_SERVER_URL
 const isProduction = process.env.NODE_ENV === 'production'
 const isDev = process.env.NODE_ENV === 'development'
-
+const mainRemote = require('@electron/remote/main')
 export default class BrowserWinHandler {
   /**
    * @param [options] {object} - browser window options
@@ -46,6 +46,12 @@ export default class BrowserWinHandler {
         contextIsolation: false, // https://github.com/electron/electron/issues/18037#issuecomment-806320028
       },
     })
+
+    // Enable remote module
+    // as of @electron/remote 2.x
+    // https://github.com/electron/remote/blob/main/docs/migration-2.md
+    mainRemote.enable(this.browserWindow.webContents)
+
     this.browserWindow.on('closed', () => {
       // Dereference the window object
       this.browserWindow = null
