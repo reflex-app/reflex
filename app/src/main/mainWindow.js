@@ -1,7 +1,6 @@
 import path from 'path'
 import { app, shell } from 'electron'
 import BrowserWinHandler from './BrowserWinHandler'
-const mainRemote = require('@electron/remote/main')
 
 import autoUpdater from './auto-updater'
 // import browserInstaller from './browser-installer'
@@ -23,7 +22,6 @@ const winHandler = new BrowserWinHandler({
   webPreferences: {
     webviewTag: true, // Required
     nodeIntegration: true, // Required
-    enableRemoteModule: true,
     nodeIntegrationInWorker: true, // Enable Web Workers https://www.electronjs.org/docs/tutorial/multithreading
     contextIsolation: false, // Required Electron 12
   },
