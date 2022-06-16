@@ -3227,7 +3227,7 @@ __metadata:
     jest: 27.0.6
     jest-vue-preprocessor: ^1.7.1
     lodash.debounce: ^4.0.8
-    moment: ^2.29.1
+    moment: ^2.29.2
     native-ext-loader: 2.3.0
     nuxt: ^2.15.8
     playwright: ^1.20.1
@@ -16819,10 +16819,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"moment@npm:^2.29.1":
-  version: 2.29.1
-  resolution: "moment@npm:2.29.1"
-  checksum: 2617e383c0e0f910696214d026b9742173ea1916775d2023b39fd7d5fc3fae694f67c17876d154e246b139ad2a8028c42b2898c66cd665316b61c18453a5103f
+"moment@npm:^2.29.2":
+  version: 2.29.3
+  resolution: "moment@npm:2.29.3"
+  checksum: 2395b566a5e9ab88ea75c26ef4c72bc3aec801bfa46904ea237b67e824a7abcb0d52a79dfb83d402772b67d8c8cfe7853ebd864066c39f82bfa195a560c0e4b8
   languageName: node
   linkType: hard
 
