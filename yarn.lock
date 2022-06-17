@@ -3202,7 +3202,6 @@ __metadata:
     comlink: ^4.3.1
     comlink-loader: ^2.0.0
     core-js: ^3.16.0
-    cross-env: ^7.0.3
     css-loader: ^5.2.7
     deepmerge: 4.2.2
     devtron: ^1.4.0
@@ -9036,18 +9035,6 @@ __metadata:
   version: 1.1.1
   resolution: "create-require@npm:1.1.1"
   checksum: 157cbc59b2430ae9a90034a5f3a1b398b6738bf510f713edc4d4e45e169bc514d3d99dd34d8d01ca7ae7830b5b8b537e46ae8f3c8f932371b0875c0151d7ec91
-  languageName: node
-  linkType: hard
-
-"cross-env@npm:^7.0.3":
-  version: 7.0.3
-  resolution: "cross-env@npm:7.0.3"
-  dependencies:
-    cross-spawn: ^7.0.1
-  bin:
-    cross-env: src/bin/cross-env.js
-    cross-env-shell: src/bin/cross-env-shell.js
-  checksum: f3765c25746c69fcca369655c442c6c886e54ccf3ab8c16847d5ad0e91e2f337d36eedc6599c1227904bf2a228d721e690324446876115bc8e7b32a866735ecf
   languageName: node
   linkType: hard
 
