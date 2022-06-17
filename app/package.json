@@ -72,7 +72,6 @@
     "comlink": "^4.3.1",
     "comlink-loader": "^2.0.0",
     "core-js": "^3.16.0",
-    "cross-env": "^7.0.3",
     "css-loader": "^5.2.7",
     "deepmerge": "4.2.2",
     "devtron": "^1.4.0",
