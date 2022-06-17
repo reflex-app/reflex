@@ -3266,7 +3266,7 @@ __metadata:
     esm: ^3.2.25
     extract-zip: ^2.0.1
     https-proxy-agent: ^5.0.0
-    jpeg-js: ^0.4.3
+    jpeg-js: ^0.4.4
     mime: ^2.5.2
     node-polyfill-webpack-plugin: ^1.1.4
     playwright-core: ^1.13.1
@@ -15380,10 +15380,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jpeg-js@npm:0.4.3, jpeg-js@npm:^0.4.3":
+"jpeg-js@npm:0.4.3":
   version: 0.4.3
   resolution: "jpeg-js@npm:0.4.3"
   checksum: f1d6f38e5250e80f0ff9020f09f216f1493d4bd1ce091fff1ae361fcdab199df5df03a6d81a418964074b572b8f6ecfad3cf4ea807e5aa96477c092b3d247a12
+  languageName: node
+  linkType: hard
+
+"jpeg-js@npm:^0.4.4":
+  version: 0.4.4
+  resolution: "jpeg-js@npm:0.4.4"
+  checksum: 4d0d5097f8e55d8bbce6f1dc32ffaf3f43f321f6222e4e6490734fdc6d005322e3bd6fb992c2df7f5b587343b1441a1c333281dc3285bc9116e369fd2a2b43a7
   languageName: node
   linkType: hard
 
