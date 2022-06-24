@@ -23,7 +23,7 @@ const getEnv = (name, expectedVal) => {
   }
 }
 
-const isRelease = getEnv('RELEASE', 'true') // Controls whether the app will be codesigned, notarized, published
+const isRelease = getEnv('RELEASE', 'true') || false // Controls whether the app will be codesigned, notarized, published
 console.log(`Is release? ${isRelease}`)
 
 const ICONS_DIR = 'build/icons/'
