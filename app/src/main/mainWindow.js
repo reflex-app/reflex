@@ -40,8 +40,7 @@ winHandler.onCreated(async (browserWindow) => {
   }
 
   // Watch for window change events
-  ;['resize', 'move', 'close', 'maximize', 'unmaximize'].forEach(function (e) {
-    // TODO: Maximize/unmaximize not being stored?
+  ;['resize', 'move', 'close'].forEach(function (e) {
     browserWindow.on(e, () => windowPosition.saveState(browserWindow))
   })
 
