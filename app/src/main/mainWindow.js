@@ -1,29 +1,31 @@
 import path from 'path'
 import { app, shell } from 'electron'
 import BrowserWinHandler from './BrowserWinHandler'
-const mainRemote = require('@electron/remote/main')
-
+import windowPosition from './windowPosition'
 import autoUpdater from './auto-updater'
 // import browserInstaller from './browser-installer'
-
 import { setMenu } from './menu'
+
 const log = require('electron-log')
 const isDev = require('electron-is-dev')
-
 // const isDev = process.env.NODE_ENV === 'development'
-
 const INDEX_PATH = path.join(__dirname, '..', 'renderer', 'index.html')
 const DEV_SERVER_URL = process.env.DEV_SERVER_URL // eslint-disable-line prefer-destructuring
 
+// Get saved window position state
+windowPosition.onAppLoad()
+const initialWindowPos = windowPosition.getState()
+
 const winHandler = new BrowserWinHandler({
-  height: 750,
-  width: 1200,
+  x: (initialWindowPos.bounds && initialWindowPos.bounds.x) || undefined,
+  y: (initialWindowPos.bounds && initialWindowPos.bounds.y) || undefined,
+  width: (initialWindowPos.bounds && initialWindowPos.bounds.width) || 1200,
+  height: (initialWindowPos.bounds && initialWindowPos.bounds.height) || 750,
   useContentSize: true,
   backgroundColor: '#F5F5F5',
   webPreferences: {
     webviewTag: true, // Required
     nodeIntegration: true, // Required
-    enableRemoteModule: true,
     nodeIntegrationInWorker: true, // Enable Web Workers https://www.electronjs.org/docs/tutorial/multithreading
     contextIsolation: false, // Required Electron 12
   },
@@ -31,6 +33,17 @@ const winHandler = new BrowserWinHandler({
 })
 
 winHandler.onCreated(async (browserWindow) => {
+  // Restore maximized state if it is set.
+  // not possible via Electron options so we do it here
+  if (initialWindowPos.isMaximized) {
+    browserWindow.maximize()
+  }
+
+  // Watch for window change events
+  ;['resize', 'move', 'close'].forEach(function (e) {
+    browserWindow.on(e, () => windowPosition.saveState(browserWindow))
+  })
+
   // Load the app
   await winHandler.loadPage('/')
   // if (isDev) browserWindow.loadURL(DEV_SERVER_URL)

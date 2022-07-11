@@ -43,12 +43,26 @@ Please note: The `dev` branch represents the latest works-in-progress, and shoul
 
 ### Release
 
+#### The new way
+
+1. Run the command:
+   ```bash
+   yarn run release
+   ```
+1. The version will be bumped automatically in the package.json file, according to semantic versioning.
+1. The Git tag for the version will be created or overwritten.
+1. The new version and Git tag will be pushed to Github
+1. Github Actions will be triggered, and a build for the release will be created
+1. The new release will appear on Github as a draft release
+
+#### The old way
+
 1. Update the version in the project's package.json file (e.g. 1.2.3)
-2. Commit that change (git commit -am v1.2.3)
-3. Tag your commit (git tag v1.2.3). Make sure your tag name's format is v*.*.\*. Your workflow will use this tag to detect when to create a release
-4. Push your changes to GitHub (git push && git push --tags)
-5. Github Actions will run the build only for commits to `master` and `dev` branches
-6. If the build is successful and a Github Release is in draft for the same version, the Github Action will notarize (Mac only) and upload the build artifacts to the Github Release directly.
+1. Commit that change (git commit -am v1.2.3)
+1. Tag your commit (git tag v1.2.3). Make sure your tag name's format is v*.*.\*. Your workflow will use this tag to detect when to create a release
+1. Push your changes to GitHub (git push && git push --tags)
+1. Github Actions will run the build only for commits to `master` and `dev` branches
+1. If the build is successful and a Github Release is in draft for the same version, the Github Action will notarize (Mac only) and upload the build artifacts to the Github Release directly.
 
 https://github.com/samuelmeuli/action-electron-builder#releasing
 
@@ -71,7 +85,6 @@ See: https://github.com/megahertz/electron-log#readme
 - on macOS: ~/Library/Logs/{app name}/{process type}.log
 - on Windows: %USERPROFILE%\AppData\Roaming\{app name}\logs\{process type}.log
 - on Linux: ~/.config/{app name}/logs/{process type}.log
-
 
 ---
 

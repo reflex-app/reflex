@@ -26,7 +26,18 @@ function main() {
 
       // Bump version
       console.log(`Bumping ${answers.updateType}...`)
-      shell.exec(`yarn version ${answers.updateType}`, { silent: true })
+      shell.exec(
+        `yarn version ${answers.updateType}`,
+        function (err, stdout, stderr) {
+          // Handle cases where Yarn version plugin is not installed: "yarn plugin import version"
+          if (err) {
+            console.error(err, stdout, stderr)
+            throw err
+          }
+
+          console.log('Version bumped!')
+        }
+      )
 
       // Get updated version
       const newVersion = 'v' + requireUncached(pkg).version

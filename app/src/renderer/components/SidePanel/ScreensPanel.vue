@@ -25,141 +25,179 @@
     <!-- Templates -->
     <div class="panel-section">
       <span>Add from template:</span>
-      <select v-model="defaultSizeSelection" @change="addDefaultSizes">
+      <select v-model="defaultSizeSelection" ref="preset-dropdown">
         <option disabled value>Select template...</option>
-        <option value="basic">Basic</option>
-        <option value="bootstrap">Bootstrap 4</option>
-        <option value="foundation">Foundation 6</option>
+        <option
+          v-for="(preset, index) in presets"
+          :key="index"
+          :value="preset.label"
+        >
+          {{ preset.label }}
+        </option>
       </select>
     </div>
   </div>
 </template>
 
 <script>
+import Vue from 'vue'
 import artboardEditable from '@/components/SidePanel/artboardEditable'
 
-export default {
+export default Vue.extend({
   name: 'ScreensPanel',
   components: {
-    artboardEditable
+    artboardEditable,
   },
-
-  data () {
+  data() {
     return {
-      defaultSizeSelection: ''
+      defaultSizeSelection: '',
+      presets: [
+        {
+          label: 'Default',
+          value: {
+            small: {
+              title: 'Small',
+              width: 375,
+              height: 667,
+            },
+            medium: {
+              title: 'Medium',
+              width: 768,
+              height: 1024,
+            },
+            large: {
+              title: 'Large',
+              width: 1024,
+              height: 720,
+            },
+          },
+        },
+        {
+          label: 'Bootstrap 4',
+          value: {
+            xsmall: {
+              title: 'XS',
+              width: 375,
+              height: 500,
+            },
+            small: {
+              title: 'S',
+              width: 576,
+              height: 800,
+            },
+            medium: {
+              title: 'M',
+              width: 768,
+              height: 1000,
+            },
+            large: {
+              title: 'MD',
+              width: 992,
+              height: 1200,
+            },
+            xlarge: {
+              title: 'LG',
+              width: 1200,
+              height: 1400,
+            },
+          },
+        },
+        {
+          label: 'Foundation 4',
+          value: {
+            small: {
+              title: 'Small',
+              width: 400,
+              height: 600,
+            },
+            medium: {
+              title: 'Medium',
+              width: 640,
+              height: 800,
+            },
+            large: {
+              title: 'Large',
+              width: 1024,
+              height: 1200,
+            },
+          },
+        },
+        {
+          label: 'TailwindCSS 2',
+          value: {
+            small: {
+              title: 'sm',
+              width: 640,
+              height: 480,
+            },
+            medium: {
+              title: 'md',
+              width: 768,
+              height: 1024,
+            },
+            large: {
+              title: 'lg',
+              width: 1024,
+              height: 768,
+            },
+            xlarge: {
+              title: 'xl',
+              width: 1280,
+              height: 1024,
+            },
+            xxlarge: {
+              title: 'xxl',
+              width: 1536,
+              height: 2048,
+            },
+          },
+        },
+      ],
     }
   },
-
   computed: {
     // Bind to our Vuex Store's URL value
     artboards: {
-      get () {
+      get() {
         return this.$store.state.artboards.list
       },
-      set (value) {
+      set(value) {
         this.$store.dispatch('artboards/setArtboards', value)
-      }
-    }
-  },
-
-  methods: {
-    add () {
-      this.$store.dispatch('artboards/addArtboard', {
-        title: 'Untitled',
-        width: 375,
-        height: 667
-      })
+      },
     },
-    addDefaultSizes () {
-      if (!this.defaultSizeSelection) return false
+  },
+  watch: {
+    defaultSizeSelection(presetLabel) {
+      if (!presetLabel) return
 
-      let sizes // This will contain the size data
-
-      const defaults = {
-        small: {
-          title: 'Small',
-          width: 375,
-          height: 667
-        },
-        medium: {
-          title: 'Medium',
-          width: 768,
-          height: 1024
-        },
-        large: {
-          title: 'Large',
-          width: 1024,
-          height: 720
-        }
-      }
-
-      const bootstrap = {
-        xsmall: {
-          title: 'XS',
-          width: 375,
-          height: 500
-        },
-        small: {
-          title: 'S',
-          width: 576,
-          height: 800
-        },
-        medium: {
-          title: 'M',
-          width: 768,
-          height: 1000
-        },
-        large: {
-          title: 'MD',
-          width: 992,
-          height: 1200
-        },
-        xlarge: {
-          title: 'LG',
-          width: 1200,
-          height: 1400
-        }
-      }
-
-      const foundation = {
-        small: {
-          title: 'Small',
-          width: 400,
-          height: 600
-        },
-        medium: {
-          title: 'Medium',
-          width: 640,
-          height: 800
-        },
-        large: {
-          title: 'Large',
-          width: 1024,
-          height: 1200
-        }
-      }
-
-      switch (this.defaultSizeSelection) {
-      case 'basic':
-        sizes = defaults
-        break
-      case 'bootstrap':
-        sizes = bootstrap
-        break
-      case 'foundation':
-        sizes = foundation
-        break
+      // Check if preset matches any from this.presets
+      const match = this.presets.find((preset) => preset.label === presetLabel)
+      if (!match) {
+        console.error(`No preset found with label: ${presetLabel}`)
+        return
       }
 
       this.$store.dispatch('artboards/addMultipleArtboards', {
-        data: sizes
+        data: match.value,
       })
 
       // Empty selected value
       this.defaultSizeSelection = ''
-    }
-  }
-}
+
+      // Blur the DOM element
+      this.$refs['preset-dropdown'].blur()
+    },
+  },
+  methods: {
+    add() {
+      this.$store.dispatch('artboards/addArtboard', {
+        title: 'Untitled',
+        width: 375,
+        height: 667,
+      })
+    },
+  },
+})
 </script>
 
 <style lang="scss" scoped>

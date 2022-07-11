@@ -3,6 +3,7 @@
     v-model="artboardsGetSet"
     :group="{ name: 'artboards', pull: true, put: true }"
     :animation="150"
+    :disabled="editMode === true"
   >
     <div v-for="artboard in artboards" :key="artboard.id" class="artboard-tab">
       <!-- Editing state -->

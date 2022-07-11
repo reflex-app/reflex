@@ -10,6 +10,9 @@ module.exports = {
   head: {
     title: 'Reflex',
   },
+  env: {
+    DEV: process.env.NODE_ENV !== 'production',
+  },
   loading: false,
   plugins: [
     // { src: '~/plugins/vueCompositionApi.js', ssr: false },

@@ -177,7 +177,13 @@ export default {
       // IntersectionObserver on the WebView element
       // Helps make sure we can reliably screenshot and other features
       // The actual Observer comes from the parent component
-      this.viewportObserver.observe(this.$refs['frame'].$el)
+      if (this.viewportObserver) {
+        this.viewportObserver.observe(this.$refs['frame'].$el)
+      } else {
+        console.warn(
+          'No IntersectionObserver found! Canvas may not track artboard positions correctly.'
+        )
+      }
     })
   },
 

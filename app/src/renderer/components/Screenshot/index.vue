@@ -15,9 +15,16 @@
           <Button
             v-if="selectedArtboards.length === 1"
             role="secondary"
-            @click="copyToClipboard"
+            @click="copyToClipboard()"
           >
             Copy to Clipboard
+          </Button>
+          <Button
+            v-if="selectedArtboards.length >= 1"
+            role="secondary"
+            @click="deleteMultiple()"
+          >
+            Delete selected
           </Button>
           <!-- <Button
             v-if="selectedArtboards.length === 1"
@@ -195,6 +202,14 @@ export default {
         this.$store.dispatch('artboards/resizeArtboard', {
           ...artboard,
           height: prevHeight,
+        })
+      }
+    },
+
+    async deleteMultiple() {
+      for (const id of this.selectedArtboards) {
+        this.$store.dispatch('artboards/deleteArtboard', {
+          id,
         })
       }
     },
