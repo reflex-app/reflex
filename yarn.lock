@@ -3208,7 +3208,7 @@ __metadata:
     deepmerge: 4.2.2
     devtron: ^1.4.0
     dotenv: ^16.0.0
-    electron: ^18.3.5
+    electron: ^18.3.7
     electron-builder: 23.0.2
     electron-debug: 3.2.0
     electron-devtools-installer: 3.2.0
@@ -10458,16 +10458,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron@npm:^18.3.5":
-  version: 18.3.5
-  resolution: "electron@npm:18.3.5"
+"electron@npm:^18.3.7":
+  version: 18.3.15
+  resolution: "electron@npm:18.3.15"
   dependencies:
     "@electron/get": ^1.13.0
     "@types/node": ^16.11.26
     extract-zip: ^1.0.3
   bin:
     electron: cli.js
-  checksum: cb0820156512b256a40688eb7aa7a4ca6a8e28bb0c0774665444a2df8c0daba224e0b29a98d63d109fe4249deeb233b9a0507565a533ed339bbd80534e69eece
+  checksum: 724839ad4fec67d709eed56cf79a0347e916cb31e9ee170e36fd09801cb506bdeedf010c83f9e64221fc518afe47b0a2678f7da3d1b78a3a5363159569a59559
   languageName: node
   linkType: hard
 
