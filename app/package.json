@@ -98,7 +98,7 @@
     "jest": "27.0.6",
     "jest-vue-preprocessor": "^1.7.1",
     "lodash.debounce": "^4.0.8",
-    "moment": "^2.29.2",
+    "moment": "^2.29.4",
     "native-ext-loader": "2.3.0",
     "nuxt": "^2.15.8",
     "playwright": "^1.20.1",
