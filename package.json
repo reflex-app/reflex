@@ -9,7 +9,7 @@
     "packages/*",
     ".github/actions/*"
   ],
-  "packageManager": "yarn@3.2.0-rc.8",
+  "packageManager": "yarn@3.4.1",
   "dependencies": {
     "node-gyp": "^8.4.1"
   }
