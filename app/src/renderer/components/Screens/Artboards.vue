@@ -1,5 +1,6 @@
 <template>
   <div>
+    <EventHandler />
     <div v-if="artboards.length" id="artboards">
       <Artboard
         v-for="(artboard, index) in artboards"
@@ -25,12 +26,14 @@ import SelectionArea from '@viselect/vanilla'
 import Artboard from './Artboard'
 import WelcomeScreen from './WelcomeScreen'
 import { useEventListener } from '@vueuse/core'
+import EventHandler from './EventHandler.vue'
 
 export default {
   name: 'Artboards',
   components: {
     Artboard,
     WelcomeScreen,
+    EventHandler,
   },
   data() {
     return {
@@ -68,11 +71,10 @@ export default {
     //     this.selectionInstance.disable()
     //   }
     // }
-
     // ONLY ALLOW DRAG SELECT WHEN "CMD/CTRL" is held
     // Enable when CMD is not pressed
-    useEventListener(window, 'keydown', this.cmdHandler)
-    useEventListener(window, 'keyup', this.cmdHandler)
+    // useEventListener(window, 'keydown', this.cmdHandler)
+    // useEventListener(window, 'keyup', this.cmdHandler)
   },
   beforeDestroy() {
     // Detach Select JS
