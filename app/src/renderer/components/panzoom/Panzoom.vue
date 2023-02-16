@@ -78,8 +78,9 @@ export default {
       // Scale to fit the content
       handleStartEvent: (event) => {
         // Default actions
-        event.preventDefault()
-        event.stopPropagation()
+        // WARNING: Don't use preventDefault, as it will block other events
+        // event.preventDefault()
+        // event.stopPropagation()
       },
     })
 
