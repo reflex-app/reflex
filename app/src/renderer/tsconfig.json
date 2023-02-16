@@ -27,5 +27,11 @@
     "types": [
       "@nuxt/types"
     ]
+  },
+  "vueCompilerOptions": {
+    "target": 2.7,
+    "extensions": [
+      ".vue"
+    ]
   }
 }
