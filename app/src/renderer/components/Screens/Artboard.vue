@@ -49,7 +49,8 @@
           @loadend="state.isLoading = false"
           @scroll="updateScrollPosition"
         />
-        <div class="artboard__cross-browser-screenshots">
+        <!-- TODO: Re-enable -->
+        <!-- <div class="artboard__cross-browser-screenshots">
           <CrossBrowserScreenshots
             ref="cross-browser-DOM"
             :height="height"
@@ -57,7 +58,7 @@
             :x="scrollPosition.x"
             :y="scrollPosition.y"
           />
-        </div>
+        </div> -->
         <div v-show="isHover" class="artboard__handles">
           <div
             class="handle_right"
