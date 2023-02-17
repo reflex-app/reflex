@@ -15,7 +15,7 @@ import SidePanel from '@/components/SidePanel/index.vue'
 import Screenshots from '@/components/Screenshot/index.vue'
 import Artboards from '@/components/Screens/Artboards.vue'
 import useEventHandler from '@/components/Screens/useEventHandler'
-import { onMounted, ref } from 'vue'
+import { onMounted } from 'vue'
 
 export default {
   components: {
@@ -25,12 +25,9 @@ export default {
     Artboards,
   },
   setup(props, ctx) {
-    const panzoomInstance = ref()
     const { init, state: interactionState } = useEventHandler() // init event handling
 
     onMounted(() => {
-      panzoomInstance.value = ctx.root?.$panzoom
-
       init() // initialize
     })
 
