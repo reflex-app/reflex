@@ -1,5 +1,6 @@
 <template>
   <div id="main-view">
+    <div>{{ interactionState }}</div>
     <SidePanel />
     <Screenshots />
     <Panzoom id="canvas">
@@ -8,27 +9,33 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import Panzoom from '@/components/panzoom/Panzoom.vue'
-import SidePanel from '@/components/SidePanel'
-import Screenshots from '@/components/Screenshot'
-import Artboards from '@/components/Screens/Artboards'
+import SidePanel from '@/components/SidePanel/index.vue'
+import Screenshots from '@/components/Screenshot/index.vue'
+import Artboards from '@/components/Screens/Artboards.vue'
+import useEventHandler from '@/components/Screens/useEventHandler'
+import { onMounted, ref } from 'vue'
 
 export default {
-  name: 'FocusView',
   components: {
-    Artboards,
     SidePanel,
     Screenshots,
-    Panzoom
+    Panzoom,
+    Artboards,
   },
-  data () {
-    return {}
+  setup(props, ctx) {
+    const panzoomInstance = ref()
+    const { init, state: interactionState } = useEventHandler() // init event handling
+
+    onMounted(() => {
+      panzoomInstance.value = ctx.root?.$panzoom
+
+      init() // initialize
+    })
+
+    return { interactionState }
   },
-  mounted () {
-    this.panzoomInstance = this.$root.$panzoom
-  },
-  methods: {}
 }
 </script>
 

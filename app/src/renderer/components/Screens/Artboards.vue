@@ -1,6 +1,5 @@
 <template>
   <div>
-    <EventHandler />
     <div v-if="artboards.length" id="artboards">
       <Artboard
         v-for="(artboard, index) in artboards"
@@ -25,15 +24,13 @@ import { mapState, mapGetters } from 'vuex'
 import SelectionArea from '@viselect/vanilla'
 import Artboard from './Artboard'
 import WelcomeScreen from './WelcomeScreen'
-import { useEventListener } from '@vueuse/core'
-import EventHandler from './EventHandler.vue'
+// import { useEventListener } from '@vueuse/core'
 
 export default {
   name: 'Artboards',
   components: {
     Artboard,
     WelcomeScreen,
-    EventHandler,
   },
   data() {
     return {
@@ -78,7 +75,7 @@ export default {
   },
   beforeDestroy() {
     // Detach Select JS
-    this.selectionInstance.destroy()
+    this.selectionInstance?.destroy()
 
     // Remove viewport observer
     this.stopViewportObserver()
