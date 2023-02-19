@@ -16,7 +16,7 @@ module.exports = {
   loading: false,
   plugins: [
     // { src: '~/plugins/vueCompositionApi.js', ssr: false },
-    { src: '~/plugins/vuex-persist.js', ssr: false },
+    // { src: '~/plugins/vuex-persist.js', ssr: false },
     { src: '~/plugins/eventBus.js', ssr: false },
     { src: '~/plugins/globalComponents.js', ssr: false },
     { src: '~/plugins/featureFlipping.js', ssr: false },
@@ -30,6 +30,7 @@ module.exports = {
     // '@nuxtjs/eslint-module',
     '@nuxt/typescript-build',
     '@nuxtjs/composition-api/module',
+    ['@pinia/nuxt', { disableVuex: true }], // Use Pinia w/ Nuxt 2
   ],
   build: {
     transpile: ['@viselect/vanilla'],

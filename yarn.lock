@@ -3160,6 +3160,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@pinia/nuxt@npm:0.2.1":
+  version: 0.2.1
+  resolution: "@pinia/nuxt@npm:0.2.1"
+  dependencies:
+    vue-demi: "*"
+  peerDependencies:
+    pinia: ">=2.0.16"
+  checksum: a32afcb1f63bb0220d420f4a1fa2b449b2808e7f4bc2f2567345dc89ff7eb87dab37420fd479c621a460d5a9627961dbcd52ec8c9ed3ac023861652aae3df5f1
+  languageName: node
+  linkType: hard
+
 "@polka/url@npm:^1.0.0-next.20":
   version: 1.0.0-next.21
   resolution: "@polka/url@npm:1.0.0-next.21"
@@ -3180,6 +3191,7 @@ __metadata:
     "@nuxtjs/eslint-config-typescript": 6.0.1
     "@nuxtjs/eslint-module": ^3.0.2
     "@panzoom/panzoom": ^4.4.3
+    "@pinia/nuxt": 0.2.1
     "@reflex/browser-installer": ^1.0.0
     "@reflex/ui": ^1.0.0
     "@viselect/vanilla": ^3.0.0-beta.13
@@ -3227,6 +3239,7 @@ __metadata:
     moment: ^2.29.2
     native-ext-loader: 2.3.0
     nuxt: ^2.16.1
+    pinia: ^2.0.16
     playwright: ^1.20.1
     playwright-core: ^1.20.1
     postcss: 8.2.10
@@ -5521,6 +5534,13 @@ __metadata:
   peerDependencies:
     vue: ">= 2.5 < 2.7"
   checksum: 5858c11adca9624812041534a1d9546add25bab782c24626d34adea106427d095a2a42bc6fe3001a5226f71e6b07368263e112e042dd5c2a0c9fda9f8704291d
+  languageName: node
+  linkType: hard
+
+"@vue/devtools-api@npm:^6.4.5":
+  version: 6.5.0
+  resolution: "@vue/devtools-api@npm:6.5.0"
+  checksum: 6dab27d6ed880de0cd94549ba16ba4e85eb273f12ea2ba5cf66ed87e3f616242339d787e52360bf54bb7b360eb481c9b814f13ec08120e630e90adf5da2d7ff9
   languageName: node
   linkType: hard
 
@@ -18155,6 +18175,25 @@ __metadata:
   version: 5.0.0
   resolution: "pify@npm:5.0.0"
   checksum: 9f6f3cd1f159652692f514383efe401a06473af35a699962230ad1c4c9796df5999961461fc1a3b81eed8e3e74adb8bd032474fb3f93eb6bdbd9f33328da1ed2
+  languageName: node
+  linkType: hard
+
+"pinia@npm:^2.0.16":
+  version: 2.0.30
+  resolution: "pinia@npm:2.0.30"
+  dependencies:
+    "@vue/devtools-api": ^6.4.5
+    vue-demi: "*"
+  peerDependencies:
+    "@vue/composition-api": ^1.4.0
+    typescript: ">=4.4.4"
+    vue: ^2.6.14 || ^3.2.0
+  peerDependenciesMeta:
+    "@vue/composition-api":
+      optional: true
+    typescript:
+      optional: true
+  checksum: 9078ce46a20ad242cb86eab54ac7800e62a934214b5ae6e5def055cddca8ad7e81172f9a19d89f7af5985f018eb310743250ce05e3cb9381bd8b70bcf2bb8ffb
   languageName: node
   linkType: hard
 
