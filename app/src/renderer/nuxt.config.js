@@ -31,6 +31,7 @@ module.exports = {
     '@nuxt/typescript-build',
     '@nuxtjs/composition-api/module',
     ['@pinia/nuxt', { disableVuex: true }], // Use Pinia w/ Nuxt 2
+    '@pinia-plugin-persistedstate/nuxt', // Persisted state w/ Pinia + Nuxt
   ],
   build: {
     transpile: ['@viselect/vanilla'],
