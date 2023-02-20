@@ -76,273 +76,266 @@
   </div>
 </template>
 
-<script>
-import { mapState, mapGetters } from 'vuex'
-import rightClickMenu from '@/mixins/rightClickMenu.js'
+<script setup lang="ts">
+import Vue, { reactive, computed, onMounted } from 'vue'
+import rightClickMenu from '~/mixins/rightClickMenu'
 import WebPage from './WebPage.vue'
 import CrossBrowserScreenshots from '~/components/CrossBrowser/Screenshots/CrossBrowserScreenshots.vue'
+import { useHistoryStore } from '~/store/history'
+import { useSelectedArtboardsStore } from '~/store/selectedArtboards'
+import { useHoverArtboardsStore } from '~/store/hoverArtboards'
+import { useInteractionStore } from '~/store/interactions'
 
-export default {
-  name: 'Artboard',
-  components: {
-    WebPage,
-    CrossBrowserScreenshots,
+const history = useHistoryStore()
+const selectedArtboards = useSelectedArtboardsStore()
+const hoverArtboards = useHoverArtboardsStore()
+const interactions = useInteractionStore()
+
+const state = reactive({
+  isLoading: false,
+  horizontalLayout: true,
+})
+
+const scrollPosition = reactive({
+  x: 0,
+  y: 0,
+})
+
+const props = defineProps({
+  title: {
+    type: String,
+    default: 'Artboard',
   },
-  props: {
-    title: {
-      type: String,
-      default: 'Artboard',
-    },
-    id: {
-      type: String,
-      default: '123',
-    },
-    height: {
-      type: Number,
-      default: 0,
-    },
-    width: {
-      type: Number,
-      default: 0,
-    },
-    selectedItems: {
-      type: Array,
-      default: () => [],
-    },
-    isVisible: Boolean,
-    viewportObserver: {
-      type: IntersectionObserver,
-      default: null,
-    },
+  id: {
+    type: String,
+    default: '123',
   },
-  data() {
-    return {
-      state: {
-        isLoading: false,
-        horizontalLayout: true,
-      },
-      scrollPosition: {
-        x: 0,
-        y: 0,
-      },
+  height: {
+    type: Number,
+    default: 0,
+  },
+  width: {
+    type: Number,
+    default: 0,
+  },
+  selectedItems: {
+    type: Array,
+    default: () => [],
+  },
+  isVisible: Boolean,
+  viewportObserver: {
+    type: IntersectionObserver,
+    default: null,
+  },
+})
+
+const computedVars = reactive({
+  url: computed(() => history.currentPage.url),
+  selectedArtboards: computed(() => selectedArtboards.list),
+  hoverArtboards: computed(() => hoverArtboards.list),
+  panzoomEnabled: computed(() => interactions.panzoomEnabled),
+  isInteracting: computed(() => interactions.isInteracting),
+  isHover() {
+    const isHover = this.hoverArtboards.filter((item) => item === this.id)
+    if (isHover.length) {
+      return true
+    } else {
+      return false
     }
   },
-  computed: {
-    ...mapState({
-      url: (state) => state.history.currentPage.url,
-      selectedArtboards: (state) => state.selectedArtboards,
-      hoverArtboards: (state) => state.hoverArtboards,
-      panzoomEnabled: (state) => state.interactions.panzoomEnabled,
-    }),
-    ...mapGetters('interactions', ['isInteracting']),
-    isHover() {
-      const isHover = this.hoverArtboards.filter((item) => item === this.id)
-      if (isHover.length) {
-        return true
-      } else {
-        return false
-      }
-    },
-    isSelected() {
-      const isSelected = this.selectedArtboards.filter(
-        (item) => item === this.id
-      )
-      if (isSelected.length) {
-        return true
-      } else {
-        return false
-      }
-    },
-    /**
-     * Only allow interacting with the underlying
-     * artboard (WebView) when the artboard is selected
-     * and the user is not dragging a selection area
-     */
-    canInteractWithWebContext() {
-      if (this.isSelected === false) return false // Not selected!
-      if (this.isSelected && this.isInteracting === false) {
-        this.$store.commit('interactions/setWebInteractionState', true) // Update global state
-        return true // Can interact!
-      }
-      this.$store.commit('interactions/setWebInteractionState', false) // Update global state
-      return false // Otherwise, false
-    },
+  isSelected() {
+    const isSelected = this.selectedArtboards.filter((item) => item === this.id)
+    if (isSelected.length) {
+      return true
+    } else {
+      return false
+    }
   },
+  /**
+   * Only allow interacting with the underlying
+   * artboard (WebView) when the artboard is selected
+   * and the user is not dragging a selection area
+   */
+  canInteractWithWebContext() {
+    if (this.isSelected === false) return false // Not selected!
+    if (this.isSelected && this.isInteracting === false) {
+      this.$store.commit('interactions/setWebInteractionState', true) // Update global state
+      return true // Can interact!
+    }
+    this.$store.commit('interactions/setWebInteractionState', false) // Update global state
+    return false // Otherwise, false
+  },
+})
 
-  mounted() {
-    this.$nextTick(() => {
-      // Remove any leftover selected artboards
-      // @TODO: This should be done from VueX Store, or wiped before quitting
-      this.$store.dispatch('selectedArtboards/selectedArtboardsEmpty')
+onMounted(async () => {
+  await Vue.nextTick()
 
-      // IntersectionObserver on the WebView element
-      // Helps make sure we can reliably screenshot and other features
-      // The actual Observer comes from the parent component
-      if (this.viewportObserver) {
-        this.viewportObserver.observe(this.$refs['frame'].$el)
-      } else {
-        console.warn(
-          'No IntersectionObserver found! Canvas may not track artboard positions correctly.'
-        )
+  // Remove any leftover selected artboards
+  // @TODO: This should be done from VueX Store, or wiped before quitting
+  this.$store.dispatch('selectedArtboards/empty')
+
+  // IntersectionObserver on the WebView element
+  // Helps make sure we can reliably screenshot and other features
+  // The actual Observer comes from the parent component
+  if (this.viewportObserver) {
+    this.viewportObserver.observe(this.$refs['frame'].$el)
+  } else {
+    console.warn(
+      'No IntersectionObserver found! Canvas may not track artboard positions correctly.'
+    )
+  }
+})
+
+function updateScrollPosition({ x, y }) {
+  this.scrollPosition.x = x
+  this.scrollPosition.y = y
+}
+function rightClickHandler() {
+  rightClickMenu(this.$store, {
+    title: props.title,
+    id: props.id,
+    width: props.width,
+    height: props.height,
+    isVisible: props.isVisible,
+  })
+}
+// Limits the size of an artboard
+function validateArtboardSizeInput(name, value) {
+  // @TODO: Refactor this into the size editor
+  const minSize = 50
+  const maxSize = 9999
+
+  // Make sure we're working with a number
+  const newValue = typeof value === 'number' ? value : Number(parseInt(value))
+
+  // Change the data based on the name
+  let oldValue = ''
+  if (name === 'height') {
+    oldValue = this.artboard.height
+  } else if (name === 'width') {
+    oldValue = this.artboard.width
+  }
+
+  // If no change
+  if (oldValue === newValue) {
+    return
+  }
+
+  // Min & Max
+  if (newValue > maxSize || newValue < minSize) {
+    return false
+    // Size is within range!
+  } else if (name === 'height') {
+    this.artboard.height = newValue
+  } else if (name === 'width') {
+    this.artboard.width = newValue
+  } else {
+    console.log('out of range')
+  }
+}
+
+/**
+ * Resize an artboard/screen
+ * e = event
+ * direction = horizontal, vertical
+ */
+function triggerResize(event, direction) {
+  console.log('should resize', event, direction)
+  const vm = this
+
+  const parent = vm.$refs.artboard
+  const resizable = parent
+  const startX = event.clientX
+  const startY = event.clientY
+
+  const startWidth = parseInt(
+    document.defaultView.getComputedStyle(resizable).width,
+    10
+  )
+  const startHeight = parseInt(
+    document.defaultView.getComputedStyle(resizable).height,
+    10
+  )
+
+  document.documentElement.addEventListener('mousedown', doStart)
+  document.documentElement.addEventListener('mousemove', doDrag)
+  document.documentElement.addEventListener('mouseup', stopDrag)
+
+  // Pause the panzoom
+  // if (this.$root.$panzoom.state.isEnabled === true) {
+  //   this.$root.$panzoom.disable() // TODO: Cleaner solution that polluting document?
+  // }
+
+  function doStart() {
+    // Update global state
+    vm.$store.commit('interactions/interactionSetState', {
+      key: 'isResizingArtboard',
+      value: true,
+    })
+  }
+
+  // Resize objects
+  let isDraggingTracker
+  function doDrag(e) {
+    // This event needs to be debounced, as it's called on mousemove
+    // Debounce via https://gomakethings.com/debouncing-your-javascript-events/
+    if (isDraggingTracker) {
+      window.cancelAnimationFrame(isDraggingTracker)
+    }
+
+    // Setup the new requestAnimationFrame()
+    isDraggingTracker = window.requestAnimationFrame(function () {
+      switch (direction) {
+        case 'horizontal':
+          // Run our scroll functions
+          resizable.style.width = startWidth + e.clientX - startX + 'px'
+          // Update the dimensions in the UI
+          vm.$emit('resize', {
+            id: vm.id,
+            width: parseInt(resizable.style.width, 10),
+            height: startHeight,
+          })
+          break
+
+        case 'vertical':
+          // Run our scroll functions
+          resizable.style.height = startHeight + e.clientY - startY + 'px'
+          // Update the dimensions in the UI
+          vm.$emit('resize', {
+            id: vm.id,
+            height: parseInt(resizable.style.height, 10),
+            width: startWidth,
+          })
+          break
       }
     })
-  },
+  }
 
-  methods: {
-    updateScrollPosition({ x, y }) {
-      this.scrollPosition.x = x
-      this.scrollPosition.y = y
-    },
-    rightClickHandler() {
-      rightClickMenu(this.$store, {
-        title: this.title,
-        id: this.id,
-        width: this.width,
-        height: this.height,
-        isVisible: this.isVisible,
-      })
-    },
-    // Limits the size of an artboard
-    validateArtboardSizeInput(name, value) {
-      // @TODO: Refactor this into the size editor
-      const minSize = 50
-      const maxSize = 9999
+  function stopDrag() {
+    document.documentElement.removeEventListener('mousedown', doStart, false)
+    document.documentElement.removeEventListener('mousemove', doDrag, false)
+    document.documentElement.removeEventListener('mouseup', stopDrag, false)
 
-      // Make sure we're working with a number
-      const newValue =
-        typeof value === 'number' ? value : Number(parseInt(value))
+    // Re-enable pointer events on frames
+    // const frames = document.getElementsByClassName('frame')
 
-      // Change the data based on the name
-      let oldValue = ''
-      if (name === 'height') {
-        oldValue = this.artboard.height
-      } else if (name === 'width') {
-        oldValue = this.artboard.width
-      }
+    // Re-enable the panzoom
+    // vm.$root.$panzoom.enable() // TODO: Cleaner solution that polluting document?
 
-      // If no change
-      if (oldValue === newValue) {
-        return
-      }
+    // Update global state
+    interactions.interactionSetState({
+      key: 'isResizingArtboard',
+      value: false,
+    })
+  }
+}
 
-      // Min & Max
-      if (newValue > maxSize || newValue < minSize) {
-        return false
-        // Size is within range!
-      } else if (name === 'height') {
-        this.artboard.height = newValue
-      } else if (name === 'width') {
-        this.artboard.width = newValue
-      } else {
-        console.log('out of range')
-      }
-    },
-    /**
-     * Resize an artboard/screen
-     * e = event
-     * direction = horizontal, vertical
-     */
-    triggerResize(event, direction) {
-      console.log('should resize', event, direction)
-      const vm = this
+function hoverStart(id) {
+  hoverArtboards.addHover(id)
+}
 
-      const parent = vm.$refs.artboard
-      const resizable = parent
-      const startX = event.clientX
-      const startY = event.clientY
-
-      const startWidth = parseInt(
-        document.defaultView.getComputedStyle(resizable).width,
-        10
-      )
-      const startHeight = parseInt(
-        document.defaultView.getComputedStyle(resizable).height,
-        10
-      )
-
-      document.documentElement.addEventListener('mousedown', doStart)
-      document.documentElement.addEventListener('mousemove', doDrag)
-      document.documentElement.addEventListener('mouseup', stopDrag)
-
-      // Pause the panzoom
-      // if (this.$root.$panzoom.state.isEnabled === true) {
-      //   this.$root.$panzoom.disable() // TODO: Cleaner solution that polluting document?
-      // }
-
-      function doStart() {
-        // Update global state
-        vm.$store.commit('interactions/interactionSetState', {
-          key: 'isResizingArtboard',
-          value: true,
-        })
-      }
-
-      // Resize objects
-      let isDraggingTracker
-      function doDrag(e) {
-        // This event needs to be debounced, as it's called on mousemove
-        // Debounce via https://gomakethings.com/debouncing-your-javascript-events/
-        if (isDraggingTracker) {
-          window.cancelAnimationFrame(isDraggingTracker)
-        }
-
-        // Setup the new requestAnimationFrame()
-        isDraggingTracker = window.requestAnimationFrame(function () {
-          switch (direction) {
-            case 'horizontal':
-              // Run our scroll functions
-              resizable.style.width = startWidth + e.clientX - startX + 'px'
-              // Update the dimensions in the UI
-              vm.$emit('resize', {
-                id: vm.id,
-                width: parseInt(resizable.style.width, 10),
-                height: startHeight,
-              })
-              break
-
-            case 'vertical':
-              // Run our scroll functions
-              resizable.style.height = startHeight + e.clientY - startY + 'px'
-              // Update the dimensions in the UI
-              vm.$emit('resize', {
-                id: vm.id,
-                height: parseInt(resizable.style.height, 10),
-                width: startWidth,
-              })
-              break
-          }
-        })
-      }
-
-      function stopDrag() {
-        document.documentElement.removeEventListener(
-          'mousedown',
-          doStart,
-          false
-        )
-        document.documentElement.removeEventListener('mousemove', doDrag, false)
-        document.documentElement.removeEventListener('mouseup', stopDrag, false)
-
-        // Re-enable pointer events on frames
-        // const frames = document.getElementsByClassName('frame')
-
-        // Re-enable the panzoom
-        // vm.$root.$panzoom.enable() // TODO: Cleaner solution that polluting document?
-
-        // Update global state
-        vm.$store.commit('interactions/interactionSetState', {
-          key: 'isResizingArtboard',
-          value: false,
-        })
-      }
-    },
-    hoverStart(id) {
-      this.$store.dispatch('hoverArtboards/hoverArtboardsAdd', id)
-    },
-    hoverEnd(id) {
-      this.$store.dispatch('hoverArtboards/hoverArtboardsRemove', id)
-    },
-  },
+function hoverEnd(id) {
+  hoverArtboards.removeHover(id)
 }
 </script>
 
