@@ -29,8 +29,8 @@ export const useInteractionStore = defineStore('interactions', {
        */
       let isOn = false
 
-      for (const s in this.internal) {
-        if (this[s] === true) {
+      for (const s in state.internal) {
+        if (state[s] === true) {
           isOn = true
         }
       }
@@ -42,22 +42,22 @@ export const useInteractionStore = defineStore('interactions', {
      * Is the current user in the
      * app context or the web interaction context?
      */
-    currentContext: () => {
+    currentContext: (state) => {
       // TODO this should also take into consideration if 1+ screens are selected,
       // or if there is a panzoom event happening
-      return this.isWebInteractionContext ? 'web' : 'app'
+      return state.isWebInteractionContext ? 'web' : 'app'
     },
   },
   actions: {
-    interactionSetState: ({ key, value }) => {
+    interactionSetState({ key, value }) {
       if (this.internal[key] !== value) {
         this.internal[key] = value
       }
     },
-    setPanzoomState: ({ value }) => {
+    setPanzoomState({ value }) {
       this.panzoomEnabled = value
     },
-    setWebInteractionState: (value) => {
+    setWebInteractionState(value) {
       this.isWebInteractionContext = value
     },
   },

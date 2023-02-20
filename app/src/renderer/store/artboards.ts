@@ -1,8 +1,22 @@
 import { defineStore } from 'pinia'
+import { useStorage } from '@vueuse/core'
 import { v1 as uuid } from 'uuid'
 
+interface Artboard {
+  height: number
+  width: number
+  title: string
+  id: string
+  isVisible: boolean
+  isInViewport: boolean
+}
+
+interface State {
+  list: [Artboard]
+}
+
 export const useArtboardsStore = defineStore('artboards', {
-  state: () => ({
+  state: (): State => ({
     list: [], // All artboards on the screen
   }),
   getters: {
@@ -61,7 +75,7 @@ export const useArtboardsStore = defineStore('artboards', {
       // don't remove any, just insert this artboard
       this.list.splice(newIndex, 0, newArtboard)
     },
-    changeArtboardViewportVisibility(artboard) {
+    changeArtboardViewportVisibility(payload) {
       const { id, isVisible } = payload
       const artboard = state.list.find((obj) => obj.id === id)
       artboard.isInViewport = isVisible

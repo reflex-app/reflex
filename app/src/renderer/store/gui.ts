@@ -1,22 +1,28 @@
 import { defineStore } from 'pinia'
 
-const useGuiStore = defineStore('gui', {
-  state = () => ({
+interface State {
+  sidebar: boolean
+  focusMode: boolean
+  discoMode: boolean
+}
+
+export const useGuiStore = defineStore('gui', {
+  state: (): State => ({
     sidebar: true,
     focusMode: false,
     discoMode: false,
   }),
   getters: {},
   actions: {
-    toggleSidebar(state, bool) {
+    toggleSidebar(bool?) {
       if (!bool) bool = ''
 
       if (bool === true) {
-        state.sidebar = true
+        this.sidebar = true
       } else if (bool === false) {
-        state.sidebar = false
+        this.sidebar = false
       } else {
-        state.sidebar = !state.sidebar
+        this.sidebar = !this.sidebar
       }
     },
     toggleGui(state, key) {

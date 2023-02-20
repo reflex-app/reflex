@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 export const useHistoryStore = defineStore('history', {
   state: () => ({
     pages: [],
-    this.currentPage: {
+    currentPage: {
       index: 0,
       url: '',
       title: null,

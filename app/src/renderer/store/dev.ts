@@ -5,8 +5,8 @@ export const useDevStore = defineStore('dev', {
     showCanvasDebugger: false
   },
   actions: {
-    toggleCanvasDebugger(state) {
-      state.showCanvasDebugger = !state.showCanvasDebugger
+    toggleCanvasDebugger() {
+      this.showCanvasDebugger = !this.showCanvasDebugger
     },
   },
 })

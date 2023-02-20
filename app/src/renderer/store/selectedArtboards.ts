@@ -1,26 +1,29 @@
 import { defineStore } from 'pinia'
 
-const useSelectedArtboards = defineStore('selectedArtboards', {
+export const useSelectedArtboardsStore = defineStore('selectedArtboards', {
   // A list of selected artboards by index
   // I.e. state.selectedArtboards = [ 0, 3 ]
   state: () => ({
-    selectedArtboards: [],
+    list: [],
   }),
   actions: {
-    add: (payload) => {
+    /** Add a new Artboard to the list of selected artboards */
+    add(payload) {
       // Only add new numbers
-      if (this.selectedArtboards.includes(payload)) return false
+      if (this.list.includes(payload)) return false
 
       // Add the payload
-      this.selectedArtboards.push(payload)
+      this.list.push(payload)
     },
-    remove: (payload) => {
-      const index = this.selectedArtboards.findIndex((obj) => obj === payload)
-      this.selectedArtboards.splice(index, 1)
+    /** Remove a specific Artboard */
+    remove(payload) {
+      const index = this.list.findIndex((obj) => obj === payload)
+      this.list.splice(index, 1)
     },
-    empty(payload) {
+    /** Deletes all Artboards */
+    empty() {
       // TODO Make this less specific
-      this.selectedArtboards = []
+      this.list = []
     },
   },
 })
