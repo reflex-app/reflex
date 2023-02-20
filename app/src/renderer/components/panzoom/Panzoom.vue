@@ -3,7 +3,7 @@
     class="panzoom-container"
     :class="{ 'dev-visual-debugger': showCanvasDebugger }"
   >
-    <PanzoomControls :instance="panzoomInstance" />
+    <PanzoomControls v-if="panzoomInstance" :instance="panzoomInstance" />
     <div
       ref="parent"
       :class="{
@@ -16,9 +16,8 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, watch, getCurrentInstance, onMounted, unref } from 'vue'
+import { ref, getCurrentInstance, onMounted } from 'vue'
 import Panzoom, { PanzoomObject } from '@panzoom/panzoom'
-import { mapState, mapGetters } from 'vuex'
 import { ipcRenderer } from 'electron'
 import isElectron from 'is-electron'
 import PanzoomControls from './PanzoomControls.vue'
@@ -26,7 +25,7 @@ import { useInteractionStore } from '~/store/interactions'
 import { useEventListener } from '@vueuse/core'
 import useEventHandler from '../Screens/useEventHandler'
 
-const interactionStore = useInteractionStore()
+const interactions = useInteractionStore()
 
 // Store
 // TODO: Migrate from Vuex -> Pinia
@@ -34,24 +33,27 @@ const showCanvasDebugger = false // TODO: Migrate from Vuex -> Pinia
 // const showCanvasDebugger = store.dev.showCanvasDebugger
 const panzoomEnabled = false // TODO: Migrate from Vuex -> Pinia
 // const panzoomEnabled: (state) => state.interactions.panzoomEnabled,
-const isInteracting = interactionStore.isInteracting
+const isInteracting = interactions.isInteracting
 
 // Template refs
 const parentRef = ref()
 const domElement = ref()
-const panzoomInstance = ref<PanzoomObject>()
+const panzoomInstance = ref<PanzoomObject | undefined>()
 
 // Watch for changes and change Panzoom accordingly
 // watch(() => panzoomEnabled, () => {})
 
-onMounted(() => {
+onMounted(async () => {
   // Initialize
-  domElement.value = parentRef.value
+  // domElement.value = parentRef.value
+  domElement.value = document.querySelector('#canvas')
 
   // TODO: This should be refactored after Vue 3 update
-  const root = getCurrentInstance()
+  const { $root } = getCurrentInstance()?.proxy
+  if (!$root) console.warn('No Panzoom created')
 
-  root.$panzoom = Panzoom(domElement.value, {
+  // Init Panzoom globally
+  $root.$panzoom = Panzoom(domElement.value, {
     canvas: true, // Allows parent to control child
     cursor: 'grab',
     startScale: 1,
@@ -66,7 +68,7 @@ onMounted(() => {
   })
 
   // Reference inside of this component
-  panzoomInstance.value = root.$panzoom
+  panzoomInstance.value = $root.$panzoom
 
   // Center Panzoom
   // this.panzoomInstance.pan(
@@ -103,8 +105,8 @@ function enableEventListeners() {
 
   // Listen for menu bar events
   if (isElectron()) {
-    ipcRenderer.on('menu_zoom-in', () => panzoomInstance.value?.zoomIn)
-    ipcRenderer.on('menu_zoom-out', () => panzoomInstance.value?.zoomOut)
+    ipcRenderer.on('menu_zoom-in', () => instance?.zoomIn)
+    ipcRenderer.on('menu_zoom-out', () => instance?.zoomOut)
     // ipcRenderer.on("menu_zoom-to-fit", this.panzoomInstance.fitToScreen);
     ipcRenderer.on('menu_show-developer-canvas-debugger', () => {
       // TODO: Migrate from Vuex -> Pinia
@@ -173,22 +175,24 @@ function mouseHandlers(DOMElement, instance) {
       return false
     }
 
-    panzoomInstance.setOptions({
+    panzoomInstance.value?.setOptions({
       cursor: 'grabbing',
     })
 
-    $store.commit('interactions/interactionSetState', {
+    // Update Store
+    interactions.interactionSetState({
       key: 'isPanzooming',
       value: true,
     })
   }
 
   function endEvents(e) {
-    panzoomInstance.setOptions({
+    panzoomInstance.value?.setOptions({
       cursor: 'grab',
     })
 
-    $store.commit('interactions/interactionSetState', {
+    // Update Store
+    interactions.interactionSetState({
       key: 'isPanzooming',
       value: false,
     })
@@ -201,203 +205,6 @@ function fitToScreen() {
   // TODO Re-attach fitToScreen
   // this.panzoomInstance.fitToScreen();
 }
-
-////////////////////////
-////////////////////////
-////////////////////////
-// data() {
-//   return {
-//     DOMElement: null,
-//     panzoomInstance: {},
-//   }
-// },
-// computed: {
-//   ...mapState({
-//     showCanvasDebugger: (state) => state.dev.showCanvasDebugger,
-//     panzoomEnabled: (state) => state.interactions.panzoomEnabled,
-//   }),
-//   ...mapGetters('interactions', ['isInteracting']),
-// },
-// watch: {
-//   // Watch for changes and change Panzoom accordingly
-//   panzoomEnabled(state) {
-//     // state = true
-
-//     // Disable panzoom interactions while "CMD" is pressed or 1+ artboards are selected
-//     if (state === true) {
-//       // Enable panzoom
-//       this.panzoomInstance.bind() // Add event listeners
-
-//       this.panzoomInstance.setOptions({
-//         disablePan: false,
-//         disableZoom: false,
-//         cursor: 'grab',
-//       })
-//     } else {
-//       // Disable panzoom
-//       this.panzoomInstance.destroy() // Remove event listeners until re-enabled
-
-//       this.panzoomInstance.setOptions({
-//         disablePan: true,
-//         disableZoom: true,
-//         cursor: 'default',
-//       })
-//     }
-//   },
-// },
-// mounted() {
-//   // Initialize
-//   domElement.value = parentRef.value
-//   this.$root.$panzoom = Panzoom(domElement.value, {
-//     canvas: true, // Allows parent to control child
-//     cursor: 'grab',
-//     startScale: 1,
-//     startX: 0,
-//     // Scale to fit the content
-//     handleStartEvent: (event) => {
-//       // Default actions
-//       // WARNING: Don't use preventDefault, as it will block other events
-//       // event.preventDefault()
-//       // event.stopPropagation()
-//     },
-//   })
-
-//   // Reference inside of this component
-//   panzoomInstance.value = this.$root.$panzoom
-
-//   // Center Panzoom
-//   // this.panzoomInstance.pan(
-//   //   origX + (current.clientX - startClientX) / scale,
-//   //   origY + (current.clientY - startClientY) / scale,
-//   //   {
-//   //     animate: false,
-//   //   }
-//   // )
-
-//   // Enable event listeners
-//   this.$nextTick(() => {
-//     this.enableEventListeners()
-//   })
-// },
-// methods: {
-//   enableEventListeners() {
-//     const instance = this.panzoomInstance
-//     const element = domElement.value
-//     const vm = this
-
-//     // element.addEventListener("panzoomchange", event => {
-//     //   console.log(event.detail); // => { x: 0, y: 0, scale: 1 }
-//     // });
-
-//     // Enable when CMD is not pressed
-//     // useEventListener(window, 'keydown', this.cmdHandler)
-//     // useEventListener(window, 'keyup', this.cmdHandler)
-
-//     // TODO Add tests for these
-
-//     // Handle mouse & touch events
-//     this.mouseHandlers(element, instance, vm)
-
-//     // Mousewheel zoom w/ CMD/CTRL key
-//     this.wheelHandler(element, instance, vm)
-
-//     // Listen for menu bar events
-//     if (isElectron()) {
-//       ipcRenderer.on('menu_zoom-in', this.panzoomInstance.zoomIn)
-//       ipcRenderer.on('menu_zoom-out', this.panzoomInstance.zoomOut)
-//       // ipcRenderer.on("menu_zoom-to-fit", this.panzoomInstance.fitToScreen);
-//       ipcRenderer.on('menu_show-developer-canvas-debugger', () => {
-//         this.$store.commit('dev/toggleCanvasDebugger')
-//       })
-//     }
-//   },
-//   /**
-//    * Handles wheel events (i.e. mousewheel)
-//    * @param DOMElement DOM element that Panzoom is on
-//    * @param instance The Panzoom instance
-//    */
-//   wheelHandler(DOMElement, instance, vm) {
-//     DOMElement.parentElement.addEventListener('wheel', onWheel)
-
-//     function onWheel(event) {
-//       if (!vm.panzoomEnabled) return false // Only do this if Panzoom is enabled
-
-//       // Prevent default scroll event
-//       event.preventDefault()
-
-//       // Require the CMD/CTRL key to be pressed
-//       // This prevents accidental scrolling
-//       if (event.ctrlKey || event.metaKey || event.altKey) {
-//         instance.zoomWithWheel(event)
-//       } else {
-//         // Allow trackpads to pan using two fingers
-//         const currentPan = instance.getPan()
-
-//         const newPan = {
-//           x: currentPan.x - event.deltaX,
-//           y: currentPan.y - event.deltaY,
-//         }
-
-//         instance.pan(newPan.x, newPan.y)
-//       }
-//     }
-//   },
-//   /**
-//    * Handles mouse and touch events
-//    * @param DOMElement DOM element that Panzoom is on
-//    * @param instance The Panzoom instance
-//    */
-//   mouseHandlers(DOMElement, instance, vm) {
-//     // TODO These DO NOT WORK
-//     const parentElement = DOMElement.parentElement
-
-//     // Emit start events
-//     const onEvents = ['mousedown', 'touchstart', 'gesturestart']
-//     onEvents.forEach((name) => {
-//       parentElement.addEventListener(name, startEvents)
-//     })
-
-//     const offEvents = ['mouseup', 'touchend', 'gestureend']
-//     offEvents.forEach((name) => {
-//       parentElement.removeEventListener(name, startEvents)
-//       parentElement.addEventListener(name, endEvents)
-//     })
-
-//     function startEvents(e) {
-//       // Only continue if Panzoom is enabled
-//       if (vm.panzoomEnabled === false) {
-//         // e.stopPropogation()
-//         return false
-//       }
-
-//       vm.panzoomInstance.setOptions({
-//         cursor: 'grabbing',
-//       })
-
-//       vm.$store.commit('interactions/interactionSetState', {
-//         key: 'isPanzooming',
-//         value: true,
-//       })
-//     }
-
-//     function endEvents(e) {
-//       vm.panzoomInstance.setOptions({
-//         cursor: 'grab',
-//       })
-
-//       vm.$store.commit('interactions/interactionSetState', {
-//         key: 'isPanzooming',
-//         value: false,
-//       })
-
-//       parentElement.removeEventListener(name, endEvents)
-//     }
-//   },
-//   fitToScreen() {
-//     // TODO Re-attach fitToScreen
-//     // this.panzoomInstance.fitToScreen();
-//   },
-// },
 </script>
 
 <style lang="scss" scoped>
