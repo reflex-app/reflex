@@ -1,7 +1,7 @@
 <template>
   <div id="artboard-tabs">
     <!-- List of Artboards -->
-    <div v-if="artboards.length" class="artboard-tabs__scroll">
+    <div v-if="data.artboards.length" class="artboard-tabs__scroll">
       <artboardEditable data="artboards" />
     </div>
 
@@ -18,17 +18,17 @@
     </div>
 
     <!-- Show a tip if there's no artboards -->
-    <div v-if="!artboards.length" class="empty-state">
+    <div v-if="!data.artboards.length" class="empty-state">
       <div class="empty-state__text">Click to create a new screen</div>
     </div>
 
     <!-- Templates -->
     <div class="panel-section">
       <span>Add from template:</span>
-      <select v-model="defaultSizeSelection" ref="preset-dropdown">
+      <select v-model="data.defaultSizeSelection" ref="presetDropdown">
         <option disabled value>Select template...</option>
         <option
-          v-for="(preset, index) in presets"
+          v-for="(preset, index) in data.presets"
           :key="index"
           :value="preset.label"
         >
@@ -39,165 +39,160 @@
   </div>
 </template>
 
-<script>
-import Vue from 'vue'
-import artboardEditable from '@/components/SidePanel/artboardEditable'
+<script setup lang="ts">
+import { reactive, watch, ref, computed } from 'vue'
+import artboardEditable from '@/components/SidePanel/artboardEditable.vue'
+import { useArtboardsStore } from '~/store/artboards'
 
-export default Vue.extend({
-  name: 'ScreensPanel',
-  components: {
-    artboardEditable,
-  },
-  data() {
-    return {
-      defaultSizeSelection: '',
-      presets: [
-        {
-          label: 'Default',
-          value: {
-            small: {
-              title: 'Small',
-              width: 375,
-              height: 667,
-            },
-            medium: {
-              title: 'Medium',
-              width: 768,
-              height: 1024,
-            },
-            large: {
-              title: 'Large',
-              width: 1024,
-              height: 720,
-            },
-          },
+const artboards = useArtboardsStore()
+
+const presetDropdown = ref<HTMLElement>()
+
+const data = reactive({
+  defaultSizeSelection: '',
+  presets: [
+    {
+      label: 'Default',
+      value: {
+        small: {
+          title: 'Small',
+          width: 375,
+          height: 667,
         },
-        {
-          label: 'Bootstrap 4',
-          value: {
-            xsmall: {
-              title: 'XS',
-              width: 375,
-              height: 500,
-            },
-            small: {
-              title: 'S',
-              width: 576,
-              height: 800,
-            },
-            medium: {
-              title: 'M',
-              width: 768,
-              height: 1000,
-            },
-            large: {
-              title: 'MD',
-              width: 992,
-              height: 1200,
-            },
-            xlarge: {
-              title: 'LG',
-              width: 1200,
-              height: 1400,
-            },
-          },
+        medium: {
+          title: 'Medium',
+          width: 768,
+          height: 1024,
         },
-        {
-          label: 'Foundation 4',
-          value: {
-            small: {
-              title: 'Small',
-              width: 400,
-              height: 600,
-            },
-            medium: {
-              title: 'Medium',
-              width: 640,
-              height: 800,
-            },
-            large: {
-              title: 'Large',
-              width: 1024,
-              height: 1200,
-            },
-          },
+        large: {
+          title: 'Large',
+          width: 1024,
+          height: 720,
         },
-        {
-          label: 'TailwindCSS 2',
-          value: {
-            small: {
-              title: 'sm',
-              width: 640,
-              height: 480,
-            },
-            medium: {
-              title: 'md',
-              width: 768,
-              height: 1024,
-            },
-            large: {
-              title: 'lg',
-              width: 1024,
-              height: 768,
-            },
-            xlarge: {
-              title: 'xl',
-              width: 1280,
-              height: 1024,
-            },
-            xxlarge: {
-              title: 'xxl',
-              width: 1536,
-              height: 2048,
-            },
-          },
-        },
-      ],
-    }
-  },
-  computed: {
-    // Bind to our Vuex Store's URL value
-    artboards: {
-      get() {
-        return this.$store.state.artboards.list
-      },
-      set(value) {
-        this.$store.dispatch('artboards/setArtboards', value)
       },
     },
-  },
-  watch: {
-    defaultSizeSelection(presetLabel) {
-      if (!presetLabel) return
-
-      // Check if preset matches any from this.presets
-      const match = this.presets.find((preset) => preset.label === presetLabel)
-      if (!match) {
-        console.error(`No preset found with label: ${presetLabel}`)
-        return
-      }
-
-      this.$store.dispatch('artboards/addMultipleArtboards', {
-        data: match.value,
-      })
-
-      // Empty selected value
-      this.defaultSizeSelection = ''
-
-      // Blur the DOM element
-      this.$refs['preset-dropdown'].blur()
+    {
+      label: 'Bootstrap 4',
+      value: {
+        xsmall: {
+          title: 'XS',
+          width: 375,
+          height: 500,
+        },
+        small: {
+          title: 'S',
+          width: 576,
+          height: 800,
+        },
+        medium: {
+          title: 'M',
+          width: 768,
+          height: 1000,
+        },
+        large: {
+          title: 'MD',
+          width: 992,
+          height: 1200,
+        },
+        xlarge: {
+          title: 'LG',
+          width: 1200,
+          height: 1400,
+        },
+      },
     },
-  },
-  methods: {
-    add() {
-      this.$store.dispatch('artboards/addArtboard', {
-        title: 'Untitled',
-        width: 375,
-        height: 667,
-      })
+    {
+      label: 'Foundation 4',
+      value: {
+        small: {
+          title: 'Small',
+          width: 400,
+          height: 600,
+        },
+        medium: {
+          title: 'Medium',
+          width: 640,
+          height: 800,
+        },
+        large: {
+          title: 'Large',
+          width: 1024,
+          height: 1200,
+        },
+      },
+    },
+    {
+      label: 'TailwindCSS 2',
+      value: {
+        small: {
+          title: 'sm',
+          width: 640,
+          height: 480,
+        },
+        medium: {
+          title: 'md',
+          width: 768,
+          height: 1024,
+        },
+        large: {
+          title: 'lg',
+          width: 1024,
+          height: 768,
+        },
+        xlarge: {
+          title: 'xl',
+          width: 1280,
+          height: 1024,
+        },
+        xxlarge: {
+          title: 'xxl',
+          width: 1536,
+          height: 2048,
+        },
+      },
+    },
+  ],
+  artboards: {
+    get() {
+      return computed(() => artboards.list)
+    },
+    set(value) {
+      artboards.setArtboards(value)
     },
   },
 })
+
+watch(
+  () => data.defaultSizeSelection,
+  (presetLabel) => {
+    if (!presetLabel) return
+
+    // Check if preset matches any from this.presets
+    const match = data.presets.find((preset) => preset.label === presetLabel)
+    if (!match) {
+      console.error(`No preset found with label: ${presetLabel}`)
+      return
+    }
+
+    artboards.addMultipleArtboards({
+      data: match.value,
+    })
+
+    // Empty selected value
+    data.defaultSizeSelection = ''
+
+    // Blur the DOM element
+    presetDropdown.value?.blur()
+  }
+)
+
+function add() {
+  artboards.addArtboard({
+    title: 'Untitled',
+    width: 375,
+    height: 667,
+  })
+}
 </script>
 
 <style lang="scss" scoped>
