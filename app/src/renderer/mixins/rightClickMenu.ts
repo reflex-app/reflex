@@ -5,6 +5,7 @@ import * as remote from '@electron/remote'
 import { Menu, MenuItem } from '@electron/remote' // TODO Migrate to @electron/remote and move this logic to main process
 import isElectron from 'is-electron'
 import Trigger from '~/components/CrossBrowser/Screenshots/Trigger.vue'
+import { useArtboardsStore } from '~/store/artboards'
 
 /**
  * @param {Object} store The Vue component's context
@@ -22,7 +23,8 @@ export default function (store, artboard) {
     new MenuItem({
       label: 'Duplicate',
       click() {
-        store.dispatch('artboards/duplicateArtboard', artboard)
+        const store = useArtboardsStore()
+        store.duplicateArtboard(artboard)
       },
     })
   )
@@ -30,7 +32,8 @@ export default function (store, artboard) {
     new MenuItem({
       label: 'Rotate',
       click() {
-        store.commit('artboards/resizeArtboard', {
+        const store = useArtboardsStore()
+        store.resizeArtboard({
           id: artboard.id,
           width: artboard.height,
           height: artboard.width,
@@ -42,7 +45,8 @@ export default function (store, artboard) {
     new MenuItem({
       label: artboard.isVisible ? 'Hide' : 'Show',
       click() {
-        store.commit('artboards/changeArtboardVisibility', artboard)
+        const store = useArtboardsStore()
+        store.changeArtboardVisibility(artboard)
       },
     })
   )
@@ -79,7 +83,8 @@ export default function (store, artboard) {
     new MenuItem({
       label: 'Delete',
       click() {
-        store.dispatch('artboards/deleteArtboard', artboard)
+        const store = useArtboardsStore()
+        store.removeArtboard(artboard)
       },
     })
   )
