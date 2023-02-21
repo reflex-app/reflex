@@ -91,12 +91,12 @@ export default {
     },
     enableSelections() {
       this.selectionInstance = new SelectionArea({
-        selectables: ['.artboard'], // All elements in this container can be selected
-        startareas: ['#canvas'], // Query selectors for elements from where a selection can be started from.
-        boundaries: ['#canvas'], // Query selectors for elements which will be used as boundaries for the selection.
-        container: '#canvas',
-        class: 'selection-area', // Class for the selection-area
-        selectedClass: 'is-selected',
+        startAreas: ['#canvas'], // Elements from where a selection can be started from.
+        boundaries: ['#canvas'], // Elements which will be used as boundaries for the selection
+        selectables: ['.artboard'], // All elements with this class can be selected
+        selectionContainerClass: 'selection-area-container', // Query selectors for elements from where a selection can be started from.
+        selectionAreaClass: 'selection-area', // Class for the selection-area itself (the element).
+        // selectedClass: 'is-selected',
         behaviour: {
           // Specifies what should be done if already selected elements get selected again.
           overlap: 'invert', // invert: Invert selection for elements which were already selected
