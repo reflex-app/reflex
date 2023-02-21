@@ -21,7 +21,7 @@ export const useArtboardsStore = defineStore('artboards', {
   }),
   getters: {
     isArtboardInViewport: (state) => (id) => {
-      const artboard = state.list.find((artboard) => artboard.id === id)
+      const artboard = this.list.find((artboard) => artboard.id === id)
       if (!artboard) {
         console.error('Artboard not found')
         return
@@ -49,7 +49,7 @@ export const useArtboardsStore = defineStore('artboards', {
       const artboards = payload.data
 
       for (const i in artboards) {
-        addArtboard(artboards[i])
+        this.addArtboard(artboards[i])
       }
     },
     duplicateArtboard(payload) {
@@ -77,15 +77,15 @@ export const useArtboardsStore = defineStore('artboards', {
     },
     changeArtboardViewportVisibility(payload) {
       const { id, isVisible } = payload
-      const artboard = state.list.find((obj) => obj.id === id)
+      const artboard = this.list.find((obj) => obj.id === id)
       artboard.isInViewport = isVisible
     },
     changeArtboardVisibility(artboard) {
       // 1. Get the artboard.id
       const id = artboard.id
-      const index = state.list.findIndex((obj) => obj.id === id)
+      const index = this.list.findIndex((obj) => obj.id === id)
       // 2. Change the visibility of just that artboard's is property
-      state.list[index].isVisible = !artboard.isVisible
+      this.list[index].isVisible = !artboard.isVisible
     },
     updateArtboardAtIndex(artboard) {
       // 1. Get the artboard.id
@@ -106,7 +106,7 @@ export const useArtboardsStore = defineStore('artboards', {
         throw new Error('artboard missing properties')
       }
 
-      const artboards = state.list
+      const artboards = this.list
 
       for (let i = 0; i < artboards.length; i++) {
         if (artboard.id === artboards[i].id) {
