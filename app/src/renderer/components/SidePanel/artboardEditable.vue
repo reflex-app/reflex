@@ -83,8 +83,11 @@
 
 <script lang="ts">
 import draggable from 'vuedraggable'
-import { mapState } from 'vuex'
+import { mapState } from 'pinia'
 import rightClickMenu from '~/mixins/rightClickMenu'
+import { useArtboardsStore } from '~/store/artboards'
+import { useHoverArtboardsStore } from '~/store/hoverArtboards'
+import { useSelectedArtboardsStore } from '~/store/selectedArtboards'
 
 export default {
   name: 'ArtboardEditable',
@@ -104,15 +107,16 @@ export default {
     }
   },
   computed: {
-    ...mapState({
-      artboards: (state) => state.artboards.list,
+    ...mapState(useArtboardsStore, {
+      artboards: 'list', // map local artboards variable to the Store's 'list'
     }),
     artboardsGetSet: {
       get() {
-        return this.$store.state.artboards.list
+        return this.artboards
       },
       set(value) {
-        this.$store.dispatch('artboards/setArtboards', value)
+        const artboards = useArtboardsStore()
+        artboards.setArtboards(value)
       },
     },
     artboardVisibility(bool) {
@@ -126,7 +130,8 @@ export default {
       this.editID = null
 
       // Save to Store
-      this.$store.commit('artboards/updateArtboardAtIndex', {
+      const artboards = useArtboardsStore()
+      artboards.updateArtboardAtIndex({
         ...artboard,
         width: Number(this.localFormData.width),
         height: Number(this.localFormData.height),
@@ -190,18 +195,22 @@ export default {
       })
     },
     hoverStart(id) {
-      this.$store.dispatch('hoverArtboards/addHover', id)
+      const hoverArtboards = useHoverArtboardsStore()
+      hoverArtboards.addHover(id)
     },
     hoverEnd(id) {
-      this.$store.dispatch('hoverArtboards/removeHover', id)
+      const hoverArtboards = useHoverArtboardsStore()
+      hoverArtboards.removeHover(id)
     },
     selectArtboard(id) {
       // Move screen to the selected artboard
       this.goToArtboard(id)
       // Remove all previous selections
-      this.$store.dispatch('selectedArtboards/empty', id)
+      const selectedArtboards = useSelectedArtboardsStore()
+      selectedArtboards.empty()
+
       // Add the new artboard to selection
-      this.$store.dispatch('selectedArtboards/add', id)
+      selectedArtboards.add(id)
     },
   },
 }

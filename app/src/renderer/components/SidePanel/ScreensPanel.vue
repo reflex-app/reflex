@@ -1,8 +1,8 @@
 <template>
   <div id="artboard-tabs">
     <!-- List of Artboards -->
-    <div v-if="data.artboards.length" class="artboard-tabs__scroll">
-      <artboardEditable data="artboards" />
+    <div v-if="artboards.list.length" class="artboard-tabs__scroll">
+      <artboardEditable data="artboards.list" />
     </div>
 
     <!-- New Artboard -->
@@ -18,7 +18,7 @@
     </div>
 
     <!-- Show a tip if there's no artboards -->
-    <div v-if="!data.artboards.length" class="empty-state">
+    <div v-if="!artboards.list.length" class="empty-state">
       <div class="empty-state__text">Click to create a new screen</div>
     </div>
 
@@ -40,7 +40,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, watch, ref, computed } from 'vue'
+import { reactive, watch, ref, computed } from '@nuxtjs/composition-api'
 import artboardEditable from '@/components/SidePanel/artboardEditable.vue'
 import { useArtboardsStore } from '~/store/artboards'
 

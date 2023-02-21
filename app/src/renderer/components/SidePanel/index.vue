@@ -75,7 +75,7 @@ function isActive(val) {
 }
 
 function toggleSidebar() {
-  this.$store.commit('gui/toggleSidebar')
+  gui.toggleSidebar()
 }
 </script>
 

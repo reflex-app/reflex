@@ -10,11 +10,13 @@
   />
 </template>
 
-<script>
+<script lang="ts">
 import path from 'path'
-import { mapState } from 'vuex'
+import { mapState } from 'pinia'
 import { state as reflexState, setPublisher } from '~/mixins/reflex-sync'
 import remote from '@electron/remote'
+import { useHistoryStore } from '~/store/history'
+import { watch } from '@nuxtjs/composition-api'
 
 export default {
   props: {
@@ -36,8 +38,11 @@ export default {
     }
   },
   computed: {
-    ...mapState({
-      url: (state) => state.history.currentPage.url,
+    // ...mapState({
+    //   url: (state) => state.history.currentPage.url,
+    // }),
+    ...mapState(useHistoryStore, {
+      url: (store) => store.currentPage.url,
     }),
     injectScript() {
       // const appPath = remote.app.getPath('appData')
@@ -67,12 +72,8 @@ export default {
     },
   },
   mounted() {
-    const vm = this
-
     // Once the WebView is rendered
     this.$nextTick(() => {
-      const frame = vm.$refs.frame
-
       // Bind event listeners
       this.bindEventListeners()
 
@@ -80,9 +81,9 @@ export default {
       this.loadSite()
 
       // Watch for History actions
-      // TODO Better way to watch for VueX actions?
-      this.unsubscribeAction = this.$store.subscribeAction((action, state) => {
-        switch (action.type) {
+      const history = useHistoryStore()
+      this.unsubscribeAction = history.$subscribe((mutation, state) => {
+        switch (mutation.type) {
           case 'history/reload':
             this.reload()
             break
@@ -106,7 +107,7 @@ export default {
     this.unbindEventListeners()
 
     // Unsubscribe from Store
-    this.unsubscribeAction()
+    // this.unsubscribeAction()
   },
   methods: {
     bindEventListeners() {

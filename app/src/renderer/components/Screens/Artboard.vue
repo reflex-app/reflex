@@ -2,14 +2,17 @@
   <!-- Allow pointer-events when panzoom is disabled -->
   <div
     class="artboard-container"
-    :class="{ 'panzoom-exclude': this.panzoomEnabled }"
+    :class="{ 'panzoom-exclude': state.panzoomEnabled }"
   >
     <div
       v-show="isVisible"
       ref="artboard"
       :artboard-id="id"
       class="artboard"
-      :class="{ 'is-hover': isHover, 'is-selected': isSelected }"
+      :class="{
+        'is-hover': state.isHover,
+        'is-selected': state.isSelected,
+      }"
       @mouseover="hoverStart(id)"
       @mouseout="hoverEnd(id)"
       @click.right="rightClickHandler()"
@@ -34,15 +37,15 @@
         class="artboard__content"
         :class="{
           'layout--horizontal': state.horizontalLayout,
-          'is-hover': isHover,
-          'is-selected': isSelected,
+          'is-hover': state.isHover,
+          'is-selected': state.isSelected,
         }"
       >
         <WebPage
           :id="id"
           :artboard-id="id"
           ref="frame"
-          :allow-interactions="canInteractWithWebContext"
+          :allow-interactions="state.canInteractWithWebContext"
           class="webview"
           :style="{ height: height + 'px', width: width + 'px' }"
           @loadstart="state.isLoading = true"
@@ -59,7 +62,7 @@
             :y="scrollPosition.y"
           />
         </div> -->
-        <div v-show="isHover" class="artboard__handles">
+        <div v-show="state.isHover" class="artboard__handles">
           <div
             class="handle_right"
             title="Resize"
@@ -77,7 +80,14 @@
 </template>
 
 <script setup lang="ts">
-import Vue, { reactive, computed, onMounted } from 'vue'
+import {
+  reactive,
+  computed,
+  onMounted,
+  ref,
+  Ref,
+} from '@nuxtjs/composition-api'
+import { defineEmits } from 'vue'
 import rightClickMenu from '~/mixins/rightClickMenu'
 import WebPage from './WebPage.vue'
 import CrossBrowserScreenshots from '~/components/CrossBrowser/Screenshots/CrossBrowserScreenshots.vue'
@@ -94,7 +104,55 @@ const interactions = useInteractionStore()
 const state = reactive({
   isLoading: false,
   horizontalLayout: true,
+  panzoomEnabled: computed(() => interactions.panzoomEnabled),
+  isInteracting: computed(() => interactions.isInteracting),
+  isHover() {
+    const isHover = computedVars.hoverArtboards.filter(
+      (item) => item === this.id
+    )
+    return isHover.length ? true : false
+  },
+  isSelected: computed(() => {
+    const isSelected = computedVars.selectedArtboards.filter(
+      (item) => item === props.id
+    )
+    return isSelected.length ? true : false
+  }),
+
+  /**
+   * Only allow interacting with the underlying
+   * artboard (WebView) when the artboard is selected
+   * and the user is not dragging a selection area
+   */
+  // canInteractWithWebContext: computed(() => {
+  //   if (this.isSelected === false) return false // Not selected!
+  //   if (this.isSelected && this.isInteracting === false) {
+  //     return true // Can interact!
+  //   } else {
+  //     interactions.setWebInteractionState(false) // Update global state
+  //     return false // Otherwise, false
+  //   }
+  // }),
+  canInteractWithWebContext: computed(() => {
+    if (state.isSelected === false) return false // Not selected!
+    if (state.isSelected && state.isInteracting === false) {
+      return true // Can interact!
+    } else {
+      interactions.setWebInteractionState(false) // Update global state
+      return false // Otherwise, false
+    }
+  }),
 })
+
+const computedVars = reactive({
+  url: computed(() => history.currentPage.url),
+  selectedArtboards: computed(() => selectedArtboards.list),
+  hoverArtboards: computed(() => hoverArtboards.list),
+})
+
+// Template refs
+const frame = ref<Ref | null>(null)
+const artboard = ref()
 
 const scrollPosition = reactive({
   x: 0,
@@ -129,47 +187,9 @@ const props = defineProps({
   },
 })
 
-const computedVars = reactive({
-  url: computed(() => history.currentPage.url),
-  selectedArtboards: computed(() => selectedArtboards.list),
-  hoverArtboards: computed(() => hoverArtboards.list),
-  panzoomEnabled: computed(() => interactions.panzoomEnabled),
-  isInteracting: computed(() => interactions.isInteracting),
-  isHover() {
-    const isHover = this.hoverArtboards.filter((item) => item === this.id)
-    if (isHover.length) {
-      return true
-    } else {
-      return false
-    }
-  },
-  isSelected() {
-    const isSelected = this.selectedArtboards.filter((item) => item === this.id)
-    if (isSelected.length) {
-      return true
-    } else {
-      return false
-    }
-  },
-  /**
-   * Only allow interacting with the underlying
-   * artboard (WebView) when the artboard is selected
-   * and the user is not dragging a selection area
-   */
-  canInteractWithWebContext() {
-    if (this.isSelected === false) return false // Not selected!
-    if (this.isSelected && this.isInteracting === false) {
-      this.$store.commit('interactions/setWebInteractionState', true) // Update global state
-      return true // Can interact!
-    }
-    this.$store.commit('interactions/setWebInteractionState', false) // Update global state
-    return false // Otherwise, false
-  },
-})
+const emit = defineEmits(['resize'])
 
 onMounted(async () => {
-  await Vue.nextTick()
-
   // Remove any leftover selected artboards
   // @TODO: This should be done from VueX Store, or wiped before quitting
   selectedArtboards.empty()
@@ -178,7 +198,9 @@ onMounted(async () => {
   // Helps make sure we can reliably screenshot and other features
   // The actual Observer comes from the parent component
   if (props.viewportObserver) {
-    props.viewportObserver.observe(this.$refs['frame'].$el)
+    if (!frame.value) return false
+    const { $el } = frame.value
+    props.viewportObserver.observe($el)
   } else {
     console.warn(
       'No IntersectionObserver found! Canvas may not track artboard positions correctly.'
@@ -243,7 +265,7 @@ function triggerResize(event, direction) {
   console.log('should resize', event, direction)
   const vm = this
 
-  const parent = vm.$refs.artboard
+  const parent = artboard.value
   const resizable = parent
   const startX = event.clientX
   const startY = event.clientY
@@ -268,7 +290,7 @@ function triggerResize(event, direction) {
 
   function doStart() {
     // Update global state
-    vm.$store.commit('interactions/interactionSetState', {
+    interactions.interactionSetState({
       key: 'isResizingArtboard',
       value: true,
     })
@@ -290,8 +312,8 @@ function triggerResize(event, direction) {
           // Run our scroll functions
           resizable.style.width = startWidth + e.clientX - startX + 'px'
           // Update the dimensions in the UI
-          vm.$emit('resize', {
-            id: vm.id,
+          emit('resize', {
+            id: props.id,
             width: parseInt(resizable.style.width, 10),
             height: startHeight,
           })
@@ -301,8 +323,8 @@ function triggerResize(event, direction) {
           // Run our scroll functions
           resizable.style.height = startHeight + e.clientY - startY + 'px'
           // Update the dimensions in the UI
-          vm.$emit('resize', {
-            id: vm.id,
+          emit('resize', {
+            id: props.id,
             height: parseInt(resizable.style.height, 10),
             width: startWidth,
           })
