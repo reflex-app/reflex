@@ -2933,7 +2933,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nuxt/types@npm:^2.16.1":
+"@nuxt/types@npm:^2.16.0":
   version: 2.16.1
   resolution: "@nuxt/types@npm:2.16.1"
   dependencies:
@@ -3250,7 +3250,7 @@ __metadata:
   dependencies:
     "@babel/runtime-corejs2": ^7.14.8
     "@electron/remote": ^2.0.8
-    "@nuxt/types": ^2.16.1
+    "@nuxt/types": ^2.16.0
     "@nuxt/typescript-build": ^2.1.0
     "@nuxtjs/composition-api": ^0.33.1
     "@nuxtjs/eslint-config": ^6.0.1
@@ -3264,7 +3264,7 @@ __metadata:
     "@viselect/vanilla": ^3.0.0-beta.13
     "@vue/composition-api": ^1.7.1
     "@vue/test-utils": ^1.2.2
-    "@vueuse/core": ^9.12.0
+    "@vueuse/core": ^9.13.0
     "@xpda-dev/core": ^0.1.6
     "@xpda-dev/electron-builder": ^0.2.1
     "@xpda-dev/electron-launcher": ^0.3.0
@@ -3318,7 +3318,7 @@ __metadata:
     sass-loader: 10.2.0
     shelljs: ^0.8.5
     uuid: 8.3.2
-    vue: 2.7
+    vue: 2.7.14
     vue-devtools: 5.1.4
     vue-feature-flipping: ^3.0.0
     vue-jest: ^3.0.7
@@ -5703,31 +5703,31 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vueuse/core@npm:^9.12.0":
-  version: 9.12.0
-  resolution: "@vueuse/core@npm:9.12.0"
+"@vueuse/core@npm:^9.13.0":
+  version: 9.13.0
+  resolution: "@vueuse/core@npm:9.13.0"
   dependencies:
     "@types/web-bluetooth": ^0.0.16
-    "@vueuse/metadata": 9.12.0
-    "@vueuse/shared": 9.12.0
+    "@vueuse/metadata": 9.13.0
+    "@vueuse/shared": 9.13.0
     vue-demi: "*"
-  checksum: 18eb2946006fc2290b02b1212fbef9ec6bff0086354109c4fb3d82053ecf8c30cb9164a0836ea95e1824a0aa85b220aa27d1f932b8e56bb437b870358e075e6d
+  checksum: 59791dbfad5725810139c22adb4d8266ca9de419a4b252cb99f1b2a0bdb2f500988a7aabd42583c255fa45499ebb43dafc9d6ddc45fdf09ef15fdadd02958f42
   languageName: node
   linkType: hard
 
-"@vueuse/metadata@npm:9.12.0":
-  version: 9.12.0
-  resolution: "@vueuse/metadata@npm:9.12.0"
-  checksum: 4543dff94408e1953ad3a5c3b88eee10317f864c864c6774c7630475ee4287d7f5b4e93fed4eaa4428e5c22cd032dca4c1a72bccbcab1606579397701ab240c8
+"@vueuse/metadata@npm:9.13.0":
+  version: 9.13.0
+  resolution: "@vueuse/metadata@npm:9.13.0"
+  checksum: c2a8a85946f382b9b51b4e96f17f0913091e7c271fbde565b59d3c4fd8f67f2f34778e002d65dd78c420700781e725c05d72cb65acec9c773a423116e8d49cd4
   languageName: node
   linkType: hard
 
-"@vueuse/shared@npm:9.12.0":
-  version: 9.12.0
-  resolution: "@vueuse/shared@npm:9.12.0"
+"@vueuse/shared@npm:9.13.0":
+  version: 9.13.0
+  resolution: "@vueuse/shared@npm:9.13.0"
   dependencies:
     vue-demi: "*"
-  checksum: 9fcc368a5fede1a9324df11ac4a291d4ce4454ad9e1a2ee4a7a69ac687b3d89ff1a09dd074c0f18c4686f0c1873151e9b4306de99754335331646bd0d05bdf54
+  checksum: 22c453dc3c9ccd389e32d4dcfb6e6facfbb29860376c0b1c4d40d2745edd733857d1a1f82835c1d698dedf0c9f697bd9d1265e4e70a6702c85b61cc295bd7352
   languageName: node
   linkType: hard
 
@@ -24413,7 +24413,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vue@npm:2.7, vue@npm:^2.7.10":
+"vue@npm:2.7.14, vue@npm:^2.7.10":
   version: 2.7.14
   resolution: "vue@npm:2.7.14"
   dependencies:
