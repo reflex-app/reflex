@@ -172,13 +172,13 @@ onMounted(async () => {
 
   // Remove any leftover selected artboards
   // @TODO: This should be done from VueX Store, or wiped before quitting
-  this.$store.dispatch('selectedArtboards/empty')
+  selectedArtboards.empty()
 
   // IntersectionObserver on the WebView element
   // Helps make sure we can reliably screenshot and other features
   // The actual Observer comes from the parent component
-  if (this.viewportObserver) {
-    this.viewportObserver.observe(this.$refs['frame'].$el)
+  if (props.viewportObserver) {
+    props.viewportObserver.observe(this.$refs['frame'].$el)
   } else {
     console.warn(
       'No IntersectionObserver found! Canvas may not track artboard positions correctly.'

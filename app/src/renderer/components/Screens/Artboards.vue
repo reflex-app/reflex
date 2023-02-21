@@ -1,17 +1,17 @@
 <template>
   <div ref="containerRef">
-    <div v-if="artboards.length" id="artboards">
+    <div v-if="artboards.list.length" id="artboards">
       <Artboard
-        v-for="(artboard, index) in artboards"
+        v-for="(artboard, index) in artboards.list"
         :key="artboard.id"
         ref="artboard"
         v-bind="artboard"
         :index="index"
         :artboard-id="artboard.id"
-        :selected-items="selectedArtboards"
+        :selected-items="selectedArtboards.list"
         :is-visible="artboard.isVisible"
         @resize="resize"
-        :viewportObserver="viewportObserverParent"
+        :viewportObserver="data.viewportObserverParent"
       />
     </div>
     <!-- Show empty state if no artboards exist -->
@@ -34,8 +34,8 @@ const selectedArtboards = useSelectedArtboardsStore()
 const interactions = useInteractionStore()
 
 const data = reactive({
-  selectionInstance: null,
-  viewportObserverParent: <IntersectionObserver | null>null,
+  selectionInstance: <any | null>null, // TODO: Improve type
+  viewportObserverParent: <IntersectionObserver | undefined>undefined,
   artboards: artboards.list,
   selectedArtboards: selectedArtboards.list,
   panzoomEnabled: interactions.panzoomEnabled,
@@ -80,7 +80,7 @@ onBeforeUnmount(() => {
 })
 
 function resize(artboard) {
-  this.$store.commit('artboards/resizeArtboard', artboard)
+  artboards.resizeArtboard(artboard)
 }
 function fitToScreen() {
   // TODO De-couple this call to the parent
@@ -88,7 +88,7 @@ function fitToScreen() {
   this.$parent.fitToScreen()
 }
 function enableSelections() {
-  this.selectionInstance = new SelectionArea({
+  data.selectionInstance = new SelectionArea({
     selectables: ['.artboard'], // All elements in this container can be selected
     startareas: ['#canvas'], // Query selectors for elements from where a selection can be started from.
     boundaries: ['#canvas'], // Query selectors for elements which will be used as boundaries for the selection.
@@ -148,11 +148,11 @@ function enableSelections() {
     .on('start', (evt) => {
       // Every non-ctrlKey causes a selection reset
       if (!evt.ctrlKey) {
-        this.$store.dispatch('selectedArtboards/empty')
+        selectedArtboards.empty()
       }
 
       // Update state
-      this.$store.commit('interactions/interactionSetState', {
+      interactions.interactionSetState({
         key: 'isSelectingArea',
         value: true,
       })
@@ -171,13 +171,13 @@ function enableSelections() {
         // Add
         added.forEach((item) => {
           const id = item.getAttribute('artboard-id')
-          this.$store.dispatch('selectedArtboards/add', id)
+          selectedArtboards.add(id)
         })
 
         // Remove
         removed.forEach((item) => {
           const id = item.getAttribute('artboard-id')
-          this.$store.dispatch('selectedArtboards/remove', id)
+          selectedArtboards.remove(id)
         })
       }
     )
@@ -188,10 +188,10 @@ function enableSelections() {
        * to the current selection.
        */
       // Remove all in case temporarily added
-      this.$store.dispatch('selectedArtboards/empty')
+      selectedArtboards.empty()
 
       // Update state
-      this.$store.commit('interactions/interactionSetState', {
+      interactions.interactionSetState({
         key: 'isSelectingArea',
         value: false,
       })
@@ -199,7 +199,7 @@ function enableSelections() {
       // Push the new IDs
       selected.forEach((item) => {
         const id = item.getAttribute('artboard-id')
-        this.$store.dispatch('selectedArtboards/add', id) // Add these items to the Store
+        selectedArtboards.add(id) // Add these items to the Store
       })
 
       // // Re-enable panzoom
@@ -230,7 +230,7 @@ function cmdHandler(e) {
   console.log('panzoom enabled?', isDragSelectionEnabled)
 
   // Key down (pressed)
-  this.$store.commit('interactions/setPanzoomState', {
+  interactions.setPanzoomState({
     value: isDragSelectionEnabled,
   })
 
