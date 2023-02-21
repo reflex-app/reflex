@@ -25,7 +25,8 @@
       ]
     },
     "types": [
-      "@nuxt/types"
+      "@nuxt/types",
+      "@pinia/nuxt"
     ]
   },
   "vueCompilerOptions": {
