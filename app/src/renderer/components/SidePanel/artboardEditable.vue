@@ -81,7 +81,7 @@
   </draggable>
 </template>
 
-<script>
+<script lang="ts">
 import draggable from 'vuedraggable'
 import { mapState } from 'vuex'
 import rightClickMenu from '~/mixins/rightClickMenu'
@@ -91,7 +91,7 @@ export default {
   components: {
     draggable,
   },
-  props: ['data'],
+  // props: ['data'],
   data() {
     return {
       editMode: false,
@@ -171,6 +171,10 @@ export default {
     goToArtboard(id) {
       // Find the artboard (DOM)
       const artboard = document.querySelector(`[artboard-id="${id}"]`)
+      if (!artboard) {
+        console.warn('No Artboard found')
+        return false
+      }
 
       // Pan to the position of the element relative to the parent
       // TODO factor in the size of the artboard... Panzoom should scale down to fith the screen
