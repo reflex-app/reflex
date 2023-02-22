@@ -1,39 +1,28 @@
 <template>
   <div id="main-view">
-    <div>{{ interactionState }}</div>
+    <DevModeHud />
     <SidePanel />
     <Screenshots />
-    <Panzoom id="canvas">
+    <Panzoom>
       <Artboards />
     </Panzoom>
   </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+import { ref, onMounted } from 'vue'
 import Panzoom from '@/components/panzoom/Panzoom.vue'
 import SidePanel from '@/components/SidePanel/index.vue'
 import Screenshots from '@/components/Screenshot/index.vue'
 import Artboards from '@/components/Screens/Artboards.vue'
 import useEventHandler from '@/components/Screens/useEventHandler'
-import { onMounted } from 'vue'
+import DevModeHud from '~/components/DevModeHud.vue'
 
-export default {
-  components: {
-    SidePanel,
-    Screenshots,
-    Panzoom,
-    Artboards,
-  },
-  setup(props, ctx) {
-    const { init, state: interactionState } = useEventHandler() // init event handling
+const { init } = useEventHandler() // init event handling
 
-    onMounted(() => {
-      init() // initialize
-    })
-
-    return { interactionState }
-  },
-}
+onMounted(() => {
+  init() // initialize
+})
 </script>
 
 <style lang="scss">
