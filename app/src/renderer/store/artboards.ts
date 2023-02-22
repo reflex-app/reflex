@@ -12,7 +12,7 @@ interface Artboard {
 }
 
 interface State {
-  list: [Artboard]
+  list: Artboard[]
 }
 
 export const useArtboardsStore = defineStore('artboards', {
@@ -21,7 +21,7 @@ export const useArtboardsStore = defineStore('artboards', {
   }),
   getters: {
     isArtboardInViewport: (state) => (id) => {
-      const artboard = this.list.find((artboard) => artboard.id === id)
+      const artboard = state.list.find((artboard) => artboard.id === id)
       if (!artboard) {
         console.error('Artboard not found')
         return
@@ -75,10 +75,15 @@ export const useArtboardsStore = defineStore('artboards', {
       // don't remove any, just insert this artboard
       this.list.splice(newIndex, 0, newArtboard)
     },
-    changeArtboardViewportVisibility(payload) {
+    changeArtboardViewportVisibility(payload: {
+      id: string
+      isVisible: boolean
+    }) {
       const { id, isVisible } = payload
       const artboard = this.list.find((obj) => obj.id === id)
-      artboard.isInViewport = isVisible
+      artboard
+        ? (artboard.isInViewport = isVisible)
+        : console.warn('No artboard found')
     },
     changeArtboardVisibility(artboard) {
       // 1. Get the artboard.id
