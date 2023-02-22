@@ -1,5 +1,5 @@
 <template>
-  <!-- Allow pointer-events when panzoom is disabled -->
+  <!-- Allow pointer-events when panzoom is enabled -->
   <div
     class="artboard-container"
     :class="{ 'panzoom-exclude': state.panzoomEnabled }"
@@ -108,7 +108,7 @@ const state = reactive({
   isInteracting: computed(() => interactions.isInteracting),
   isHover() {
     const isHover = computedVars.hoverArtboards.filter(
-      (item) => item === this.id
+      (item) => item === props.id
     )
     return isHover.length ? true : false
   },
@@ -212,6 +212,7 @@ function updateScrollPosition({ x, y }) {
   this.scrollPosition.x = x
   this.scrollPosition.y = y
 }
+
 function rightClickHandler() {
   rightClickMenu(this.$store, {
     title: props.title,
@@ -221,6 +222,7 @@ function rightClickHandler() {
     isVisible: props.isVisible,
   })
 }
+
 // Limits the size of an artboard
 function validateArtboardSizeInput(name, value) {
   // @TODO: Refactor this into the size editor
