@@ -39,7 +39,7 @@ export default {
   },
   computed: {
     ...mapState(useHistoryStore, {
-      url: 'currentPage.url',
+      url: (state) => state.currentPage.url,
     }),
   },
   watch: {
