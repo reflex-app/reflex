@@ -10,7 +10,7 @@ module.exports = {
   head: {
     title: 'Reflex',
   },
-  env: {
+  publicRuntimeConfig: {
     DEV: process.env.NODE_ENV !== 'production',
   },
   loading: false,
