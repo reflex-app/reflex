@@ -20,19 +20,27 @@ type Events = {
   isMouseDown: boolean
   isCtrlPressed: boolean
   isDragging: boolean
+  canDragSelect: boolean
   isDragSelecting: boolean
   isScrollZooming: boolean
 }
 
-export default function useEventHandler() {
-  const state = reactive<Events>({
-    isMouseDown: false,
-    isCtrlPressed: false,
-    isDragging: false,
-    isDragSelecting: false,
-    isScrollZooming: false,
-  })
+// IMPORTANT: This is a SHARED state
+// This means it can be changed from multiple sources
+const state = reactive<Events>({
+  isMouseDown: false,
+  isCtrlPressed: false,
+  isDragging: false,
+  canDragSelect: false,
+  isDragSelecting: false,
+  isScrollZooming: false,
+})
 
+// SHARED emitter
+const emitter: Emitter<Events> = mitt<Events>()
+// emitter.on('*', (type, e) => console.log(type, e))
+
+export default function useEventHandler() {
   const scrollState = reactive<{
     timer: any | null
   }>({
@@ -52,8 +60,7 @@ export default function useEventHandler() {
   //   { deep: true }
   // )
 
-  const emitter: Emitter<Events> = mitt<Events>()
-  // emitter.on('*', (type, e) => console.log(type, e))
+  const boundary = '.panzoom-container' // The area where we'll listen for click events
 
   const init = () => {
     console.log('init')
@@ -67,19 +74,19 @@ export default function useEventHandler() {
     })
 
     // Handle click/drag events
-    // useEventListener(document, 'mousedown', onMouseDown) // start
-    // useEventListener(document, 'mouseup', onMouseUp) // end
+    // useEventListener(boundary, 'mousedown', onMouseDown) // start
+    // useEventListener(boundary, 'mouseup', onMouseUp) // end
 
     // Emit start events
     const onEvents = ['mousedown', 'touchstart', 'gesturestart']
     onEvents.forEach((name) => {
-      document.addEventListener(name, onMouseDown)
+      document.querySelector(boundary)?.addEventListener(name, onMouseDown)
     })
 
     const offEvents = ['mouseup', 'touchend', 'gestureend']
     offEvents.forEach((name) => {
-      // document.removeEventListener(name, onMouseDown)
-      document.addEventListener(name, onMouseUp)
+      // document.querySelector(boundary).removeEventListener(name, onMouseDown)
+      document.querySelector(boundary)?.addEventListener(name, onMouseUp)
     })
 
     // TODO: Add touch, gesture as well
@@ -223,6 +230,7 @@ export default function useEventHandler() {
     const onMouseDown = (e: MouseEvent) => {
       // Emit event
       emitter.emit('isMouseDown', true)
+      emitter.emit('canDragSelect', true) // CTRL + Mousedown
 
       // Wait for drag event
       console.log('Waiting for mouse drag')
@@ -236,6 +244,7 @@ export default function useEventHandler() {
       // Emit event
       emitter.emit('isMouseDown', false)
       emitter.emit('isDragSelecting', false)
+      emitter.emit('canDragSelect', false) // CTRL + Mousedown
 
       document.removeEventListener('mouseup', onMouseUp)
     }
@@ -284,6 +293,18 @@ export default function useEventHandler() {
     // Add interaction triggers
     document.addEventListener('wheel', onWheel) // Listen for mouse wheel zoom in/out
     document.addEventListener('mousedown', onMouseDown)
+
+    // Remove listeners once user lets go of control key
+    watch(
+      () => state,
+      () => {
+        console.log('updated')
+
+        if (state.isCtrlPressed === false) {
+          document.removeEventListener('wheel', onWheel)
+        }
+      }
+    )
   }
 
   return {
