@@ -42,6 +42,8 @@ export default {
     //   url: (state) => state.history.currentPage.url,
     // }),
     ...mapState(useHistoryStore, {
+      pages: (store) => store.pages,
+      currentPage: (store) => store.currentPage,
       url: (store) => store.currentPage.url,
     }),
     injectScript() {
@@ -170,9 +172,9 @@ export default {
       // const frame = this.$refs.frame
 
       // VueX
-      const pages = this.$store.state.history.pages
-      // const currentPage = this.$store.state.history.currentPage.index
-      const nextPage = this.$store.state.history.currentPage.index - 1
+      const pages = this.pages
+      // const currentPage = this.currentPage.index
+      const nextPage = this.currentPage.index - 1
       // frame.loadURL(pages[nextPage]);
 
       // Update the URL in the store
@@ -190,13 +192,14 @@ export default {
       // const frame = this.$refs.frame
 
       // VueX
-      const pages = this.$store.state.history.pages
-      // const currentPage = this.$store.state.history.currentPage.index
-      const nextPage = this.$store.state.history.currentPage.index + 1
+      const pages = this.pages
+      // const currentPage = this.currentPage.index
+      const nextPage = this.currentPage.index + 1
       // frame.loadURL(pages[nextPage]);
 
       // Update the URL in the store
-      this.$store.commit('history/changeSiteData', {
+      const history = useHistoryStore()
+      history.changeSiteData({
         url: pages[nextPage],
       })
 
