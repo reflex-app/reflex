@@ -20,21 +20,24 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, reactive, ref } from 'vue'
+import { onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import SelectionArea from '@viselect/vanilla'
 import Artboard from './Artboard.vue'
 import WelcomeScreen from './WelcomeScreen.vue'
 import { useArtboardsStore } from '~/store/artboards'
 import { useSelectedArtboardsStore } from '~/store/selectedArtboards'
 import { useInteractionStore } from '~/store/interactions'
-// import { useEventListener } from '@vueuse/core'
+import { useEventListener } from '@vueuse/core'
+import useEventHandler from '@/components/Screens/useEventHandler'
+
+const { state: userEventsState } = useEventHandler() // init event handling
 
 const artboards = useArtboardsStore()
 const selectedArtboards = useSelectedArtboardsStore()
 const interactions = useInteractionStore()
 
 const data = reactive({
-  selectionInstance: <any | null>null, // TODO: Improve type
+  selectionInstance: <SelectionArea | null>null, // TODO: Improve type
   viewportObserverParent: <IntersectionObserver | undefined>undefined,
   artboards: artboards.list,
   selectedArtboards: selectedArtboards.list,
@@ -49,19 +52,20 @@ const containerRef = ref<HTMLElement | undefined>()
 startViewportObserver()
 
 onMounted(() => {
-  // TODO Create shortcut listener
-  // this._keyListener = function (e) {
-  //   if (e.ctrlKey || e.metaKey) {
-  //     e.preventDefault() // prevent normal event from happening
-  //     this.selectionInstance.enable() // enable selections
-  //   } else {
-  //     this.selectionInstance.disable()
-  //   }
-  // }
   // ONLY ALLOW DRAG SELECT WHEN "CMD/CTRL" is held
-  // Enable when CMD is not pressed
-  // useEventListener(window, 'keydown', this.cmdHandler)
-  // useEventListener(window, 'keyup', this.cmdHandler)
+  // Enable Panzoom when CMD is not pressed
+  watch(
+    userEventsState,
+    (state) => {
+      // These will run every time the state changes
+      if (state.isCtrlPressed) {
+        cmdHandler()
+      }
+    },
+    { deep: true }
+  )
+
+  useEventListener(window, 'keyup', cmdHandler)
 })
 
 // TODO Consider enabling this once panzoom is a Vue plugin?
@@ -76,25 +80,27 @@ onBeforeUnmount(() => {
   data.selectionInstance?.destroy()
 
   // Remove viewport observer
-  function stopViewportObserver()
+  stopViewportObserver()
 })
 
 function resize(artboard) {
   artboards.resizeArtboard(artboard)
 }
+
 function fitToScreen() {
   // TODO De-couple this call to the parent
   console.log('Artboards loaded', this.$parent)
   this.$parent.fitToScreen()
 }
+
 function enableSelections() {
   data.selectionInstance = new SelectionArea({
     selectables: ['.artboard'], // All elements in this container can be selected
-    startareas: ['#canvas'], // Query selectors for elements from where a selection can be started from.
+    startAreas: ['#canvas'], // Query selectors for elements from where a selection can be started from.
     boundaries: ['#canvas'], // Query selectors for elements which will be used as boundaries for the selection.
     container: '#canvas',
-    class: 'selection-area', // Class for the selection-area
-    selectedClass: 'is-selected',
+    // class: 'selection-area', // Class for the selection-area
+    // selectedClass: 'is-selected',
     behaviour: {
       // Specifies what should be done if already selected elements get selected again.
       overlap: 'invert', // invert: Invert selection for elements which were already selected
@@ -129,14 +135,16 @@ function enableSelections() {
     },
   })
     .on('beforestart', ({ event: evt, store }) => {
-      if (this.panzoomEnabled === true) {
+      // Before allowing the user to drag-select things, run some checks
+      if (data.panzoomEnabled) {
+        console.log('panzoom status', data.panzoomEnabled)
+
         // Prevent selections if the user is interacting with an artboard
         console.log(evt)
 
         // Allow user to click or drag on an artboard even if panzoom is enabled
-        if (evt.type === 'mousedown') {
-          // Continue
-          return
+        if (evt?.type === 'mousedown') {
+          return // Don't enable Selections
         } else {
           console.info(
             'Cannot interact with artboard while canvas is enabled. Please disable canvas.'
@@ -147,7 +155,7 @@ function enableSelections() {
     })
     .on('start', (evt) => {
       // Every non-ctrlKey causes a selection reset
-      if (!evt.ctrlKey) {
+      if (userEventsState.isCtrlPressed === false) {
         selectedArtboards.empty()
       }
 
@@ -202,42 +210,42 @@ function enableSelections() {
         selectedArtboards.add(id) // Add these items to the Store
       })
 
-      // // Re-enable panzoom
-      // this.$store.commit('interactions/setPanzoomState', {
-      //   value: true,
-      // })
+      // Re-enable panzoom
+      interactions.setPanzoomState({
+        value: true,
+      })
     })
 }
+
+function disableSelections() {
+  data.selectionInstance?.disable()
+}
+
 /**
  * Toggles the pan/zoom controls
  * When on, users can pan and zoom
- * When off, users can only interact inside of Screens
+ * When off, users can only interact s of Screens
  */
-function cmdHandler(e) {
-  // If user keeps holding the key down,
-  // prevent firing repetitively and only counting once
-  if (e.repeat) {
-    return
-  }
-
-  // Only check for CMD/CTRL key to be held
-  const isCtrlKeyPressed = e.ctrlKey || e.metaKey ? true : false
-
-  console.log('isCtrlKeyPressed', isCtrlKeyPressed)
-
+function cmdHandler() {
   // Disable panzoom when CMD/CTRL is pressed
-  const isDragSelectionEnabled = !isCtrlKeyPressed
-  console.log('panzoom enabled?', isDragSelectionEnabled)
+  const canDragSelect = userEventsState.canDragSelect
 
-  // Key down (pressed)
-  interactions.setPanzoomState({
-    value: isDragSelectionEnabled,
-  })
+  if (canDragSelect) {
+    // Disable Panzoom
+    interactions.setPanzoomState({
+      value: false,
+    })
 
-  if (isDragSelectionEnabled) {
-    this.enableSelections()
+    // Enable Selection
+    enableSelections()
   } else {
-    this.selectionInstance.destroy()
+    // Disable Selection
+    disableSelections()
+
+    // Enable Panzoom only if not drag-selecting
+    interactions.setPanzoomState({
+      value: true,
+    })
   }
 }
 
