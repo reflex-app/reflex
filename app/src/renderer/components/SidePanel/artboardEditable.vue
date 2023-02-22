@@ -170,7 +170,8 @@ export default {
           `Are you sure you want to delete the ${name} screen size? Click "OK" to delete.`
         )
       ) {
-        this.$store.commit('artboards/removeArtboard', id)
+        const artboards = useArtboardsStore()
+        artboards.removeArtboard(id)
       }
     },
     goToArtboard(id) {
