@@ -18,13 +18,13 @@ module.exports = {
     '@nuxt/typescript-build',
     '@nuxtjs/composition-api/module',
     ['@pinia/nuxt', { disableVuex: true }], // Use Pinia w/ Nuxt 2
-    '@pinia-plugin-persistedstate/nuxt', // Persisted state w/ Pinia + Nuxt (Nuxt 2) https://pinia.vuejs.org/ssr/nuxt.html#nuxt-2-without-bridge
+    // '@pinia-plugin-persistedstate/nuxt', // Persisted state w/ Pinia + Nuxt (Nuxt 3) https://pinia.vuejs.org/ssr/nuxt.html#nuxt-2-without-bridge
   ],
   plugins: [
     // Persisted localStorage of Pinia Store states
     // https://github.com/iendeavor/pinia-plugin-persistedstate-2#with-localstorage-client-only-nuxt2-example
     { src: '~/plugins/eventListenerDebug', mode: 'client' },
-    { src: '~/plugins/pinia-persist', mode: 'client' },
+    { src: '~/plugins/pinia-persisted-state', mode: 'client' },
     { src: '~/plugins/eventBus', mode: 'client' },
     { src: '~/plugins/globalComponents', mode: 'client' },
     { src: '~/plugins/featureFlipping', mode: 'client' },
