@@ -2,7 +2,7 @@
   <div id="artboard-tabs">
     <!-- List of Artboards -->
     <div v-if="artboards.list.length" class="artboard-tabs__scroll">
-      <artboardEditable data="artboards.list" />
+      <artboardEditable :data="artboards.list" />
     </div>
 
     <!-- New Artboard -->
