@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { useStorage } from '@vueuse/core'
 import { v1 as uuid } from 'uuid'
+import Vue from 'vue'
 
 interface Artboard {
   height: number
@@ -92,16 +93,17 @@ export const useArtboardsStore = defineStore('artboards', {
       // 2. Change the visibility of just that artboard's is property
       this.list[index].isVisible = !artboard.isVisible
     },
-    updateArtboardAtIndex(artboard) {
+    updateArtboardAtIndex(artboard: Artboard) {
       // 1. Get the artboard.id
-      const id = artboard.id
+      const { id } = artboard
       const index = this.list.findIndex((obj) => obj.id === id)
 
       // 2. Change just that artboard's content
-      this.list[index] = artboard
+      // IMPORTANT: Vue.set() is required to keep reactivity!
+      // https://github.com/vuejs/pinia/issues/452#issuecomment-827059072
+      Vue.set(this.list, index, artboard)
     },
     setArtboards(payload) {
-      // TODO this is not reactive currently
       if (this.list !== payload) {
         this.list = payload
       }
