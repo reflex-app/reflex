@@ -41,21 +41,6 @@ function zoomOut() {
 function reset() {
   props.instance.reset()
 }
-
-// /**
-//  * Toggles the canvas
-//  * When on, users can pan and zoom
-//  * When off, users can only interact inside of Screens
-//  */
-// toggleCanvas(state) {
-//   // Update local state
-//   this.enabled = state
-
-//   // Update Store
-//   this.$store.commit('interactions/setPanzoomState', {
-//     value: state,
-//   })
-// },
 </script>
 
 <style lang="scss" scoped>

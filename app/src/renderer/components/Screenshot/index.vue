@@ -209,7 +209,7 @@ async function hideFullPreviews() {
     )
 
     // Commit
-    this.$store.dispatch('artboards/resizeArtboard', {
+    artboards.resizeArtboard({
       ...artboard,
       height: prevHeight,
     })
