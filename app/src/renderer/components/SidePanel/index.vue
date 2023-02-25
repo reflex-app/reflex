@@ -21,70 +21,61 @@
         </div>
     </div>-->
     <transition name="slide-in">
-      <div v-if="sidebar === true" class="side-panel__content">
-        <PanelComponent :title="activeStation" />
+      <div v-if="data.sidebar === true" class="side-panel__content">
+        <PanelComponent :title="data.activeStation" />
       </div>
     </transition>
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import PanelComponent from './PanelComponent.vue'
+import { computed, reactive } from 'vue'
+import { useArtboardsStore } from '~/store/artboards'
+import { useGuiStore } from '~/store/gui'
 
-export default {
-  name: 'SidePanel',
-  components: {
-    PanelComponent
-  },
-  data () {
-    return {
-      activeStation: 'Screens'
-    }
-  },
-  computed: {
-    // Bind to our Vuex Store's URL value
-    artboards () {
-      return this.$store.state.artboards.list
-    },
-    sidebar () {
-      return this.$store.state.gui.sidebar
-    }
-  },
+const artboards = useArtboardsStore()
+const gui = useGuiStore()
 
-  methods: {
-    setActive (val) {
-      // Handle hide/show side panel
-      if (this.sidebar && this.activeStation !== val) {
-        // Normal State
-        // Simply set the clicked station to active
-        this.activeStation = val
-      } else if (this.sidebar && this.activeStation === val) {
-        // Close State
-        // When clicking on the same station,
-        // it should close the sidebar
-        this.toggleSidebar(false)
-        this.activeStation = ''
-      } else if (this.sidebar === false) {
-        // Closed State
-        // Sidebar is closed, re-open
-        this.toggleSidebar(true)
-        this.activeStation = val
-      }
-    },
-    isActive (val) {
-      // Make sure to open the sidebar
-      // if it was open in last session
-      // Otherwise, don't set an active state
-      if (this.sidebar === true) {
-        return this.activeStation === val
-      } else {
-        return ''
-      }
-    },
-    toggleSidebar () {
-      this.$store.commit('gui/toggleSidebar')
-    }
+const data = reactive({
+  activeStation: 'Screens',
+  artboards: computed(() => artboards.list),
+  sidebar: computed(() => gui.sidebar),
+})
+
+function setActive(val) {
+  // Handle hide/show side panel
+  if (data.sidebar && this.activeStation !== val) {
+    // Normal State
+    // Simply set the clicked station to active
+    this.activeStation = val
+  } else if (data.sidebar && this.activeStation === val) {
+    // Close State
+    // When clicking on the same station,
+    // it should close the sidebar
+    this.toggleSidebar(false)
+    this.activeStation = ''
+  } else if (data.sidebar === false) {
+    // Closed State
+    // Sidebar is closed, re-open
+    this.toggleSidebar(true)
+    this.activeStation = val
   }
+}
+
+function isActive(val) {
+  // Make sure to open the sidebar
+  // if it was open in last session
+  // Otherwise, don't set an active state
+  if (data.sidebar === true) {
+    return this.activeStation === val
+  } else {
+    return ''
+  }
+}
+
+function toggleSidebar() {
+  gui.toggleSidebar()
 }
 </script>
 

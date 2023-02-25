@@ -31,21 +31,22 @@ import { mapState } from 'vuex'
 export default {
   computed: {
     ...mapState({
-      toggleState: state => state.gui.focusMode
-    })
+      toggleState: (state) => state.gui.focusMode,
+    }),
   },
   methods: {
-    toggle () {
-      this.$store.commit('toggleGui', 'focusMode')
+    toggle() {
+      const focus = useFocusMode()
+      focus.toggleGui('focusMode')
     },
-    isRouteActive (id) {
+    isRouteActive(id) {
       if (this.$route.path === id) {
         return true
       } else {
         return false
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

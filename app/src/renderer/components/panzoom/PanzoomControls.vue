@@ -1,6 +1,6 @@
 <template>
   <div class="panzoom-controls">
-    <template v-if="enabled">
+    <template v-if="state.enabled">
       <div @click="zoomOut">-</div>
       <div @click="zoomIn">+</div>
       <div @click="reset">Reset</div>
@@ -10,55 +10,36 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import SwitchButton from '@/components/Shared/Switch.vue'
-import { mapState, mapGetters } from 'vuex'
+import { computed, reactive, defineProps } from 'vue'
+import { useInteractionStore } from '~/store/interactions'
 
-export default {
-  components: {
-    SwitchButton,
-  },
-  props: {
-    instance: {
-      type: Object,
-      required: true,
-    },
-  },
-  data: () => ({
-    enabled: true,
-  }),
-  computed: {
-    // ...mapState({
-    //   showCanvasDebugger: (state) => state.dev.showCanvasDebugger,
-    //   panzoomEnabled: (state) => state.interactions.panzoomEnabled,
-    // }),
-    ...mapGetters('interactions', ['currentContext']),
-  },
-  methods: {
-    zoomIn() {
-      this.instance.zoomIn()
-    },
-    zoomOut() {
-      this.instance.zoomOut()
-    },
-    reset() {
-      this.instance.reset()
-    },
-    // /**
-    //  * Toggles the canvas
-    //  * When on, users can pan and zoom
-    //  * When off, users can only interact inside of Screens
-    //  */
-    // toggleCanvas(state) {
-    //   // Update local state
-    //   this.enabled = state
+const interactions = useInteractionStore()
 
-    //   // Update Store
-    //   this.$store.commit('interactions/setPanzoomState', {
-    //     value: state,
-    //   })
-    // },
+const props = defineProps({
+  instance: {
+    type: Object,
+    required: true,
   },
+})
+
+const data = reactive({
+  interactions: computed(() => interactions.currentContext),
+})
+
+const state = reactive({
+  enabled: true,
+})
+
+function zoomIn() {
+  props.instance.zoomIn()
+}
+function zoomOut() {
+  props.instance.zoomOut()
+}
+function reset() {
+  props.instance.reset()
 }
 </script>
 

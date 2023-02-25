@@ -82,7 +82,7 @@ export default {
       .on('start', (evt) => {
         // Every non-ctrlKey causes a selection reset
         if (!evt.ctrlKey) {
-          this.$store.dispatch('selectedArtboards/selectedArtboardsEmpty')
+          this.$store.dispatch('selectedArtboards/empty')
         }
 
         // Update state
@@ -105,16 +105,13 @@ export default {
           // Add
           added.forEach((item) => {
             const id = item.getAttribute('artboard-id')
-            this.$store.dispatch('selectedArtboards/selectedArtboardsAdd', id)
+            this.$store.dispatch('selectedArtboards/add', id)
           })
 
           // Remove
           removed.forEach((item) => {
             const id = item.getAttribute('artboard-id')
-            this.$store.dispatch(
-              'selectedArtboards/selectedArtboardsRemove',
-              id
-            )
+            this.$store.dispatch('selectedArtboards/remove', id)
           })
         }
       )
@@ -125,7 +122,7 @@ export default {
          * to the current selection.
          */
         // Remove all in case temporarily added
-        this.$store.dispatch('selectedArtboards/selectedArtboardsEmpty')
+        this.$store.dispatch('selectedArtboards/empty')
 
         // Update state
         this.$store.commit('interactions/interactionSetState', {
@@ -136,7 +133,7 @@ export default {
         // Push the new IDs
         selected.forEach((item) => {
           const id = item.getAttribute('artboard-id')
-          this.$store.dispatch('selectedArtboards/selectedArtboardsAdd', id) // Add these items to the Store
+          this.$store.dispatch('selectedArtboards/add', id) // Add these items to the Store
         })
       })
   },
