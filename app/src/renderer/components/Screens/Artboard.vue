@@ -1,5 +1,7 @@
 <template>
   <!-- Allow pointer-events when panzoom is enabled -->
+  <!-- The 'panzoom-exclude' class allows us to ignore Panzoom click events on a certain element -->
+  <!-- ... and then we use Selection to select just one artboard -->
   <div
     class="artboard-container"
     :class="{ 'panzoom-exclude': state.panzoomEnabled }"
@@ -7,20 +9,20 @@
     <div
       v-show="isVisible"
       ref="artboard"
-      :artboard-id="id"
+      :artboard-id="props.id"
       class="artboard"
       :class="{
         'is-hover': state.isHover,
         'is-selected': state.isSelected,
       }"
-      @mouseover="hoverStart(id)"
-      @mouseout="hoverEnd(id)"
+      @mouseover="hoverStart(props.id)"
+      @mouseout="hoverEnd(props.id)"
       @click.right="rightClickHandler()"
     >
       <div class="artboard__top">
         <div>
-          <span class="title">{{ title }}</span>
-          <span class="dimension">{{ width }} x {{ height }}</span>
+          <span class="title">{{ props.title }}</span>
+          <span class="dimension">{{ props.width }} x {{ props.height }}</span>
         </div>
         <!-- Show a loader when state.isLoading == true -->
         <div v-show="state.isLoading" class="artboard__loader is-loading">
@@ -34,24 +36,28 @@
       </div>
       <div class="artboard__keypoints" />
       <div
+        ref="artboardResizable"
         class="artboard__content"
         :class="{
           'layout--horizontal': state.horizontalLayout,
           'is-hover': state.isHover,
           'is-selected': state.isSelected,
         }"
+        :style="{ height: props.height + 'px', width: props.width + 'px' }"
       >
-        <WebPage
-          :id="id"
-          :artboard-id="id"
-          ref="frame"
-          :allow-interactions="state.canInteractWithWebContext"
-          class="webview"
-          :style="{ height: height + 'px', width: width + 'px' }"
-          @loadstart="state.isLoading = true"
-          @loadend="state.isLoading = false"
-          @scroll="updateScrollPosition"
-        />
+        <div class="content__frame">
+          <WebPage
+            :id="props.id"
+            :artboard-id="props.id"
+            ref="frame"
+            :allow-interactions="state.canInteractWithWebContext"
+            class="webview"
+            @loadstart="state.isLoading = true"
+            @loadend="state.isLoading = false"
+            @scroll="updateScrollPosition"
+          />
+        </div>
+
         <!-- TODO: Re-enable -->
         <!-- <div class="artboard__cross-browser-screenshots">
           <CrossBrowserScreenshots
@@ -90,11 +96,11 @@ import {
 import { defineEmits } from 'vue'
 import rightClickMenu from '~/mixins/rightClickMenu'
 import WebPage from './WebPage.vue'
-import CrossBrowserScreenshots from '~/components/CrossBrowser/Screenshots/CrossBrowserScreenshots.vue'
 import { useHistoryStore } from '~/store/history'
 import { useSelectedArtboardsStore } from '~/store/selectedArtboards'
 import { useHoverArtboardsStore } from '~/store/hoverArtboards'
 import { useInteractionStore } from '~/store/interactions'
+import CrossBrowserScreenshots from '~/components/CrossBrowser/Screenshots/CrossBrowserScreenshots.vue'
 
 const history = useHistoryStore()
 const selectedArtboards = useSelectedArtboardsStore()
@@ -152,6 +158,7 @@ const computedVars = reactive({
 // Template refs
 const frame = ref<Ref | null>(null)
 const artboard = ref()
+const artboardResizable = ref()
 
 const scrollPosition = reactive({
   x: 0,
@@ -266,7 +273,7 @@ function triggerResize(event, direction) {
   console.log('should resize', event, direction)
   const vm = this
 
-  const parent = artboard.value
+  const parent = artboardResizable.value
   const resizable = parent
   const startX = event.clientX
   const startY = event.clientY
@@ -298,46 +305,37 @@ function triggerResize(event, direction) {
   }
 
   // Resize objects
-  let isDraggingTracker
   function doDrag(e) {
     // This event needs to be debounced, as it's called on mousemove
     // Debounce via https://gomakethings.com/debouncing-your-javascript-events/
-    if (isDraggingTracker) {
-      window.cancelAnimationFrame(isDraggingTracker)
+    switch (direction) {
+      case 'horizontal':
+        // Run our scroll functions
+        resizable.style.width = startWidth + e.clientX - startX + 'px'
+        // Update the dimensions in the UI
+        emit('resize', {
+          id: props.id,
+          width: parseInt(resizable.style.width, 10),
+          height: startHeight,
+        })
+        break
+      case 'vertical':
+        // Run our scroll functions
+        resizable.style.height = startHeight + e.clientY - startY + 'px'
+        // Update the dimensions in the UI
+        emit('resize', {
+          id: props.id,
+          height: parseInt(resizable.style.height, 10),
+          width: startWidth,
+        })
+        break
     }
-
-    // Setup the new requestAnimationFrame()
-    isDraggingTracker = window.requestAnimationFrame(function () {
-      switch (direction) {
-        case 'horizontal':
-          // Run our scroll functions
-          resizable.style.width = startWidth + e.clientX - startX + 'px'
-          // Update the dimensions in the UI
-          emit('resize', {
-            id: props.id,
-            width: parseInt(resizable.style.width, 10),
-            height: startHeight,
-          })
-          break
-
-        case 'vertical':
-          // Run our scroll functions
-          resizable.style.height = startHeight + e.clientY - startY + 'px'
-          // Update the dimensions in the UI
-          emit('resize', {
-            id: props.id,
-            height: parseInt(resizable.style.height, 10),
-            width: startWidth,
-          })
-          break
-      }
-    })
   }
 
   function stopDrag() {
-    document.documentElement.removeEventListener('mousedown', doStart, false)
-    document.documentElement.removeEventListener('mousemove', doDrag, false)
-    document.documentElement.removeEventListener('mouseup', stopDrag, false)
+    document.documentElement.removeEventListener('mousedown', doStart)
+    document.documentElement.removeEventListener('mousemove', doDrag)
+    document.documentElement.removeEventListener('mouseup', stopDrag)
 
     // Re-enable pointer events on frames
     // const frames = document.getElementsByClassName('frame')
@@ -369,7 +367,6 @@ $artboard-handle-height: 1.5rem;
 .artboard-container {
   display: block;
   position: relative;
-  margin-right: 15rem;
   width: auto;
   height: auto;
   align-self: flex-start; // Prevent stretching to flex container height
@@ -419,55 +416,52 @@ $artboard-handle-height: 1.5rem;
     transition: all 250ms ease-out;
   }
 
+  $artboard-content-radius: 1rem;
   .artboard__content {
-    min-width: 100%;
     width: auto;
-    min-height: 100%;
     height: auto;
     position: relative;
-    border: 4px solid white;
-    border-radius: 1rem;
-    box-sizing: border-box;
-    // background: #ffffff;
-    transition: all 100ms ease-out;
-    // box-shadow: 0 4px 10px rgba(#000, 0.1);
     z-index: 1;
+    box-sizing: border-box;
+    transition: border-radius 50ms ease-out, box-shadow 200ms ease-out; // animate the hover effects
 
     &:hover,
     &.is-hover {
-      border-color: #929292;
       cursor: pointer;
-      box-shadow: 0 2rem 3rem rgba(#000, 0.15);
+      box-shadow: 0 0 1rem rgba(white, 1), 0 3rem 5rem 1rem rgba(#000, 0.2);
+
+      & .content__frame {
+        border-radius: $artboard-content-radius;
+      }
     }
 
     &.is-selected {
-      background: rgba(226, 239, 255, 0.63);
-      border-color: #2f82ea;
+      .content__frame {
+        background: rgba(226, 239, 255, 0.63);
+        box-shadow: 0 0 1rem rgba(blue, 1);
+        // Remove the rounded corners once selected
+        border-radius: 0;
+      }
     }
 
-    // Remove the rounded corners once selected
-    &.is-selected,
-    &.is-selected .frame {
-      border-radius: 0;
-    }
-
-    .frame {
-      border-radius: 1rem;
+    .content__frame {
+      min-width: 100%; // the outer div is always set to the accurate artboard width
+      min-height: 100%; // the outer div is always set to the accurate artboard height
+      border: none;
       overflow: hidden;
       z-index: 1;
+      box-sizing: border-box;
+      transition: box-shadow 200ms ease-out; // animate the shadow when selecting the frame
     }
 
     &.layout--horizontal {
       display: flex;
       flex-direction: row;
       // flex-wrap: wrap;
-      max-width: 100%;
     }
 
     .artboard__cross-browser-screenshots {
       position: relative;
-      // left: 100%;
-      // top: 0;
       width: auto;
     }
   }
