@@ -20,7 +20,7 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
+import { onBeforeUnmount, onMounted, reactive, ref, watch, computed } from 'vue'
 import SelectionArea from '@viselect/vanilla'
 import Artboard from './Artboard.vue'
 import WelcomeScreen from './WelcomeScreen.vue'
@@ -66,6 +66,8 @@ onMounted(() => {
   )
 
   useEventListener(window, 'keyup', cmdHandler)
+
+  createSelectionInstance()
 })
 
 // TODO Consider enabling this once panzoom is a Vue plugin?
@@ -93,7 +95,7 @@ function fitToScreen() {
   this.$parent.fitToScreen()
 }
 
-function enableSelections() {
+function createSelectionInstance() {
   data.selectionInstance = new SelectionArea({
     selectables: ['.artboard'], // All elements in this container can be selected
     startAreas: ['#canvas'], // Query selectors for elements from where a selection can be started from.
@@ -217,6 +219,10 @@ function enableSelections() {
     })
 }
 
+function enableSelections() {
+  data.selectionInstance?.enable()
+}
+
 function disableSelections() {
   data.selectionInstance?.disable()
 }
@@ -293,6 +299,7 @@ function onElementObserved(entries) {
 #artboards {
   position: relative;
   display: inline-flex;
+  gap: 10rem;
   flex-direction: row;
   flex-wrap: nowrap;
   user-select: none;
