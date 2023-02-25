@@ -14,8 +14,8 @@
 import path from 'path'
 import { mapState } from 'pinia'
 import { state as reflexState, setPublisher } from '~/mixins/reflex-sync'
-import remote from '@electron/remote'
 import { useHistoryStore } from '~/store/history'
+import remote from '@electron/remote'
 import { watch } from '@nuxtjs/composition-api'
 
 export default {
@@ -38,9 +38,6 @@ export default {
     }
   },
   computed: {
-    // ...mapState({
-    //   url: (state) => state.history.currentPage.url,
-    // }),
     ...mapState(useHistoryStore, {
       pages: (store) => store.pages,
       currentPage: (store) => store.currentPage,
@@ -94,17 +91,17 @@ export default {
         }) => {
           switch (name) {
             case 'reload':
-            this.reload()
-            break
+              this.reload()
+              break
             case 'back':
-            this.back()
-            break
+              this.back()
+              break
             case 'forward':
-            this.forward()
-            break
-          default:
-            break
-        }
+              this.forward()
+              break
+            default:
+              break
+          }
         }
       )
     })
@@ -183,7 +180,8 @@ export default {
       // frame.loadURL(pages[nextPage]);
 
       // Update the URL in the store
-      this.$store.commit('history/changeSiteData', {
+      const history = useHistoryStore()
+      history.changeSiteData({
         url: pages[nextPage],
       })
 
@@ -280,7 +278,9 @@ export default {
 
       // Change the title to Loading...
       // TODO Add a VueX action for this?
-      this.$store.commit('history/changeSiteData', {
+
+      const history = useHistoryStore()
+      history.changeSiteData({
         title: 'Loading...',
       })
     },
@@ -323,7 +323,8 @@ export default {
         const favicon = returnedData.favicon
 
         // TODO Add to VueX Action
-        this.$store.commit('history/changeSiteData', {
+        const history = useHistoryStore()
+        history.changeSiteData({
           title,
           favicon,
         })
@@ -339,14 +340,22 @@ export default {
       this.$emit('loadend') // Hide loading spinner
 
       // History
+      // TODO: webContents.history is no longer around https://github.com/electron/electron/issues/26727
+      // how should we track the page history?
       // If the call said history:false, then we need to update history
       // TODO Shouldn't this only update when history:true?
-      if (this.options.history === false) {
-        this.$store.commit(
-          'history/updateHistory',
-          remote.webContents.fromId(frame.getWebContentsId()).history
-        )
-      }
+      // if (this.options.history === false) {
+      //   const history = useHistoryStore()
+      //   const id = frame.getWebContentsId()
+
+      //   // We'll search through all the
+      //   const pages = remote.webContents.fromId(id).history
+      //   if (!pages) {
+      //     console.warn('No history found')
+      //     return false
+      //   }
+      //   history.updateHistory(pages)
+      // }
     },
     loadabort() {
       this.$emit('loadend') // Hide loading spinner
@@ -363,7 +372,8 @@ export default {
       // Handle user clicking on a link inside of the webview
       // TODO This should add a new page to the History
       // TODO Add to VueX Action
-      this.$store.commit('history/changeSiteData', {
+      const history = useHistoryStore()
+      history.changeSiteData({
         url: event.url,
       })
     },
