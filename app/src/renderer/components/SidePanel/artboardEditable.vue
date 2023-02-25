@@ -15,7 +15,7 @@
             v-model="localFormData.title"
             type="text"
             placeholder="Title"
-            @keyup.enter="save(artboard), (editMode = false)"
+            @keyup.enter="save(artboard)"
           />
         </div>
         <div class="group group--two-up">
@@ -26,7 +26,7 @@
                 v-model="localFormData.width"
                 type="number"
                 placeholder="Width"
-                @keyup.enter="save(artboard), (editMode = false)"
+                @keyup.enter="save(artboard)"
               />
               <label>W</label>
             </div>
@@ -35,7 +35,7 @@
                 v-model="localFormData.height"
                 type="number"
                 placeholder="Height"
-                @keyup.enter="save(artboard), (editMode = false)"
+                @keyup.enter="save(artboard)"
               />
               <label>H</label>
             </div>
@@ -43,9 +43,7 @@
 
           <div class="buttons">
             <!-- TODO Cancel button doesn't really cancel/undo... -->
-            <Button role="secondary" @click="cancelEdit(), (editMode = false)">
-              Cancel
-            </Button>
+            <Button role="secondary" @click="cancelEdit()"> Cancel </Button>
             <Button role="primary" @click="save(artboard)">Save</Button>
           </div>
         </div>
@@ -160,6 +158,8 @@ export default {
       })
     },
     cancelEdit() {
+      this.editMode = false
+
       // Reset to Vuex store state
       this.localFormData = this.artboards
     },
