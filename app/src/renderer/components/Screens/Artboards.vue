@@ -39,11 +39,11 @@ const interactions = useInteractionStore()
 const data = reactive({
   selectionInstance: <SelectionArea | null>null, // TODO: Improve type
   viewportObserverParent: <IntersectionObserver | undefined>undefined,
-  artboards: artboards.list,
-  selectedArtboards: selectedArtboards.list,
-  panzoomEnabled: interactions.panzoomEnabled,
-  isInteracting: interactions.isInteracting,
-  currentContext: interactions.currentContext,
+  artboards: computed(() => artboards.list),
+  selectedArtboards: computed(() => selectedArtboards.list),
+  panzoomEnabled: computed(() => interactions.panzoomEnabled),
+  isInteracting: computed(() => interactions.isInteracting),
+  currentContext: computed(() => interactions.currentContext),
 })
 
 const containerRef = ref<HTMLElement | undefined>()
