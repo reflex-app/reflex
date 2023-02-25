@@ -14,11 +14,6 @@
     <div v-if="data.artboards.length" id="toolbar__url-container">
       <HistoryControls />
       <div class="bar">
-        <!-- <div class="bar__left">
-          <div v-show="!state.inputStateActive" class="sync">
-            <SyncButton />
-          </div>
-        </div> -->
         <div
           class="bar__right"
           :class="{ 'is-active': state.inputStateActive }"
@@ -56,12 +51,12 @@ import { computed, onMounted, reactive } from 'vue'
 import * as remote from '@electron/remote'
 import isElectron from 'is-electron'
 import URLInput from '@/components/ToolBar/URLInput.vue'
-import SyncButton from '@/components/ToolBar/SyncButton.vue'
 import HistoryControls from '@/components/ToolBar/HistoryControls.vue'
 import InstallUpdateButton from '@/components/ToolBar/InstallUpdateButton.vue'
 import SwitchMode from '@/components/ToolBar/SwitchMode.vue'
 import UpdateChannel from '@/components/Settings/UpdateChannel.vue'
 import Artboard from '@/components/Screens/Artboard.vue'
+
 // Pinia
 import { useArtboardsStore } from '~/store/artboards'
 import { useHistoryStore } from '~/store/history'
@@ -103,22 +98,20 @@ onMounted(() => {
   }
 })
 
-function changeURL() {
-  debounce(function (url) {
-    // Change the URL
-    // TODO Check if it's a valid URL
-    history.changeSiteData({
-      url,
-    })
+function changeURL(url) {
+  // Change the URL
+  // TODO: Add debounce?
+  console.log('should do stuff')
 
-    console.log('change url triggered')
+  history.changeSiteData({
+    url,
+  })
 
-    // Add this new page to the history
-    history.addPageToHistory(url)
+  // Add this new page to the history
+  history.addPageToHistory(url)
 
-    // Off
-    state.inputStateActive = false
-  }, 100)
+  // Off
+  state.inputStateActive = false
 }
 
 function toggleSidebar() {
