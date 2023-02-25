@@ -209,8 +209,8 @@ onMounted(async () => {
 })
 
 function updateScrollPosition({ x, y }) {
-  this.scrollPosition.x = x
-  this.scrollPosition.y = y
+  scrollPosition.x = x
+  scrollPosition.y = y
 }
 
 function rightClickHandler() {
