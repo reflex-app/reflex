@@ -84,24 +84,29 @@ export default {
 
       // Watch for History actions
       const history = useHistoryStore()
-      this.unsubscribeAction = history.$subscribe((mutation, state) => {
-        switch (mutation.type) {
-          case 'history/reload':
+      this.unsubscribeAction = history.$onAction(
+        ({
+          name, // name of the action
+          store, // store instance, same as `someStore`
+          args, // array of parameters passed to the action
+          after, // hook after the action returns or resolves
+          onError, // hook if the action throws or rejects
+        }) => {
+          switch (name) {
+            case 'reload':
             this.reload()
             break
-
-          case 'history/back':
+            case 'back':
             this.back()
             break
-
-          case 'history/forward':
+            case 'forward':
             this.forward()
             break
-
           default:
             break
         }
-      })
+        }
+      )
     })
   },
   beforeDestroy() {
