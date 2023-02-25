@@ -25,8 +25,9 @@ export const useGuiStore = defineStore('gui', {
         this.sidebar = !this.sidebar
       }
     },
-    toggleGui(state, key) {
-      state[key] = !state[key]
+    toggleGui(key: string) {
+      // Reverse the boolean value of the state key
+      this[key] = !this[key]
     },
   },
 })
