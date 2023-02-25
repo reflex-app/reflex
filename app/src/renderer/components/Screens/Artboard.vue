@@ -106,12 +106,11 @@ const state = reactive({
   horizontalLayout: true,
   panzoomEnabled: computed(() => interactions.panzoomEnabled),
   isInteracting: computed(() => interactions.isInteracting),
-  isHover() {
-    const isHover = computedVars.hoverArtboards.filter(
-      (item) => item === props.id
-    )
-    return isHover.length ? true : false
-  },
+  isHover: computed(() =>
+    computedVars.hoverArtboards.filter((item) => item === props.id).length
+      ? true
+      : false
+  ),
   isSelected: computed(() => {
     const isSelected = computedVars.selectedArtboards.filter(
       (item) => item === props.id
