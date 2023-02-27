@@ -75,7 +75,6 @@ function jsonStringToObject(string: string): IDomObject | {} {
       parsed = { tag: parsed }
     }
 
-    console.log(parsed)
     return parsed
   } catch (e) {
     console.error('Error parsing nodes JSON:', e)
@@ -125,7 +124,6 @@ function highlightDomElement(id: string, hoveredElement: HTMLElement) {
   }
 
   const elements: IDomObject | 'window' | 'document' = JSON.parse(elementJson)
-  console.log(elements)
   if (!elements) {
     console.error('No elements found', elements)
     return false
@@ -143,10 +141,10 @@ function highlightDomElement(id: string, hoveredElement: HTMLElement) {
   const root = document.createElement('div')
   root.appendChild(nodes)
   const node = nodeMap.get(nodes)
-  console.log(nodes) // This will log the original DOM node
+  // console.log(nodes) // This will log the original DOM node
 
   const isNodeInDOM = document.body.contains(nodes)
-  console.log('Is node in DOM?', isNodeInDOM)
+  // console.log('Is node in DOM?', isNodeInDOM)
 
   if (!isNodeInDOM) {
     // DOM Node is outdated
@@ -158,16 +156,16 @@ function highlightDomElement(id: string, hoveredElement: HTMLElement) {
 
     // Example: 'div' + 'data-v-123' + ''
     const selector = `${tagName}${convertAttrsToQuerySelector(attrs)}`
-    console.log(selector)
+    // console.log(selector)
 
     const liveNodes = document.querySelectorAll(selector)
     liveNodes.forEach((node) => {
       highlight(node)
     })
-    console.log(liveNodes)
+    // console.log(liveNodes)
   } else {
     highlight(nodes)
-    console.log(nodes)
+    // console.log(nodes)
   }
 
   function highlight(node) {
@@ -224,7 +222,7 @@ onMounted(() => {
         element = null
       }
 
-      console.log(element)
+      // console.log(element)
 
       return {
         id: uniqueId(),
@@ -243,22 +241,8 @@ onMounted(() => {
   }
 
   checkEventListeners()
-
   // setInterval(() => checkEventListeners(), 1000)
 })
-
-function getCircularReplacer() {
-  const seen = new WeakSet()
-  return (key, value) => {
-    if (typeof value === 'object' && value !== null) {
-      if (seen.has(value)) {
-        return
-      }
-      seen.add(value)
-    }
-    return value
-  }
-}
 
 function nodesToJson(node: any) {
   if (node === document) {
