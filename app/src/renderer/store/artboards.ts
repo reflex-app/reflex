@@ -3,7 +3,7 @@ import { useStorage } from '@vueuse/core'
 import { v1 as uuid } from 'uuid'
 import Vue from 'vue'
 
-interface Artboard {
+export interface Artboard {
   height: number
   width: number
   title: string
