@@ -2,32 +2,32 @@
   <div id="screenshots">
     <!-- One selected -->
     <transition name="slide-fade">
-      <div v-if="selectedArtboards.length > 0" class="modal">
+      <div v-if="selectedArtboards.list.length > 0" class="modal">
         <div>
           <Button role="primary" @click="screenshotSelected">
             Save
             {{
-              selectedArtboards.length > 1
-                ? selectedArtboards.length + ' images...'
-                : selectedArtboards.length + ' image...'
+              selectedArtboards.list.length > 1
+                ? selectedArtboards.list.length + ' images...'
+                : selectedArtboards.list.length + ' image...'
             }}
           </Button>
           <Button
-            v-if="selectedArtboards.length === 1"
+            v-if="selectedArtboards.list.length === 1"
             role="secondary"
             @click="copyToClipboard()"
           >
             Copy to Clipboard
           </Button>
           <Button
-            v-if="selectedArtboards.length >= 1"
+            v-if="selectedArtboards.list.length >= 1"
             role="secondary"
             @click="deleteMultiple()"
           >
             Delete selected
           </Button>
           <!-- <Button
-            v-if="selectedArtboards.length === 1"
+            v-if="selectedArtboards.list.length === 1"
             role="secondary"
             @click="copyToClipboard"
             >Run Cross-browser</Button
@@ -151,13 +151,13 @@ async function copyToClipboard() {
 //   )
 
 //   // Store the previous height
-//   this.prevArtboardHeights.push({
+//   data.prevArtboardHeights.push({
 //     id,
 //     height: parseInt(webviewEl.style.height, 10),
 //   })
 
 //   // Temporarily expand the height of the artboard
-//   const artboard = this.artboards.find((artboard) => artboard.id === id)
+//   const artboard = data.artboards.find((artboard) => artboard.id === id)
 //   this.$store.dispatch('artboards/resizeArtboard', {
 //     ...artboard,
 //     height: tempHeight,
@@ -190,7 +190,7 @@ async function showFullPreviews() {
 
 async function hideFullPreviews() {
   // Loop through each artboard
-  for (const id of this.selectedArtboards) {
+  for (const id of selectedArtboards.list) {
     const webviewEl = capture.getWebview(id)
     const webviewElContents = capture.getWebViewContents(id)
     const tempHeight = await webviewElContents.executeJavaScript(
@@ -198,13 +198,13 @@ async function hideFullPreviews() {
     )
 
     // Revert to original height
-    const { height: prevHeight } = this.prevArtboardHeights.find(
+    const { height: prevHeight } = data.prevArtboardHeights.find(
       (artboard) => artboard.id === id
     )
-    const artboard = this.artboards.find((artboard) => artboard.id === id)
+    const artboard = data.artboards.find((artboard) => artboard.id === id)
 
     // Remove last height from array
-    this.prevArtboardHeights = this.prevArtboardHeights.filter(
+    data.prevArtboardHeights = data.prevArtboardHeights.filter(
       (artboard) => artboard.id !== id
     )
 

@@ -16,7 +16,7 @@ import { mapState } from 'pinia'
 import { state as reflexState, setPublisher } from '~/mixins/reflex-sync'
 import { useHistoryStore } from '~/store/history'
 import remote from '@electron/remote'
-import { watch } from '@nuxtjs/composition-api'
+import { watch, ref, Ref } from 'vue'
 
 export default {
   props: {
@@ -60,12 +60,12 @@ export default {
         this.loadSite()
       },
     },
-    allowInteractions(value) {
+    allowInteractions(allowed) {
       // Toggle frame pointer-events
       const element = this.$refs.frame
-      if (value === true) {
+      if (allowed === true) {
         element.style.pointerEvents = 'auto' // Allow interacting with webpage
-      } else if (value === false) {
+      } else if (allowed === false) {
         element.style.pointerEvents = 'none' // Disable interactions with webpage
       }
     },
