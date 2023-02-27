@@ -5,27 +5,17 @@
       <div @click="zoomIn">+</div>
       <div @click="reset">Reset</div>
     </template>
-    <!-- <SwitchButton :value="true" label="Canvas" @onToggle="toggleCanvas" /> -->
-    <!-- {{ currentContext }} -->
   </div>
 </template>
 
 <script setup lang="ts">
-import SwitchButton from '@/components/Shared/Switch.vue'
 import { computed, reactive, defineProps } from 'vue'
-import { useInteractionStore } from '~/store/interactions'
-
-const interactions = useInteractionStore()
 
 const props = defineProps({
   instance: {
     type: Object,
     required: true,
   },
-})
-
-const data = reactive({
-  interactions: computed(() => interactions.currentContext),
 })
 
 const state = reactive({
@@ -53,6 +43,7 @@ function reset() {
   border-bottom: 1px solid rgba(black, 0.1);
   font-size: 1rem;
   z-index: 1;
+  user-select: none;
 
   & > * {
     padding: 0.5rem 1.25rem;
