@@ -60,33 +60,46 @@ export default function useEventHandler() {
   //   { deep: true }
   // )
 
-  const boundary = '.panzoom-container' // The area where we'll listen for click events
+  const boundary = '#canvas' // The area where we'll listen for click events
+  const boundaryEl = () => document.querySelector(boundary)
 
   const init = () => {
     console.log('init')
 
     // Event Listeners
     // CMD/CTRL keyboard shortcuts
-    useEventListener(document, 'keydown', keyboardHandler)
-    useEventListener(document, 'keyup', () => {
-      // Emit event
-      emitter.emit('isCtrlPressed', false) // TODO: This should be handled elsewhere
-    })
+
+    // IMPORTANT: We enable the Event Listener's 'capture', so that
+    // these functions will always be triggered before listeners
+    // defined at more specific points in the application
+    useEventListener(document, 'keydown', keyboardHandler, true)
+    useEventListener(
+      document,
+      'keyup',
+      () => {
+        // Emit event
+        emitter.emit('isCtrlPressed', false) // TODO: This should be handled elsewhere
+      },
+      true
+    )
 
     // Handle click/drag events
     // useEventListener(boundary, 'mousedown', onMouseDown) // start
     // useEventListener(boundary, 'mouseup', onMouseUp) // end
 
+    // IMPORTANT: We enable the Event Listener's 'capture', so that
+    // these functions will always be triggered before listeners
+    // defined at more specific points in the application
     // Emit start events
     const onEvents = ['mousedown', 'touchstart', 'gesturestart']
     onEvents.forEach((name) => {
-      document.querySelector(boundary)?.addEventListener(name, onMouseDown)
+      useEventListener(boundaryEl(), name, onMouseDown, true)
     })
 
     const offEvents = ['mouseup', 'touchend', 'gestureend']
     offEvents.forEach((name) => {
       // document.querySelector(boundary).removeEventListener(name, onMouseDown)
-      document.querySelector(boundary)?.addEventListener(name, onMouseUp)
+      useEventListener(boundaryEl(), name, onMouseUp, true)
     })
 
     // TODO: Add touch, gesture as well
