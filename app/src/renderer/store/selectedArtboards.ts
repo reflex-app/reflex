@@ -1,9 +1,14 @@
+import { Artboard } from './artboards'
 import { defineStore } from 'pinia'
+
+interface State {
+  list: Artboard[]
+}
 
 export const useSelectedArtboardsStore = defineStore('selectedArtboards', {
   // A list of selected artboards by index
   // I.e. state.selectedArtboards = [ 0, 3 ]
-  state: () => ({
+  state: (): State => ({
     list: [],
   }),
   actions: {
