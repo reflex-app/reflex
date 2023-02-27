@@ -92,8 +92,9 @@ import {
   onMounted,
   ref,
   Ref,
-} from '@nuxtjs/composition-api'
-import { defineEmits } from 'vue'
+  defineEmits,
+  watch,
+} from 'vue'
 import rightClickMenu from '~/mixins/rightClickMenu'
 import WebPage from './WebPage.vue'
 import { useHistoryStore } from '~/store/history'
@@ -107,11 +108,24 @@ const selectedArtboards = useSelectedArtboardsStore()
 const hoverArtboards = useHoverArtboardsStore()
 const interactions = useInteractionStore()
 
+watch(interactions.$state.internal, (internal) => {
+  // TODO: Pinia Getter is not working in Vue 2: isInteracting: computed(() => interactions.isInteracting),
+  let isOn = false
+
+  for (const key in internal) {
+    if (internal[key] === true) {
+      isOn = true
+    }
+  }
+
+  state.isInteracting = isOn
+})
+
 const state = reactive({
   isLoading: false,
   horizontalLayout: true,
   panzoomEnabled: computed(() => interactions.panzoomEnabled),
-  isInteracting: computed(() => interactions.isInteracting),
+  isInteracting: false,
   isHover: computed(() =>
     computedVars.hoverArtboards.filter((item) => item === props.id).length
       ? true
@@ -129,23 +143,20 @@ const state = reactive({
    * artboard (WebView) when the artboard is selected
    * and the user is not dragging a selection area
    */
-  // canInteractWithWebContext: computed(() => {
-  //   if (this.isSelected === false) return false // Not selected!
-  //   if (this.isSelected && this.isInteracting === false) {
-  //     return true // Can interact!
-  //   } else {
-  //     interactions.setWebInteractionState(false) // Update global state
-  //     return false // Otherwise, false
-  //   }
-  // }),
   canInteractWithWebContext: computed(() => {
-    if (state.isSelected === false) return false // Not selected!
-    if (state.isSelected && state.isInteracting === false) {
-      return true // Can interact!
-    } else {
+    // This artboard must be 'selected'
+    if (!state.isSelected) return false
+
+    // Artboard is selected, but user is also doing an interaction
+    // Disable interactions with the Web Context
+    if (state.isSelected && state.isInteracting) {
       interactions.setWebInteractionState(false) // Update global state
-      return false // Otherwise, false
-    }
+      return false
+    } else if (state.isSelected && !state.isInteracting)
+      // Artboard is selected and user is not interacting
+      // Allow interactions in WebPage!
+      interactions.setWebInteractionState(true) // Update global state
+    return true
   }),
 })
 
