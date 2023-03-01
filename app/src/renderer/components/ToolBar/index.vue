@@ -1,40 +1,43 @@
 <template>
-  <div id="toolbar" :class="{ 'is-fullscreen': isFullScreen, 'is-mac': isMac }">
+  <div
+    id="toolbar"
+    :class="{ 'is-fullscreen': state.isFullScreen, 'is-mac': state.isMac }"
+  >
     <Button
       role="ghost"
       icon="screens"
       :tight="true"
-      :is-pressed="sidebar"
+      :is-pressed="data.sidebar"
       title="Screens"
       @click="toggleSidebar"
     />
-    <div v-if="artboards.length" id="toolbar__url-container">
+    <div v-if="data.artboards.length" id="toolbar__url-container">
       <HistoryControls />
       <div class="bar">
-        <!-- <div class="bar__left">
-          <div v-show="!inputStateActive" class="sync">
-            <SyncButton />
-          </div>
-        </div> -->
-        <div class="bar__right" :class="{ 'is-active': inputStateActive }">
+        <div
+          class="bar__right"
+          :class="{ 'is-active': state.inputStateActive }"
+        >
           <div
-            v-show="!inputStateActive"
-            @click="inputStateActive = !inputStateActive"
+            v-show="!state.inputStateActive"
+            @click="state.inputStateActive = !state.inputStateActive"
           >
             <!-- <img v-if="favicon" :src="favicon" class="favicon" height="10" width="10"> -->
-            <span class="title" :title="title">{{ title }}</span>
+            <span class="title" :title="data.title || 'Page title'">{{
+              data.title
+            }}</span>
           </div>
           <URLInput
             class="input"
-            :state="inputStateActive"
+            :state="state.inputStateActive"
             @url-changed="changeURL"
-            @toggle-input="inputStateActive = !inputStateActive"
+            @toggle-input="state.inputStateActive = !state.inputStateActive"
           />
         </div>
       </div>
     </div>
     <div id="toolbar__recentURLs" />
-    <div v-if="artboards.length" class="toolbar__right">
+    <div v-if="data.artboards.length" class="toolbar__right">
       <SwitchMode />
     </div>
     <!-- <UpdateChannel /> -->
@@ -43,100 +46,97 @@
   </div>
 </template>
 
-<script>
-import { mapState } from 'vuex'
+<script setup lang="ts">
+import { computed, onMounted, reactive } from 'vue'
 import * as remote from '@electron/remote'
 import isElectron from 'is-electron'
 import URLInput from '@/components/ToolBar/URLInput.vue'
-import SyncButton from '@/components/ToolBar/SyncButton.vue'
 import HistoryControls from '@/components/ToolBar/HistoryControls.vue'
 import InstallUpdateButton from '@/components/ToolBar/InstallUpdateButton.vue'
-import SwitchMode from '@/components/ToolBar/SwitchMode'
+import SwitchMode from '@/components/ToolBar/SwitchMode.vue'
 import UpdateChannel from '@/components/Settings/UpdateChannel.vue'
-import Artboard from '../Screens/Artboard.vue'
+import Artboard from '@/components/Screens/Artboard.vue'
+
+// Pinia
+import { useArtboardsStore } from '~/store/artboards'
+import { useHistoryStore } from '~/store/history'
+import { useGuiStore } from '~/store/gui'
+
+const artboards = useArtboardsStore()
+const history = useHistoryStore()
+const gui = useGuiStore()
 
 const debounce = require('lodash.debounce')
 
-export default {
-  name: 'ToolBar',
-  components: {
-    URLInput,
-    HistoryControls,
-    SyncButton,
-    InstallUpdateButton,
-    SwitchMode,
-    Artboard,
-    UpdateChannel,
-  },
-  data() {
-    return {
-      inputStateActive: false,
-      isFullScreen: false,
-      currentWindow: null,
-    }
-  },
-  computed: {
-    ...mapState({
-      artboards: (state) => state.artboards.list,
-      title: (state) => state.history.currentPage.title,
-      url: (state) => state.history.currentPage.url,
-      favicon: (state) => state.history.currentPage.favicon,
-      sidebar: (state) => state.gui.sidebar,
-    }),
-    isMac() {
-      return process.platform === 'darwin'
-    },
-  },
-  methods: {
-    changeURL: debounce(function (url) {
-      // Change the URL
-      // TODO Check if it's a valid URL
-      this.$store.commit('history/changeSiteData', {
-        url,
-      })
+const data = reactive({
+  artboards: computed(() => artboards.list),
+  title: computed(() => history.currentPage.title),
+  url: computed(() => history.currentPage.url),
+  favicon: computed(() => history.currentPage.favicon),
+  sidebar: computed(() => gui.sidebar),
+})
 
-      console.log('change url triggered')
+const state = reactive({
+  inputStateActive: false,
+  isFullScreen: false,
+  currentWindow: null,
 
-      // Add this new page to the history
-      this.$store.dispatch('history/addPageToHistory', url)
-
-      // Off
-      this.inputStateActive = false
-    }, 100),
-    toggleSidebar() {
-      this.$store.commit('gui/toggleSidebar')
-    },
-    toggleWindowMaximize() {
-      const window = remote.getCurrentWindow()
-      const isMaximized = window.isMaximized()
-      // Do the opposite
-      if (isMaximized) {
-        window.unmaximize()
-      } else {
-        window.maximize()
-      }
-    },
-    toggleFullscreen() {
-      // TODO Error about calling a window that has
-      // already been closed
-      // To avoid this problem, ensure you clean up any references to renderer callbacks passed to the main process.
-      // This involves cleaning up event handlers, or ensuring the main process is explicitly told to dereference callbacks that came from a renderer process that is exiting.
-      // See: https://electronjs.org/docs/api/remote#passing-callbacks-to-the-main-process
-      const window = remote.getCurrentWindow()
-      this.isFullScreen = !!window.isFullScreen()
-    },
+  isMac() {
+    return process.platform === 'darwin'
   },
-  mounted() {
-    if (isElectron()) {
-      // Check if already in fullscreen
-      this.toggleFullscreen()
+})
 
-      // Listen for fullscreen event
-      const currentWindow = remote.getCurrentWindow()
-      currentWindow.on('enter-full-screen', this.toggleFullscreen)
-      currentWindow.on('leave-full-screen', this.toggleFullscreen)
-    }
-  },
+onMounted(() => {
+  if (isElectron()) {
+    // Check if already in fullscreen
+    toggleFullscreen()
+
+    // Listen for fullscreen event
+    const currentWindow = remote.getCurrentWindow()
+    currentWindow.on('enter-full-screen', toggleFullscreen)
+    currentWindow.on('leave-full-screen', toggleFullscreen)
+  }
+})
+
+function changeURL(url) {
+  // Change the URL
+  // TODO: Add debounce?
+  console.log('should do stuff')
+
+  history.changeSiteData({
+    url,
+  })
+
+  // Add this new page to the history
+  history.addPageToHistory(url)
+
+  // Off
+  state.inputStateActive = false
+}
+
+function toggleSidebar() {
+  gui.toggleSidebar()
+}
+
+function toggleWindowMaximize() {
+  const window = remote.getCurrentWindow()
+  const isMaximized = window.isMaximized()
+  // Do the opposite
+  if (isMaximized) {
+    window.unmaximize()
+  } else {
+    window.maximize()
+  }
+}
+
+function toggleFullscreen() {
+  // TODO Error about calling a window that has
+  // already been closed
+  // To avoid this problem, ensure you clean up any references to renderer callbacks passed to the main process.
+  // This involves cleaning up event handlers, or ensuring the main process is explicitly told to dereference callbacks that came from a renderer process that is exiting.
+  // See: https://electronjs.org/docs/api/remote#passing-callbacks-to-the-main-process
+  const window = remote.getCurrentWindow()
+  state.isFullScreen = !!window.isFullScreen()
 }
 </script>
 

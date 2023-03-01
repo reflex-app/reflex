@@ -15,8 +15,8 @@
             v-model="localFormData.title"
             type="text"
             placeholder="Title"
-            @keyup.enter="save(artboard), (editMode = false)"
-          >
+            @keyup.enter="save(artboard)"
+          />
         </div>
         <div class="group group--two-up">
           <label>Dimensions</label>
@@ -26,8 +26,8 @@
                 v-model="localFormData.width"
                 type="number"
                 placeholder="Width"
-                @keyup.enter="save(artboard), (editMode = false)"
-              >
+                @keyup.enter="save(artboard)"
+              />
               <label>W</label>
             </div>
             <div class="group__input-with-right-label">
@@ -35,17 +35,15 @@
                 v-model="localFormData.height"
                 type="number"
                 placeholder="Height"
-                @keyup.enter="save(artboard), (editMode = false)"
-              >
+                @keyup.enter="save(artboard)"
+              />
               <label>H</label>
             </div>
           </div>
 
           <div class="buttons">
             <!-- TODO Cancel button doesn't really cancel/undo... -->
-            <Button role="secondary" @click="cancelEdit(), (editMode = false)">
-              Cancel
-            </Button>
+            <Button role="secondary" @click="cancelEdit()"> Cancel </Button>
             <Button role="primary" @click="save(artboard)">Save</Button>
           </div>
         </div>
@@ -81,66 +79,71 @@
   </draggable>
 </template>
 
-<script>
+<script lang="ts">
 import draggable from 'vuedraggable'
-import { mapState } from 'vuex'
-import rightClickMenu from '@/mixins/rightClickMenu.js'
+import { mapState } from 'pinia'
+import rightClickMenu from '~/mixins/rightClickMenu'
+import { useArtboardsStore } from '~/store/artboards'
+import { useHoverArtboardsStore } from '~/store/hoverArtboards'
+import { useSelectedArtboardsStore } from '~/store/selectedArtboards'
 
 export default {
   name: 'ArtboardEditable',
   components: {
-    draggable
+    draggable,
   },
-  props: ['data'],
-  data () {
+  // props: ['data'],
+  data() {
     return {
       editMode: false,
       editID: null,
       localFormData: {
         title: '',
         width: 0,
-        height: 0
-      }
+        height: 0,
+      },
     }
   },
   computed: {
-    ...mapState({
-      artboards: state => state.artboards.list
+    ...mapState(useArtboardsStore, {
+      artboards: 'list', // map local artboards variable to the Store's 'list'
     }),
     artboardsGetSet: {
-      get () {
-        return this.$store.state.artboards.list
+      get() {
+        return this.artboards
       },
-      set (value) {
-        this.$store.dispatch('artboards/setArtboards', value)
-      }
+      set(value) {
+        const artboards = useArtboardsStore()
+        artboards.setArtboards(value)
+      },
     },
-    artboardVisibility (bool) {
+    artboardVisibility(bool) {
       return bool ? 'visible' : 'hidden'
-    }
+    },
   },
   methods: {
-    save (artboard) {
+    save(artboard) {
       // Disable editing mode
       this.editMode = false
       this.editID = null
 
       // Save to Store
-      this.$store.commit('artboards/updateArtboardAtIndex', {
+      const artboards = useArtboardsStore()
+      artboards.updateArtboardAtIndex({
         ...artboard,
         width: Number(this.localFormData.width),
         height: Number(this.localFormData.height),
-        title: this.localFormData.title
+        title: this.localFormData.title,
       })
     },
-    edit (id) {
+    edit(id) {
       // Udpate the state
       this.editMode = true
       this.editID = id
 
       // Fill in the latest data
       const currentArtboard = () => {
-        const obj = this.artboards.find(artboard => artboard.id === id)
+        const obj = this.artboards.find((artboard) => artboard.id === id)
         // Return a clone of the Store object
         return JSON.parse(JSON.stringify(obj))
       }
@@ -154,52 +157,63 @@ export default {
         this.$refs.input[0].select()
       })
     },
-    cancelEdit () {
+    cancelEdit() {
+      this.editMode = false
+
       // Reset to Vuex store state
       this.localFormData = this.artboards
     },
-    remove (name, id) {
+    remove(name, id) {
       // TODO Custom prompts?
       if (
         confirm(
           `Are you sure you want to delete the ${name} screen size? Click "OK" to delete.`
         )
       ) {
-        this.$store.commit('artboards/removeArtboard', id)
+        const artboards = useArtboardsStore()
+        artboards.removeArtboard(id)
       }
     },
-    goToArtboard (id) {
+    goToArtboard(id) {
       // Find the artboard (DOM)
       const artboard = document.querySelector(`[artboard-id="${id}"]`)
+      if (!artboard) {
+        console.warn('No Artboard found')
+        return false
+      }
 
       // Pan to the position of the element relative to the parent
       // TODO factor in the size of the artboard... Panzoom should scale down to fith the screen
       this.$root.$panzoom.pan(-artboard.offsetLeft, artboard.offsetTop)
     },
-    rightClickMenu (e, artboard) {
+    rightClickMenu(e, artboard) {
       rightClickMenu(this.$store, {
         title: artboard.title,
         id: artboard.id,
         width: artboard.width,
         height: artboard.height,
-        isVisible: artboard.isVisible
+        isVisible: artboard.isVisible,
       })
     },
-    hoverStart (id) {
-      this.$store.dispatch('hoverArtboards/hoverArtboardsAdd', id)
+    hoverStart(id) {
+      const hoverArtboards = useHoverArtboardsStore()
+      hoverArtboards.addHover(id)
     },
-    hoverEnd (id) {
-      this.$store.dispatch('hoverArtboards/hoverArtboardsRemove', id)
+    hoverEnd(id) {
+      const hoverArtboards = useHoverArtboardsStore()
+      hoverArtboards.removeHover(id)
     },
-    selectArtboard (id) {
+    selectArtboard(id) {
       // Move screen to the selected artboard
       this.goToArtboard(id)
       // Remove all previous selections
-      this.$store.dispatch('selectedArtboards/selectedArtboardsEmpty', id)
+      const selectedArtboards = useSelectedArtboardsStore()
+      selectedArtboards.empty()
+
       // Add the new artboard to selection
-      this.$store.dispatch('selectedArtboards/selectedArtboardsAdd', id)
-    }
-  }
+      selectedArtboards.add(id)
+    },
+  },
 }
 </script>
 

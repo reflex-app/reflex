@@ -1,54 +1,35 @@
 <template>
   <div class="panzoom-controls">
-    <template v-if="enabled">
+    <template v-if="state.enabled">
       <div @click="zoomOut">-</div>
       <div @click="zoomIn">+</div>
       <div @click="reset">Reset</div>
     </template>
-    <SwitchButton :value="true" label="Canvas" @onToggle="toggleCanvas" />
   </div>
 </template>
 
-<script>
-import SwitchButton from '@/components/Shared/Switch.vue'
-export default {
-  components: {
-    SwitchButton
-  },
-  props: {
-    instance: {
-      type: Object,
-      required: true
-    }
-  },
-  data: () => ({
-    enabled: true
-  }),
-  methods: {
-    zoomIn () {
-      this.instance.zoomIn()
-    },
-    zoomOut () {
-      this.instance.zoomOut()
-    },
-    reset () {
-      this.instance.reset()
-    },
-    /**
-     * Toggles the canvas
-     * When on, users can pan and zoom
-     * When off, users can only interact inside of Screens
-     */
-    toggleCanvas (state) {
-      // Update local state
-      this.enabled = state
+<script setup lang="ts">
+import { computed, reactive, defineProps } from 'vue'
 
-      // Update Store
-      this.$store.commit('interactions/setPanzoomState', {
-        value: state
-      })
-    }
-  }
+const props = defineProps({
+  instance: {
+    type: Object,
+    required: true,
+  },
+})
+
+const state = reactive({
+  enabled: true,
+})
+
+function zoomIn() {
+  props.instance.zoomIn()
+}
+function zoomOut() {
+  props.instance.zoomOut()
+}
+function reset() {
+  props.instance.reset()
 }
 </script>
 
@@ -62,6 +43,7 @@ export default {
   border-bottom: 1px solid rgba(black, 0.1);
   font-size: 1rem;
   z-index: 1;
+  user-select: none;
 
   & > * {
     padding: 0.5rem 1.25rem;

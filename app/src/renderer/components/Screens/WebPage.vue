@@ -10,11 +10,13 @@
   />
 </template>
 
-<script>
+<script lang="ts">
 import path from 'path'
-import { mapState } from 'vuex'
+import { mapState } from 'pinia'
 import { state as reflexState, setPublisher } from '~/mixins/reflex-sync'
+import { useHistoryStore } from '~/store/history'
 import remote from '@electron/remote'
+import { watch, ref, Ref } from 'vue'
 
 export default {
   props: {
@@ -26,7 +28,6 @@ export default {
     allowInteractions: {
       type: Boolean,
       required: true,
-      default: false,
     },
   },
   data() {
@@ -37,8 +38,10 @@ export default {
     }
   },
   computed: {
-    ...mapState({
-      url: (state) => state.history.currentPage.url,
+    ...mapState(useHistoryStore, {
+      pages: (store) => store.pages,
+      currentPage: (store) => store.currentPage,
+      url: (store) => store.currentPage.url,
     }),
     injectScript() {
       // const appPath = remote.app.getPath('appData')
@@ -57,23 +60,19 @@ export default {
         this.loadSite()
       },
     },
-    allowInteractions(value) {
+    allowInteractions(allowed) {
       // Toggle frame pointer-events
       const element = this.$refs.frame
-      if (value === true) {
+      if (allowed === true) {
         element.style.pointerEvents = 'auto' // Allow interacting with webpage
-      } else if (value === false) {
+      } else if (allowed === false) {
         element.style.pointerEvents = 'none' // Disable interactions with webpage
       }
     },
   },
   mounted() {
-    const vm = this
-
     // Once the WebView is rendered
     this.$nextTick(() => {
-      const frame = vm.$refs.frame
-
       // Bind event listeners
       this.bindEventListeners()
 
@@ -81,25 +80,30 @@ export default {
       this.loadSite()
 
       // Watch for History actions
-      // TODO Better way to watch for VueX actions?
-      this.unsubscribeAction = this.$store.subscribeAction((action, state) => {
-        switch (action.type) {
-          case 'history/reload':
-            this.reload()
-            break
-
-          case 'history/back':
-            this.back()
-            break
-
-          case 'history/forward':
-            this.forward()
-            break
-
-          default:
-            break
+      const history = useHistoryStore()
+      this.unsubscribeAction = history.$onAction(
+        ({
+          name, // name of the action
+          store, // store instance, same as `someStore`
+          args, // array of parameters passed to the action
+          after, // hook after the action returns or resolves
+          onError, // hook if the action throws or rejects
+        }) => {
+          switch (name) {
+            case 'reload':
+              this.reload()
+              break
+            case 'back':
+              this.back()
+              break
+            case 'forward':
+              this.forward()
+              break
+            default:
+              break
+          }
         }
-      })
+      )
     })
   },
   beforeDestroy() {
@@ -107,7 +111,7 @@ export default {
     this.unbindEventListeners()
 
     // Unsubscribe from Store
-    this.unsubscribeAction()
+    // this.unsubscribeAction()
   },
   methods: {
     bindEventListeners() {
@@ -170,13 +174,14 @@ export default {
       // const frame = this.$refs.frame
 
       // VueX
-      const pages = this.$store.state.history.pages
-      // const currentPage = this.$store.state.history.currentPage.index
-      const nextPage = this.$store.state.history.currentPage.index - 1
+      const pages = this.pages
+      // const currentPage = this.currentPage.index
+      const nextPage = this.currentPage.index - 1
       // frame.loadURL(pages[nextPage]);
 
       // Update the URL in the store
-      this.$store.commit('history/changeSiteData', {
+      const history = useHistoryStore()
+      history.changeSiteData({
         url: pages[nextPage],
       })
 
@@ -190,13 +195,14 @@ export default {
       // const frame = this.$refs.frame
 
       // VueX
-      const pages = this.$store.state.history.pages
-      // const currentPage = this.$store.state.history.currentPage.index
-      const nextPage = this.$store.state.history.currentPage.index + 1
+      const pages = this.pages
+      // const currentPage = this.currentPage.index
+      const nextPage = this.currentPage.index + 1
       // frame.loadURL(pages[nextPage]);
 
       // Update the URL in the store
-      this.$store.commit('history/changeSiteData', {
+      const history = useHistoryStore()
+      history.changeSiteData({
         url: pages[nextPage],
       })
 
@@ -272,7 +278,9 @@ export default {
 
       // Change the title to Loading...
       // TODO Add a VueX action for this?
-      this.$store.commit('history/changeSiteData', {
+
+      const history = useHistoryStore()
+      history.changeSiteData({
         title: 'Loading...',
       })
     },
@@ -315,7 +323,8 @@ export default {
         const favicon = returnedData.favicon
 
         // TODO Add to VueX Action
-        this.$store.commit('history/changeSiteData', {
+        const history = useHistoryStore()
+        history.changeSiteData({
           title,
           favicon,
         })
@@ -331,14 +340,22 @@ export default {
       this.$emit('loadend') // Hide loading spinner
 
       // History
+      // TODO: webContents.history is no longer around https://github.com/electron/electron/issues/26727
+      // how should we track the page history?
       // If the call said history:false, then we need to update history
       // TODO Shouldn't this only update when history:true?
-      if (this.options.history === false) {
-        this.$store.commit(
-          'history/updateHistory',
-          remote.webContents.fromId(frame.getWebContentsId()).history
-        )
-      }
+      // if (this.options.history === false) {
+      //   const history = useHistoryStore()
+      //   const id = frame.getWebContentsId()
+
+      //   // We'll search through all the
+      //   const pages = remote.webContents.fromId(id).history
+      //   if (!pages) {
+      //     console.warn('No history found')
+      //     return false
+      //   }
+      //   history.updateHistory(pages)
+      // }
     },
     loadabort() {
       this.$emit('loadend') // Hide loading spinner
@@ -355,7 +372,8 @@ export default {
       // Handle user clicking on a link inside of the webview
       // TODO This should add a new page to the History
       // TODO Add to VueX Action
-      this.$store.commit('history/changeSiteData', {
+      const history = useHistoryStore()
+      history.changeSiteData({
         url: event.url,
       })
     },
@@ -368,10 +386,7 @@ export default {
 webview {
   height: 100%;
   width: 100%;
-  // min-width: 100%;
-  // min-height: 100%;
-  pointer-events: none; // Don't allow by default
   position: relative;
-  // display: block;
+  pointer-events: none; // Prevent interactions/events by default
 }
 </style>

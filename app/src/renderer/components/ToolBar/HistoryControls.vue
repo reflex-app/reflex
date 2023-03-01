@@ -29,50 +29,53 @@
   </div>
 </template>
 
-<script>
-import { mapActions, mapState } from 'vuex'
+<script lang="ts">
+import { mapActions, mapState } from 'pinia'
+import { useHistoryStore } from '~/store/history'
+
 export default {
   computed: {
-    ...mapState({
-      pages: state => state.history.pages,
-      currentPage: state => state.history.currentPage.index,
-      history: state => state.history
-    }),
-    canGoBack () {
+    // ...mapState({
+    //   pages: (useHistoryStore, ['history.pages']),
+    //   currentPage: (useHistoryStore, ['history.currentPage.index']),
+    //   history: (useHistoryStore, ['history']),
+    // }),
+    ...mapState(useHistoryStore, ['pages', 'currentPage']),
+    canGoBack() {
       return this.checkHistory('back')
     },
-    canGoForward () {
+    canGoForward() {
       return this.checkHistory('forward')
-    }
+    },
   },
   methods: {
-    ...mapActions('history', ['reload', 'forward', 'back']),
-    checkHistory (direction) {
+    ...mapActions(useHistoryStore, ['reload', 'forward', 'back']),
+    checkHistory(direction) {
       if (!direction || !this.pages) throw new Error('Missing inputs')
 
       let nextPageIndex
 
       switch (direction) {
-      case 'back':
-        nextPageIndex = this.pages[this.currentPage - 1]
-        break
+        case 'back':
+          nextPageIndex = this.pages[this.currentPage.index - 1]
+          break
 
-      case 'forward':
-        nextPageIndex = this.pages[this.currentPage + 1]
-        break
+        case 'forward':
+          nextPageIndex = this.pages[this.currentPage.index + 1]
+          break
       }
 
       if (
         this.pages.length > 0 &&
-        this.currentPage !== nextPageIndex &&
+        this.currentPage.index !== nextPageIndex &&
         typeof nextPageIndex !== 'undefined'
       ) {
         return true
       } else {
         return false
       }
-    }
-  }
+    },
+  },
 }
 </script>
 
