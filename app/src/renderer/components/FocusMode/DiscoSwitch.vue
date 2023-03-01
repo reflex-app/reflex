@@ -3,12 +3,15 @@
 </template>
 
 <script>
+import { useGuiStore } from '~/store/gui'
+
 export default {
   methods: {
-    toggleDisco () {
-      this.$store.commit('gui/toggleGui', 'discoMode')
-    }
-  }
+    toggleDisco() {
+      const gui = useGuiStore()
+      gui.toggleGui('discoMode')
+    },
+  },
 }
 </script>
 

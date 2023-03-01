@@ -1,35 +1,28 @@
 <template>
   <div id="main-view">
+    <DevModeHud />
     <SidePanel />
     <Screenshots />
-    <Panzoom id="canvas">
+    <Panzoom>
       <Artboards />
     </Panzoom>
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
+import { ref, onMounted } from 'vue'
 import Panzoom from '@/components/panzoom/Panzoom.vue'
-import SidePanel from '@/components/SidePanel'
-import Screenshots from '@/components/Screenshot'
-import Artboards from '@/components/Screens/Artboards'
+import SidePanel from '@/components/SidePanel/index.vue'
+import Screenshots from '@/components/Screenshot/index.vue'
+import Artboards from '@/components/Screens/Artboards.vue'
+import useEventHandler from '@/components/Screens/useEventHandler'
+import DevModeHud from '~/components/DevModeHud.vue'
 
-export default {
-  name: 'FocusView',
-  components: {
-    Artboards,
-    SidePanel,
-    Screenshots,
-    Panzoom
-  },
-  data () {
-    return {}
-  },
-  mounted () {
-    this.panzoomInstance = this.$root.$panzoom
-  },
-  methods: {}
-}
+const { init } = useEventHandler() // init event handling
+
+onMounted(() => {
+  init() // initialize
+})
 </script>
 
 <style lang="scss">

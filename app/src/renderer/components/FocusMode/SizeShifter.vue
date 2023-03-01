@@ -14,30 +14,28 @@
         <div class="number">{{ index + 1 }}</div>
         <div class="size">{{ item.width }}x{{ item.height }}</div>
       </div>
-      <div
-        ref="background-sliding-object"
-        class="background-sliding-object"
-      />
+      <div ref="background-sliding-object" class="background-sliding-object" />
     </div>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
+import { useFocusMode } from '~/store/focusMode'
 export default {
-  data () {
+  data() {
     return {
-      resizeTimer: null
+      resizeTimer: null,
     }
   },
   computed: {
     ...mapState({
-      focusModeActiveScreen: state => state.focusMode.activeScreen,
-      focusModeScreens: state => state.focusMode.screens,
-      artboards: state => state.artboards.list
-    })
+      focusModeActiveScreen: (state) => state.focusMode.activeScreen,
+      focusModeScreens: (state) => state.focusMode.screens,
+      artboards: (state) => state.artboards.list,
+    }),
   },
-  mounted () {
+  mounted() {
     this.enableListeners()
 
     // TODO Re-enable changing size on load
@@ -52,9 +50,10 @@ export default {
     // this.changeSize(activeScreen.id);
   },
   methods: {
-    changeSize (id) {
+    changeSize(id) {
       // Update size in Store
-      this.$store.commit('focusMode/focusChangeActiveScreen', id)
+      const focusStore = useFocusMode()
+      focusStore.focusChangeActiveScreen(id)
 
       const index = this.getIndexFromId(this.focusModeActiveScreen.id)
 
@@ -77,7 +76,7 @@ export default {
      * Get the index, given the ID
      * @param {String} id UUID
      */
-    getIndexFromId (id) {
+    getIndexFromId(id) {
       const nodes = Array.from(document.querySelectorAll('[screen-id]'))
       const index = nodes.indexOf(document.querySelector(`[screen-id='${id}']`))
       return index
@@ -86,13 +85,13 @@ export default {
      * Return the ID (String) of a screen, given the index
      * @param {Number} index
      */
-    getIdFromIndex (index) {
+    getIdFromIndex(index) {
       // NOTE: this is 0-indexed (-1)
       const item = document.querySelectorAll('[screen-id]')[index - 1]
       const id = item.getAttribute('screen-id')
       return id
     },
-    enableListeners () {
+    enableListeners() {
       window.addEventListener('keydown', this.keyupHandler)
       window.addEventListener('resize', this.resizeHandler)
 
@@ -101,19 +100,16 @@ export default {
         window.removeEventListener('resize', this.resizeHandler)
       })
     },
-    keyupHandler (event) {
+    keyupHandler(event) {
       const keys = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
       // If Control or Command key is pressed and a key is pressed
-      if (
-        (event.ctrlKey || event.metaKey) &&
-        keys.includes(event.key)
-      ) {
+      if ((event.ctrlKey || event.metaKey) && keys.includes(event.key)) {
         const id = this.getIdFromIndex(event.key)
         this.changeSize(id)
       }
     },
-    resizeHandler () {
+    resizeHandler() {
       // Only calls after resize event stops
       // via http://bencentra.com/code/2015/02/27/optimizing-window-resize.html
       clearTimeout(this.resizeTimer)
@@ -121,8 +117,8 @@ export default {
       this.resizeTimer = setTimeout(() => {
         this.changeSize(this.focusModeActiveScreen.id)
       }, 50)
-    }
-  }
+    },
+  },
 }
 </script>
 

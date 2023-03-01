@@ -25,7 +25,15 @@
       ]
     },
     "types": [
-      "@nuxt/types"
+      "@nuxt/types",
+      "@pinia/nuxt",
+      "@types/lodash"
+    ]
+  },
+  "vueCompilerOptions": {
+    "target": 2.7,
+    "extensions": [
+      ".vue"
     ]
   }
 }
