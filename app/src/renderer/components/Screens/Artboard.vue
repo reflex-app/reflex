@@ -45,7 +45,10 @@
         }"
         :style="{ height: props.height + 'px', width: props.width + 'px' }"
       >
-        <div class="content__frame">
+        <div
+          class="content__frame"
+          @mousedown="$emit('clicked', props.id, $event)"
+        >
           <WebPage
             :id="props.id"
             :artboard-id="props.id"
@@ -204,7 +207,7 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['resize'])
+const emit = defineEmits(['resize', 'clicked'])
 
 onMounted(async () => {
   // Remove any leftover selected artboards

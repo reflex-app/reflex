@@ -1,7 +1,7 @@
 <template>
   <div ref="containerRef">
     <div v-if="artboards.list.length" id="artboards">
-      <Artboard
+      <ArtboardComponent
         v-for="(artboard, index) in artboards.list"
         ref="artboard"
         :key="artboard.id"
@@ -11,7 +11,7 @@
         :selected-items="selectedArtboards.list"
         :is-visible="artboard.isVisible"
         :viewportObserver="data.viewportObserverParent"
-        @click.capture="onClick($event, artboard)"
+        @clicked="onClick"
         @resize="resize"
       />
     </div>
@@ -23,9 +23,9 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, reactive, ref, watch, computed } from 'vue'
 import SelectionArea from '@viselect/vanilla'
-import Artboard from './Artboard.vue'
+import ArtboardComponent from './Artboard.vue'
 import WelcomeScreen from './WelcomeScreen.vue'
-import { useArtboardsStore } from '~/store/artboards'
+import { Artboard, useArtboardsStore } from '~/store/artboards'
 import { useSelectedArtboardsStore } from '~/store/selectedArtboards'
 import { useInteractionStore } from '~/store/interactions'
 import { useEventListener } from '@vueuse/core'
@@ -243,22 +243,24 @@ function disableSelections() {
   data.selectionInstance?.disable()
 }
 
-function onClick(evt: MouseEvent, artboard) {
-  console.log('clicked')
+function onClick(id: Partial<Artboard>['id'], evt: MouseEvent) {
+  if (evt.button !== 0) {
+    // We only want left-click to select the artboard
+    // We ignore middle-mouse (1) and right-click (2)
+    return false
+  }
 
   // User could be interacting with inner WebPage
   // We only want to check if this artboard is NOT yet selected
   // and if so, their intent was to enable it
-  const isArtboardSelected = selectedArtboards.list.find(
-    (i) => i.id === artboard.id
-  )
-
-  console.log(isArtboardSelected)
+  const isArtboardSelected = selectedArtboards.list.find((i) => i.id === id)
 
   if (!isArtboardSelected) {
-    console.log('thing', evt.target?.value)
+    // Clear existing selected artboards
+    selectedArtboards.empty()
 
-    data.selectionInstance?.select(evt.target?.value, true)
+    // Select this artboard
+    selectedArtboards.add(id)
   }
 }
 
