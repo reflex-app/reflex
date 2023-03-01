@@ -3324,7 +3324,7 @@ __metadata:
     pinia-plugin-persistedstate-2: ^2.0.13
     playwright: ^1.20.1
     playwright-core: ^1.20.1
-    postcss: 8.2.10
+    postcss: 8.2.13
     postcss-import: 13.0.0
     postcss-loader: 4.2.0
     postcss-url: 10.1.3
@@ -19523,14 +19523,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"postcss@npm:8.2.10":
-  version: 8.2.10
-  resolution: "postcss@npm:8.2.10"
+"postcss@npm:8.2.13":
+  version: 8.2.13
+  resolution: "postcss@npm:8.2.13"
   dependencies:
     colorette: ^1.2.2
     nanoid: ^3.1.22
     source-map: ^0.6.1
-  checksum: 5d2b4fa1370fc4dcade92b1f73fc7dfd5661224f47efcff4ef04eca30f0cdf49c0727060fe6adbc57ede442a40a8255fa272f0fe917a980b3836f529a8ce2f1c
+  checksum: a0ddadf2fdd288a27d6be15bdbd466c87151850506be8bb05ced967c0e947abde5c4ebfc39f31aa41f20b098573ad51c15eb88bd88ab14ebc2ad0f661b722acb
   languageName: node
   linkType: hard
 

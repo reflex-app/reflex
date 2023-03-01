@@ -110,7 +110,7 @@
     "pinia": "^2.0.16",
     "pinia-plugin-persistedstate-2": "^2.0.13",
     "playwright": "^1.20.1",
-    "postcss": "8.2.10",
+    "postcss": "8.2.13",
     "postcss-import": "13.0.0",
     "postcss-loader": "4.2.0",
     "postcss-url": "10.1.3",
