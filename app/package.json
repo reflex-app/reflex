@@ -61,6 +61,7 @@
     "@pinia/nuxt": "0.2.1",
     "@reflex/browser-installer": "^1.0.0",
     "@reflex/ui": "^1.0.0",
+    "@types/inquirer": "^9.0.3",
     "@types/lodash": "^4.14.191",
     "@viselect/vanilla": "^3.0.0-beta.13",
     "@vue/composition-api": "^1.7.1",
