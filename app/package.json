@@ -14,7 +14,7 @@
     "dev": "node .electron-nuxt/dev.js",
     "build": "npx cross-env RELEASE=true node .electron-nuxt/build.js",
     "build:fast": "node .electron-nuxt/build.js",
-    "release": "node scripts/updater-cli.js",
+    "release": "npx ts-node --logError scripts/updater-cli",
     "test": "jest",
     "lint": "eslint --ext .js,.vue,.ts -f eslint-friendly-formatter ./src",
     "lint:fix": "yarn run lint -- --fix",
