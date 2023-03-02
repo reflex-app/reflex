@@ -74,13 +74,12 @@ async function inquireUpdateType() {
       // Use Yarn to bump the version
       await execaCommandAtRoot(`yarn version ${answers.updateType}`)
 
-      // Check the latest package.json to see if the vesion has been changed
-      const {
-        default: { version: updatedPackageVersion },
-      } = await import(path.resolve(pathToApp, 'package.json'), {
-        assert: {
-          type: 'json',
-        },
+      // Check updated package.json version
+      const updatedPackageVersion = await fs
+        .readFile(path.resolve(pathToApp, 'package.json'), 'utf-8')
+        .then((data) => {
+          const { version } = JSON.parse(data)
+          return version
       })
 
       // Ensure that the version has really been bumped
