@@ -2,7 +2,7 @@
   "name": "@reflex/app",
   "productName": "Reflex",
   "description": "Make responsive websites without the guesswork.",
-  "version": "0.7.0-beta.26",
+  "version": "0.7.0-beta.27",
   "author": "Nick Wittwer",
   "main": "./dist/main/index.js",
   "homepage": "https://reflexapp.nickwittwer.com",
@@ -14,7 +14,7 @@
     "dev": "node .electron-nuxt/dev.js",
     "build": "npx cross-env RELEASE=true node .electron-nuxt/build.js",
     "build:fast": "node .electron-nuxt/build.js",
-    "release": "node --loader @esbuild-kit/esm-loader ./scripts/updater-cli.mjs",
+    "release": "npx @digitak/esrun --tsconfig=./scripts/tsconfig.json ./scripts/updater-cli.ts",
     "test": "jest",
     "lint": "eslint --ext .js,.vue,.ts -f eslint-friendly-formatter ./src",
     "lint:fix": "yarn run lint -- --fix",
@@ -133,5 +133,5 @@
     "webpack": "^4.46.0",
     "webpack-node-externals": "^2.5.2"
   },
-  "stableVersion": "0.7.0-beta.25"
+  "stableVersion": "0.7.0-beta.26"
 }
