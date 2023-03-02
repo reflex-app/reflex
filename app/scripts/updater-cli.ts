@@ -72,6 +72,8 @@ async function inquireUpdateType() {
       await removeStableVersion()
 
       // Use Yarn to bump the version
+      // --immediate: We will immediately bump the version in package.json, commit the change
+      // and tag the version with Git
       await execaCommandAtRoot(`yarn version ${answers.updateType}`)
 
       // Check updated package.json version
@@ -80,7 +82,11 @@ async function inquireUpdateType() {
         .then((data) => {
           const { version } = JSON.parse(data)
           return version
-      })
+        })
+
+      // Version with "v" prefix
+      // Example: v0.7.0
+      const newVersion = 'v' + updatedPackageVersion
 
       // Ensure that the version has really been bumped
       const hasChanged = packageVersion !== updatedPackageVersion
@@ -94,10 +100,6 @@ async function inquireUpdateType() {
       }
 
       console.log(`Version bumped! to ${updatedPackageVersion}`)
-
-      // package.json version will be changed by Yarn
-      // Get updated version
-      const newVersion = 'v' + packageVersion
 
       ////////////////////////////////
       // Get tags & create new tag
@@ -133,16 +135,34 @@ async function inquireUpdateType() {
       }
 
       // Git Commit
-      console.log(`Committing`)
-      await execaCommandAtRoot(
-        `git add package.json && git commit -m ${newVersion}`
-      ).catch((err) => {
-        console.error('custom err')
-      })
+      await inquirer
+        .prompt({
+          name: 'confirmCommit',
+          type: 'confirm',
+          message: `⚠️ Ready to commit the package.json and Git tag the version?`,
+          default: false,
+        })
+        .then(async ({ confirmCommit }) => {
+          if (confirmCommit === true) {
+            // Git commit the package.json with the commit named as the version
+            // NOTE: This will trigger the CI build
+            console.log(`Committing`)
+            await execaCommandAtRoot(
+              `git add package.json && git commit -m ${newVersion}`
+            ).catch((err) => {
+              console.error('custom err')
+            })
 
-      // Create Git tag
-      console.log(`Tagging`)
-      await execaCommandAtRoot(`git tag ${newVersion}`)
+            // Create Git tag
+            console.log(`Tagging`)
+            await execaCommandAtRoot(`git tag ${newVersion}`)
+          } else {
+            console.log(
+              `${newVersion} not committed and tag not created. Exiting.`
+            )
+            process.exit() // Stop the script
+          }
+        })
 
       ////////////////////////////////
 
@@ -151,7 +171,7 @@ async function inquireUpdateType() {
         .prompt({
           name: 'confirmUpdate',
           type: 'confirm',
-          message: `Do you want to Git push ${newVersion} to origin? This will also push any other other local commits, and a release build will start.`,
+          message: `Ready to push ${newVersion} to origin? This will also push any other other local commits, and a release build will start.`,
           default: false,
         })
         .then(async ({ confirmUpdate }) => {
@@ -167,9 +187,6 @@ async function inquireUpdateType() {
             )
           }
         })
-
-      // Return too root
-      // shell.cd(initialPath)
     })
 }
 
