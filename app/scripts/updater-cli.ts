@@ -104,9 +104,27 @@ async function inquireUpdateType() {
       ////////////////////////////////
       // Get tags & create new tag
 
-      // --prune: connect to remote repository and fetch all remote branch refs -> delete remote refs that are no longer in use on remote repository
-      console.log(`Getting latest tags`)
-      await execaCommandAtRoot('git fetch --tags --all --prune')
+      await inquirer
+        .prompt({
+          name: 'confirmDeleteLocalTags',
+          type: 'confirm',
+          message: `⚠️ Any local tags that aren't yet pushed to origin will be deleted! Are you sure you would like to continue?`,
+          default: false,
+        })
+        .then(async ({ confirmDeleteLocalTags }) => {
+          if (confirmDeleteLocalTags === true) {
+            console.log(`Getting latest tags`)
+
+            // --prune: connect to remote repository and fetch all remote branch refs -> delete remote refs that are no longer in use on remote repository
+            // IMPORANT: --prune-tags removes all local tags!
+            await execaCommandAtRoot(
+              'git fetch --tags --all --prune --prune-tags'
+            )
+          } else {
+            console.log(`Exiting.`)
+            process.exit() // Stop the script
+          }
+        })
 
       // Get existing tags
       const { stdout: tags } = await execaCommandAtRoot('git tag --list')
