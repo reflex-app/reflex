@@ -74,6 +74,11 @@ Env vars required:
 - APPLEID: Apple ID
 - APPLEIDPASS: App-specific password for Apple ID
 
+See:
+
+- https://www.electron.build/code-signing.html
+- https://federicoterzi.com/blog/automatic-code-signing-and-notarization-for-macos-apps-using-github-actions/
+
 ### Debugging
 
 `CMD/CTRL + Shift + I` will open the Chrome DevTools inside of the Electron instance.
