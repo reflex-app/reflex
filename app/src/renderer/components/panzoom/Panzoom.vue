@@ -46,7 +46,7 @@ import useEventHandler from '../Screens/useEventHandler'
 import { useDevStore } from '~/store/dev'
 import { isEqual } from 'lodash'
 import { start } from 'repl'
-import { initialPan } from './panzoomFns'
+import { initialPanZoom } from './panzoomFns'
 // import { useEventListener } from '@vueuse/core'
 
 const interactions = useInteractionStore()
@@ -82,9 +82,9 @@ onMounted(async () => {
   if (!$root) console.warn('No Panzoom created')
 
   // const startZoom = initialZoom()
-  const { x: startX } = initialPan()
-  const { y: startY } = initialPan()
-  const { zoom: startZoom } = initialPan()
+  const { x: startX } = initialPanZoom()
+  const { y: startY } = initialPanZoom()
+  const { zoom: startZoom } = initialPanZoom()
 
   // Init Panzoom globally
   // We use the 'canvas' option to enable interactions on the parent DOM Node as well
