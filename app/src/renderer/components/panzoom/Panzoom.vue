@@ -94,7 +94,8 @@ onMounted(async () => {
     cursor: 'grab',
     // origin = transform-origin is the origin from which transforms are applied
     // Default: 50% 50% https://github.com/timmywil/panzoom#origin
-    origin: '50% 50%',
+    origin: '0 0',
+    // origin: '0 0',
     startX: startX, // x
     startY: startY, // y
     // contain: false,
