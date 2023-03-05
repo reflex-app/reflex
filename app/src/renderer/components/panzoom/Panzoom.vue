@@ -2,6 +2,7 @@
   <div style="display: inline-block; width: 100%; height: 100%">
     <!-- We 'panzoom-exclude' to mark this as not relevant to Panzoom -->
     <!-- <PanzoomControls v-if="panzoomInstance" :instance="panzoomInstance" /> -->
+    <div class="dev"></div>
     <div
       id="canvas"
       ref="outerPanArea"
@@ -45,7 +46,6 @@ import { useInteractionStore } from '~/store/interactions'
 import useEventHandler from '../Screens/useEventHandler'
 import { useDevStore } from '~/store/dev'
 import { isEqual } from 'lodash'
-import { start } from 'repl'
 import { initialPanZoom } from './panzoomFns'
 // import { useEventListener } from '@vueuse/core'
 
@@ -78,7 +78,7 @@ watch(panzoomEnabled, (newVal) => {
 
 onMounted(async () => {
   // TODO: This should be refactored after Vue 3 update
-  const { $root } = getCurrentInstance()?.proxy
+  const { $root, $config } = getCurrentInstance()?.proxy
   if (!$root) console.warn('No Panzoom created')
 
   // const startZoom = initialZoom()
@@ -126,21 +126,24 @@ onMounted(async () => {
   panzoomInstance.value = $root.$panzoom
 
   // TODO: Remove later; useful for debugging
-  // let zoom, pan
-  // setInterval(() => {
-  //   const newZoom = panzoomInstance.value?.getScale()
-  //   const newPan = panzoomInstance.value?.getPan()
+  const isDev = $config?.DEV
+  if (isDev) {
+    let zoom, pan
+    setInterval(() => {
+      const currZoom = panzoomInstance.value?.getScale()
+      const currPan = panzoomInstance.value?.getPan()
 
-  //   const isNewZoom = zoom !== newZoom
-  //   const isNewPan = isEqual(pan, newPan) === false
+      const isNewZoom = zoom !== currZoom
+      const isNewPan = isEqual(pan, currPan) === false
 
-  //   if (isNewZoom) zoom = newZoom
-  //   if (isNewPan) pan = newPan
+      if (isNewZoom) zoom = currZoom
+      if (isNewPan) pan = currPan
 
-  //   if (isNewPan || isNewZoom) {
-  //     console.log('Panzoom', { zoom, ...pan }, isNewZoom, isNewPan)
-  //   }
-  // }, 1000)
+      if (isNewPan || isNewZoom) {
+        console.log('Panzoom', { zoom, ...pan }, isNewZoom, isNewPan)
+      }
+    }, 1000)
+  }
 
   // Enable event listeners
   enableEventListeners()
@@ -352,10 +355,12 @@ function fitToScreen() {
 
   // Nested debugger
   .dev-visual-debugger {
+    box-shadow: 0 0 0 8px green;
+
     // Vertical line
     &:before {
       position: absolute;
-      width: 100%;
+      width: 50%;
       z-index: 100;
       height: 100%;
       left: 50%;
@@ -367,7 +372,7 @@ function fitToScreen() {
       position: absolute;
       width: 100%;
       z-index: 100;
-      height: 100%;
+      height: 50%;
       top: 50%;
       border-top: 5px solid green;
     }
