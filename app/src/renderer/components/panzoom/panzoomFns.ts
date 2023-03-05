@@ -1,28 +1,55 @@
 // The CSS classes
+
+import Panzoom, { PanzoomObject } from '@panzoom/panzoom'
+
 // TODO: Add tests to make sure these don't break
 const panzoomContainer = '.panzoom-container'
 const panzoomChild = '.panzoom-inner'
+
+function getPanzoomElement(name: 'viewport' | 'container') {
+  const viewport = document.querySelector(panzoomContainer) as HTMLElement
+  if (!viewport) {
+    console.error('No container')
+    return {}
+  }
+  // Calculate the position of the element relative to the viewport container
+  const viewportRect = viewport.getBoundingClientRect()
+
+  // Get the full size of the artboards container (panzoomChild)
+  const container = document.querySelector(panzoomChild) as HTMLElement
+  if (!container) return {}
+  const containerRect = container.getBoundingClientRect()
+
+  let element: HTMLElement
+  let elementRect: DOMRect
+
+  if (name === 'container') {
+    element = container
+    elementRect = containerRect
+  } else {
+    element = viewport
+    elementRect = viewportRect
+  }
+
+  // Always return an HTML Element and a bounding rectangle
+  return {
+    el: element,
+    rect: elementRect,
+  }
+}
 
 /**
  * Returns the x, y, zoom for the initial app startup
  */
 export function initialPanZoom() {
-  const panzoomEl = document.querySelector<HTMLElement>(panzoomContainer)
-  if (!panzoomEl) {
-    console.error('No container')
-    return {}
-  }
-  const childElement = panzoomEl?.querySelector(panzoomChild) as HTMLElement
-
-  const panzoomRect = panzoomEl.getBoundingClientRect()
-  const childRect = childElement.getBoundingClientRect()
+  const { el: parent } = getPanzoomElement('viewport')
+  const childElement = parent?.querySelector(panzoomChild) as HTMLElement
 
   // Calculate the zoom to fit all artboards
   const zoom = calculateZoomToFitAll()
 
   // Pan
-  const panX = (panzoomRect.width - childRect.width) / 2 - childRect.left
-  const panY = (panzoomRect.height - childRect.height) / 2 - childRect.top
+  const { x: panX, y: panY } = getCenterCoordinates(childElement, zoom)
 
   // center child element within viewport
   return {
@@ -31,6 +58,7 @@ export function initialPanZoom() {
     zoom: zoom,
   }
 }
+
 export function centerOn(element: HTMLElement, options: { instance: any }) {
   // Get the position and dimensions of the element relative to the viewport.
   // Then you can calculate the center point of the element by adding half of the width and height to its top-left position
@@ -54,112 +82,22 @@ export function centerOn(element: HTMLElement, options: { instance: any }) {
   const child = element
   const childRect = child.getBoundingClientRect()
 
-  /////////////
-
-  // Calculate the center point of the element
-
-  // const containerCenterX = containerRect.left + containerRect.width / 2
-  // const containerCenterY = containerRect.top + containerRect.height / 2
-  // const childCenterX = childRect.left + childRect.width / 2
-  // const childCenterY = childRect.top + childRect.height / 2
-  // const dx = containerCenterX - childCenterX
-  // const dy = containerCenterY - childCenterY
-  // const distance = Math.sqrt(dx * dx + dy * dy)
-  // const intensity = Math.min(1, distance / (containerRect.width / 2))
-  // const factorX = dx * intensity * (childRect.width / containerRect.width)
-  // const factorY = dy * intensity * (childRect.height / containerRect.height)
-  // const centerX =
-  //   (parentRect.width - childRect.width) / 2 +
-  //   containerRect.left -
-  //   childRect.left +
-  //   factorX
-  // const centerY =
-  //   (parentRect.height - childRect.height) / 2 +
-  //   containerRect.top -
-  //   childRect.top +
-  //   factorY
-
-  // console.log('Distance', distance)
-
-  ///////////////
-  // const containerWidth = container.clientWidth
-  // const containerHeight = container.clientHeight
-  // const centerX =
-  //   (parentRect.width - containerRect.width + childRect.width) / 2 -
-  //   childRect.left
-  // const centerY =
-  //   (parentRect.height - containerRect.height + childRect.height) / 2 -
-  //   childRect.top
-
-  // console.log('centerX:', centerX)
-  // console.log('centerY:', centerY)
-  ////////////
-
-  // const centerX = (parentRect.width - childRect.width) / 2 - childRect.left
-  // const centerY = (parentRect.height - childRect.height) / 2 - childRect.top
-
-  // Calculate the zoom scale
-  // const panzoomViewportRect = {
-  //   width: parent.offsetWidth,
-  //   height: parent.offsetHeight,
-  // }
-  // const zoom = zoomToFitElement(element)
-  // const zoom = options.instance.getScale()
-  // if (!zoom) return false
-
-  // TODO: Include window.devicePixelRatio?
-
-  // var viewportWidth = parentRect.width
-  // var viewportHeight = parentRect.height
-  // var childWidth = childRect.width * zoom // We want to use the rendered width
-  // var childHeight = childRect.height * zoom // We want to use the rendered height
-  // var childX = (childRect.left - parentRect.left) / zoom
-  // var childY = (childRect.top - parentRect.top) / zoom
-  // var minX = Math.max(0, childWidth / 2 - parentRect.width / 2 - childX)
-  // var minY = Math.max(0, childHeight / 2 - parentRect.height / 2 - childY)
-  // var centerX = parentRect.width / 2 - childWidth / 2 + minX
-  // var centerY = parentRect.height / 2 - childHeight / 2 + minY
-
-  // const centerX = parentRect.left + parentRect.width / 2
-  // const centerY = parentRect.top + parentRect.height / 2
-
-  // const offsetX =
-  //   centerX -
-  //   (childRect.left + childRect.width / 2) -
-  //   (childRect.width - parentRect.width) / 2
-  // const offsetY =
-  //   centerY -
-  //   (childRect.top + childRect.height / 2) -
-  //   (childRect.height - parentRect.height) / 2
-
-  // // const centerXOnScreen = window.innerWidth / 2 - parentRect.left - parentRect.width / 2 + offsetX;
-  // // const centerYOnScreen = window.innerHeight / 2 - parentRect.top - parentRect.height / 2 + offsetY;
-
-  // console.log(parent, element.closest(panzoomChild), element) // Elements
-  // console.log(zoom, centerX, centerY, { child, container }) // Output
-  // options.instance.pan(offsetX, offsetY)
-
-  ////////////////////////////////
-
-  console.log('Test', {
-    parent: parent,
-    container: container,
-    child: child,
-  })
+  // console.log('Test', {
+  //   parent: parent,
+  //   container: container,
+  //   child: child,
+  // })
 
   // Current settings
+  // TODO: Get the current zoom level
   const zoom = options.instance.getScale()
+  console.log('Zoom', zoom)
   if (!zoom) return false
 
   // Get the viewport dimensions in pixels
   const viewportWidth = parent.offsetWidth
   const viewportHeight = parent.offsetHeight
-  // const viewportWidth = parentRect.width
-  // const viewportHeight = parentRect.height
 
-  // Get the offset from the container element
-  // const containerOffsetLeft = childRect.left
-  // const containerOffsetTop = childRect.top
   const containerOffsetLeft = child.offsetLeft * zoom
   const containerOffsetTop = child.offsetTop * zoom
   console.log('offset', containerOffsetLeft, containerOffsetTop)
@@ -171,8 +109,6 @@ export function centerOn(element: HTMLElement, options: { instance: any }) {
 
   // Calculate the center point of the viewport, adjusted for the container offset
   // Factor in the zoom level
-  // const viewportCenterX = viewportWidth / 2 - containerOffsetLeft
-  // const viewportCenterY = viewportHeight / 2 - containerOffsetTop
   const viewportCenterX = (viewportWidth / 2 - containerOffsetLeft) / zoom
   const viewportCenterY = (viewportHeight / 2 - containerOffsetTop) / zoom
 
@@ -180,12 +116,8 @@ export function centerOn(element: HTMLElement, options: { instance: any }) {
   console.log('viewportCenterY:', viewportCenterY)
 
   // Set the position of the element to the adjusted center point of the viewport
-  // const elementWidth = childRect.width
-  // const elementHeight = childRect.height
   const elementWidth = child.offsetWidth
   const elementHeight = child.offsetHeight
-  // const elementWidth = parseFloat(getComputedStyle(element).width)
-  // const elementHeight = parseFloat(getComputedStyle(element).height)
 
   console.log('elementWidth:', elementWidth)
   console.log('elementHeight:', elementHeight)
@@ -200,17 +132,17 @@ export function centerOn(element: HTMLElement, options: { instance: any }) {
   // Normally, we pan relative to the container
   // But we want to pan relative to a specific element, so we can
   // set our own transform values to be more specific
-  // options.instance.setTransform()
-  options.instance.setStyle(
-    'transform',
-    `scale(${zoom}) translate(${x}px, ${y}px)`
+
+  options.instance.zoom(zoom)
+  setTimeout(() =>
+    options.instance.setStyle(
+      'transform',
+      `scale(${zoom}) translate(${x}px, ${y}px)`
+    )
   )
-  console.log()
 
   // options.instance.pan(x, y)
   ////////////////////////////////
-
-  // options.instance.zoom(zoom)
 
   // Firstly calculate the offset of the element relative to the parent
   // The first artboard is always 0,0
@@ -296,22 +228,158 @@ export function centerOn(element: HTMLElement, options: { instance: any }) {
   // options.instance.pan(panX, panY)
   // options.instance.zoom(zoom)
 }
+
+/**
+ * Get the XY coordinates of the center of the viewport
+ */
+export function getCenterCoordinates(
+  element: HTMLElement,
+  zoom: number,
+  options?: { instance: PanzoomObject }
+) {
+  let scale
+
+  // Set zoom
+  scale = zoom ? zoom : options?.instance.getScale()
+
+  console.log('scale', scale)
+
+  const { el: parent, rect: parentRect } = getPanzoomElement('viewport')
+  const { el: container, rect: containerRect } = getPanzoomElement('container')
+  const child = element
+
+  // Get the viewport dimensions in pixels
+  const viewportWidth = parent.offsetWidth
+  const viewportHeight = parent.offsetHeight
+  console.log(viewportHeight, viewportWidth)
+
+  // Get the offset from the container element
+  const containerOffsetLeft = child.offsetLeft * scale
+  const containerOffsetTop = child.offsetTop * scale
+  console.log('offset', containerOffsetLeft, containerOffsetTop)
+
+  console.log('viewportWidth:', viewportWidth)
+  console.log('viewportHeight:', viewportHeight)
+  console.log('containerOffsetLeft:', containerOffsetLeft)
+  console.log('containerOffsetTop:', containerOffsetTop)
+
+  // Calculate the center point of the viewport, adjusted for the container offset
+  // Factor in the zoom level
+  const viewportCenterX = (viewportWidth / 2 - containerOffsetLeft) / scale
+  const viewportCenterY = (viewportHeight / 2 - containerOffsetTop) / scale
+
+  console.log('viewportCenterX:', viewportCenterX)
+  console.log('viewportCenterY:', viewportCenterY)
+
+  // Set the position of the element to the adjusted center point of the viewport
+  const elementWidth = child.offsetWidth
+  const elementHeight = child.offsetHeight
+
+  console.log('elementWidth:', elementWidth)
+  console.log('elementHeight:', elementHeight)
+
+  // Final position
+  const x = viewportCenterX - elementWidth / 2
+  const y = viewportCenterY - elementHeight / 2
+
+  console.log('x:', x)
+  console.log('y:', y)
+
+  return { x, y }
+}
+
+/**
+ * Returns the X, Y coordinates of an element
+ * relative to the inner Panzoom container.
+ * Can use these coordinates with panzoom.pan()
+ */
+function getElementCoordinates(e: HTMLElement, zoom: number) {
+  // The Panzoom viewport node
+  // The Panzoom content container node
+  // Some specific element node _within_ the Panzoon content container
+
+  // 1. Calculate the center of the viewport element and the container element
+  // 2. Calculate the offset of a specific element relative to the container element
+  // 3. Calculate final x,y coordinates which will put the specific element in the center of the viewport
+  // given that center is calculated relative to the container element
+
+  const viewport = document.querySelector<HTMLElement>(panzoomContainer)
+  const container = document.querySelector(panzoomChild) as HTMLElement
+  const element = e
+
+  const viewportCenterX = viewport.clientWidth / 2 + viewport.scrollLeft
+  const viewportCenterY = viewport.clientHeight / 2 + viewport.scrollTop
+
+  const containerRect = container.getBoundingClientRect()
+  const containerCenterX = containerRect.left + containerRect.width / 2
+  const containerCenterY = containerRect.top + containerRect.height / 2
+
+  const elementRect = element.getBoundingClientRect()
+
+  const elementOffsetX = elementRect.left - containerRect.left
+  const elementOffsetY = elementRect.top - containerRect.top
+
+  const finalX = viewportCenterX - (elementOffsetX + elementRect.width / 2)
+  const finalY = viewportCenterY - (elementOffsetY + elementRect.height / 2)
+
+  return {
+    x: finalX,
+    y: finalY,
+  }
+}
+
+function zoomToFitElement(e: HTMLElement) {
+  // 1. Calculate the dimensions of the element and the viewport
+  // 2. Calculate the scaling factor based on the dimensions of the element and the viewport
+  // 3. Set the zoom level of the container element to the calculated scale factor
+  const viewport = document.querySelector<HTMLElement>(panzoomChild)
+  const elementRect = e.getBoundingClientRect()
+
+  if (!viewport || !elementRect) {
+    console.error('Failed to get element')
+    return false
+  }
+
+  const viewportWidth = viewport.offsetWidth
+  const viewportHeight = viewport.offsetHeight
+
+  const elementWidth = elementRect.width
+  const elementHeight = elementRect.height
+
+  const zoomPadding = 0.9 // add extra space on sides of the content
+  const zoomX =
+    (viewportWidth / (elementRect.left + elementWidth)) * zoomPadding
+  const zoomY =
+    (viewportHeight / (elementRect.top + elementHeight)) * zoomPadding
+
+  const scaleFactor = Math.min(zoomX, zoomY)
+
+  console.log('Zooom', scaleFactor, viewport, e)
+
+  return scaleFactor
+}
+
 /**
  * Returns a zoom factor which would fit all the current artboards within the viewport
  */
 export function calculateZoomToFitAll(): number {
-  const panzoomEl = document.querySelector<HTMLElement>(panzoomContainer)
-  if (!panzoomEl) {
+  const { el: viewport } = getPanzoomElement('viewport')
+  if (!viewport) {
     console.error('No container')
     return 1
   }
-  const childElement = panzoomEl?.querySelector(panzoomChild) as HTMLElement
+
+  const { el: container } = getPanzoomElement('container')
+  if (!container) {
+    console.error('No container')
+    return 1
+  }
 
   const panzoomViewportRect = {
-    width: panzoomEl.offsetWidth,
-    height: panzoomEl.offsetHeight,
+    width: viewport.offsetWidth,
+    height: viewport.offsetHeight,
   }
-  const childRect = childElement.getBoundingClientRect()
+  const childRect = container.getBoundingClientRect()
   const childWidth = childRect.width
   const childHeight = childRect.height
 
@@ -319,9 +387,8 @@ export function calculateZoomToFitAll(): number {
   const zoomPadding = 0.9 // add extra space on sides of the content
   const zoomX = (panzoomViewportRect.width / childWidth) * zoomPadding
   const zoomY = (panzoomViewportRect.height / childHeight) * zoomPadding
-  const zoom = Math.min(zoomX, zoomY)
+  let zoom = Math.min(zoomX, zoomY)
 
   // Return
   return zoom
 }
-
