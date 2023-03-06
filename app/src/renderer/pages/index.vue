@@ -1,9 +1,15 @@
 <template>
   <div id="main-view">
+    <ToolBar ref="toolbarElement" />
     <DevModeHud />
     <SidePanel />
     <Screenshots />
     <Panzoom>
+      <!-- :style="{
+        // height: `calc(100% - ${toolbarHeight}px)`,
+        height: '100%',
+        width: '100%',
+      }" -->
       <Artboards />
     </Panzoom>
   </div>
@@ -17,11 +23,16 @@ import Screenshots from '@/components/Screenshot/index.vue'
 import Artboards from '@/components/Screens/Artboards.vue'
 import useEventHandler from '@/components/Screens/useEventHandler'
 import DevModeHud from '~/components/DevModeHud.vue'
+import ToolBar from '~/components/ToolBar/index.vue'
 
 const { init } = useEventHandler() // init event handling
 
+const toolbarElement = ref() // Template Ref
+const toolbarHeight = ref()
+
 onMounted(() => {
   init() // initialize
+  toolbarHeight.value = toolbarElement.value.$el.offsetHeight
 })
 </script>
 
