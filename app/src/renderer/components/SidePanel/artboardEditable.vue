@@ -86,7 +86,7 @@ import rightClickMenu from '~/mixins/rightClickMenu'
 import { useArtboardsStore } from '~/store/artboards'
 import { useHoverArtboardsStore } from '~/store/hoverArtboards'
 import { useSelectedArtboardsStore } from '~/store/selectedArtboards'
-import { centerOn } from '~/components/panzoom/panzoomFns'
+import { centerOnElement } from '~/components/panzoom/panzoomFns'
 
 export default {
   name: 'ArtboardEditable',
@@ -186,7 +186,7 @@ export default {
       }
 
       // Pan to the position of the element relative to the parent
-      centerOn(artboard, {
+      centerOnElement(artboard, {
         instance: this.$root.$panzoom,
       })
     },
@@ -210,6 +210,7 @@ export default {
     selectArtboard(id) {
       // Move screen to the selected artboard
       this.goToArtboard(id)
+
       // Remove all previous selections
       const selectedArtboards = useSelectedArtboardsStore()
       selectedArtboards.empty()
