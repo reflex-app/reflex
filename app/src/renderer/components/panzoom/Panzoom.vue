@@ -17,8 +17,8 @@
         style="
           display: block;
           position: relative;
-          height: 100%;
-          width: 100%;
+          /* height: 100%; */
+          /* width: 100%; */
           overflow: visible;
         "
       >
@@ -98,8 +98,8 @@ onMounted(async () => {
     // origin: '0 0',
     startX: startX, // x
     startY: startY, // y
-    // contain: false,
     startScale: startZoom,
+    // contain: false,
     handleStartEvent: (event: PointerEvent) => {
       // WARNING: Don't use preventDefault, as it will block other events
       // event.preventDefault()
