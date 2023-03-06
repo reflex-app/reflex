@@ -6,6 +6,7 @@ import Panzoom, { PanzoomObject } from '@panzoom/panzoom'
 const panzoomContainer = '.panzoom-container'
 const panzoomChild = '.panzoom-inner'
 const zoomPadding = 0.25
+export const minScale = 0.001
 
 function getPanzoomElement(name: 'viewport' | 'container') {
   const viewport = document.querySelector(panzoomContainer) as HTMLElement

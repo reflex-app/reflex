@@ -46,7 +46,7 @@ import { useInteractionStore } from '~/store/interactions'
 import useEventHandler from '../Screens/useEventHandler'
 import { useDevStore } from '~/store/dev'
 import { isEqual } from 'lodash'
-import { initialPanZoom } from './panzoomFns'
+import { initialPanZoom, getPanzoomElement, minScale } from './panzoomFns'
 // import { useEventListener } from '@vueuse/core'
 
 const interactions = useInteractionStore()
@@ -96,6 +96,7 @@ onMounted(async () => {
     // Default: 50% 50% https://github.com/timmywil/panzoom#origin
     origin: '0 0',
     // origin: '0 0',
+    minScale: minScale,
     startX: startX, // x
     startY: startY, // y
     startScale: startZoom,
