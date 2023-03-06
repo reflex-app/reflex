@@ -8,7 +8,7 @@ const panzoomChild = '.panzoom-inner'
 const zoomPadding = 0.25
 export const minScale = 0.001
 
-function getPanzoomElement(name: 'viewport' | 'container') {
+export function getPanzoomElement(name: 'viewport' | 'container') {
   const viewport = document.querySelector(panzoomContainer) as HTMLElement
   if (!viewport) {
     console.error('No container')
@@ -342,6 +342,9 @@ function getZoomToFitElement(e: HTMLElement) {
  * Returns a zoom factor which would fit all the current artboards within the viewport
  */
 export function calculateZoomToFitAll(): number {
+  // We first calculate the available width and height for the container, and the aspect ratio of the container. We then calculate the zoom level based on the shorter side of the container and the maximum available width and height.
+  // Next, we check if the container is wider than the viewport, or taller than the viewport, or both. In each case, we adjust the zoom level based on the appropriate dimension (width or height or the larger dimension).
+  // Finally, we adjust the position of the container to keep it centered within the viewport, and return the calculated zoom level.
   const { el: viewport } = getPanzoomElement('viewport')
   if (!viewport) {
     console.error('No container')
@@ -354,36 +357,40 @@ export function calculateZoomToFitAll(): number {
     return 1
   }
 
-  // Calculate the zoom scale based on the longer side of the child element
-  const widthRatio =
-    viewport.offsetWidth /
-    (container.offsetWidth + container.offsetWidth * zoomPadding)
-  const heightRatio =
-    viewport.offsetHeight /
-    (container.offsetHeight + container.offsetHeight * zoomPadding)
+  // Calculate the available width and height for the container
+  const maxWidth = viewport.offsetWidth * (1 - zoomPadding)
+  const maxHeight = viewport.offsetHeight * (1 - zoomPadding)
 
-  // If the container height is greater than the viewport height, calculate the zoom scale based on the container height
-  const maxHeightRatio =
-    viewport.offsetHeight /
-    (container.offsetHeight +
-      container.offsetHeight *
-        zoomPadding *
-        (viewport.offsetWidth / container.offsetWidth))
-  const aspectRatio = container.offsetWidth / container.offsetHeight
-  const maxAdjustedHeightRatio =
-    viewport.offsetHeight /
-    (container.offsetHeight +
-      (container.offsetHeight *
-        zoomPadding *
-        Math.sqrt(viewport.offsetWidth / container.offsetWidth)) /
-        aspectRatio)
-
-  // Adjust the zoom ratio based on the aspect ratio of the container element
-  const zoom = Math.min(
-    widthRatio,
-    heightRatio,
-    maxHeightRatio / aspectRatio,
-    maxAdjustedHeightRatio
+  // Calculate the zoom scale based on the shorter side of the container and the maximum available width and height
+  let zoom = Math.min(
+    maxWidth / container.offsetWidth,
+    maxHeight / container.offsetHeight
   )
+
+  // If the container is wider than the viewport, adjust the zoom scale based on the width of the container
+  if (container.offsetWidth > maxWidth && container.offsetHeight <= maxHeight) {
+    zoom = maxWidth / container.offsetWidth
+  }
+
+  // If the container is taller than the viewport, adjust the zoom scale based on the height of the container
+  if (container.offsetHeight > maxHeight && container.offsetWidth <= maxWidth) {
+    zoom = maxHeight / container.offsetHeight
+  }
+
+  // If the container is both wider and taller than the viewport, adjust the zoom scale based on the larger dimension (width or height) of the container
+  if (container.offsetWidth > maxWidth && container.offsetHeight > maxHeight) {
+    if (container.offsetWidth / maxWidth > container.offsetHeight / maxHeight) {
+      zoom = maxWidth / container.offsetWidth
+    } else {
+      zoom = maxHeight / container.offsetHeight
+    }
+  }
+
+  if (zoom <= minScale) {
+    console.warn(
+      `Zoom level calculated (${zoom}) would exceed min scale (${minScale}). Using min scale instead.`
+    )
+  }
+
   return zoom
 }
