@@ -86,6 +86,7 @@ import rightClickMenu from '~/mixins/rightClickMenu'
 import { useArtboardsStore } from '~/store/artboards'
 import { useHoverArtboardsStore } from '~/store/hoverArtboards'
 import { useSelectedArtboardsStore } from '~/store/selectedArtboards'
+import { centerOnElement } from '~/components/panzoom/panzoomFns'
 
 export default {
   name: 'ArtboardEditable',
@@ -176,15 +177,18 @@ export default {
     },
     goToArtboard(id) {
       // Find the artboard (DOM)
-      const artboard = document.querySelector(`[artboard-id="${id}"]`)
+      const artboard = document.querySelector<HTMLElement>(
+        `[artboard-id="${id}"]`
+      )
       if (!artboard) {
         console.warn('No Artboard found')
         return false
       }
 
       // Pan to the position of the element relative to the parent
-      // TODO factor in the size of the artboard... Panzoom should scale down to fith the screen
-      this.$root.$panzoom.pan(-artboard.offsetLeft, artboard.offsetTop)
+      centerOnElement(artboard, {
+        instance: this.$root.$panzoom,
+      })
     },
     rightClickMenu(e, artboard) {
       rightClickMenu(this.$store, {
@@ -206,6 +210,7 @@ export default {
     selectArtboard(id) {
       // Move screen to the selected artboard
       this.goToArtboard(id)
+
       // Remove all previous selections
       const selectedArtboards = useSelectedArtboardsStore()
       selectedArtboards.empty()

@@ -1,28 +1,55 @@
 // The CSS classes
+
+import Panzoom, { PanzoomObject } from '@panzoom/panzoom'
+
 // TODO: Add tests to make sure these don't break
 const panzoomContainer = '.panzoom-container'
 const panzoomChild = '.panzoom-inner'
+const zoomPadding = 0.25
+export const minScale = 0.001
+
+export function getPanzoomElement(name: 'viewport' | 'container') {
+  const viewport = document.querySelector(panzoomContainer) as HTMLElement
+  if (!viewport) {
+    console.error('No container')
+    return {}
+  }
+  // Calculate the position of the element relative to the viewport container
+  const viewportRect = viewport.getBoundingClientRect()
+
+  // Get the full size of the artboards container (panzoomChild)
+  const container = document.querySelector(panzoomChild) as HTMLElement
+  if (!container) return {}
+  const containerRect = container.getBoundingClientRect()
+
+  let element: HTMLElement
+  let elementRect: DOMRect
+
+  if (name === 'container') {
+    element = container
+    elementRect = containerRect
+  } else {
+    element = viewport
+    elementRect = viewportRect
+  }
+
+  // Always return an HTML Element and a bounding rectangle
+  return {
+    el: element,
+    rect: elementRect,
+  }
+}
 
 /**
  * Returns the x, y, zoom for the initial app startup
  */
 export function initialPanZoom() {
-  const panzoomEl = document.querySelector<HTMLElement>(panzoomContainer)
-  if (!panzoomEl) {
-    console.error('No container')
-    return {}
-  }
-  const childElement = panzoomEl?.querySelector(panzoomChild) as HTMLElement
-
-  const panzoomRect = panzoomEl.getBoundingClientRect()
-  const childRect = childElement.getBoundingClientRect()
-
   // Calculate the zoom to fit all artboards
   const zoom = calculateZoomToFitAll()
 
   // Pan
-  const panX = (panzoomRect.width - childRect.width) / 2 - childRect.left
-  const panY = (panzoomRect.height - childRect.height) / 2 - childRect.top
+  // Old calculation: https://github.com/reflex-app/reflex/blob/42b07e33cbed8404d60749c29f0ed5f04a412184/app/src/renderer/components/panzoom/panzoomFns.ts#L23
+  const { x: panX, y: panY } = getViewportCenterCoordinates(zoom)
 
   // center child element within viewport
   return {
@@ -31,32 +58,339 @@ export function initialPanZoom() {
     zoom: zoom,
   }
 }
+
 /**
- * Returns a zoom factor which would fit all the current artboards within the viewport
+ * Programmatically centers an element in the viewport
  */
-export function calculateZoomToFitAll(): number {
-  const panzoomEl = document.querySelector<HTMLElement>(panzoomContainer)
-  if (!panzoomEl) {
+export function centerOnElement(
+  element: HTMLElement,
+  options: { instance: any }
+) {
+  // Get the position and dimensions of the element relative to the viewport.
+  // Then you can calculate the center point of the element by adding half of the width and height to its top-left position
+  // Then subtract the position of the parent element to get the center relative to its parent.
+
+  const { el: parent, rect: parentRect } = getPanzoomElement('viewport')
+  if (!parent) {
+    console.error('No container')
+    return {}
+  }
+  // Calculate the position of the element relative to the parent container
+
+  // Get the full size of the artboards container (panzoomChild)
+  const { el: container, rect: containerRect } = getPanzoomElement('container')
+  if (!container) return false
+
+  // Get the element's bounding rectangle relative to the viewport
+  const child = element
+  const childRect = child.getBoundingClientRect()
+
+  // console.log('Test', {
+  //   parent: parent,
+  //   container: container,
+  //   child: child,
+  // })
+
+  // Current settings
+  // TODO: Get the current zoom level
+  // const zoom = options.instance.getScale()
+  const zoom = getZoomToFitElement(child)
+  console.log('Zoom', zoom)
+  if (!zoom) return false
+
+  // Get the viewport dimensions in pixels
+  const viewportWidth = parent.offsetWidth
+  const viewportHeight = parent.offsetHeight
+
+  const containerOffsetLeft = child.offsetLeft * zoom
+  const containerOffsetTop = child.offsetTop * zoom
+  console.log('offset', containerOffsetLeft, containerOffsetTop)
+
+  console.log('viewportWidth:', viewportWidth)
+  console.log('viewportHeight:', viewportHeight)
+  console.log('containerOffsetLeft:', containerOffsetLeft)
+  console.log('containerOffsetTop:', containerOffsetTop)
+
+  // Calculate the center point of the viewport, adjusted for the container offset
+  // Factor in the zoom level
+  const viewportCenterX = (viewportWidth / 2 - containerOffsetLeft) / zoom
+  const viewportCenterY = (viewportHeight / 2 - containerOffsetTop) / zoom
+
+  console.log('viewportCenterX:', viewportCenterX)
+  console.log('viewportCenterY:', viewportCenterY)
+
+  // Set the position of the element to the adjusted center point of the viewport
+  const elementWidth = child.offsetWidth
+  const elementHeight = child.offsetHeight
+
+  console.log('elementWidth:', elementWidth)
+  console.log('elementHeight:', elementHeight)
+
+  // Final position
+  const x = viewportCenterX - elementWidth / 2
+  const y = viewportCenterY - elementHeight / 2
+
+  console.log('x:', x)
+  console.log('y:', y)
+
+  // Normally, we pan relative to the container
+  // But we want to pan relative to a specific element, so we can
+  // set our own transform values to be more specific
+  // This works... but it would be better to use pan() and zoom()
+  // options.instance.setStyle(
+  //   'transform',
+  //   `scale(${zoom}) translate(${x}px, ${y}px)`
+  // )
+
+  // Perform the panning & zoom
+  options.instance.pan(x, y)
+  options.instance.zoom(zoom)
+}
+
+/**
+ * This will get coordinates to place the container at the top-left of the viewport
+ */
+export function getCoordinatesTopLeft(
+  zoom: number,
+  options?: { instance: PanzoomObject }
+) {
+  let scale
+
+  // Set zoom
+  scale = zoom ? zoom : options?.instance.getScale()
+
+  console.log('scale', scale)
+
+  const { el: viewport, rect: viewportRect } = getPanzoomElement('viewport')
+  const { el: container, rect: containerRect } = getPanzoomElement('container')
+
+  if (!viewport || !container) return {}
+
+  // Get the viewport dimensions in pixels
+  const viewportWidth = viewport.offsetWidth
+  const viewportHeight = viewport.offsetHeight
+  console.log(viewportHeight, viewportWidth)
+
+  // Get the offset from the container element
+  const containerOffsetLeft = container.offsetLeft * scale
+  const containerOffsetTop = container.offsetTop * scale
+
+  // Calculate the center point of the viewport, adjusted for the container offset
+  // Factor in the zoom level
+  const viewportCenterX = viewportWidth / 2 - containerOffsetLeft
+  const viewportCenterY = viewportHeight / 2 - containerOffsetTop
+
+  // Final position
+  const containerWidth = Math.min(container.offsetWidth, viewportWidth)
+  const containerHeight = Math.min(container.offsetHeight, viewportHeight)
+  const x = viewportCenterX - containerWidth / 2
+  const y = viewportCenterY - containerHeight / 2
+
+  const offsetX = (viewportWidth - containerWidth) / 2
+  const offsetY = (viewportHeight - containerHeight) / 2
+
+  const finalX = x + offsetX
+  const finalY = y + offsetY
+
+  console.log('x:', x)
+  console.log('y:', y)
+
+  return { x: finalX, y: finalY }
+}
+
+/**
+ * Get the XY coordinates at the center of the viewport(container)
+ * Useful for centering all artboards in the viewport
+ */
+export function getViewportCenterCoordinates(
+  zoom: number,
+  options?: { instance: PanzoomObject }
+) {
+  let scale
+
+  // Set zoom
+  scale = zoom ? zoom : options?.instance.getScale()
+
+  const { el: viewport } = getPanzoomElement('viewport')
+  const { el: container } = getPanzoomElement('container')
+
+  if (!viewport || !container) return {}
+
+  // Get the viewport dimensions in pixels
+  const viewportWidth = viewport.offsetWidth
+  const viewportHeight = viewport.offsetHeight
+
+  // Get the offset from the container element
+  const containerOffsetLeft = container.offsetLeft * scale
+  const containerOffsetTop = container.offsetTop * scale
+
+  // Calculate the center point of the viewport, adjusted for the container offset
+  const viewportCenterX = (viewportWidth / 2 + containerOffsetLeft) / scale
+  const viewportCenterY = (viewportHeight / 2 + containerOffsetTop) / scale
+
+  // Calculate the container dimensions, scaled to the current zoom level
+  // NOTE: We don't need to calculate scale here
+  const containerWidth = container.offsetWidth
+  const containerHeight = container.offsetHeight
+
+  // Calculate the position of the container to be centered on the viewport center point
+  const x = viewportCenterX - containerWidth / 2
+  const y = viewportCenterY - containerHeight / 2
+
+  return { x: x, y: y }
+}
+
+/**
+ * Returns the X, Y coordinates of an element
+ * relative to the inner Panzoom container.
+ * Can use these coordinates with panzoom.pan()
+ */
+function getElementCoordinates(e: HTMLElement, zoom: number, options) {
+  let scale
+
+  // Set zoom
+  scale = zoom ? zoom : options?.instance.getScale()
+
+  console.log('scale', scale)
+
+  const { el: viewport, rect: viewportRect } = getPanzoomElement('viewport')
+  const { el: container, rect: containerRect } = getPanzoomElement('container')
+  const child = e
+
+  if (!viewport || !container) {
+    console.error('No parent or container element found')
+    return { x: 0, y: 0 }
+  }
+
+  const containerOffsetLeft = containerRect.left - viewport.offsetLeft
+  const containerOffsetTop = containerRect.top - viewport.offsetTop
+
+  // Calculate the center coordinates of the "container" element, accounting for the zoom/scale factor
+  const containerCenterX =
+    (containerOffsetLeft + container.offsetWidth / 2) * scale
+  const containerCenterY =
+    (containerOffsetTop + container.offsetHeight / 2) * scale
+
+  // Calculate the center coordinates of the "child" element relative to the "container" element, accounting for the zoom/scale factor
+  const childCenterX = (child.offsetWidth / 2) * scale
+  const childCenterY = (child.offsetHeight / 2) * scale
+
+  // Calculate the final center coordinates of the "child" element, accounting for the relative positioning and zoom/scale factor
+  const finalCenterX = containerCenterX + childCenterX
+  const finalCenterY = containerCenterY + childCenterY
+
+  return {
+    x: finalCenterX,
+    y: finalCenterY,
+  }
+}
+
+/**
+ * Returns the zoom scale needed to fit a specific element (e.g. an <Artboard>) in the viewport
+ */
+function getZoomToFitElement(e: HTMLElement) {
+  const { el: viewport } = getPanzoomElement('viewport')
+  if (!viewport) {
     console.error('No container')
     return 1
   }
-  const childElement = panzoomEl?.querySelector(panzoomChild) as HTMLElement
 
-  const panzoomViewportRect = {
-    width: panzoomEl.offsetWidth,
-    height: panzoomEl.offsetHeight,
+  const { el: container, rect: containerRect } = getPanzoomElement('container')
+  if (!container) {
+    console.error('No container')
+    return 1
   }
-  const childRect = childElement.getBoundingClientRect()
-  const childWidth = childRect.width
-  const childHeight = childRect.height
 
-  // Calculate the zoom scale
-  const zoomPadding = 0.9 // add extra space on sides of the content
-  const zoomX = (panzoomViewportRect.width / childWidth) * zoomPadding
-  const zoomY = (panzoomViewportRect.height / childHeight) * zoomPadding
-  const zoom = Math.min(zoomX, zoomY)
+  const child = e
+
+  // Calculate the zoom scale based on the longer side of the child element
+  const widthRatio =
+    viewport.offsetWidth / (child.offsetWidth + child.offsetWidth * zoomPadding)
+  const heightRatio =
+    viewport.offsetHeight /
+    (child.offsetHeight + child.offsetHeight * zoomPadding)
+
+  // If the child height is greater than the viewport height, calculate the zoom scale based on the child height
+  const maxHeightRatio =
+    viewport.offsetHeight /
+    (child.offsetHeight +
+      child.offsetHeight *
+        zoomPadding *
+        (viewport.offsetWidth / child.offsetWidth))
+  const aspectRatio = child.offsetWidth / child.offsetHeight
+  const maxAdjustedHeightRatio =
+    viewport.offsetHeight /
+    (child.offsetHeight +
+      (child.offsetHeight *
+        zoomPadding *
+        Math.sqrt(viewport.offsetWidth / child.offsetWidth)) /
+        aspectRatio)
+
+  // Adjust the zoom ratio based on the aspect ratio of the child element
+  const zoom = Math.min(
+    widthRatio,
+    heightRatio,
+    maxHeightRatio / aspectRatio,
+    maxAdjustedHeightRatio
+  )
 
   // Return
   return zoom
 }
 
+/**
+ * Returns a zoom factor which would fit all the current artboards within the viewport
+ */
+export function calculateZoomToFitAll(): number {
+  // We first calculate the available width and height for the container, and the aspect ratio of the container. We then calculate the zoom level based on the shorter side of the container and the maximum available width and height.
+  // Next, we check if the container is wider than the viewport, or taller than the viewport, or both. In each case, we adjust the zoom level based on the appropriate dimension (width or height or the larger dimension).
+  // Finally, we adjust the position of the container to keep it centered within the viewport, and return the calculated zoom level.
+  const { el: viewport } = getPanzoomElement('viewport')
+  if (!viewport) {
+    console.error('No container')
+    return 1
+  }
+
+  const { el: container, rect: containerRect } = getPanzoomElement('container')
+  if (!container) {
+    console.error('No container')
+    return 1
+  }
+
+  // Calculate the available width and height for the container
+  const maxWidth = viewport.offsetWidth * (1 - zoomPadding)
+  const maxHeight = viewport.offsetHeight * (1 - zoomPadding)
+
+  // Calculate the zoom scale based on the shorter side of the container and the maximum available width and height
+  let zoom = Math.min(
+    maxWidth / container.offsetWidth,
+    maxHeight / container.offsetHeight
+  )
+
+  // If the container is wider than the viewport, adjust the zoom scale based on the width of the container
+  if (container.offsetWidth > maxWidth && container.offsetHeight <= maxHeight) {
+    zoom = maxWidth / container.offsetWidth
+  }
+
+  // If the container is taller than the viewport, adjust the zoom scale based on the height of the container
+  if (container.offsetHeight > maxHeight && container.offsetWidth <= maxWidth) {
+    zoom = maxHeight / container.offsetHeight
+  }
+
+  // If the container is both wider and taller than the viewport, adjust the zoom scale based on the larger dimension (width or height) of the container
+  if (container.offsetWidth > maxWidth && container.offsetHeight > maxHeight) {
+    if (container.offsetWidth / maxWidth > container.offsetHeight / maxHeight) {
+      zoom = maxWidth / container.offsetWidth
+    } else {
+      zoom = maxHeight / container.offsetHeight
+    }
+  }
+
+  if (zoom <= minScale) {
+    console.warn(
+      `Zoom level calculated (${zoom}) would exceed min scale (${minScale}). Using min scale instead.`
+    )
+  }
+
+  return zoom
+}
