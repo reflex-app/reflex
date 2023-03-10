@@ -2,7 +2,9 @@
   <div style="display: inline-block; width: 100%; height: 100%">
     <!-- We 'panzoom-exclude' to mark this as not relevant to Panzoom -->
     <!-- <PanzoomControls v-if="panzoomInstance" :instance="panzoomInstance" /> -->
-    <div class="dev"></div>
+    <div class="dev">
+      <div>Mouse: {{ mouse }}</div>
+    </div>
     <div
       id="canvas"
       ref="outerPanArea"
@@ -37,7 +39,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, getCurrentInstance, onMounted, computed, watch } from 'vue'
+import {
+  ref,
+  reactive,
+  getCurrentInstance,
+  onMounted,
+  computed,
+  watch,
+} from 'vue'
 import Panzoom, { PanzoomObject } from '@panzoom/panzoom'
 import { ipcRenderer } from 'electron'
 import isElectron from 'is-electron'
@@ -58,9 +67,14 @@ const showCanvasDebugger = computed(() => devStore.showCanvasDebugger)
 const panzoomEnabled = computed(() => interactions.panzoomEnabled)
 const isInteracting = computed(() => interactions.isInteracting)
 
+const mouse = reactive({
+  x: 0,
+  y: 0,
+})
+
 // Template refs
-const innerPanArea = ref()
-const outerPanArea = ref() // The parent DOM Node
+const innerPanArea = ref<HTMLElement>()
+const outerPanArea = ref<HTMLElement>() // The parent DOM Node
 const panzoomInstance = ref<PanzoomObject | undefined>()
 
 // Watch for changes and change Panzoom accordingly
@@ -81,6 +95,11 @@ onMounted(async () => {
   const { $root, $config } = getCurrentInstance()?.proxy
   if (!$root) console.warn('No Panzoom created')
 
+  outerPanArea.value?.addEventListener('mousemove', (e) => {
+    mouse.x = e.clientX
+    mouse.y = e.clientY
+  })
+
   // const startZoom = initialZoom()
   const { x: startX } = initialPanZoom()
   const { y: startY } = initialPanZoom()
@@ -89,6 +108,11 @@ onMounted(async () => {
   // Init Panzoom globally
   // We use the 'canvas' option to enable interactions on the parent DOM Node as well
   // Docs: https://github.com/timmywil/panzoom#canvas
+  if (!innerPanArea.value) {
+    console.warn('No innerPanArea')
+    return false
+  }
+
   $root.$panzoom = Panzoom(innerPanArea.value, {
     canvas: true, // Allows parent to control child
     cursor: 'grab',
@@ -100,6 +124,12 @@ onMounted(async () => {
     startX: startX, // x
     startY: startY, // y
     startScale: startZoom,
+    // Override the focal point of the zoom
+    // because we don't use the default 50% 50% transform-origin
+    // focal: {
+    //   x: innerPanArea.value?.offsetLeft,
+    //   y: innerPanArea.value?.offsetTop,
+    // },
     // contain: false,
     handleStartEvent: (event: PointerEvent) => {
       // WARNING: Don't use preventDefault, as it will block other events
@@ -180,6 +210,10 @@ function disablePanzoom() {
 
 function enableEventListeners() {
   const instance = panzoomInstance.value
+  if (!instance) {
+    console.warn('No Panzoom instance')
+    return false
+  }
 
   // element.addEventListener("panzoomchange", event => {
   //   console.log(event.detail); // => { x: 0, y: 0, scale: 1 }
