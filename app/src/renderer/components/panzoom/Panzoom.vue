@@ -1,5 +1,5 @@
 <template>
-  <div style="display: inline-block">
+  <div style="display: inline-block; width: 100%; height: 100%">
     <!-- We 'panzoom-exclude' to mark this as not relevant to Panzoom -->
     <!-- <PanzoomControls v-if="panzoomInstance" :instance="panzoomInstance" /> -->
     <div
