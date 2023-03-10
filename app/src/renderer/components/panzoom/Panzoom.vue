@@ -211,7 +211,7 @@ function enableEventListeners() {
  * @param DOMElement DOM element that Panzoom is on
  * @param instance The Panzoom instance
  */
-function wheelHandler(DOMElement, instance) {
+function wheelHandler(DOMElement, instance: PanzoomObject) {
   DOMElement.addEventListener('wheel', onWheel)
 
   function onWheel(event) {
@@ -222,10 +222,284 @@ function wheelHandler(DOMElement, instance) {
     // Prevent default scroll event
     event.preventDefault()
 
+    // Normalize to deltaX in case shift modifier is used on Mac
+    const delta =
+      event.deltaY === 0 && event.deltaX ? event.deltaX : event.deltaY
+    const wheel = delta < 0 ? 1 : -1
+
     // Require the CMD/CTRL key to be pressed
     // This prevents accidental scrolling
     if (event.ctrlKey || event.metaKey || event.altKey) {
-      instance.zoomWithWheel(event)
+      // If we were using transform-origin 50%,50% on the Panzoom class we could use instance.zoomWithWheel and be done with it
+      // instance.zoomWithWheel(event)
+      // But we are using origin 0,0 so we need to do this manually
+      // Docs: https://github.com/timmywil/panzoom#zoomtopoint
+      // https://github.com/timmywil/panzoom/issues/482#issuecomment-621933139
+      // https://github.com/timmywil/panzoom/issues/630#issuecomment-1419893403
+      // https://github.com/timmywil/panzoom/issues/564#issuecomment-832791748
+      // https://github.com/timmywil/panzoom/issues/555
+      // https://github.com/timmywil/panzoom/blob/7428761452cfb570a7ebf7e5d6d7cd18b1893ee2/src/panzoom.ts#L349
+
+      function convertClientPointToPanzoomViewport() {
+        // We receive a clientX and clientY from the event
+        // We need to convert this to a point relative to the Panzoom viewport
+        // This is because Panzoom uses the viewport as its origin
+        // We can do this by using the Panzoom instance's getBoundingClientRect method
+        const { el: viewport, rect: viewportRect } =
+          getPanzoomElement('viewport')
+        if (!viewport) return { x: 0, y: 0 }
+
+        // We need to subtract the Panzoom viewport's offset from the event's X/Y
+        // We calculate all the size outside the Panzoom Viewport and subtract it from the event's X/Y
+        const rootElement = document.body
+        const rootRect = rootElement.getBoundingClientRect()
+        // rootRect.height = rootRect.height - viewportRect.height
+        // rootRect.width = rootRect.width - viewportRect.width
+
+        console.log(rootElement, viewport)
+
+        console.log(rootRect.height, viewportRect.height)
+
+        const x = event.clientX - (rootRect.width - viewportRect.width)
+        const y = event.clientY - (rootRect.height - viewportRect.height)
+
+        return { x, y }
+      }
+
+      // const scale = instance.getScale()
+      // const toScale = scale * Math.exp(wheel / 3)
+      // const toScale = scale * Math.exp(wheel / 30)
+
+      // Calculate the new zoom level based on the wheel delta
+      // const delta = event.deltaY || event.detail || event.wheelDelta
+      // const delta =
+      //   event.deltaY === 0 && event.deltaX ? event.deltaX : event.deltaY
+
+      // const zoomDelta = delta ? delta / 10000 : 0 // TODO: Make the value smaller to zoom faster
+      // const zoomLevel = panzoomInstance.value?.getScale() + zoomDelta
+
+      // Calculate the center point of the viewport
+      const { el: viewport, rect: viewportRect } = getPanzoomElement('viewport')
+      const { el: container, rect: containerRect } =
+        getPanzoomElement('container')
+      if (!viewport || !container) return false
+
+      ////////////////
+
+      // Calculate the zoom scale
+      const delta = Math.max(-1, Math.min(1, event.deltaY))
+      // const zoomScale = Math.pow(1.2, delta)
+      const prevScale = instance.getScale()
+      let newScale = prevScale + delta / 100
+      newScale = Math.max(newScale, minScale) // Ensure the scale never goes below 0.001
+
+      // const deltaX =
+      //   (event.clientX - container.offsetLeft) * (1 / prevScale - 1 / newScale)
+      // const deltaY =
+      //   (event.clientY - container.offsetTop) * (1 / prevScale - 1 / newScale)
+      // const newX = instance.getPan().x - deltaX
+      // const newY = instance.getPan().y - deltaY
+      const currPan = {
+        x: instance.getPan().x,
+        y: instance.getPan().y,
+      }
+
+      // calculate the new pan position to keep the mouse centered
+      const zoomFactor = newScale / prevScale
+      const mouse = {
+        x: event.clientX,
+        y: event.clientY,
+      }
+
+      // const offset = {
+      //   x: mouse.x - containerRect.left - currPan.x * prevScale,
+      //   y: mouse.y - containerRect.top - currPan.y * prevScale,
+      // }
+      // const newPan = {
+      //   x: currPan.x - offset.x * delta,
+      //   y: currPan.y - offset.y * delta,
+      // }
+
+      // const offsetX = mouseOffset.x - viewport.offsetWidth / 2
+      // const offsetY = mouseOffset.y - viewport.offsetHeight / 2
+      // const panX =
+      //   instance.getPan().x -
+      //   offsetX * (newScale / prevScale - 1) +
+      //   ((container.offsetWidth - viewport.offsetWidth) / 2) *
+      //     (newScale / prevScale)
+      // const panY = instance.getPan().y - offsetY * (newScale / prevScale - 1)
+
+      // `focal` is a low-level option for focusing in on a point of the element,
+      // not relative to the parent dimensions.
+      // But zooming the way we usually think about it is often relative to parent dimensions
+      // and not the element, which is why Panzoom has the zoomToPoint method to make things easier.
+      // Setting the focal to the existing transform doesn't work, as those numbers aren't really related.
+      // Original `focal` implementation: https://github.com/timmywil/panzoom/blob/7428761452cfb570a7ebf7e5d6d7cd18b1893ee2/src/panzoom.ts#LL401C5-L404C6
+      // This assumes the transform-origin is 50%,50%
+      // In our case, the transform-origin is 0,0
+      // const focal = {
+      //   x: (mouse.x / viewportRect.width) * (viewportRect.width * newScale),
+      //   y: (mouse.y / viewportRect.height) * (viewportRect.height * newScale),
+      // }
+
+      ///////////////
+      // const viewportCenter = {
+      //   x: viewportRect.width / 2,
+      //   y: viewportRect.height / 2,
+      // }
+      // const containerCenter = {
+      //   x: containerRect.width / 2,
+      //   y: containerRect.height / 2,
+      // }
+      // const focal = {
+      //   x: (mouse.x / viewportCenter.x) * (containerCenter.x * newScale),
+      //   y: (mouse.y / viewportCenter.y) * (containerCenter.y * newScale),
+      // }
+      ///////////////
+      // const mouseOffset = {
+      //   x: mouse.x - containerRect.left - containerRect.width / 2,
+      //   y: mouse.y - containerRect.top - containerRect.height / 2,
+      // }
+
+      // console.log(container)
+      console.log(mouse.x - containerRect.left, mouse.y - containerRect.top)
+
+      const mouseOffset = {
+        x: mouse.x - containerRect.left - containerRect.width / 2,
+        y: mouse.y - containerRect.top - containerRect.height / 2,
+      }
+      // console.log('mouseOffset', mouseOffset)
+
+      // Calculate the focal point relative to the container element
+      // Convert the mouse point from it's position over the
+      // effective area before the scale to the position
+      // over the effective area after the scale.
+      const focal = {
+        x: (mouse.x - mouseOffset.x) * prevScale,
+        y: (mouse.y - mouseOffset.y) * prevScale,
+      }
+
+      // The difference between the point after the scale and the point before the scale
+      // plus the current translation after the scale
+      // neutralized to no scale (as the transform scale will apply to the translation)
+      const focal2 = {
+        x:
+          (focal.x / newScale - focal.x / prevScale + currPan.x * newScale) /
+          newScale,
+        y:
+          (focal.y / newScale - focal.y / prevScale + currPan.y * newScale) /
+          newScale,
+      }
+
+      // const focal = {
+      //   x: (viewportRect.width / 2 - mouseOffset.x) * newScale,
+      //   y: (viewportRect.height / 2 - mouseOffset.y) * newScale,
+      // }
+
+      instance.zoom(newScale, {
+        animate: true,
+        focal: focal,
+      })
+
+      // instance.pan(newPan.x, newPan.y, {
+      //   animate: true,
+      //   relative: true,
+      // })
+
+      // Pan relative to the current position
+      // instance.pan(newPan.x, newPan.y, { relative: true })
+      // instance.pan(newPan.x, newPan.y)
+
+      const table = {
+        scale: {
+          prev: prevScale,
+          new: newScale,
+        },
+        mouseX: {
+          prev: mouse.x,
+          new: mouseOffsetX,
+        },
+        mouseY: {
+          prev: mouse.y,
+          new: mouseOffsetY,
+        },
+        panX: {
+          prev: currPan.x,
+          new: newPanX,
+        },
+        panY: {
+          prev: currPan.y,
+          new: newPanY,
+        },
+      }
+
+      console.table(table)
+
+      ////////////////
+
+      // // Get the current x, y, and scale
+      // const { x: currX, y: currY } = instance.getPan()
+      // const currScale = instance.getScale()
+
+      // // Get the position and dimensions of the container element
+      // const left = container.offsetLeft
+      // const top = container.offsetTop
+      // const width = container.offsetWidth
+      // const height = container.offsetHeight
+
+      // // Get the position of the mouse in the viewport
+      // const mouseX = event.clientX
+      // const mouseY = event.clientY
+
+      // // Calculate the new scale based on the wheel delta
+      // // Normalize to deltaX in case shift modifier is used on Mac
+      // const delta =
+      //   event.deltaY === 0 && event.deltaX ? event.deltaX : event.deltaY
+      // const zoomLevel = delta / 1000
+      // const newScale = currScale + zoomLevel
+
+      // // Get the size of the viewport element
+      // const viewportWidth = viewport.clientWidth
+      // const viewportHeight = viewport.clientHeight
+
+      // // Calculate the difference between the current mouse position and the center of the viewport
+      // const diffX = (viewportWidth / 2 - currX - event.clientX) / currScale
+      // const diffY = (viewportHeight / 2 - currY - event.clientY) / currScale
+
+      // // Calculate the new x and y position of the container element
+      // const newLeft = container.offsetLeft - diffX * newScale
+      // const newTop = container.offsetTop - diffY * newScale
+
+      // // Pan and zoom to the new position and scale
+      // instance.pan(newLeft, newTop)
+      // instance.zoom(newScale, { animate: true })
+
+      ////////////////
+
+      /////////
+      // const targetX = event.clientX - viewport.offsetLeft
+      // const targetY = event.clientY - viewport.offsetTop
+      // const currentPan = panzoomInstance.value.getPan()
+      // const viewportX =
+      //   (targetX - currentPan.x) / panzoomInstance.value.getScale()
+      // const viewportY =
+      //   (targetY - currentPan.y) / panzoomInstance.value.getScale()
+      /////////
+
+      // instance.zoomToPoint(
+      //   zoomLevel,
+      //   {
+      //     clientX: viewportX,
+      //     clientY: viewportY,
+      //   },
+      //   { animate: true, transformOrigin: { x: 0, y: 0 } }
+      // )
+
+      // Adjust the pan position to keep the zoom centered on the mouse position
+      // instance.pan(offsetLeft, offsetTop)
+
+      // instance.zoom(toScale)
+      // instance.pan(x, y)
     } else {
       // Allow trackpads to pan using two fingers
       const currentPan = instance.getPan()
