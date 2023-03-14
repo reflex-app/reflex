@@ -1,4 +1,4 @@
-const scroll = (origin, x, y) => {
+export default function scrollHandler(origin, x, y) {
   // https://stackoverflow.com/a/27915353/1114901
 
   const scrollProportion = ({ val, direction }) => {
@@ -37,5 +37,3 @@ const scroll = (origin, x, y) => {
     scrollProportion({ val: y, direction: 'y' })
   ) // % of y axis of scroll to px
 }
-
-module.exports = scroll

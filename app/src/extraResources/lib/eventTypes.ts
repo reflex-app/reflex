@@ -2,8 +2,8 @@ const CLICK = 'click'
 const DBLCLICK = 'dblclick'
 const SCROLL = 'scroll'
 
-module.exports = {
+export default {
   CLICK,
   DBLCLICK,
-  SCROLL
+  SCROLL,
 }
