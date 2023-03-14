@@ -41,7 +41,7 @@ jobs:
           node-version: ${{ matrix.node }}
 
       # ----- Yarn Install and Caching ------
-      # Cache Yarn 2
+      # Cache Yarn 3
       # https://github.com/actions/cache/blob/main/examples.md#node---yarn-2
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
