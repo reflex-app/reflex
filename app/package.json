@@ -11,9 +11,11 @@
     "url": "https://github.com/reflex-app/reflex.git"
   },
   "scripts": {
-    "dev": "node .electron-nuxt/dev.js",
-    "build": "npx cross-env RELEASE=true node .electron-nuxt/build.js",
-    "build:fast": "node .electron-nuxt/build.js",
+    "dev": "yarn run preload:build --mode development && yarn run preload:dev & node .electron-nuxt/dev.js",
+    "build": "yarn run preload:build && npx cross-env RELEASE=true node .electron-nuxt/build.js",
+    "build:fast": "yarn run preload:build && node .electron-nuxt/build.js",
+    "preload:dev": "cd src/extraResources && yarn run dev",
+    "preload:build": "cd src/extraResources && yarn run build",
     "release": "npx @digitak/esrun --tsconfig=./scripts/tsconfig.json ./scripts/updater-cli.ts",
     "test": "jest",
     "lint": "eslint --ext .js,.vue,.ts -f eslint-friendly-formatter ./src",
@@ -45,11 +47,11 @@
     }
   },
   "dependencies": {
+    "@electron/remote": "^2.0.8",
     "playwright-core": "^1.20.1"
   },
   "devDependencies": {
     "@babel/runtime-corejs2": "^7.14.8",
-    "@electron/remote": "^2.0.8",
     "@esbuild-kit/esm-loader": "^2.5.5",
     "@nuxt/types": "^2.16.0",
     "@nuxt/typescript-build": "^2.1.0",
@@ -99,7 +101,6 @@
     "eslint-plugin-nuxt": "^2.0.0",
     "eslint-plugin-prettier": "^3.4.0",
     "execa": "^7.0.0",
-    "html-to-image": "^1.9.0",
     "inquirer": "^9.1.4",
     "is-electron": "^2.2.1",
     "jest": "27.0.6",
