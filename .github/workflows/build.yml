@@ -24,12 +24,12 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0 # https://yarnpkg.com/features/release-workflow#commit-history
 
       - name: Install Node.js, NPM and Yarn
-        uses: actions/setup-node@v2 # See: https://github.com/actions/setup-node
+        uses: actions/setup-node@v3 # See: https://github.com/actions/setup-node
         with:
           node-version: ${{ matrix.node }}
 
