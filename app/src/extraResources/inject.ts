@@ -3,13 +3,31 @@
  * Communicate with renderer process (WebPage.vue) via ipcRenderer.sendToHost()
  * When this file is loaded it no longer has access to the compiled src/renderer/* files!
  */
-const { contextBridge, ipcRenderer } = require('electron')
-const remote = require('@electron/remote')
-const setDOMEffect = require('./lib/effects')
-const eventTypes = require('./lib/eventTypes')
-const helpers = require('./lib/helpers')
+// import remote from '@electron/remote'
+import { ipcRenderer } from 'electron'
+import setDOMEffect from './lib/effects'
+import eventTypes from './lib/eventTypes'
+import * as helpers from './lib/helpers'
+import * as htmlToImage from 'html-to-image'
+import fs from 'fs/promises'
+import path from 'path'
 
-console.log(ipcRenderer, remote)
+if (import.meta.env.MODE === 'development') {
+  // Ensure that all modules are loaded
+  console.log('Development mode')
+
+  // // Import package.json for the /app, and check that all dependencies are installed
+  // // Electron-builder will only include packages under "dependencies"
+  // const pkgPath = path.join(__dirname, '../../package.json')
+
+  // fs.readFile(pkgPath, 'utf8').then((data) => {
+  //   const pkgJson = JSON.parse(data)
+
+  //   // if (pkgJson.dependencies['html-to-image']) {
+  //   //   console.log('html-to-image is installed')
+  //   // }
+  // })
+}
 
 /// ////////////////////////////
 /// ////////////////////////////
@@ -40,15 +58,12 @@ function initiateBridge() {
     document.removeEventListener('DOMContentLoaded', initiateBridge)
 
     // Run our functions
-    startSync(syncFns)
+    startSync()
   })
 }
 
 // Enable html-to-image
 // https://stackoverflow.com/a/67803203
-const htmlToImage = require('html-to-image')
-console.log(htmlToImage)
-
 if (window) {
   window.htmlToImage = htmlToImage
 }

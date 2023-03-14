@@ -1,4 +1,4 @@
-function click (event) {
+export default function click(event) {
   console.log('click event')
 
   // event.target.{element, index}
@@ -28,5 +28,3 @@ function click (event) {
     throw new Error('No elements found based on event')
   }
 }
-
-module.exports = click

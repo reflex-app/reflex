@@ -108,8 +108,8 @@ module.exports = {
   ],
   extraResources: [
     {
-      from: 'src/extraResources/',
-      to: '',
+      from: 'dist/extraResources/',
+      to: 'app/dist/extraResources', // e.g. /Users/user123/.../reflex/app/build/mac-arm64/Reflex.app/Contents/Resources/app/_____
     },
   ],
   // Using ASAR
