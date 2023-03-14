@@ -2,7 +2,7 @@
   "name": "@reflex/app",
   "productName": "Reflex",
   "description": "Make responsive websites without the guesswork.",
-  "version": "0.7.0-beta.29",
+  "version": "0.7.0-beta.30",
   "author": "Nick Wittwer",
   "main": "./dist/main/index.js",
   "homepage": "https://reflexapp.nickwittwer.com",
@@ -134,5 +134,5 @@
     "webpack": "^4.46.0",
     "webpack-node-externals": "^2.5.2"
   },
-  "stableVersion": "0.7.0-beta.28"
+  "stableVersion": "0.7.0-beta.29"
 }
