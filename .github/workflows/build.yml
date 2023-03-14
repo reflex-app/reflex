@@ -15,6 +15,13 @@ on:
     tags:
       - 'v*.*.*' # Only watch for new v- Git tags
 
+# Set the default command-line across operating systems
+# Fixes OS-specific $GITHUB_OUTPUT variable usage bug
+# https://github.com/actions/cache/pull/954#issuecomment-1297079170
+defaults:
+  run:
+    shell: bash
+
 jobs:
   release:
     strategy:
