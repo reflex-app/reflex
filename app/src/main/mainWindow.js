@@ -45,7 +45,11 @@ winHandler.onCreated(async (browserWindow) => {
   })
 
   // Load the app
-  await winHandler.loadPage('/')
+  try {
+    await winHandler.loadPage('/')
+  } catch (err) {
+    log.error(err)
+  }
   // if (isDev) browserWindow.loadURL(DEV_SERVER_URL)
   // else browserWindow.loadFile(INDEX_PATH)
 

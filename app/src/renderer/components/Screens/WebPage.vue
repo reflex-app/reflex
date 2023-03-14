@@ -2,11 +2,9 @@
   <webview
     ref="frame"
     class="frame"
-    :preload="injectScript"
-    allowpopups="true"
-    enableremotemodule="true"
-    plugins="true"
-    webpreferences="contextIsolation=true, nodeIntegration=true"
+    :preload="injectScriptPath"
+    v-bind="webviewOptions"
+    :electronConfig="webpreferences"
   />
 </template>
 
@@ -16,7 +14,7 @@ import { mapState } from 'pinia'
 import { state as reflexState, setPublisher } from '~/mixins/reflex-sync'
 import { useHistoryStore } from '~/store/history'
 import remote from '@electron/remote'
-import { watch, ref, Ref } from 'vue'
+import { watch, ref, Ref, getCurrentInstance, computed } from 'vue'
 
 export default {
   props: {
@@ -43,14 +41,41 @@ export default {
       currentPage: (store) => store.currentPage,
       url: (store) => store.currentPage.url,
     }),
-    injectScript() {
-      // const appPath = remote.app.getPath('appData')
-      // Load the inject script
+    injectScriptPath() {
+      // The inject script is loaded into the <webview> to enable Node.js
+      // It will have access to the Node.js APIs
+      // Docs: https://www.electronjs.org/docs/api/webview-tag#preload
+      // The ./inject.js file is handled separately, in the extraResources directory
+      // The protocol of script's URL must be file: (even when using asar: archives) because it will be loaded by Node's require under the hood
       // TODO add a test to make sure this file exists
-      const injectScriptPath =
-        'file://' + path.join(process.resourcesPath, './inject.js')
 
-      return injectScriptPath
+      const isDev = getCurrentInstance()?.proxy.$root.$config.DEV
+      const suffix = 'dist/extraResources/index.js'
+
+      const scriptPath = isDev
+        ? 'file://' + path.join(process.resourcesPath, '../../', suffix) // Path in dev
+        : 'file://' + path.join(process.resourcesPath, './app/', suffix) // Path in production
+
+      return scriptPath
+    },
+    webpreferences(): string {
+      const settings: Partial<Electron.WebPreferences> = {
+        plugins: true,
+        nodeIntegration: true, // Enables Node.js integration
+        contextIsolation: true,
+      }
+
+      // Return as a comma-separated string
+      return Object.keys(settings)
+        .map((key) => `${key}=${settings[key]}`)
+        .join(',')
+    },
+    webviewOptions(): Partial<Electron.WebviewTag> {
+      return {
+        nodeintegration: true,
+        allowpopups: true,
+        webpreferences: this.webpreferences,
+      }
     },
   },
   watch: {
