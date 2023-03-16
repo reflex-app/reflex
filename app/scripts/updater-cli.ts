@@ -216,11 +216,12 @@ async function deleteGitTag(tagName) {
 async function removeStableVersion() {
   const packageJsonPath = path.resolve(pathToApp, 'package.json')
 
-  const { default: currPackageJson } = await import(packageJsonPath, {
-    assert: {
-      type: 'json',
-    },
-  })
+  const currPackageJson = await fs
+    .readFile(packageJsonPath, 'utf-8')
+    .then((data) => {
+      return JSON.parse(data)
+    })
+
   const newPackageJson = cloneDeep(currPackageJson)
 
   // Remove the .stableVersion key

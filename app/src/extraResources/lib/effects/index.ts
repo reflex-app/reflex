@@ -1,6 +1,6 @@
-const eventTypes = require('../eventTypes')
-const scrollHandler = require('./scroll')
-const clickHandler = require('./click')
+import eventTypes from '../eventTypes'
+import scrollHandler from './scroll'
+import clickHandler from './click'
 
 /**
  *
@@ -8,7 +8,7 @@ const clickHandler = require('./click')
  * @param {*} event Event data
  * @param {*} args Options and details
  */
-function setDOMEffect (event, args) {
+export default function setDOMEffect(event, args) {
   console.log('Setting DOM effect', event, args)
 
   if (args.event.type === eventTypes.CLICK) {
@@ -24,5 +24,3 @@ function setDOMEffect (event, args) {
     )
   }
 }
-
-module.exports = setDOMEffect

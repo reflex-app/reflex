@@ -15,6 +15,13 @@ on:
     tags:
       - 'v*.*.*' # Only watch for new v- Git tags
 
+# Set the default command-line across operating systems
+# Fixes OS-specific $GITHUB_OUTPUT variable usage bug
+# https://github.com/actions/cache/pull/954#issuecomment-1297079170
+defaults:
+  run:
+    shell: bash
+
 jobs:
   release:
     strategy:
@@ -24,32 +31,33 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0 # https://yarnpkg.com/features/release-workflow#commit-history
 
       - name: Install Node.js, NPM and Yarn
-        uses: actions/setup-node@v2 # See: https://github.com/actions/setup-node
+        uses: actions/setup-node@v3 # See: https://github.com/actions/setup-node
         with:
           node-version: ${{ matrix.node }}
 
       # ----- Yarn Install and Caching ------
-      # Cache Yarn 2
+      # Cache Yarn 3
       # https://github.com/actions/cache/blob/main/examples.md#node---yarn-2
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn config get cacheFolder)"
+        run: echo "dir=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
 
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
         with:
           path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-node-${{ matrix.node }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-yarn-
+            ${{ runner.os }}-node-${{ matrix.node }}-yarn-
+            ${{ runner.os }}-node--yarn-
 
       - name: Install dependencies
-        run: yarn
+        run: yarn install
       # ----- End Yarn Install and Caching ------
 
       - name: Build/release Electron app
