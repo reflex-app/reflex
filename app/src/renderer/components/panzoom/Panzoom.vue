@@ -10,20 +10,40 @@
         'dev-visual-debugger': showCanvasDebugger,
       }"
     >
+      <!-- For transform-origin: 50% 50% to work, this next element HAS to be display:block -->
       <div
         ref="innerPanArea"
-        :class="{
-          'dev-visual-debugger': showCanvasDebugger,
-        }"
+        style="
+          display: block;
+          position: relative;
+          height: 100%;
+          width: 100%;
+          overflow: visible;
+        "
       >
-        <slot />
+        <!-- Now we have the real panzoom content inside: -->
+        <div
+          class="panzoom-inner"
+          :class="{
+            'dev-visual-debugger': showCanvasDebugger,
+          }"
+        >
+          <slot />
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, getCurrentInstance, onMounted, computed, watch } from 'vue'
+import {
+  ref,
+  getCurrentInstance,
+  onMounted,
+  computed,
+  watch,
+  nextTick,
+} from 'vue'
 import Panzoom, { PanzoomObject } from '@panzoom/panzoom'
 import { ipcRenderer } from 'electron'
 import isElectron from 'is-electron'
@@ -31,6 +51,9 @@ import PanzoomControls from './PanzoomControls.vue'
 import { useInteractionStore } from '~/store/interactions'
 import useEventHandler from '../Screens/useEventHandler'
 import { useDevStore } from '~/store/dev'
+import { isEqual } from 'lodash'
+import { start } from 'repl'
+import { initialPanZoom } from './panzoomFns'
 // import { useEventListener } from '@vueuse/core'
 
 const interactions = useInteractionStore()
@@ -38,14 +61,14 @@ const devStore = useDevStore()
 const { state: userEventsState } = useEventHandler()
 
 // Store
-// const showCanvasDebugger = false // TODO: Migrate from Vuex -> Pinia
-const showCanvasDebugger = devStore.showCanvasDebugger
+const showCanvasDebugger = computed(() => devStore.showCanvasDebugger)
 const panzoomEnabled = computed(() => interactions.panzoomEnabled)
 const isInteracting = computed(() => interactions.isInteracting)
 
 // Template refs
 const innerPanArea = ref()
 const outerPanArea = ref() // The parent DOM Node
+const panzoomContent = ref() // Dynamic content within Panzoom
 const panzoomInstance = ref<PanzoomObject | undefined>()
 
 // Watch for changes and change Panzoom accordingly
@@ -61,10 +84,31 @@ watch(panzoomEnabled, (newVal) => {
   }
 })
 
-onMounted(async () => {
+// Dynamic height and width for parent based on child
+const dynamicDims = computed(() => {
+  const { width, height } = panzoomContent.value?.getBoundingClientRect() || {
+    width: 0,
+    height: 0,
+  }
+
+  console.log('dynamicDims', width, height)
+
+  return {
+    width: width + 'px',
+    height: height + 'px',
+  }
+})
   // TODO: This should be refactored after Vue 3 update
   const { $root } = getCurrentInstance()?.proxy
-  if (!$root) console.warn('No Panzoom created')
+if (!$root) console.warn('No $root')
+
+onMounted(async () => {
+  await nextTick()
+
+  // const startZoom = initialZoom()
+  const { x: startX } = initialPanZoom()
+  const { y: startY } = initialPanZoom()
+  const { zoom: startZoom } = initialPanZoom()
 
   // Init Panzoom globally
   // We use the 'canvas' option to enable interactions on the parent DOM Node as well
@@ -72,8 +116,13 @@ onMounted(async () => {
   $root.$panzoom = Panzoom(innerPanArea.value, {
     canvas: true, // Allows parent to control child
     cursor: 'grab',
-    startScale: 1,
-    startX: 0,
+    // origin = transform-origin is the origin from which transforms are applied
+    // Default: 50% 50% https://github.com/timmywil/panzoom#origin
+    origin: '50% 50%',
+    startX: startX, // x
+    startY: startY, // y
+    // contain: false,
+    startScale: startZoom,
     handleStartEvent: (event: PointerEvent) => {
       // WARNING: Don't use preventDefault, as it will block other events
       // event.preventDefault()
@@ -99,14 +148,22 @@ onMounted(async () => {
   // Reference inside of this component
   panzoomInstance.value = $root.$panzoom
 
-  // Center Panzoom
-  // this.panzoomInstance.pan(
-  //   origX + (current.clientX - startClientX) / scale,
-  //   origY + (current.clientY - startClientY) / scale,
-  //   {
-  //     animate: false,
+  // TODO: Remove later; useful for debugging
+  // let zoom, pan
+  // setInterval(() => {
+  //   const newZoom = panzoomInstance.value?.getScale()
+  //   const newPan = panzoomInstance.value?.getPan()
+
+  //   const isNewZoom = zoom !== newZoom
+  //   const isNewPan = isEqual(pan, newPan) === false
+
+  //   if (isNewZoom) zoom = newZoom
+  //   if (isNewPan) pan = newPan
+
+  //   if (isNewPan || isNewZoom) {
+  //     console.log('Panzoom', { zoom, ...pan }, isNewZoom, isNewPan)
   //   }
-  // )
+  // }, 1000)
 
   // Enable event listeners
   enableEventListeners()
@@ -263,16 +320,18 @@ function fitToScreen() {
 
 <style lang="scss" scoped>
 .panzoom-container {
-  // position: absolute;
-  // overflow: hidden;
-  // outline: none;
+  position: relative !important;
   height: 100%;
   width: 100%;
-  position: relative;
-  // position: absolute;
   top: 0;
   left: 0;
   overflow: hidden;
+}
+
+.panzoom-inner {
+  position: relative; // Important
+  display: inline-block;
+  overflow: visible;
 }
 
 #parent {
@@ -318,14 +377,22 @@ function fitToScreen() {
   .dev-visual-debugger {
     // Vertical line
     &:before {
+      position: absolute;
+      width: 100%;
+      z-index: 100;
+      height: 100%;
       left: 50%;
-      border-left: 1px solid green;
+      border-left: 5px solid green;
     }
 
     // Horizonal line
     &:after {
+      position: absolute;
+      width: 100%;
+      z-index: 100;
+      height: 100%;
       top: 50%;
-      border-top: 1px solid green;
+      border-top: 5px solid green;
     }
   }
 }
