@@ -66,9 +66,12 @@ export const useHistoryStore = defineStore('history', {
       // This function may be called just to trigger a new URL navigation
       // but it can also be called from an <artboard> once it has access to the new URL
 
-      // @TODO: Throttle this fn, as it will be called by
-      // each <webview> when it loads, and doesn't need to keep changing
+      // TODO: Only log in dev
+      console.log('Changing site data', val)
 
+      // TODO: Each artboard will call this fn right now
+      // But really we should only update the title once
+      // We could use a throttle fn, or a debounce fn, but this is also a bit hacky
       if (val.title && val.title !== this.currentPage.title) {
         this.currentPage.title = val.title
       }

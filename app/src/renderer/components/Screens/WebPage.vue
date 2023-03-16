@@ -1,11 +1,6 @@
 <template>
-  <webview
-    ref="frame"
-    class="frame"
-    :preload="injectScriptPath"
-    v-bind="webviewOptions"
-    :electronConfig="webpreferences"
-  />
+  <webview ref="frame" class="frame" :preload="injectScriptPath" v-bind="webviewOptions"
+    :electronConfig="webpreferences" />
 </template>
 
 <script lang="ts">
@@ -302,8 +297,6 @@ export default {
       this.$emit('loadstart') // Show loading spinner
 
       // Change the title to Loading...
-      // TODO Add a VueX action for this?
-
       const history = useHistoryStore()
       history.changeSiteData({
         title: 'Loading...',
@@ -347,7 +340,6 @@ export default {
         const title = returnedData.title
         const favicon = returnedData.favicon
 
-        // TODO Add to VueX Action
         const history = useHistoryStore()
         history.changeSiteData({
           title,
@@ -363,6 +355,11 @@ export default {
     loadstop() {
       const frame = this.$refs.frame
       this.$emit('loadend') // Hide loading spinner
+
+      // Get the final <title> after the page finished loading
+      frame.send('bridgeToFrame', {
+        id: this.id,
+      })
 
       // History
       // TODO: webContents.history is no longer around https://github.com/electron/electron/issues/26727

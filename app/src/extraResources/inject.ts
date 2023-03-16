@@ -12,6 +12,16 @@ import * as htmlToImage from 'html-to-image'
 import fs from 'fs/promises'
 import path from 'path'
 
+interface Data {
+  title: string
+  favicon: string
+}
+
+let data: Data = {
+  title: '',
+  favicon: '',
+}
+
 if (import.meta.env.MODE === 'development') {
   // Ensure that all modules are loaded
   console.log('Development mode')
@@ -37,25 +47,87 @@ if (import.meta.env.MODE === 'development') {
  * Collect and send back information from the document context
  * Only done during the initial bridging
  */
-document.addEventListener('DOMContentLoaded', initiateBridge)
+document.addEventListener('DOMContentLoaded', init)
+// document.addEventListener('load', initiateBridge)
 
-function initiateBridge() {
-  const data = {
-    title: document.title,
-    favicon:
-      'https://www.google.com/s2/favicons?domain=' + window.location.href,
-  }
+async function init() {
+  //  Communicate back to the Electron app
+  await initiateBridge()
+}
 
+async function getPageData() {
+  data.title = await getPageTitle()
+  console.log('Title:', data.title)
+
+  data.favicon =
+    'https://www.google.com/s2/favicons?domain=' + window.location.href
+  console.log('Favicon:', data.favicon)
+}
+
+function getPageTitle(): Promise<string> {
+  return new Promise(async (resolve, reject) => {
+    let title: string | undefined = document.title
+
+    if (title) {
+      resolve(title)
+    } else {
+      console.log('Waiting for <title> to be added')
+
+      // If no title after 15s, just return as empty
+      const timer = setTimeout(() => {
+        reject('No title found')
+      }, 2500)
+
+      // Wait for a <title> to be added
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          if (!mutation.addedNodes) return
+
+          for (let i = 0; i < mutation.addedNodes.length; i++) {
+            let node = mutation.addedNodes[i]
+            if (node.nodeName !== 'TITLE') continue
+            // Only look for <title> node
+            if (node.nodeName === 'TITLE') {
+              // Title set!
+              title = document.title
+
+              // Cancel the timer
+              clearTimeout(timer)
+
+              // Kill the observer
+              observer.disconnect()
+
+              // Return the final title
+              resolve(title)
+            }
+          }
+        })
+      })
+
+      // Watch the <head> for the <title> to be added
+      observer.observe(document.head, {
+        childList: true,
+        subtree: true,
+        characterData: true,
+      })
+    }
+  })
+}
+
+async function initiateBridge() {
   // Listen for initial connection to the frame
-  ipcRenderer.once('bridgeToFrame', (event, args) => {
+  ipcRenderer.on('bridgeToFrame', async (event, args) => {
     // We get the ID of the artboard we're connected to
     console.log('Passed from parent:', args)
     const { id, syncFns } = args
     state.id = id
 
+    // Get the page title and favicon
+    await getPageData()
+
     // Respond to the parent component
     ipcRenderer.sendToHost('initiateBridge', data)
-    document.removeEventListener('DOMContentLoaded', initiateBridge)
+    // document.removeEventListener('DOMContentLoaded', initiateBridge)
 
     // Run our functions
     startSync()
