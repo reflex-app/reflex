@@ -36,7 +36,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, getCurrentInstance, onMounted, computed, watch } from 'vue'
+import {
+  ref,
+  getCurrentInstance,
+  onMounted,
+  computed,
+  watch,
+  nextTick,
+} from 'vue'
 import Panzoom, { PanzoomObject } from '@panzoom/panzoom'
 import { ipcRenderer } from 'electron'
 import isElectron from 'is-electron'
@@ -61,6 +68,7 @@ const isInteracting = computed(() => interactions.isInteracting)
 // Template refs
 const innerPanArea = ref()
 const outerPanArea = ref() // The parent DOM Node
+const panzoomContent = ref() // Dynamic content within Panzoom
 const panzoomInstance = ref<PanzoomObject | undefined>()
 
 // Watch for changes and change Panzoom accordingly
@@ -76,10 +84,26 @@ watch(panzoomEnabled, (newVal) => {
   }
 })
 
-onMounted(async () => {
+// Dynamic height and width for parent based on child
+const dynamicDims = computed(() => {
+  const { width, height } = panzoomContent.value?.getBoundingClientRect() || {
+    width: 0,
+    height: 0,
+  }
+
+  console.log('dynamicDims', width, height)
+
+  return {
+    width: width + 'px',
+    height: height + 'px',
+  }
+})
   // TODO: This should be refactored after Vue 3 update
   const { $root } = getCurrentInstance()?.proxy
-  if (!$root) console.warn('No Panzoom created')
+if (!$root) console.warn('No $root')
+
+onMounted(async () => {
+  await nextTick()
 
   // const startZoom = initialZoom()
   const { x: startX } = initialPanZoom()
