@@ -24,6 +24,8 @@ const getEnv = (name, expectedVal) => {
 }
 
 const isRelease = getEnv('RELEASE', 'true') || false // Controls whether the app will be codesigned, notarized, published
+const isLocalBuild = getEnv('LOCAL_BUILD', 'true') || false // Used to enable `publish` in local builds
+
 console.log(`Is release? ${isRelease}`)
 
 const ICONS_DIR = 'build/icons/'
@@ -85,7 +87,9 @@ module.exports = {
   productName: require('./package.json').productName,
   appId: 'com.reflex.app',
   artifactName: 'Reflex-${version}-${os}-${arch}.${ext}',
-  publish: isRelease ? ['github'] : null, //  Publish artifacts to Github (release)
+  // TODO: Publish is needed in order to create app-update.yml in build, but we don't want
+  // to publish artifacts to Github for local builds
+  publish: isRelease || isLocalBuild ? ['github'] : null, // Publish artifacts to Github (release)
 
   // Enable Release channels
   // https://www.electron.build/tutorials/release-using-channels#release-using-channels-auto-updates-with-channels
