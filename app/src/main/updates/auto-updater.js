@@ -4,7 +4,7 @@ const { ipcMain, app, BrowserWindow } = require('electron')
 const { autoUpdater } = require('electron-updater')
 const isDev = require('electron-is-dev')
 
-export default function init(window) {
+export function init(window) {
   let UPDATE_AVAILABLE = null
   const win = window.webContents
 
@@ -18,17 +18,6 @@ export default function init(window) {
   // Don't set this. Allow electron-builder to do the work.
   // See: https://www.electron.build/auto-update#AppUpdater-allowPrerelease
   // autoUpdater.allowPrerelease = true
-
-  if (isDev) {
-    // Useful for some dev/debugging tasks, but download can
-    // not be validated becuase dev app is not signed
-    autoUpdater.updateConfigPath = path.join(
-      __dirname,
-      '../../build/dev-app-update.yml'
-    )
-
-    // To test it out, change package.json version to a previous version
-  }
 
   // Channel for updates
   // Default is latest non-preview (not beta, not alpha)
@@ -82,13 +71,13 @@ export default function init(window) {
 
   win.on('did-finish-load', () => {
     // Check for updates (only in non-dev environments)
-    if (!isDev) {
-      autoUpdater.checkForUpdates()
-    }
+    console.log('checking for update')
+    autoUpdater.checkForUpdates()
   })
 
   autoUpdater.on('checking-for-update', () => {
     log.info('checking for update')
+    console.log('checking for update')
     sendStatusToWindow('Checking for update...')
   })
 

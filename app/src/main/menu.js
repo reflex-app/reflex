@@ -1,53 +1,56 @@
 const { app, Menu, shell } = require('electron')
 const isDev = require('electron-is-dev')
+import { checkForUpdates } from './updates/check-for-update'
 
-export function setMenu (window) {
+const isMac = process.platform === 'darwin'
+
+export function setMenu(window) {
   const template = [
     {
       label: 'Edit',
       submenu: [
         {
-          role: 'undo'
+          role: 'undo',
         },
         {
-          role: 'redo'
+          role: 'redo',
         },
         {
-          type: 'separator'
+          type: 'separator',
         },
         {
-          role: 'cut'
+          role: 'cut',
         },
         {
-          role: 'copy'
+          role: 'copy',
         },
         {
-          role: 'paste'
+          role: 'paste',
         },
         {
-          role: 'pasteandmatchstyle'
+          role: 'pasteandmatchstyle',
         },
         {
-          role: 'delete'
+          role: 'delete',
         },
         {
-          role: 'selectall'
+          role: 'selectall',
         },
         {
-          type: 'separator'
+          type: 'separator',
         },
         {
           label: 'Speech',
           submenu: [
             {
-              role: 'startspeaking'
+              role: 'startspeaking',
             },
             {
-              role: 'stopspeaking'
-            }
-          ]
-        }
-      ]
+              role: 'stopspeaking',
+            },
+          ],
+        },
+      ],
     },
     {
       label: 'View',
@@ -59,64 +62,64 @@ export function setMenu (window) {
           label: 'Zoom In',
           accelerator: 'CmdOrCtrl+=',
           // role: 'zoomin',
-          click () {
+          click() {
             window.webContents.send('menu_zoom-in')
-          }
+          },
         },
         {
           label: 'Zoom Out',
           accelerator: 'CmdOrCtrl+-',
           // role: 'zoomout'
-          click () {
+          click() {
             window.webContents.send('menu_zoom-out')
-          }
+          },
         },
         {
-          type: 'separator'
+          type: 'separator',
         },
         {
-          role: 'togglefullscreen'
+          role: 'togglefullscreen',
         },
         {
           label: 'Center to Screen',
           accelerator: 'CmdOrCtrl+0',
-          click () {
+          click() {
             window.webContents.send('menu_zoom-to-fit')
-          }
+          },
         },
         {
-          type: 'separator'
+          type: 'separator',
         },
         // {
         //   role: 'reload'
         // },
         {
-          role: 'forcereload'
+          role: 'forcereload',
         },
         {
-          role: 'toggledevtools'
-        }
-      ]
+          role: 'toggledevtools',
+        },
+      ],
     },
     {
       role: 'window',
       submenu: [
         {
-          role: 'minimize'
+          role: 'minimize',
         },
         {
-          role: 'close'
+          role: 'close',
         },
         {
-          role: 'zoom'
+          role: 'zoom',
         },
         {
-          type: 'separator'
+          type: 'separator',
         },
         {
-          role: 'front'
-        }
-      ]
+          role: 'front',
+        },
+      ],
     },
     {
       role: 'help',
@@ -129,66 +132,77 @@ export function setMenu (window) {
         // },
         {
           label: 'Report a Bug',
-          click () {
-            shell.openExternal('https://github.com/nwittwer/reflex/issues/new')
-          }
+          click() {
+            shell.openExternal(
+              'https://github.com/reflex-app/reflex/issues/new'
+            )
+          },
         },
         {
           label: 'Follow on Twitter',
-          click () {
+          click() {
             shell.openExternal('https://twitter.com/reflex_app')
-          }
-        }
-      ]
-    }
+          },
+        },
+      ],
+    },
   ]
 
-  if (process.platform === 'darwin') {
+  if (isMac) {
     template.unshift({
       label: app.name,
       submenu: [
         {
-          role: 'about'
+          role: 'about',
         },
         {
-          type: 'separator'
+          id: 'check-for-updates',
+          parentId: isMac ? 'mac' : 'help',
+          orderNumber: isMac ? 20 : 50,
+          label: 'Check for updates...',
+          enabled: true, // TODO: Make this reactive; currently doesn't change
+          click: async (menuItem) => await checkForUpdates(menuItem),
         },
         {
-          role: 'services'
+          type: 'separator',
         },
         {
-          type: 'separator'
+          role: 'services',
         },
         {
-          role: 'hide'
+          type: 'separator',
         },
         {
-          role: 'hideothers'
+          role: 'hide',
         },
         {
-          role: 'unhide'
+          role: 'hideothers',
         },
         {
-          type: 'separator'
+          role: 'unhide',
         },
         {
-          role: 'quit'
-        }
-      ]
+          type: 'separator',
+        },
+        {
+          role: 'quit',
+        },
+      ],
     })
   }
 
+  // Reset Reflex
   template[0].submenu.splice(
-    1,
+    isMac ? 2 : 1, // place after "About" on Mac
     0,
     {
-      type: 'separator'
+      type: 'separator',
     },
     {
       label: `Reset ${app.name}...`,
-      click () {
+      click() {
         window.webContents.send('menu_reset-app')
-      }
+      },
     }
   )
   // If in Dev mode, add menu
@@ -198,11 +212,11 @@ export function setMenu (window) {
       submenu: [
         {
           label: 'Show Canvas Debugger',
-          click () {
+          click() {
             window.webContents.send('menu_show-developer-canvas-debugger')
-          }
-        }
-      ]
+          },
+        },
+      ],
     })
   }
 
