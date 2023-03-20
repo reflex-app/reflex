@@ -8,22 +8,14 @@
             Save
             {{
               selectedArtboards.list.length > 1
-                ? selectedArtboards.list.length + ' images...'
-                : selectedArtboards.list.length + ' image...'
+              ? selectedArtboards.list.length + ' images...'
+              : selectedArtboards.list.length + ' image...'
             }}
           </Button>
-          <Button
-            v-if="selectedArtboards.list.length === 1"
-            role="secondary"
-            @click="copyToClipboard()"
-          >
+          <Button v-if="selectedArtboards.list.length === 1" role="secondary" @click="copyToClipboard()">
             Copy to Clipboard
           </Button>
-          <Button
-            v-if="selectedArtboards.list.length >= 1"
-            role="secondary"
-            @click="deleteMultiple()"
-          >
+          <Button v-if="selectedArtboards.list.length >= 1" role="secondary" @click="deleteMultiple()">
             Delete selected
           </Button>
           <!-- <Button
@@ -33,7 +25,7 @@
             >Run Cross-browser</Button
           > -->
           <!-- Toggle fullPage screenshots on/off -->
-          <div class="screenshot-settings">
+          <!-- <div class="screenshot-settings">
             <label
               @mouseover="showFullPreviews()"
               @mouseout="
@@ -55,13 +47,9 @@
               />
               Visible
             </label>
-          </div>
+          </div> -->
         </div>
-        <Button
-          role="secondary"
-          class="modal__close button"
-          @click="clearAllSelected"
-        >
+        <Button role="secondary" class="modal__close button" @click="clearAllSelected">
           Clear Selection
         </Button>
       </div>
@@ -263,9 +251,11 @@ async function deleteMultiple() {
 .slide-fade-enter-active {
   transition: all 300ms ease;
 }
+
 .slide-fade-leave-active {
   transition: all 250ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
+
 .slide-fade-enter,
 .slide-fade-leave-to {
   transform: translateY(4rem);
