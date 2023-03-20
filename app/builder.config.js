@@ -87,9 +87,11 @@ module.exports = {
   productName: require('./package.json').productName,
   appId: 'com.reflex.app',
   artifactName: 'Reflex-${version}-${os}-${arch}.${ext}',
-  // TODO: Publish is needed in order to create app-update.yml in build, but we don't want
-  // to publish artifacts to Github for local builds
-  publish: isRelease || isLocalBuild ? ['github'] : null, // Publish artifacts to Github (release)
+
+  // The `publish` setting here is just for defining the publish provider
+  // The actual publishing is handled by setting `electron-builder --publish always`
+  // Which is done in our case via Github Actions workflow
+  publish: ['github'], // Publish artifacts to Github (release)
 
   // Enable Release channels
   // https://www.electron.build/tutorials/release-using-channels#release-using-channels-auto-updates-with-channels
