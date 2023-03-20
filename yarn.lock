@@ -3627,6 +3627,7 @@ __metadata:
     "@types/lodash": ^4.14.191
     "@viselect/vanilla": ^3.0.0-beta.13
     "@vue/composition-api": ^1.7.1
+    "@vue/reactivity": ^3.2.47
     "@vue/test-utils": ^1.2.2
     "@vueuse/core": ^9.13.0
     "@xpda-dev/core": ^0.1.6
@@ -6058,7 +6059,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vue/reactivity@npm:3.2.47, @vue/reactivity@npm:^3.2.19":
+"@vue/reactivity@npm:3.2.47, @vue/reactivity@npm:^3.2.19, @vue/reactivity@npm:^3.2.47":
   version: 3.2.47
   resolution: "@vue/reactivity@npm:3.2.47"
   dependencies:
