@@ -21,7 +21,7 @@ export const useArtboardsStore = defineStore('artboards', {
     list: [], // All artboards on the screen
   }),
   getters: {
-    isArtboardInViewport: (state) => (id) => {
+    isArtboardInViewport: (state) => (id: Artboard['id']) => {
       const artboard = state.list.find((artboard) => artboard.id === id)
       if (!artboard) {
         console.error('Artboard not found')
@@ -41,8 +41,7 @@ export const useArtboardsStore = defineStore('artboards', {
         isInViewport: artboard.isInViewport || false,
       })
     },
-    removeArtboard(artboard) {
-      const { id } = artboard
+    removeArtboard(id: Artboard['id']) {
       const index = this.list.findIndex((obj) => obj.id === id)
       this.list.splice(index, 1)
     },

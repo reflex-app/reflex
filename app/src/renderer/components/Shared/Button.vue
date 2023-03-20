@@ -31,24 +31,25 @@ export default {
     }
   },
   computed: {
-    containerStyles () {
+    containerStyles() {
       // Returns a class name based on
       // some logic w/ props
       const classNames = []
 
       // Set primary/secondary
       switch (this.role) {
-      case 'primary':
-        classNames.push('button--primary')
-        break
-
-      case 'secondary':
-        classNames.push('button--secondary')
-        break
-
-      case 'ghost':
-        classNames.push('button--ghost')
-        break
+        case 'primary':
+          classNames.push('button--primary')
+          break
+        case 'secondary':
+          classNames.push('button--secondary')
+          break
+        case 'ghost':
+          classNames.push('button--ghost')
+          break
+        case 'danger':
+          classNames.push('button--danger')
+          break
       }
 
       // Check for button content + icon
@@ -75,21 +76,21 @@ export default {
 
       return classNames
     },
-    iconColor () {
+    iconColor() {
       if (!this.icon) return false
 
       switch (this.role) {
-      // Dark BG
-      case 'primary':
-        return 'light'
+        // Dark BG
+        case 'primary':
+          return 'light'
 
         // Light BG
-      case 'secondary':
-      case 'ghost':
-        return 'dark'
+        case 'secondary':
+        case 'ghost':
+          return 'dark'
 
-      default:
-        return false
+        default:
+          return false
       }
     }
   },
@@ -98,7 +99,7 @@ export default {
      * Emits a 'click' event
      * Can be listened via @click
      */
-    onClick (event) {
+    onClick(event) {
       this.$emit('click', event)
     }
   }
@@ -169,6 +170,22 @@ export default {
     &:active {
       color: darken(#6f6f6f, 40%);
       background: #cecece;
+    }
+  }
+
+  &.button--danger {
+    color: white;
+    background: red;
+    box-shadow: none;
+    border-color: transparent;
+
+    &:hover {
+      background: darken(red, 5%);
+    }
+
+    &:active {
+      color: white;
+      background: darken(red, 15%);
     }
   }
 

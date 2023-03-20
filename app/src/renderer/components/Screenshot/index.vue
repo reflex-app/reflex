@@ -2,24 +2,22 @@
   <div id="screenshots">
     <!-- One selected -->
     <transition name="slide-fade">
-      <div v-if="selectedArtboards.list.length > 0" class="modal">
+      <div v-if="data.selectedArtboards.length > 0" class="modal">
+        <!-- Left buttons -->
         <div>
           <Button role="primary" @click="screenshotSelected">
             Save
             {{
-              selectedArtboards.list.length > 1
-              ? selectedArtboards.list.length + ' images...'
-              : selectedArtboards.list.length + ' image...'
+              data.selectedArtboards.length > 1
+              ? data.selectedArtboards.length + ' images...'
+              : data.selectedArtboards.length + ' image...'
             }}
           </Button>
-          <Button v-if="selectedArtboards.list.length === 1" role="secondary" @click="copyToClipboard()">
+          <Button v-if="data.selectedArtboards.length === 1" role="secondary" @click="copyToClipboard()">
             Copy to Clipboard
           </Button>
-          <Button v-if="selectedArtboards.list.length >= 1" role="secondary" @click="deleteMultiple()">
-            Delete selected
-          </Button>
           <!-- <Button
-            v-if="selectedArtboards.list.length === 1"
+            v-if="data.selectedArtboards.length === 1"
             role="secondary"
             @click="copyToClipboard"
             >Run Cross-browser</Button
@@ -49,9 +47,15 @@
             </label>
           </div> -->
         </div>
-        <Button role="secondary" class="modal__close button" @click="clearAllSelected">
-          Clear Selection
-        </Button>
+        <!-- Right buttons -->
+        <div>
+          <Button role="secondary" class="modal__close button" @click="clearAllSelected">
+            Clear Selection
+          </Button>
+          <Button role="danger" v-show="data.selectedArtboards.length >= 1" @click="deleteMultiple()">
+            Delete selected
+          </Button>
+        </div>
       </div>
     </transition>
 
@@ -65,9 +69,11 @@ import { computed, reactive } from 'vue'
 import * as capture from './capture'
 import { useArtboardsStore } from '~/store/artboards'
 import { useSelectedArtboardsStore } from '~/store/selectedArtboards'
+import Button from '../Shared/Button.vue'
 
 const artboards = useArtboardsStore()
 const selectedArtboards = useSelectedArtboardsStore()
+
 
 interface IPrevArtboardHeights {
   height: number
@@ -78,6 +84,7 @@ const data = reactive({
   filePath: '',
   prevArtboardHeights: <IPrevArtboardHeights[]>[], // { height: 200, id: 'abc123' }
   artboards: computed(() => artboards.list),
+  selectedArtboards: computed(() => selectedArtboards.list),
 })
 
 const state = reactive({
@@ -103,7 +110,7 @@ async function screenshotAll() {
 
 async function screenshotSelected() {
   try {
-    await capture.captureMultiple(selectedArtboards.list)
+    await capture.captureMultiple(data.selectedArtboards)
   } catch (err) {
     throw new Error(err)
   }
@@ -112,7 +119,7 @@ async function screenshotSelected() {
 async function copyToClipboard() {
   // TODO This is a hacky way to handle just getting one selected artboard (which is required for clipboard image copying)
   const isArtboardInViewport = artboards.isArtboardInViewport(
-    selectedArtboards.list[0]
+    data.selectedArtboards[0]
   )
 
   if (!isArtboardInViewport) {
@@ -121,7 +128,7 @@ async function copyToClipboard() {
   }
 
   await capture
-    .copyToClipboard(selectedArtboards.list, {
+    .copyToClipboard(data.selectedArtboards, {
       fullPage: state.captureFullPage,
       isArtboardInViewport,
     })
@@ -154,7 +161,7 @@ async function copyToClipboard() {
 
 async function showFullPreviews() {
   // Loop through each artboard
-  for (const id of selectedArtboards.list) {
+  for (const id of data.selectedArtboards) {
     const webviewEl = capture.getWebview(id)
     const webviewElContents = capture.getWebViewContents(id)
     const tempHeight = await webviewElContents.executeJavaScript(
@@ -178,7 +185,7 @@ async function showFullPreviews() {
 
 async function hideFullPreviews() {
   // Loop through each artboard
-  for (const id of selectedArtboards.list) {
+  for (const id of data.selectedArtboards) {
     const webviewEl = capture.getWebview(id)
     const webviewElContents = capture.getWebViewContents(id)
     const tempHeight = await webviewElContents.executeJavaScript(
@@ -204,9 +211,27 @@ async function hideFullPreviews() {
   }
 }
 
-async function deleteMultiple() {
-  for (const id of selectedArtboards.list) {
-    selectedArtboards.remove({ id })
+function deleteMultiple() {
+  // TODO: Add test for this
+
+  // Create a copy of the list
+  const list = JSON.parse(JSON.stringify(data.selectedArtboards))
+  let count = list.length
+
+  if (count === 0) {
+    console.warn('No artboards selected; cannot delete.')
+    return
+  }
+
+  console.info(`Deleting ${count} artboards...`);
+
+  // Delete artboards
+  for (const id of list) {
+    selectedArtboards.remove(id)
+    artboards.removeArtboard(id) // Delete the artboard
+    count-- // Decrement count
+
+    console.info(`Deleted ${id}. ${count} remaining.`, list)
   }
 }
 </script>

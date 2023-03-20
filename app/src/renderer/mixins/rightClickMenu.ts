@@ -84,7 +84,7 @@ export default function (store, artboard) {
       label: 'Delete',
       click() {
         const store = useArtboardsStore()
-        store.removeArtboard(artboard)
+        store.removeArtboard(artboard.id)
       },
     })
   )

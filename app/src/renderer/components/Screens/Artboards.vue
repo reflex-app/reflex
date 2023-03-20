@@ -1,19 +1,10 @@
 <template>
   <div ref="containerRef">
     <div v-if="artboards.list.length" id="artboards">
-      <ArtboardComponent
-        v-for="(artboard, index) in artboards.list"
-        ref="artboard"
-        :key="artboard.id"
-        v-bind="artboard"
-        :index="index"
-        :artboard-id="artboard.id"
-        :selected-items="selectedArtboards.list"
-        :is-visible="artboard.isVisible"
-        :viewportObserver="data.viewportObserverParent"
-        @clicked="onClick"
-        @resize="resize"
-      />
+      <ArtboardComponent v-for="(artboard, index) in artboards.list" ref="artboard" :key="artboard.id" v-bind="artboard"
+        :index="index" :artboard-id="artboard.id" :selected-items="selectedArtboards.list"
+        :is-visible="artboard.isVisible" :viewportObserver="data.viewportObserverParent" @clicked="onClick"
+        @resize="resize" />
     </div>
     <!-- Show empty state if no artboards exist -->
     <WelcomeScreen v-else />
@@ -303,6 +294,13 @@ function stopViewportObserver() {
 function onElementObserved(entries) {
   // Actions for each Observer instance
   entries.forEach((entry) => {
+    // Make sure artboard still exists
+    // It could have been deleted and then this fires
+    const artboardExists = artboards.list.find(
+      (i) => i.id === entry.target.getAttribute('artboard-id')
+    )
+    if (!artboardExists) return false
+
     if (entry.isIntersecting === false) {
       // If NOT in view, do this:
       artboards.changeArtboardViewportVisibility({

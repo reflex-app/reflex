@@ -2,7 +2,7 @@ import { Artboard } from './artboards'
 import { defineStore } from 'pinia'
 
 interface State {
-  list: Artboard[]
+  list: Artboard['id'][]
 }
 
 export const useSelectedArtboardsStore = defineStore('selectedArtboards', {
@@ -13,16 +13,16 @@ export const useSelectedArtboardsStore = defineStore('selectedArtboards', {
   }),
   actions: {
     /** Add a new Artboard to the list of selected artboards */
-    add(payload) {
+    add(id: Artboard['id']) {
       // Only add new numbers
-      if (this.list.includes(payload)) return false
+      if (this.list.includes(id)) return false
 
-      // Add the payload
-      this.list.push(payload)
+      // Add the id
+      this.list.push(id)
     },
     /** Remove a specific Artboard */
-    remove(payload) {
-      const index = this.list.findIndex((obj) => obj === payload)
+    remove(id: Artboard['id']) {
+      const index = this.list.findIndex((i) => i === id)
       this.list.splice(index, 1)
     },
     /** Deletes all Artboards */
