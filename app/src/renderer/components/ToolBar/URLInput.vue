@@ -2,18 +2,9 @@
   <div class="input">
     <!-- State: Focused -->
     <div v-if="state">
-      <input
-        id="toolbar__url"
-        ref="input"
-        type="text"
-        placeholder="Enter a website URL (https://google.com)"
-        :value="url"
-        autocomplete="off"
-        tabindex="1"
-        @keyup.enter="triggerSiteLoad($event.target.value)"
-        @keyup.esc="blur()"
-        @blur="$emit('toggle-input')"
-      />
+      <input id="toolbar__url" ref="input" type="text" placeholder="Enter a website URL (https://google.com)" :value="url"
+        autocomplete="off" tabindex="1" @keyup.enter="triggerSiteLoad($event.target.value)" @keyup.esc="blur()"
+        @blur="$emit('toggle-input')" />
     </div>
     <!-- State: Initial -->
     <span v-else @click="$emit('toggle-input')">
@@ -65,14 +56,17 @@ export default {
 
       // Validate URL
       const newURL = await this.validateURL(url)
+
+      // URL has changed
       this.$emit('url-changed', newURL)
-      this.blur()
+
+      // Make text not editable again
+      this.$emit('toggle-input')
     },
     blur() {
       // Blur the input
-      const vm = this
-      vm.$nextTick(() => {
-        vm.$refs.input.blur()
+      this.$nextTick(() => {
+        (this.$refs.input as HTMLInputElement).blur()
       })
     },
     validateURL(url) {
