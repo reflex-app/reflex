@@ -1,34 +1,44 @@
-const path = require('path')
-const log = require('electron-log')
-const { ipcMain, app, BrowserWindow } = require('electron')
-const { autoUpdater } = require('electron-updater')
-const isDev = require('electron-is-dev')
+import path from 'path'
+import isDev from 'electron-is-dev'
+import { autoUpdater } from 'electron-updater'
+import { reactive } from '@vue/reactivity' // Use Vue's reactivity system
+import { reset as resetCheckForUpdate } from './check-for-update'
+import { dialog, ipcMain, app, BrowserWindow } from 'electron'
+import log from 'electron-log'
 
-export default function init(window) {
-  let UPDATE_AVAILABLE = null
-  const win = window.webContents
+// Shared state
+export const state = reactive({
+  checkType: 'auto', // Either 'auto' or 'menu'
+  updateAvailable: false,
+  updateDownloaded: false,
+})
 
-  // Configure autoupdater
-  // https://www.electron.build/auto-update#api
-  autoUpdater.logger = log // Use electron-log
-  autoUpdater.logger.transports.file.level = 'debug'
+export function init(window) {
+  if (isDev) {
+    // Useful for some dev/debugging tasks, but download can
+    // not be validated becuase dev app is not signed
+    // To test it out, change package.json version to a previous version
+    autoUpdater.updateConfigPath = path.join(
+      __dirname,
+      '../../../build/dev-app-update.yml'
+    )
+
+    // Force the updater to work in “dev” mode, looking for “dev-app-update.yml” instead of “app-update.yml"
+    // Docs: https://www.electron.build/api/electron-builder.html#AppUpdater-forceDevUpdateConfig
+    autoUpdater.forceDevUpdateConfig = true
+  }
+
+  // Disable auto-downloading
+  autoUpdater.autoDownload = false
+
+  // Set update type to "auto" (auto-update)
+  state.checkType = 'auto'
 
   // Using a prerelease version will depend on the current package.json version
   // If the current version includes "-beta" or "-alpha", those will be searched for.
   // Don't set this. Allow electron-builder to do the work.
   // See: https://www.electron.build/auto-update#AppUpdater-allowPrerelease
   // autoUpdater.allowPrerelease = true
-
-  if (isDev) {
-    // Useful for some dev/debugging tasks, but download can
-    // not be validated becuase dev app is not signed
-    autoUpdater.updateConfigPath = path.join(
-      __dirname,
-      '../../build/dev-app-update.yml'
-    )
-
-    // To test it out, change package.json version to a previous version
-  }
 
   // Channel for updates
   // Default is latest non-preview (not beta, not alpha)
@@ -43,7 +53,6 @@ export default function init(window) {
   let currChannel =
     channels.find((channel) => version.includes(channel)) || 'latest'
   autoUpdater.channel = currChannel
-
   console.log('Release channel:', currChannel)
 
   // Listen for requests for current channel
@@ -76,33 +85,56 @@ export default function init(window) {
     }
   })
 
-  function sendStatusToWindow(text) {
-    win.send('message', text)
-  }
-
-  win.on('did-finish-load', () => {
-    // Check for updates (only in non-dev environments)
-    if (!isDev) {
-      autoUpdater.checkForUpdates()
-    }
-  })
+  // Check for updates
+  autoUpdater.checkForUpdates()
 
   autoUpdater.on('checking-for-update', () => {
-    log.info('checking for update')
-    sendStatusToWindow('Checking for update...')
+    console.info('Checking for update...')
+  })
+
+  // Listen for when an update is available
+  autoUpdater.on('update-available', async (updateInfo) => {
+    // Update state
+    state.updateAvailable = true
+
+    // Prompt user
+    await dialog
+      .showMessageBox({
+        type: 'info',
+        title: 'Found Updates',
+        message: `An update to ${updateInfo.version} is available.\n\n Do you want update and restart the app now?`,
+        buttons: ['No', 'Yes'],
+        defaultId: 1,
+      })
+      .then(async ({ response }) => {
+        console.log('response', response)
+        if (response === 1) {
+          await autoUpdater.downloadUpdate()
+
+          // Update state
+          state.updateDownloaded = true
+        } else {
+          // Reset the menu item's state
+          resetCheckForUpdate()
+        }
+      })
   })
 
   autoUpdater.on('update-not-available', (info) => {
-    log.info('update not available')
-    sendStatusToWindow('Update not available.')
-    UPDATE_AVAILABLE = false
+    state.updateAvailable = false
   })
 
-  // We can now know if there's an available update
-  autoUpdater.on('update-available', (info) => {
-    log.info('update available')
-    sendStatusToWindow('Update available.')
-    UPDATE_AVAILABLE = true
+  /**
+   * Listen for user to click on the
+   * install button --> install & restart
+   */
+  ipcMain.on('TRIGGER_INSTALL', () => {
+    if (state.updateAvailable === true) {
+      installAndRestart()
+    } else {
+      // eslint-disable-next-line no-console
+      console.warn('No update available')
+    }
   })
 
   // Tracking the progress
@@ -126,27 +158,15 @@ export default function init(window) {
   /**
    * Downloaded!
    */
-  autoUpdater.on('update-downloaded', (info) => {
-    UPDATE_AVAILABLE = true
+  autoUpdater.on('update-downloaded', () => {
+    state.updateDownloaded = true
     log.info('update downloaded')
     sendStatusToWindow('Update downloaded')
     window.webContents.send('DOWNLOAD_PROGRESS', 100) // Notify the FE if already installed
-  })
 
-  /**
-   * Listen for user to click on the
-   * install button --> install & restart
-   */
-  ipcMain.on('TRIGGER_INSTALL', () => {
-    if (UPDATE_AVAILABLE === true) {
-      setImmediate(() => {
-        ensureSafeQuitAndInstall()
-        // Windows: Install silently and restart
-        autoUpdater.quitAndInstall(false, false)
-      })
-    } else {
-      // eslint-disable-next-line no-console
-      console.log('No update available')
+    if (state.checkType === 'auto') {
+      // Install and restart
+      installAndRestart()
     }
   })
 
@@ -157,6 +177,18 @@ export default function init(window) {
     log.info('error in auto-updater', err)
     sendStatusToWindow('Error in auto-updater. ' + err)
   })
+
+  function sendStatusToWindow(text) {
+    window.send('message', text)
+  }
+
+  function installAndRestart() {
+    setImmediate(() => {
+      ensureSafeQuitAndInstall()
+      // Windows: Install silently and restart
+      autoUpdater.quitAndInstall(false, false)
+    })
+  }
 }
 
 /**

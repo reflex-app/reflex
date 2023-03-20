@@ -2,9 +2,10 @@ import path from 'path'
 import { app, shell } from 'electron'
 import BrowserWinHandler from './BrowserWinHandler'
 import windowPosition from './windowPosition'
-import autoUpdater from './auto-updater'
+import autoUpdater from './updates/auto-updater'
 // import browserInstaller from './browser-installer'
 import { setMenu } from './menu'
+import { init as initUpdates } from './updates'
 
 const log = require('electron-log')
 const isDev = require('electron-is-dev')
@@ -44,26 +45,8 @@ winHandler.onCreated(async (browserWindow) => {
     browserWindow.on(e, () => windowPosition.saveState(browserWindow))
   })
 
-  // Load the app
-  try {
-    await winHandler.loadPage('/')
-  } catch (err) {
-    log.error(err)
-  }
-  // if (isDev) browserWindow.loadURL(DEV_SERVER_URL)
-  // else browserWindow.loadFile(INDEX_PATH)
-
-  // Do stuff...
-
-  // Check for updates...
-  // Important to not wait for page to load
-  // just in case there was a fatal bug
-  // with their current release
-  autoUpdater(browserWindow)
-
-  // Check for browser installations
-  // TODO Fix errors
-  // browserInstaller(winHandler)
+  // Load the Nuxt app
+  await winHandler.loadPage('/').catch((err) => log.error(err))
 
   // Log the version
   log.info(`Version ${app.getVersion()}`)
@@ -72,9 +55,16 @@ winHandler.onCreated(async (browserWindow) => {
   setMenu(browserWindow)
 
   // Show the app once it's ready
-  // browserWindow.once('ready-to-show', () => {
-  //   browserWindow.show()
-  // })
+  browserWindow.once('ready-to-show', () => {
+    browserWindow.show()
+  })
+
+  // Check for updates...
+  initUpdates(browserWindow)
+
+  // Check for browser installations
+  // TODO Fix errors
+  // browserInstaller(winHandler)
 
   // Listen for outbound links and
   // open in user's default web browser
