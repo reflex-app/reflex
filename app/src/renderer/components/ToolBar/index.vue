@@ -1,45 +1,25 @@
 <template>
-  <div
-    id="toolbar"
-    :class="{ 'is-fullscreen': state.isFullScreen, 'is-mac': state.isMac }"
-  >
-    <Button
-      role="ghost"
-      icon="screens"
-      :tight="true"
-      :is-pressed="data.sidebar"
-      title="Screens"
-      @click="toggleSidebar"
-    />
+  <div id="toolbar" :class="{ 'is-fullscreen': state.isFullScreen, 'is-mac': state.isMac }">
+    <Button role="ghost" icon="screens" :tight="true" :is-pressed="data.sidebar" title="Screens" @click="toggleSidebar" />
     <div v-if="data.artboards.length" id="toolbar__url-container">
       <HistoryControls />
       <div class="bar">
-        <div
-          class="bar__right"
-          :class="{ 'is-active': state.inputStateActive }"
-        >
-          <div
-            v-show="!state.inputStateActive"
-            @click="state.inputStateActive = !state.inputStateActive"
-          >
+        <div class="bar__right" :class="{ 'is-active': state.inputStateActive }">
+          <div v-show="!state.inputStateActive" @click="state.inputStateActive = !state.inputStateActive">
             <!-- <img v-if="favicon" :src="favicon" class="favicon" height="10" width="10"> -->
             <span class="title" :title="data.title || 'Page title'">{{
               data.title
             }}</span>
           </div>
-          <URLInput
-            class="input"
-            :state="state.inputStateActive"
-            @url-changed="changeURL"
-            @toggle-input="state.inputStateActive = !state.inputStateActive"
-          />
+          <URLInput class="input" :state="state.inputStateActive" @url-changed="changeURL"
+            @toggle-input="state.inputStateActive = !state.inputStateActive" />
         </div>
       </div>
     </div>
     <div id="toolbar__recentURLs" />
-    <div v-if="data.artboards.length" class="toolbar__right">
+    <!-- <div v-if="data.artboards.length" class="toolbar__right">
       <SwitchMode />
-    </div>
+    </div> -->
     <!-- <UpdateChannel /> -->
     <InstallUpdateButton />
     <div id="draggable" @dblclick="toggleWindowMaximize" />
@@ -165,7 +145,7 @@ function toggleFullscreen() {
 
   // Remove spacing reserved for traffic-sign on Mac
   &.is-fullscreen {
-    & > *:first-child {
+    &>*:first-child {
       margin-left: 1rem;
     }
   }
