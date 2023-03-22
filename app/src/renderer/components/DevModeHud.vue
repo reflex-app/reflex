@@ -1,10 +1,5 @@
 <template>
-  <div
-    v-if="$config.DEV"
-    class="dev-state"
-    :class="hudPosition"
-    @click="toggleHudPosition"
-  >
+  <div v-if="$config.DEV" class="dev-state" :class="hudPosition" @click="toggleHudPosition">
     <div>
       <CollapsibleContainer title="userInteractionState">
         <div v-for="[key, value] of Object.entries(userInteractionState)">
@@ -15,6 +10,8 @@
         <div v-for="[key, value] of Object.entries(interactionsStore.$state)">
           {{ key }}: {{ value }}
         </div>
+        <div>isInteracting: {{ interactionsStore.isInteracting }}</div>
+        <div>currentContext: {{ interactionsStore.currentContext }}</div>
       </CollapsibleContainer>
     </div>
     <div>
@@ -72,10 +69,12 @@ $offset: 1rem;
     bottom: $offset;
     left: $offset;
   }
+
   &.right {
     bottom: $offset;
     right: $offset;
   }
+
   &.closed {
     bottom: $offset;
     right: $offset;
