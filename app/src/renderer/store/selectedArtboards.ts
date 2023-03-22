@@ -31,4 +31,9 @@ export const useSelectedArtboardsStore = defineStore('selectedArtboards', {
       this.list = []
     },
   },
+  // Settings for persisting the store to localStorage
+  // We DO NOT want to save the state
+  persistedState: {
+    persist: false, // Don't save this!
+  },
 })
