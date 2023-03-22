@@ -1,5 +1,5 @@
 import path from 'path'
-import { app, shell } from 'electron'
+import { app, ipcMain, shell } from 'electron'
 import BrowserWinHandler from './BrowserWinHandler'
 import windowPosition from './windowPosition'
 // import browserInstaller from './browser-installer'
@@ -64,6 +64,11 @@ winHandler.onCreated(async (browserWindow) => {
   // Check for browser installations
   // TODO Fix errors
   // browserInstaller(winHandler)
+
+  // Reload when requested by the renderer process
+  ipcMain.handle('reload-window', () => {
+    browserWindow.reload()
+  })
 
   // Listen for outbound links and
   // open in user's default web browser

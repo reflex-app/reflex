@@ -5,19 +5,17 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { ipcRenderer } from 'electron' // TODO Migrate to @electron/remote
 import isElectron from 'is-electron'
-import ToolBar from '@/components/ToolBar'
-import remote from '@electron/remote'
+import ToolBar from '@/components/ToolBar/index.vue'
 
 export default {
   components: {
     ToolBar,
   },
   mounted() {
-    // TODO: get app version
-    // console.info(`Version: ${remote.app.getVersion()}`)
+    // TODO: Add test here
 
     // Global listeners
     if (isElectron()) {
@@ -30,8 +28,9 @@ export default {
           window.localStorage.clear()
 
           setTimeout(() => {
-            // TODO: replace this with IPC
-            remote.getCurrentWindow().reload()
+            // TODO: Add typings for `main` and `renderer` to 
+            // ensure that the channel name is correct
+            ipcRenderer.invoke('reload-window')
           }, 150)
         }
       })
