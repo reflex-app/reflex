@@ -1,0 +1,30 @@
+{
+  "name": "nuxt",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "npx nuxi generate",
+    "dev": "nuxt dev",
+    "postinstall": "nuxt prepare"
+  },
+  "devDependencies": {
+    "@panzoom/panzoom": "^4.4.3",
+    "@pinia/nuxt": "0.2.1",
+    "@types/lodash": "^4.14.191",
+    "@viselect/vanilla": "^3.0.0-beta.13",
+    "@vue/test-utils": "^1.2.2",
+    "@vueuse/core": "^9.13.0",
+    "comlink": "^4.3.1",
+    "comlink-loader": "^2.0.0",
+    "css-loader": "^5.2.7",
+    "nuxt": "^3.3.1",
+    "pinia": "^2.0.16",
+    "pinia-plugin-persistedstate-2": "^2.0.13",
+    "sass": "^1.49.10",
+    "sass-loader": "10.2.0",
+    "uuid": "8.3.2",
+    "vue-feature-flipping": "^3.0.0",
+    "vuedraggable": "^2.24.3"
+  }
+}

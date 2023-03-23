@@ -10,11 +10,7 @@
         </div>
       </div>
       <!-- Trigger -->
-      <button
-        v-if="!state.isLoading"
-        class="cbs__button"
-        @click="emit('clicked')"
-      >
+      <button v-if="!state.isLoading" class="cbs__button" @click="emit('clicked')">
         Screenshot other browsers
       </button>
     </div>
@@ -22,7 +18,7 @@
 </template>
 
 <script>
-// import { reactive, toRefs } from '@nuxtjs/composition-api'
+import { reactive, toRefs } from '@nuxtjs/composition-api'
 import useCrossBrowserScreenshots from './UseCrossBrowserScreenshots'
 import { browserContexts } from '~/components/CrossBrowser/Screenshots'
 

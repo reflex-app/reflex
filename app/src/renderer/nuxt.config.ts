@@ -1,14 +1,26 @@
-const isDevMode = process.env.NODE_ENV !== 'production'
+// https://nuxt.com/docs/api/configuration/nuxt-config
 
-module.exports = {
-  ssr: false, // https://nuxtjs.org/docs/2.x/configuration-glossary/configuration-ssr
-  target: 'static',
+const isDevMode = process.env.NODE_ENV !== 'production'
+export default defineNuxtConfig({
+  ssr: false, // Client-side-only rendering
+  router: {
+    options: {
+      hashMode: true,
+    },
+  },
+  app: {
+    baseURL: './',
+  },
+
   head: {
     title: 'Reflex',
   },
-  publicRuntimeConfig: {
-    DEV: isDevMode,
+  runtimeConfig: {
+    public: {
+      DEV: isDevMode,
+    },
   },
+
   loading: false,
 
   /*
@@ -17,23 +29,22 @@ module.exports = {
   buildModules: [
     // Doc: https://github.com/nuxt-community/eslint-module
     // '@nuxtjs/eslint-module',
-    '@nuxt/typescript-build',
-    '@nuxtjs/composition-api/module',
+    // '@nuxt/typescript-build',
     ['@pinia/nuxt', { disableVuex: true }], // Use Pinia w/ Nuxt 2
     // '@pinia-plugin-persistedstate/nuxt', // Persisted state w/ Pinia + Nuxt (Nuxt 3) https://pinia.vuejs.org/ssr/nuxt.html#nuxt-2-without-bridge
   ],
   // Nuxt + Typescript
-  typescript: {
-    /**
-     * !! WARN !!
-     * Dangerously allow production builds to successfully complete even if
-     * your project has type errors.
-     * via: https://github.com/nuxt/typescript/issues/486#issuecomment-948023713
-     *
-     * This will show us errors on dev, but not stop builds for production
-     */
-    typeCheck: isDevMode,
-  },
+  // typescript: {
+  //   /**
+  //    * !! WARN !!
+  //    * Dangerously allow production builds to successfully complete even if
+  //    * your project has type errors.
+  //    * via: https://github.com/nuxt/typescript/issues/486#issuecomment-948023713
+  //    *
+  //    * This will show us errors on dev, but not stop builds for production
+  //    */
+  //   typeCheck: isDevMode,
+  // },
   plugins: [
     // Persisted localStorage of Pinia Store states
     // https://github.com/iendeavor/pinia-plugin-persistedstate-2#with-localstorage-client-only-nuxt2-example
@@ -68,4 +79,4 @@ module.exports = {
       // }
     },
   },
-}
+})

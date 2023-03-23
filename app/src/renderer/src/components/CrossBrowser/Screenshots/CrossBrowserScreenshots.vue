@@ -4,10 +4,7 @@
     <!-- The cross-browser screenshots -->
     <div class="cbs__results">
       <div v-for="browserName in loadingSorted" :key="browserName.id">
-        <div
-          class="loading-skeleton"
-          :style="{ height: props.height + 'px', width: props.width + 'px' }"
-        >
+        <div class="loading-skeleton" :style="{ height: props.height + 'px', width: props.width + 'px' }">
           <img :src="require(`~/assets/browsers/${browserName}.svg`)" />
           {{ browserName }}
         </div>
@@ -20,12 +17,7 @@
           </template>
           <template v-else>
             <span class="result__type">{{ item.type }}</span>
-            <img
-              :src="item.img"
-              :height="height"
-              :width="width"
-              alt="Cross-browser screenshot"
-            />
+            <img :src="item.img" :height="height" :width="width" alt="Cross-browser screenshot" />
           </template>
         </div>
       </template>
@@ -34,7 +26,7 @@
 </template>
 
 <script>
-import { computed } from '@nuxtjs/composition-api'
+// import { computed } from 'vue'
 // import Trigger from './Trigger'
 import useCrossBrowserScreenshots from './UseCrossBrowserScreenshots'
 export default {
@@ -124,7 +116,7 @@ export default {
     // flex-wrap: wrap;
     // max-width: 100%;
 
-    & > * {
+    &>* {
       margin-left: 4rem;
     }
 
@@ -160,7 +152,7 @@ export default {
   font-size: 1rem;
   font-weight: bold;
 
-  & > * {
+  &>* {
     display: block;
     height: 50%;
     animation: pulse 2s infinite;

@@ -1,14 +1,8 @@
 <template>
   <div class="radio-container">
     <div v-for="(channel, index) in channels" :key="index" class="radio-item">
-      <input
-        :id="`radio-${index}`"
-        v-model="inputSelection"
-        type="radio"
-        :value="channel"
-        name="radio-group"
-        @click="showConfirm($event)"
-      />
+      <input :id="`radio-${index}`" v-model="inputSelection" type="radio" :value="channel" name="radio-group"
+        @click="showConfirm($event)" />
       <label :for="`radio-${index}`">{{ channel }}</label>
     </div>
   </div>
@@ -75,7 +69,6 @@ export default {
 .radio-container {
   display: flex;
 
-  .radio-item {
-  }
+  .radio-item {}
 }
 </style>

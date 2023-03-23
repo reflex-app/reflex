@@ -44,7 +44,7 @@ export default {
       // The protocol of script's URL must be file: (even when using asar: archives) because it will be loaded by Node's require under the hood
       // TODO add a test to make sure this file exists
 
-      const isDev = getCurrentInstance()?.proxy.$root.$config.DEV
+      const isDev = getCurrentInstance()?.proxy.$root.$config.public.DEV
       const suffix = 'dist/extraResources/index.js'
 
       const scriptPath = isDev

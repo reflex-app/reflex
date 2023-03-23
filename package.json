@@ -5,8 +5,8 @@
   "author": "Nick Wittwer",
   "homepage": "https://reflexapp.nickwittwer.com",
   "workspaces": [
-    "app",
-    "app/src/extraResources",
+    "app/",
+    "app/src/*",
     "packages/*",
     ".github/actions/*"
   ],

@@ -7,12 +7,7 @@
 
     <!-- New Artboard -->
     <div>
-      <Button
-        role="primary"
-        icon="plus"
-        class="artboard-tabs__button"
-        @click="add"
-      >
+      <Button role="primary" icon="plus" class="artboard-tabs__button" @click="add">
         New Screen
       </Button>
     </div>
@@ -27,11 +22,7 @@
       <span>Add from template:</span>
       <select v-model="data.defaultSizeSelection" ref="presetDropdown">
         <option disabled value>Select template...</option>
-        <option
-          v-for="(preset, index) in data.presets"
-          :key="index"
-          :value="preset.label"
-        >
+        <option v-for="(preset, index) in data.presets" :key="index" :value="preset.label">
           {{ preset.label }}
         </option>
       </select>
@@ -226,10 +217,12 @@ function add() {
     animation: MoveUpDown 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
 
     @keyframes MoveUpDown {
+
       0%,
       100% {
         bottom: 0;
       }
+
       50% {
         bottom: 8px;
       }

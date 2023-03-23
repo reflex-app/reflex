@@ -1,10 +1,5 @@
 <template>
-  <div
-    v-if="$config.DEV"
-    class="dev-state"
-    :class="hudPosition"
-    @click="toggleHudPosition"
-  >
+  <div v-if="$config.public.DEV" class="dev-state" :class="hudPosition" @click="toggleHudPosition">
     <div>
       <CollapsibleContainer title="userInteractionState">
         <div v-for="[key, value] of Object.entries(userInteractionState)">
@@ -72,10 +67,12 @@ $offset: 1rem;
     bottom: $offset;
     left: $offset;
   }
+
   &.right {
     bottom: $offset;
     right: $offset;
   }
+
   &.closed {
     bottom: $offset;
     right: $offset;
