@@ -1,23 +1,44 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
-
+// import path from 'path'
 const isDevMode = process.env.NODE_ENV !== 'production'
+
 export default defineNuxtConfig({
   ssr: false, // Client-side-only rendering
+
+  // Hash mode for router w/ Electron
   router: {
     options: {
       hashMode: true,
     },
   },
+
+  // Nuxt directory settings
+  srcDir: './src/',
   app: {
     baseURL: './',
   },
 
+  // App title
   head: {
     title: 'Reflex',
   },
+
+  // Environment variables
   runtimeConfig: {
     public: {
       DEV: isDevMode,
+    },
+  },
+
+  // Vite settings
+  vite: {
+    css: {
+      preprocessorOptions: {
+        scss: {
+          sourceMap: true,
+          // additionalData : `@import "@/assets/mixin.scss";`,
+        },
+      },
     },
   },
 
@@ -45,18 +66,23 @@ export default defineNuxtConfig({
   //    */
   //   typeCheck: isDevMode,
   // },
-  plugins: [
-    // Persisted localStorage of Pinia Store states
-    // https://github.com/iendeavor/pinia-plugin-persistedstate-2#with-localstorage-client-only-nuxt2-example
-    { src: '~/plugins/eventListenerDebug', mode: 'client' },
-    { src: '~/plugins/pinia-persisted-state', mode: 'client' },
-    { src: '~/plugins/eventBus', mode: 'client' },
-    { src: '~/plugins/globalComponents', mode: 'client' },
-    { src: '~/plugins/featureFlipping', mode: 'client' },
-    // { src: '~/plugins/reflex-ui', mode:'client' }, // Disabled until Nuxt v3 (w/ Vue 3)
-    // { src: '~/plugins/vueCompositionApi', mode:'client' },
-    // { src: '~/plugins/vuex-persist', mode:'client' },
-  ],
+  // plugins: [
+  //   // Persisted localStorage of Pinia Store states
+  //   // https://github.com/iendeavor/pinia-plugin-persistedstate-2#with-localstorage-client-only-nuxt2-example
+  //   { src: '~/plugins/eventListenerDebug', mode: 'client' },
+  //   { src: '~/plugins/pinia-persisted-state', mode: 'client' },
+  //   { src: '~/plugins/eventBus', mode: 'client' },
+  //   { src: '~/plugins/globalComponents', mode: 'client' },
+  //   { src: '~/plugins/featureFlipping', mode: 'client' },
+  //   // { src: '~/plugins/reflex-ui', mode:'client' }, // Disabled until Nuxt v3 (w/ Vue 3)
+  //   // { src: '~/plugins/vueCompositionApi', mode:'client' },
+  //   // { src: '~/plugins/vuex-persist', mode:'client' },
+  // ],
+
+  // nitro: {
+  //   externals: ['electron'],
+  // },
+
   build: {
     transpile: ['@viselect/vanilla'],
     extend(config, { isDev, isClient }) {

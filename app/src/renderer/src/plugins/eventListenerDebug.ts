@@ -225,3 +225,8 @@ if (window.EventListeners) {
 } else {
   console.warn('Failed to inject event listener (dev)')
 }
+
+export default defineNuxtPlugin((nuxtApp) => {
+  // No need to return anything here
+  return {}
+})
