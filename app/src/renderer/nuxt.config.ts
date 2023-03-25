@@ -47,12 +47,12 @@ export default defineNuxtConfig({
   /*
    ** Nuxt.js dev-modules
    */
-  buildModules: [
+  modules: [
+    '@pinia/nuxt', // Use Pinia w/ Nuxt 3
+    '@pinia-plugin-persistedstate/nuxt', // Persisted state w/ Pinia + Nuxt (Nuxt 3)
     // Doc: https://github.com/nuxt-community/eslint-module
     // '@nuxtjs/eslint-module',
     // '@nuxt/typescript-build',
-    ['@pinia/nuxt', { disableVuex: true }], // Use Pinia w/ Nuxt 2
-    // '@pinia-plugin-persistedstate/nuxt', // Persisted state w/ Pinia + Nuxt (Nuxt 3) https://pinia.vuejs.org/ssr/nuxt.html#nuxt-2-without-bridge
   ],
   // Nuxt + Typescript
   // typescript: {
