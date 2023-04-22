@@ -1,48 +1,54 @@
 <template>
-  <div
-    class="icon"
-    :style="{ maskImage: `url(${iconHandler}` }"
-    :class="iconColorHandler"
-  />
+  <div v-if="icon" class="icon" :class="iconColorHandler" v-html="icon" />
 </template>
 
-<script>
-export default {
-  props: {
-    name: {
-      type: String,
-      required: true
-    },
-    color: {
-      type: String,
-      default: 'dark'
-    }
+<script setup lang="ts">
+import { useIconStore } from "@/store/icons";
+
+const props = defineProps({
+  name: {
+    type: String,
+    required: true,
   },
-  computed: {
-    iconHandler () {
-      try {
-        return require(`@/assets/icons/${this.name}.svg`)
-      } catch (e) {
-        throw new Error(`Icon not found: ${this.name}`)
-      }
-    },
-    iconColorHandler () {
-      switch (this.color) {
-      case 'dark':
-        return 'icon--dark'
-
-      case 'light':
-        return 'icon--light'
-
-      case 'accent':
-        return 'icon--accent'
-
-      default:
-        throw new Error('Color not found')
-      }
-    }
+  color: {
+    type: String,
+    default: 'dark'
   }
-}
+})
+
+const iconStore = useIconStore();
+
+const icon = ref(null)
+
+const iconColorHandler = computed(() => {
+  switch (props.color) {
+    case 'dark':
+      return 'icon--dark'
+
+    case 'light':
+      return 'icon--light'
+
+    case 'accent':
+      return 'icon--accent'
+
+    default:
+      throw new Error('Color not found')
+  }
+})
+
+onMounted(async () => {
+  // Look up icons in store
+  const arr = Object.entries(iconStore.icons).filter((i) => {
+    return i[0] === props.name;
+  });
+
+  // Set icon value
+  icon.value = await arr[0][1]?.().then((res: any) => {
+    return res;
+  });
+})
+
+
 </script>
 
 <style lang="scss" scoped>
@@ -52,18 +58,28 @@ export default {
   display: inline-block;
   height: 24px;
   width: 24px;
-  mask-repeat: no-repeat;
-  mask-position: center;
-  // TODO The following should be autoprefixed...
-  -webkit-mask-repeat: no-repeat;
-  -webkit-mask-position: center;
+  // mask-repeat: no-repeat;
+  // mask-position: center;
+  // // TODO The following should be autoprefixed...
+  // -webkit-mask-repeat: no-repeat;
+  // -webkit-mask-position: center;
 
   &.icon--dark {
-    background: black;
+    // background: black;
+
+    &:deep path {
+      stroke: black;
+    }
   }
+
   &.icon--light {
-    background: white;
+    // background: white;
+
+    &:deep path {
+      stroke: white;
+    }
   }
+
   &.icon--accent {
     background: $accent-color;
   }
