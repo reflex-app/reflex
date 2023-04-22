@@ -4,6 +4,7 @@ const isDevMode = process.env.NODE_ENV !== 'production'
 
 export default defineNuxtConfig({
   ssr: false, // Client-side-only rendering
+  components: false,
 
   // Hash mode for router w/ Electron
   router: {
