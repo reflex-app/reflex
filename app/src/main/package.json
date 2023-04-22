@@ -7,7 +7,7 @@
   "scripts": {
     "build": "tsc -p ./tsconfig.json --noEmitOnError",
     "watch": "nodemon --exec yarn serve:electron",
-    "serve:electron": "yarn build && wait-on tcp:3000 && yarn run -T electron .",
+    "serve:electron": "yarn build && wait-on tcp:3000 && electron .",
     "electron:build": "yarn build",
     "electron:builder": "electron-builder --config builder.config.js",
     "electron-rebuild": "./node_modules/.bin/electron-rebuild",
@@ -16,7 +16,7 @@
   "devDependencies": {
     "@reflex/browser-installer": "workspace:^",
     "concurrently": "^7.6.0",
-    "electron": "18.3.7",
+    "electron": "18.3.15",
     "electron-builder": "23.0.2",
     "electron-debug": "3.2.0",
     "electron-devtools-installer": "3.2.0",
@@ -36,7 +36,7 @@
     "wait-on": "^7.0.1"
   },
   "dependencies": {
-    "@electron/remote": "^2.0.8",
+    "@electron/remote": "^2.0.9",
     "playwright-core": "^1.20.1"
   }
 }

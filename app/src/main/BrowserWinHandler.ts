@@ -4,8 +4,6 @@ const DEV_SERVER_URL = process.env.DEV_SERVER_URL
 const isProduction = process.env.NODE_ENV === 'production'
 // const isDev = process.env.NODE_ENV === 'development'
 import isDev from 'electron-is-dev'
-
-import mainRemote from '@electron/remote/main'
 import {
   initialize as initializeRemote,
   enable as enableRemote,
@@ -94,12 +92,6 @@ export default class BrowserWinHandler {
       return Promise.reject(
         new Error("The page could not be loaded before win 'created' event")
       )
-
-    // await winHandler.loadPage(
-    //   isDev
-    //     ?
-    //     : `file://${path.join(__dirname, '../nuxt/index.html')}`
-    // )
 
     const serverUrl = isDev
       ? 'http://localhost:3000'

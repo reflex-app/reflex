@@ -24,9 +24,8 @@ import { getPackageJson } from './util'
    */
   app.on('web-contents-created', (event, contents) => {
     contents.on('will-attach-webview', (event, webPreferences, params) => {
-      webPreferences.nodeIntegration = false // Disable Node.js integration inside <webview>
+      // webPreferences.nodeIntegration = false // Disable Node.js integration inside <webview>
       // webPreferences.webSecurity = false // Disable web security
-
       // Strip away preload scripts if unused or verify their location is legitimate
       // delete webPreferences.preload
       // delete webPreferences.preloadURL

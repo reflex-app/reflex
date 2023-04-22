@@ -47,11 +47,6 @@ export default function init() {
 
     // Load the Nuxt app
     await winHandler.loadPage('/').catch((err) => log.error(err))
-    // await winHandler.loadPage(
-    //   isDev
-    //     ? 'http://localhost:3000'
-    //     : `file://${path.join(__dirname, '../nuxt/index.html')}`
-    // )
 
     // Log the version
     log.info(`Version ${app.getVersion()}`)
