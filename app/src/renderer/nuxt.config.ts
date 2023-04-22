@@ -1,5 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
-// import path from 'path'
+import target from 'vite-plugin-target'
+
 const isDevMode = process.env.NODE_ENV !== 'production'
 
 export default defineNuxtConfig({
@@ -40,14 +41,17 @@ export default defineNuxtConfig({
 
   // Vite settings
   vite: {
-    css: {
-      preprocessorOptions: {
-        scss: {
-          sourceMap: true,
-          // additionalData : `@import "@/assets/mixin.scss";`,
+    resolve: {
+      alias: {
+        '@': path.resolve(__dirname, 'src'),
+        path: 'path-browserify',
         },
       },
-    },
+    plugins: [
+      target({
+        'electron-renderer': {}, // Vite build target for Electron
+      }),
+    ],
   },
 
   loading: false,
