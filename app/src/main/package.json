@@ -2,7 +2,11 @@
   "name": "electron-app",
   "version": "1.0.0",
   "description": "This is a sample",
-  "main": "./dist/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/reflex-app/reflex.git"
+  },
+  "main": "./dist/main/index.js",
   "license": "MIT",
   "scripts": {
     "build": "tsc -p ./tsconfig.json --noEmitOnError",

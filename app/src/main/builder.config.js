@@ -1,6 +1,9 @@
 // Set release flag based on Yarn script OR Github Action input
 // NOTE: Github Action envs ("INPUT_RELEASE") are all-caps https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#inputs
 
+const path = require('path')
+const root = '../../'
+
 const getEnv = (name, expectedVal) => {
   // Returns the value for an environment variable (or `null` if it's not defined)
   // We assume the env vars are uppercase
@@ -99,22 +102,22 @@ module.exports = {
   generateUpdatesFilesForAllChannels: true, // This will generate update files for each channel (i.e. latest.yml, beta.yml, alpha.yml)
 
   directories: {
-    output: 'build',
+    output: path.resolve(root, 'build'),
   },
   files: [
     'package.json',
     {
-      from: 'dist/main/',
+      from: path.resolve(root, 'dist/main/'),
       to: 'dist/main/',
     },
     {
-      from: 'dist/renderer',
+      from: path.resolve(root, 'dist/renderer'),
       to: 'dist/renderer/',
     },
   ],
   extraResources: [
     {
-      from: 'dist/extraResources/',
+      from: path.resolve(root, 'dist/extraResources/'),
       to: 'app/dist/extraResources', // e.g. /Users/user123/.../reflex/app/build/mac-arm64/Reflex.app/Contents/Resources/app/_____
     },
   ],

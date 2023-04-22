@@ -13,8 +13,8 @@
   "scripts": {
     "dev": "concurrently -k \"yarn serve:preload \" \"yarn serve:nuxt\" \"yarn electron:watch\"",
     "build": "yarn preload:build && yarn build:nuxt",
-    "build:fast": "yarn run preload:build && npx cross-env LOCAL_BUILD=true nuxi generate",
-    "build:app": "npx cross-env RELEASE=true yarn build:new && cd src/electron && yarn electron:build && yarn electron:builder",
+    "build:fast": "yarn run preload:build && npx cross-env LOCAL_BUILD=true yarn build:nuxt",
+    "build:app": "npx cross-env RELEASE=true yarn build && cd src/main && yarn electron:build && yarn electron:builder",
     "serve:nuxt": "cd src/renderer && yarn dev",
     "build:nuxt": "cd src/renderer && yarn build",
     "electron:watch": "cd src/main && yarn watch",
