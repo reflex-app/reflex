@@ -3,11 +3,9 @@
 // We have access to the process.env
 // We can use Node packages
 
-// import path from 'path'
 import path from 'path'
 import { v1 as uuid } from 'uuid'
-import log from 'electron-log'
-const playwright = require('playwright-core')
+import playwright from 'playwright-core'
 
 export class CrossBrowserScreenshot {
   constructor(options) {
@@ -26,7 +24,7 @@ export class CrossBrowserScreenshot {
   }
 
   async takeScreenshot() {
-    log.info(
+    console.info(
       `Preparing to launch ${this.browser}, ${this.contextId}`,
       `Packaged? ${this.isPackaged}`
     )

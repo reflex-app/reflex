@@ -40,7 +40,7 @@ export default {
 
 <style lang="scss">
 // Make global styles available
-@import '@/scss/_global';
+@import '@/scss/global.scss';
 </style>
 
 <style lang="scss" scoped>

@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
-import { useStorage } from '@vueuse/core'
 import { v1 as uuid } from 'uuid'
-import Vue from 'vue'
+// import Vue from 'vue'
+// import { useStorage } from '@vueuse/core'
 
 export interface Artboard {
   height: number
@@ -100,7 +100,11 @@ export const useArtboardsStore = defineStore('artboards', {
       // 2. Change just that artboard's content
       // IMPORTANT: Vue.set() is required to keep reactivity!
       // https://github.com/vuejs/pinia/issues/452#issuecomment-827059072
-      Vue.set(this.list, index, artboard)
+      // Vue.set(this.list, index, artboard)
+
+      // Vue 3 should not need to use Vue.set() anymore
+      // TODO: Verify this works
+      this.list[index] = artboard
     },
     setArtboards(payload) {
       if (this.list !== payload) {
