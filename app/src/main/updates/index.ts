@@ -20,7 +20,7 @@ export function init(window) {
     // To test it out, change package.json version to a previous version
     autoUpdater.updateConfigPath = path.join(
       __dirname,
-      '../../../build/dev-app-update.yml'
+      '../../../../build/dev-app-update.yml'
     )
 
     // Force the updater to work in “dev” mode, looking for “dev-app-update.yml” instead of “app-update.yml"

@@ -1,11 +1,74 @@
-const { app, Menu, shell } = require('electron')
-const isDev = require('electron-is-dev')
+import {
+  app,
+  Menu,
+  MenuItem,
+  MenuItemConstructorOptions,
+  shell,
+} from 'electron'
+import isDev from 'electron-is-dev'
 import { checkForUpdates } from './updates/check-for-update'
 
 const isMac = process.platform === 'darwin'
 
-export function setMenu(window) {
-  const template = [
+const checkForUpdatesMenuItem = {
+  id: 'check-for-updates',
+  parentId: isMac ? 'mac' : 'help',
+  orderNumber: isMac ? 20 : 50,
+  label: 'Check for updates...',
+  enabled: true, // TODO: Make this reactive; currently doesn't change
+  click: (menuItem: MenuItem) => checkForUpdates(menuItem),
+}
+
+export function setMenu(window: Electron.BrowserWindow) {
+  const template: (
+    | Electron.MenuItem
+    | Electron.MenuItemConstructorOptions
+    | {}
+  )[] = [
+    // conditional menu item for macOS
+    isMac
+      ? {
+          label: app.name,
+          submenu: [
+            { role: 'about' },
+            checkForUpdatesMenuItem, // Check for Updates (MacOS)
+            {
+              type: 'separator',
+            },
+            // Reset Reflex (MacOS)
+            {
+              label: `Reset ${app.name}...`,
+              click() {
+                window.webContents.send('menu_reset-app')
+              },
+            },
+            {
+              type: 'separator',
+            },
+            {
+              role: 'services',
+            },
+            {
+              type: 'separator',
+            },
+            {
+              role: 'hide',
+            },
+            {
+              role: 'hideothers',
+            },
+            {
+              role: 'unhide',
+            },
+            {
+              type: 'separator',
+            },
+            {
+              role: 'quit',
+            },
+          ],
+        }
+      : null,
     {
       label: 'Edit',
       submenu: [
@@ -101,6 +164,22 @@ export function setMenu(window) {
         },
       ],
     },
+    // If in Dev mode, add Developer menu
+    ...(isDev
+      ? [
+          {
+            label: 'Developer',
+            submenu: [
+              {
+                label: 'Show Canvas Debugger',
+                click() {
+                  window.webContents.send('menu_show-developer-canvas-debugger')
+                },
+              },
+            ],
+          },
+        ]
+      : []),
     {
       role: 'window',
       submenu: [
@@ -124,12 +203,6 @@ export function setMenu(window) {
     {
       role: 'help',
       submenu: [
-        //   {
-        //   label: 'Community',
-        //   click() {
-        //     shell.openExternal('https://spectrum.chat/reflex-app')
-        //   }
-        // },
         {
           label: 'Report a Bug',
           click() {
@@ -148,78 +221,8 @@ export function setMenu(window) {
     },
   ]
 
-  if (isMac) {
-    template.unshift({
-      label: app.name,
-      submenu: [
-        {
-          role: 'about',
-        },
-        {
-          id: 'check-for-updates',
-          parentId: isMac ? 'mac' : 'help',
-          orderNumber: isMac ? 20 : 50,
-          label: 'Check for updates...',
-          enabled: true, // TODO: Make this reactive; currently doesn't change
-          click: async (menuItem) => await checkForUpdates(menuItem),
-        },
-        {
-          type: 'separator',
-        },
-        {
-          role: 'services',
-        },
-        {
-          type: 'separator',
-        },
-        {
-          role: 'hide',
-        },
-        {
-          role: 'hideothers',
-        },
-        {
-          role: 'unhide',
-        },
-        {
-          type: 'separator',
-        },
-        {
-          role: 'quit',
-        },
-      ],
-    })
-  }
-
-  // Reset Reflex
-  template[0].submenu.splice(
-    isMac ? 2 : 1, // place after "About" on Mac
-    0,
-    {
-      type: 'separator',
-    },
-    {
-      label: `Reset ${app.name}...`,
-      click() {
-        window.webContents.send('menu_reset-app')
-      },
-    }
-  )
-  // If in Dev mode, add menu
-  if (isDev) {
-    template.splice(4, 0, {
-      label: 'Developer',
-      submenu: [
-        {
-          label: 'Show Canvas Debugger',
-          click() {
-            window.webContents.send('menu_show-developer-canvas-debugger')
-          },
-        },
-      ],
-    })
-  }
-
   const menu = Menu.buildFromTemplate(template)
+
+  // Initiate the menu
   Menu.setApplicationMenu(menu)
 }

@@ -1,17 +1,17 @@
 /**
  * Provides a menu item to check for updates manually
  */
-import { dialog } from 'electron'
+import { dialog, MenuItem } from 'electron'
 import { autoUpdater } from 'electron-updater'
 import isDev from 'electron-is-dev'
 import { state as appUpdateState } from './index'
 import { computed } from '@vue/reactivity'
 
-let updater = {}
+let updater: { enabled?: boolean } | null = {}
 let isManualCheckUpdate = computed(() => appUpdateState.checkType === 'menu')
 
 // export this to MenuItem click callback
-export async function checkForUpdates(menuItem) {
+export function checkForUpdates(menuItem: MenuItem) {
   // Set flag
   appUpdateState.checkType = 'menu'
 
@@ -26,7 +26,7 @@ export async function checkForUpdates(menuItem) {
   initListeners()
 
   // Check for updates
-  await autoUpdater.checkForUpdates()
+  autoUpdater.checkForUpdates()
 }
 
 export function initListeners() {

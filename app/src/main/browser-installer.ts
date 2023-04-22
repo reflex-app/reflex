@@ -5,10 +5,11 @@
  */
 
 import path from 'path'
-import { Installer as PlaywrightBrowserInstaller } from '@reflex/browser-installer'
+// import { Installer as PlaywrightBrowserInstaller } from '@reflex/browser-installer'
 import log from 'electron-log'
 import { app } from 'electron'
 
+const PlaywrightBrowserInstaller = null // TODO: Fix import of '@reflex/browser-installer'
 if (!PlaywrightBrowserInstaller) log.error('Module not defined!')
 
 // The following is essential:

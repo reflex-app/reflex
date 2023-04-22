@@ -1,16 +1,31 @@
-/* eslint-disable */
 import { EventEmitter } from 'events'
 import { BrowserWindow, app } from 'electron'
 const DEV_SERVER_URL = process.env.DEV_SERVER_URL
 const isProduction = process.env.NODE_ENV === 'production'
-const isDev = process.env.NODE_ENV === 'development'
-const mainRemote = require('@electron/remote/main')
+// const isDev = process.env.NODE_ENV === 'development'
+import isDev from 'electron-is-dev'
+
+import mainRemote from '@electron/remote/main'
+import {
+  initialize as initializeRemote,
+  enable as enableRemote,
+} from '@electron/remote/main'
+import path from 'path'
+
 export default class BrowserWinHandler {
   /**
    * @param [options] {object} - browser window options
    * @param [allowRecreate] {boolean}
    */
-  constructor(options, allowRecreate = true) {
+
+  _eventEmitter: EventEmitter
+  allowRecreate: boolean
+  options: {
+    webPreferences?: {}
+  }
+  browserWindow: BrowserWindow | null
+
+  constructor(options: object, allowRecreate: boolean = true) {
     this._eventEmitter = new EventEmitter()
     this.allowRecreate = allowRecreate
     this.options = options
@@ -50,7 +65,11 @@ export default class BrowserWinHandler {
     // Enable remote module
     // as of @electron/remote 2.x
     // https://github.com/electron/remote/blob/main/docs/migration-2.md
-    mainRemote.enable(this.browserWindow.webContents)
+    // Setup workaround for Remote module
+    // https://github.com/electron/remote#migrating-from-remote
+    // TODO Migrate away from Remote module
+    initializeRemote()
+    enableRemote(this.browserWindow.webContents)
 
     this.browserWindow.on('closed', () => {
       // Dereference the window object
@@ -63,15 +82,6 @@ export default class BrowserWinHandler {
     if (this.browserWindow === null) this._create()
   }
 
-  /**
-   * @callback onReadyCallback
-   * @param {BrowserWindow}
-   */
-
-  /**
-   *
-   * @param callback {onReadyCallback}
-   */
   onCreated(callback) {
     if (this.browserWindow !== null) return callback(this.browserWindow)
     this._eventEmitter.once('created', () => {
@@ -84,7 +94,16 @@ export default class BrowserWinHandler {
       return Promise.reject(
         new Error("The page could not be loaded before win 'created' event")
       )
-    const serverUrl = isDev ? DEV_SERVER_URL : 'app://./index.html'
+
+    // await winHandler.loadPage(
+    //   isDev
+    //     ?
+    //     : `file://${path.join(__dirname, '../nuxt/index.html')}`
+    // )
+
+    const serverUrl = isDev
+      ? 'http://localhost:3000'
+      : `file://${path.join(__dirname, '../nuxt/index.html')}`
     const fullPath = serverUrl + '#' + pagePath
     await this.browserWindow.loadURL(fullPath)
 
@@ -92,11 +111,7 @@ export default class BrowserWinHandler {
     this.browserWindow.show()
   }
 
-  /**
-   *
-   * @returns {Promise<BrowserWindow>}
-   */
-  created() {
+  created(): Promise<BrowserWindow> {
     return new Promise((resolve) => {
       this.onCreated(() => resolve(this.browserWindow))
     })

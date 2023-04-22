@@ -1,7 +1,17 @@
 import { store } from './store'
 
+interface WindowState {
+  isMaximized?: boolean
+  bounds?: {
+    x?: number
+    y?: number
+    width?: number
+    height?: number
+  }
+}
+
 const winVariable = 'winPosition'
-let windowState = {}
+let windowState: WindowState = {}
 
 // When opening your app, try to load in your state
 export function onAppLoad() {
