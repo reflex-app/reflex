@@ -5,10 +5,10 @@
   "repository": "github:reflex-app/reflex-browser-installer",
   "scripts": {
     "dev": "yarn clean && webpack --watch --mode development",
-    "build": "yarn clean && webpack --mode production",
+    "build": "yarn clean & webpack --mode production",
     "browsers": "yarn run playwright-var node .src/index.js",
     "test": "yarn run playwright-var node ./test.js",
-    "clean": "rimraf dist/*",
+    "clean": "rimraf ./dist/**/*",
     "release": "node ./scripts/release.js",
     "preinstall": "yarn run playwright-var && npx cross-env PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1",
     "playwright-var": "npx cross-env PLAYWRIGHT_BROWSERS_PATH=0"
