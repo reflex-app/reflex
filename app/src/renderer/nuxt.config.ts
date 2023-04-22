@@ -45,8 +45,8 @@ export default defineNuxtConfig({
       alias: {
         '@': path.resolve(__dirname, 'src'),
         path: 'path-browserify',
-        },
       },
+    },
     plugins: [
       target({
         'electron-renderer': {}, // Vite build target for Electron
@@ -66,6 +66,12 @@ export default defineNuxtConfig({
     // '@nuxtjs/eslint-module',
     // '@nuxt/typescript-build',
   ],
+
+  // Pinia Store <> localStorage persistence
+  piniaPersistedstate: {
+    storage: 'localStorage', // Use localStorage as default storage
+  },
+
   // Nuxt + Typescript
   // typescript: {
   //   /**
@@ -97,24 +103,24 @@ export default defineNuxtConfig({
 
   build: {
     transpile: ['@viselect/vanilla'],
-    extend(config, { isDev, isClient }) {
-      // ..
-      // Comlink loader
-      // https://github.com/GoogleChromeLabs/comlink-loader#singleton-mode
-      config.module.rules.push({
-        test: /\.worker\.(js|ts)$/i,
-        loader: 'comlink-loader',
-        options: {
-          singleton: true,
-        },
-      })
+    // extend(config, { isDev, isClient }) {
+    //   // ..
+    //   // Comlink loader
+    //   // https://github.com/GoogleChromeLabs/comlink-loader#singleton-mode
+    //   config.module.rules.push({
+    //     test: /\.worker\.(js|ts)$/i,
+    //     loader: 'comlink-loader',
+    //     options: {
+    //       singleton: true,
+    //     },
+    //   })
 
-      // Using WebPack to bundle Playwright/Puppeteer
-      // https://stackoverflow.com/a/53744505/1114901
-      // if (!config.externals) config.externals = {}
-      // config.externals = {
-      //   'playwright-core': 'playwright-core',
-      // }
-    },
+    //   // Using WebPack to bundle Playwright/Puppeteer
+    //   // https://stackoverflow.com/a/53744505/1114901
+    //   // if (!config.externals) config.externals = {}
+    //   // config.externals = {
+    //   //   'playwright-core': 'playwright-core',
+    //   // }
+    // },
   },
 })
