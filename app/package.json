@@ -11,26 +11,20 @@
     "url": "https://github.com/reflex-app/reflex.git"
   },
   "scripts": {
-    "dev:new": "concurrently -k \"yarn serve:preload \" \"yarn serve:nuxt\" \"yarn electron:watch\"",
-    "build:new": "yarn build:preload && yarn build:nuxt",
+    "dev": "concurrently -k \"yarn serve:preload \" \"yarn serve:nuxt\" \"yarn electron:watch\"",
+    "build": "yarn preload:build && yarn build:nuxt",
+    "build:fast": "yarn run preload:build && npx cross-env LOCAL_BUILD=true nuxi generate",
     "build:app": "npx cross-env RELEASE=true yarn build:new && cd src/electron && yarn electron:build && yarn electron:builder",
     "serve:nuxt": "cd src/renderer && yarn dev",
     "build:nuxt": "cd src/renderer && yarn build",
     "electron:watch": "cd src/main && yarn watch",
-    "build:electron": "cd src/main && yarn build",
-    "serve:preload": "cd src/extraResources && yarn dev",
-    "build:preload": "cd src/extraResources && yarn build",
-    "build:fast:new": "yarn run preload:build && npx cross-env LOCAL_BUILD=true nuxi generate",
-    "dev": "yarn run preload:build --mode development && yarn run preload:dev & node .electron-nuxt/dev.js",
-    "build": "yarn run preload:build && npx cross-env RELEASE=true node .electron-nuxt/build.js",
-    "build:fast": "yarn run preload:build && npx cross-env LOCAL_BUILD=true node .electron-nuxt/build.js",
-    "preload:dev": "cd src/extraResources && yarn run dev",
+    "electron:build": "cd src/main && yarn build",
+    "preload:serve": "cd src/extraResources && yarn dev",
     "preload:build": "cd src/extraResources && yarn run build",
     "release": "npx @digitak/esrun --tsconfig=./scripts/tsconfig.json ./scripts/updater-cli.ts",
     "test": "jest",
     "lint": "eslint --ext .js,.vue,.ts -f eslint-friendly-formatter ./src",
     "lint:fix": "yarn run lint -- --fix",
-    "preinstall": "node .electron-nuxt/check-engines.js",
     "postinstall": "yarn preload:build --mode development",
     "storybook": "start-storybook",
     "debug:playwright": "npx cross-env DEBUG=pw:browser* yarn run dev",
@@ -55,6 +49,10 @@
       "^@/(.*)$": "<rootDir>/src/renderer/$1",
       "^~/(.*)$": "<rootDir>/src/renderer/$1"
     }
+  },
+  "dependencies": {
+    "@electron/remote": "2.0.9",
+    "electron": "18.3.15"
   },
   "devDependencies": {
     "@babel/runtime-corejs2": "^7.14.8",
