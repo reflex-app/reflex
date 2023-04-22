@@ -31,6 +31,13 @@ export default defineNuxtConfig({
     },
   },
 
+  // Vue settings
+  vue: {
+    compilerOptions: {
+      isCustomElement: (tag) => ['webview'].includes(tag),
+    },
+  },
+
   // Vite settings
   vite: {
     css: {
