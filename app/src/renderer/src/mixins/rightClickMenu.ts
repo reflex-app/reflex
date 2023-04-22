@@ -1,18 +1,26 @@
 /**
  * Creates a generic right-click menu
  */
-import * as remote from '@electron/remote'
-import { Menu, MenuItem } from '@electron/remote' // TODO Migrate to @electron/remote and move this logic to main process
+// import { Menu, MenuItem, getCurrentWindow } from '@electron/remote' // TODO Migrate to @electron/remote and move this logic to main process
 import isElectron from 'is-electron'
 import Trigger from '~/components/CrossBrowser/Screenshots/Trigger.vue'
 import { useArtboardsStore } from '~/store/artboards'
 
-/**
- * @param {Object} store The Vue component's context
- * @param {Object} artboard The specific artboard
- * @param {DOMElement} webview The artboard's Webview DOM element
- */
-export default function (store, artboard) {
+// TODO: Re-connect with Electron
+let Menu: new () => any,
+  MenuItem: new (arg0: {
+    label: string
+    click:
+      | (() => void) // import { Menu, MenuItem, getCurrentWindow } from '@electron/remote' // TODO Migrate to @electron/remote and move this logic to main process
+      | (() => void)
+      | (() => void)
+      | (() => void)
+      | (() => void)
+      | (() => void)
+  }) => any,
+  getCurrentWindow = {}
+
+export default function (store: object, artboard: object) {
   const artboardFrame = getArtboard(artboard.id).querySelector('webview')
 
   // Require DOMElement and Electron context
@@ -88,7 +96,7 @@ export default function (store, artboard) {
       },
     })
   )
-  menu.popup(remote.getCurrentWindow())
+  menu.popup(getCurrentWindow())
 }
 
 function getArtboard(id) {
