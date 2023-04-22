@@ -2,32 +2,21 @@
   <div style="display: inline-block; width: 100%; height: 100%">
     <!-- We 'panzoom-exclude' to mark this as not relevant to Panzoom -->
     <!-- <PanzoomControls v-if="panzoomInstance" :instance="panzoomInstance" /> -->
-    <div
-      id="canvas"
-      ref="outerPanArea"
-      class="panzoom-container"
-      :class="{
-        'dev-visual-debugger': showCanvasDebugger,
-      }"
-    >
+    <div id="canvas" ref="outerPanArea" class="panzoom-container" :class="{
+      'dev-visual-debugger': showCanvasDebugger,
+    }">
       <!-- For transform-origin: 50% 50% to work, this next element HAS to be display:block -->
-      <div
-        ref="innerPanArea"
-        style="
-          display: block;
-          position: relative;
-          height: 100%;
-          width: 100%;
-          overflow: visible;
-        "
-      >
+      <div ref="innerPanArea" style="
+                display: block;
+                position: relative;
+                height: 100%;
+                width: 100%;
+                overflow: visible;
+              ">
         <!-- Now we have the real panzoom content inside: -->
-        <div
-          class="panzoom-inner"
-          :class="{
-            'dev-visual-debugger': showCanvasDebugger,
-          }"
-        >
+        <div class="panzoom-inner" :class="{
+          'dev-visual-debugger': showCanvasDebugger,
+        }">
           <slot />
         </div>
       </div>
@@ -45,7 +34,7 @@ import {
   nextTick,
 } from 'vue'
 import Panzoom, { PanzoomObject } from '@panzoom/panzoom'
-import { ipcRenderer } from 'electron'
+import { useIpcRenderer } from '@vueuse/electron'
 import isElectron from 'is-electron'
 import PanzoomControls from './PanzoomControls.vue'
 import { useInteractionStore } from '~/store/interactions'
@@ -54,7 +43,9 @@ import { useDevStore } from '~/store/dev'
 import { isEqual } from 'lodash'
 import { start } from 'repl'
 import { initialPanZoom } from './panzoomFns'
-// import { useEventListener } from '@vueuse/core'
+
+// Connect w/ Electron
+const ipcRenderer = useIpcRenderer()
 
 const interactions = useInteractionStore()
 const devStore = useDevStore()
@@ -98,8 +89,8 @@ const dynamicDims = computed(() => {
     height: height + 'px',
   }
 })
-  // TODO: This should be refactored after Vue 3 update
-  const { $root } = getCurrentInstance()?.proxy
+// TODO: This should be refactored after Vue 3 update
+const { $root } = getCurrentInstance()?.proxy
 if (!$root) console.warn('No $root')
 
 onMounted(async () => {
@@ -350,6 +341,7 @@ function fitToScreen() {
 }
 
 .dev-visual-debugger {
+
   &:before,
   &:after {
     position: absolute;
@@ -375,6 +367,7 @@ function fitToScreen() {
 
   // Nested debugger
   .dev-visual-debugger {
+
     // Vertical line
     &:before {
       position: absolute;

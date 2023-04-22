@@ -8,8 +8,9 @@ import path from 'path'
 import { mapState } from 'pinia'
 import { state as reflexState, setPublisher } from '~/mixins/reflex-sync'
 import { useHistoryStore } from '~/store/history'
-import remote from '@electron/remote'
 import { watch, ref, Ref, getCurrentInstance, computed } from 'vue'
+
+const runtimeConfig = useRuntimeConfig()
 
 export default {
   props: {
@@ -44,7 +45,7 @@ export default {
       // The protocol of script's URL must be file: (even when using asar: archives) because it will be loaded by Node's require under the hood
       // TODO add a test to make sure this file exists
 
-      const isDev = getCurrentInstance()?.proxy.$root.$config.public.DEV
+      const isDev = runtimeConfig.public.DEV
       const suffix = 'dist/extraResources/index.js'
 
       const scriptPath = isDev
@@ -59,6 +60,7 @@ export default {
         nodeIntegration: true, // Enables Node.js integration
         contextIsolation: true,
       }
+
 
       // Return as a comma-separated string
       return Object.keys(settings)

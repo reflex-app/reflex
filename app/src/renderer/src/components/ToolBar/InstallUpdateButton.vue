@@ -6,8 +6,11 @@
 
 <script>
 import isElectron from 'is-electron'
-import { ipcRenderer } from 'electron'
 import ProgressIndicator from './ProgressIndicator'
+import { useIpcRenderer } from '@vueuse/electron'
+
+// Connect w/ Electron
+const ipcRenderer = useIpcRenderer()
 
 export default {
   components: {

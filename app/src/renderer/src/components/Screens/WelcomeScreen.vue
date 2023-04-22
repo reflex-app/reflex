@@ -1,10 +1,6 @@
 <template>
   <div class="empty-state">
-    <img
-      src="@/assets/ftu-vector.svg"
-      class="empty-state__image"
-      alt="Welcome graphic"
-    />
+    <img src="@/assets/ftu-vector.svg" class="empty-state__image" alt="Welcome graphic" />
     <span class="empty-state__title">Welcome to {{ appName }}</span>
     <p class="empty-state__body">
       You’re on your way to making awesome responsive sites.
@@ -94,34 +90,25 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
+// import { useIpcRenderer } from '@vueuse/electron'
+// import { ipcRenderer } from 'electron';
 // import { app } from '@electron/remote'
+// const ipcRenderer = useIpcRenderer()
 
-export default {
-  computed: {
-    appName() {
-      // Return the name of the Electron app
-      // From package.json (name or productName)
-      // TODO this if check is required in case of tests
-      const pkgJson = require('../../../../package.json')
-      return pkgJson.productName
-      // if (app) {
-      //   return app.name // TODO confirm this is working in Electron 12+
-      // } else {
-      //   const pkgJson = require('../../../../package.json')
-      //   return pkgJson.productName
-      // }
-    },
-    systemMetaKeyName() {
-      // Show "CMD" or "CTRL" based on the user's OS
-      if (process.platform === 'darwin') {
-        return 'CMD'
-      } else {
-        return 'CTRL'
-      }
-    },
-  },
-}
+// Get the name from the main process
+// TODO: Use ipcRenderer.invoke<string>('get-app-name')
+const appName = 'Reflex'
+
+const systemMetaKeyName = computed(() => {
+  // Show "CMD" or "CTRL" based on the user's OS
+  if (process.platform === 'darwin') {
+    return 'CMD'
+  } else {
+    return 'CTRL'
+  }
+})
+
 </script>
 
 <style lang="scss" scoped>

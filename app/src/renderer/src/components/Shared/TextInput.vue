@@ -1,11 +1,6 @@
 <template>
   <div>
-    <input
-      ref="input"
-      type="text"
-      placeholder="Title"
-      @keyup="$emit('keyup')"
-    >
+    <input ref="input" type="text" placeholder="Title" @keyup="$emit('keyup')">
   </div>
 </template>
 
@@ -21,7 +16,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '~@/scss/_variables';
+@import '@/scss/_variables.scss';
 
 input[type='text'],
 input[type='number'] {
@@ -47,7 +42,7 @@ input[type='number'] {
     color: $accent-color;
   }
 
-  & + input {
+  &+input {
     margin-top: 4px;
   }
 }

@@ -9,8 +9,11 @@
 </template>
 
 <script>
-import { ref } from '@nuxtjs/composition-api'
-const { ipcRenderer } = require('electron')
+import { ref } from 'vue'
+import { useIpcRenderer } from '@vueuse/electron'
+
+// Connect w/ Electron
+const ipcRenderer = useIpcRenderer()
 
 export default {
   setup() {

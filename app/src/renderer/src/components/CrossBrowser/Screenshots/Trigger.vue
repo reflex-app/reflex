@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import { reactive, toRefs } from '@nuxtjs/composition-api'
+import { reactive, toRefs } from 'vue'
 import useCrossBrowserScreenshots from './UseCrossBrowserScreenshots'
 import { browserContexts } from '~/components/CrossBrowser/Screenshots'
 

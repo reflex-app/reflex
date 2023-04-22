@@ -2,23 +2,11 @@
   <!-- Allow pointer-events when panzoom is enabled -->
   <!-- The 'panzoom-exclude' class allows us to ignore Panzoom click events on a certain element -->
   <!-- ... and then we use Selection to select just one artboard -->
-  <div
-    class="artboard-container"
-    :class="{ 'panzoom-exclude': state.panzoomEnabled }"
-  >
-    <div
-      v-show="isVisible"
-      ref="artboard"
-      :artboard-id="props.id"
-      class="artboard"
-      :class="{
-        'is-hover': state.isHover,
-        'is-selected': state.isSelected,
-      }"
-      @mouseover="hoverStart(props.id)"
-      @mouseout="hoverEnd(props.id)"
-      @click.right="rightClickHandler()"
-    >
+  <div class="artboard-container" :class="{ 'panzoom-exclude': state.panzoomEnabled }">
+    <div v-show="isVisible" ref="artboard" :artboard-id="props.id" class="artboard" :class="{
+      'is-hover': state.isHover,
+      'is-selected': state.isSelected,
+    }" @mouseover="hoverStart(props.id)" @mouseout="hoverEnd(props.id)" @click.right="rightClickHandler()">
       <div class="artboard__top">
         <div>
           <span class="title">{{ props.title }}</span>
@@ -35,30 +23,15 @@
         </div>
       </div>
       <div class="artboard__keypoints" />
-      <div
-        ref="artboardResizable"
-        class="artboard__content"
-        :class="{
-          'layout--horizontal': state.horizontalLayout,
-          'is-hover': state.isHover,
-          'is-selected': state.isSelected,
-        }"
-        :style="{ height: props.height + 'px', width: props.width + 'px' }"
-      >
-        <div
-          class="content__frame"
-          @mousedown="$emit('clicked', props.id, $event)"
-        >
-          <WebPage
-            :id="props.id"
-            :artboard-id="props.id"
-            ref="frame"
-            :allow-interactions="state.canInteractWithWebContext"
-            class="webview"
-            @loadstart="state.isLoading = true"
-            @loadend="state.isLoading = false"
-            @scroll="updateScrollPosition"
-          />
+      <div ref="artboardResizable" class="artboard__content" :class="{
+        'layout--horizontal': state.horizontalLayout,
+        'is-hover': state.isHover,
+        'is-selected': state.isSelected,
+      }" :style="{ height: props.height + 'px', width: props.width + 'px' }">
+        <div class="content__frame" @mousedown="$emit('clicked', props.id, $event)">
+          <WebPage :id="props.id" :artboard-id="props.id" ref="frame"
+            :allow-interactions="state.canInteractWithWebContext" class="webview" @loadstart="state.isLoading = true"
+            @loadend="state.isLoading = false" @scroll="updateScrollPosition" />
         </div>
 
         <!-- TODO: Re-enable -->
@@ -72,16 +45,8 @@
           />
         </div> -->
         <div v-show="state.isHover" class="artboard__handles">
-          <div
-            class="handle_right"
-            title="Resize"
-            @mousedown="triggerResize($event, 'horizontal')"
-          />
-          <div
-            class="handle_bottom"
-            title="Resize"
-            @mousedown="triggerResize($event, 'vertical')"
-          />
+          <div class="handle_right" title="Resize" @mousedown="triggerResize($event, 'horizontal')" />
+          <div class="handle_bottom" title="Resize" @mousedown="triggerResize($event, 'vertical')" />
         </div>
       </div>
     </div>
@@ -95,7 +60,6 @@ import {
   onMounted,
   ref,
   Ref,
-  defineEmits,
   watch,
 } from 'vue'
 import rightClickMenu from '~/mixins/rightClickMenu'
@@ -412,7 +376,7 @@ $artboard-handle-height: 1.5rem;
     justify-content: space-between;
     margin-bottom: 0.5rem;
 
-    & > *:not(:first-child) {
+    &>*:not(:first-child) {
       margin-left: 16px;
     }
 
@@ -431,6 +395,7 @@ $artboard-handle-height: 1.5rem;
   }
 
   $artboard-content-radius: 1rem;
+
   .artboard__content {
     width: auto;
     height: auto;

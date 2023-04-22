@@ -1,22 +1,11 @@
 <template>
-  <div
-    class="download-progress-indicator"
-    :title="readyToInstall ? 'Click to update' : 'Downloading update...'"
-    v-on="readyToInstall ? { click: clickHandler } : {}"
-  >
-    <svg
-      :viewBox="`0 0 ${size} ${size}`"
-      class="circular-chart"
-      :class="{ 'is-complete': readyToInstall }"
-    >
-      <path
-        class="circle"
-        :d="`M${x} ${y}
-        a ${radius} ${radius} 0 0 1 0 ${diameter}
-        a ${radius} ${radius} 0 0 1 0 -${diameter}`"
-        :stroke-width="strokeWidth"
-        :stroke-dasharray="`${percentage} 100`"
-      />
+  <div class="download-progress-indicator" :title="readyToInstall ? 'Click to update' : 'Downloading update...'"
+    v-on="readyToInstall ? { click: clickHandler } : {}">
+    <svg :viewBox="`0 0 ${size} ${size}`" class="circular-chart" :class="{ 'is-complete': readyToInstall }">
+      <path class="circle" :d="`M${x} ${y}
+                a ${radius} ${radius} 0 0 1 0 ${diameter}
+                a ${radius} ${radius} 0 0 1 0 -${diameter}`" :stroke-width="strokeWidth"
+        :stroke-dasharray="`${percentage} 100`" />
     </svg>
     <div v-if="percentage === 100" class="download-complete">
       <Icon name="download" color="light" class="download-icon" />
@@ -80,7 +69,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '~@/scss/_variables';
+@import '@/scss/_variables.scss';
 
 .download-progress-indicator {
   position: relative;

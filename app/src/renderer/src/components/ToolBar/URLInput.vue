@@ -82,7 +82,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '~@/scss/_variables';
+@import '@/scss/_variables.scss';
 
 .input {
   width: 100%;

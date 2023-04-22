@@ -1,16 +1,9 @@
 <template>
   <div>
     <div class="size-shifter-container">
-      <div
-        v-for="(item, index) in artboards"
-        :key="item.id"
-        ref="size-shifter-item"
-        :screen-id="item.id"
-        class="size-shifter-item"
-        :class="{ 'is-active': item.id === focusModeActiveScreen.id }"
-        :title="`Shortcut: ⌘${index + 1}`"
-        @click="changeSize(item.id)"
-      >
+      <div v-for="(item, index) in artboards" :key="item.id" ref="size-shifter-item" :screen-id="item.id"
+        class="size-shifter-item" :class="{ 'is-active': item.id === focusModeActiveScreen.id }"
+        :title="`Shortcut: ⌘${index + 1}`" @click="changeSize(item.id)">
         <div class="number">{{ index + 1 }}</div>
         <div class="size">{{ item.width }}x{{ item.height }}</div>
       </div>
@@ -20,7 +13,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState } from 'pinia'
 import { useFocusMode } from '~/store/focusMode'
 export default {
   data() {

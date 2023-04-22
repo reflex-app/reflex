@@ -1,18 +1,12 @@
 <template>
   <div id="artboards">
-    <Artboard
-      ref="artboard"
-      v-bind="focusModeActiveScreen"
-      :selected-items="selectedArtboards"
-      class="artboard"
-      :class="{ 'disco-mode': discoMode }"
-      @resize="resize"
-    />
+    <Artboard ref="artboard" v-bind="focusModeActiveScreen" :selected-items="selectedArtboards" class="artboard"
+      :class="{ 'disco-mode': discoMode }" @resize="resize" />
   </div>
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
+import { mapState, mapGetters } from 'pinia'
 import SelectionArea from '@viselect/vanilla'
 import Artboard from '@/components/Screens/Artboard'
 

@@ -2,23 +2,12 @@
   <div class="switch-mode-container">
     <div v-feature-flipping="'focus-mode'">
       <nuxt-link to="/focus">
-        <Button
-          role="ghost"
-          icon="mode-focus"
-          :tight="true"
-          title="Single Screen"
-          :is-pressed="isRouteActive('/focus')"
-        />
+        <Button role="ghost" icon="mode-focus" :tight="true" title="Single Screen"
+          :is-pressed="isRouteActive('/focus')" />
       </nuxt-link>
     </div>
     <nuxt-link to="/">
-      <Button
-        role="ghost"
-        icon="mode-all"
-        :tight="true"
-        title="All Screens"
-        :is-pressed="isRouteActive('/')"
-      />
+      <Button role="ghost" icon="mode-all" :tight="true" title="All Screens" :is-pressed="isRouteActive('/')" />
     </nuxt-link>
 
     <!-- <input type="checkbox" id="switch" :checked="toggleState" /> -->
@@ -27,7 +16,8 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+// import { mapState } from 'vuex'
+import { mapState } from 'pinia'
 export default {
   computed: {
     ...mapState({

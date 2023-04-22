@@ -1,5 +1,5 @@
 // This file handles the state and features of the UI for taking screenshots
-import { reactive } from '@nuxtjs/composition-api'
+import { reactive } from 'vue'
 import {
   takeScreenshots,
   toBase64Image,
