@@ -1,8 +1,8 @@
 <template>
   <div id="artboard-tabs">
     <!-- List of Artboards -->
-    <div v-if="artboards.list.length" class="artboard-tabs__scroll">
-      <artboardEditable :data="artboards.list" />
+    <div v-if="artboardsList.length" class="artboard-tabs__scroll">
+      <artboardEditable :data="artboardsList" />
     </div>
 
     <!-- New Artboard -->
@@ -13,7 +13,7 @@
     </div>
 
     <!-- Show a tip if there's no artboards -->
-    <div v-if="!artboards.list.length" class="empty-state">
+    <div v-if="!artboardsList.length" class="empty-state">
       <div class="empty-state__text">Click to create a new screen</div>
     </div>
 
@@ -31,11 +31,11 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, watch, ref, computed } from '@nuxtjs/composition-api'
 import artboardEditable from '@/components/SidePanel/artboardEditable.vue'
 import { useArtboardsStore } from '~/store/artboards'
 
 const artboards = useArtboardsStore()
+const artboardsList = computed(() => artboards.list)
 
 const presetDropdown = ref<HTMLElement>()
 
@@ -147,7 +147,7 @@ const data = reactive({
     get() {
       return computed(() => artboards.list)
     },
-    set(value) {
+    set(value: {}) {
       artboards.setArtboards(value)
     },
   },
@@ -187,7 +187,7 @@ function add() {
 </script>
 
 <style lang="scss" scoped>
-@import '~@/scss/_variables';
+@import '@/scss/_variables.scss';
 
 #artboard-tabs {
   display: flex;

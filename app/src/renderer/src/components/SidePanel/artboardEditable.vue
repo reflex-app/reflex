@@ -1,86 +1,69 @@
 <template>
-  <draggable
-    v-model="artboardsGetSet"
-    :group="{ name: 'artboards', pull: true, put: true }"
-    :animation="150"
-    :disabled="editMode === true"
-  >
-    <div v-for="artboard in artboards" :key="artboard.id" class="artboard-tab">
-      <!-- Editing state -->
-      <div v-if="editMode == true && editID == artboard.id" class="editing">
-        <div class="group">
-          <label>Title</label>
-          <input
-            ref="input"
-            v-model="localFormData.title"
-            type="text"
-            placeholder="Title"
-            @keyup.enter="save(artboard)"
-          />
-        </div>
-        <div class="group group--two-up">
-          <label>Dimensions</label>
-          <div class="group__two-up">
-            <div class="group__input-with-right-label">
-              <input
-                v-model="localFormData.width"
-                type="number"
-                placeholder="Width"
-                @keyup.enter="save(artboard)"
-              />
-              <label>W</label>
-            </div>
-            <div class="group__input-with-right-label">
-              <input
-                v-model="localFormData.height"
-                type="number"
-                placeholder="Height"
-                @keyup.enter="save(artboard)"
-              />
-              <label>H</label>
-            </div>
+  <!-- Draggable Options: https://github.com/SortableJS/Sortable#options -->
+  <draggable :list="artboardsGetSet" :options="{ animation: 150 }" item-key="id" :disabled="editMode === true"
+    @end="dragEnd">
+    <template #item="{ element, index: id }">
+      <div :key="element.id" class="artboard-tab">
+        <!-- Editing state -->
+        <div v-if="editMode == true && editID == element.id" class="editing">
+          <div class="group">
+            <label>Title</label>
+            <input ref="input" v-model="localFormData.title" type="text" placeholder="Title"
+              @keyup.enter="save(element)" />
           </div>
+          <div class="group group--two-up">
+            <label>Dimensions</label>
+            <div class="group__two-up">
+              <div class="group__input-with-right-label">
+                <input v-model="localFormData.width" type="number" placeholder="Width" @keyup.enter="save(element)" />
+                <label>W</label>
+              </div>
+              <div class="group__input-with-right-label">
+                <input v-model="localFormData.height" type="number" placeholder="Height" @keyup.enter="save(element)" />
+                <label>H</label>
+              </div>
+            </div>
 
-          <div class="buttons">
-            <!-- TODO Cancel button doesn't really cancel/undo... -->
-            <Button role="secondary" @click="cancelEdit()"> Cancel </Button>
-            <Button role="primary" @click="save(artboard)">Save</Button>
+            <div class="buttons">
+              <!-- TODO Cancel button doesn't really cancel/undo... -->
+              <Button role="secondary" @click="cancelEdit()"> Cancel </Button>
+              <Button role="primary" @click="save(element)">Save</Button>
+            </div>
           </div>
         </div>
-      </div>
-      <!-- Normal state -->
-      <div
-        v-else
-        class="artboard-tab__container"
-        @click="selectArtboard(artboard.id)"
-        @mouseover="hoverStart(artboard.id)"
-        @mouseout="hoverEnd(artboard.id)"
-        @contextmenu="rightClickMenu($event, artboard)"
-      >
-        <div class="artboard-tab__container-left">
-          <div>{{ artboard.title }}</div>
-          <div>{{ artboard.width }} x {{ artboard.height }}</div>
-        </div>
-        <div class="artboard-tab__container-right">
-          <div>
-            <Icon v-if="artboard.isVisible" name="visible" />
-            <Icon v-if="!artboard.isVisible" name="hidden" />
+        <!-- Normal state -->
+        <div v-else class="artboard-tab__container" @click="selectArtboard(element.id)"
+          @mouseover="hoverStart(element.id)" @mouseout="hoverEnd(element.id)"
+          @contextmenu="rightClickMenu($event, element)">
+          <div class="artboard-tab__container-left">
+            <div>{{ element.title }}</div>
+            <div>{{ element.width }} x {{ element.height }}</div>
           </div>
-          <Button role="secondary" @click="edit(artboard.id)">Edit</Button>
-          <!-- <Button
+          <div class="artboard-tab__container-right">
+            <div>
+              <Icon v-if="element.isVisible" name="visible" />
+              <Icon v-if="!element.isVisible" name="hidden" />
+            </div>
+            <Button role="secondary" @click="edit(element.id)">Edit</Button>
+            <!-- <Button
             role="ghost"
             icon="delete"
-            @click.stop="remove(artboard.title, artboard.id)"
+            @click.stop="remove(element.title, element.id)"
             title="Delete"
           ></Button>-->
+          </div>
         </div>
       </div>
-    </div>
+      <!-- <div v-for="artboard in artboards" :key="artboard.id" class="artboard-tab"> -->
+      <!-- </div> -->
+    </template>
+
   </draggable>
 </template>
 
 <script lang="ts">
-import draggable from 'vuedraggable'
+// import draggable from 'vuedraggable'
+import { Sortable as draggable } from "sortablejs-vue3";
 import { mapState } from 'pinia'
 import rightClickMenu from '~/mixins/rightClickMenu'
 import { useArtboardsStore } from '~/store/artboards'
@@ -110,9 +93,10 @@ export default {
     }),
     artboardsGetSet: {
       get() {
-        return this.artboards
+        const artboards = useArtboardsStore()
+        return artboards.list
       },
-      set(value) {
+      set(value: {}) {
         const artboards = useArtboardsStore()
         artboards.setArtboards(value)
       },
@@ -122,6 +106,17 @@ export default {
     },
   },
   methods: {
+    dragEnd(event: any) {
+      const moveItemInArray = <T>(array: T[], from: number, to: number) => {
+        const item = array.splice(from, 1)[0];
+        array.splice(to, 0, item);
+      };
+
+      // Update the Store with the new order
+      // Docs: https://github.com/MaxLeiter/sortablejs-vue3#use-with-a-store
+      const artboards = useArtboardsStore()
+      moveItemInArray(artboards.list, event.oldIndex, event.newIndex)
+    },
     save(artboard) {
       // Disable editing mode
       this.editMode = false
@@ -218,7 +213,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '~@/scss/_variables';
+@import '@/scss/_variables.scss';
 $artboard-tab-side-padding: 1rem;
 
 .artboard-tab {
@@ -252,12 +247,12 @@ $artboard-tab-side-padding: 1rem;
       white-space: nowrap;
       overflow: hidden;
 
-      & > * {
+      &>* {
         text-overflow: ellipsis;
         overflow: hidden;
       }
 
-      & > *:nth-child(2) {
+      &>*:nth-child(2) {
         color: gray;
       }
     }
@@ -267,7 +262,7 @@ $artboard-tab-side-padding: 1rem;
       margin-left: 20px;
 
       // Add space between Edit & Delete links
-      & > *:not(:last-child) {
+      &>*:not(:last-child) {
         margin-right: 8px;
       }
     }
@@ -282,7 +277,7 @@ $artboard-tab-side-padding: 1rem;
       display: flex;
       margin: 1rem 0 0;
 
-      & > *:not(:last-child) {
+      &>*:not(:last-child) {
         margin-right: 0.5rem;
       }
     }
@@ -301,7 +296,7 @@ $artboard-tab-side-padding: 1rem;
       grid-template-columns: 1fr 1fr;
       grid-column-gap: 0.5rem;
 
-      & > * {
+      &>* {
         display: block;
         width: 100%;
       }
@@ -354,7 +349,7 @@ $artboard-tab-side-padding: 1rem;
         color: $accent-color;
       }
 
-      & + input {
+      &+input {
         margin-top: 4px;
       }
     }
