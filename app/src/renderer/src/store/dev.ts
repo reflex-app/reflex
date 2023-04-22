@@ -9,4 +9,5 @@ export const useDevStore = defineStore('dev', {
       this.showCanvasDebugger = !this.showCanvasDebugger
     },
   },
+  persist: true,
 })

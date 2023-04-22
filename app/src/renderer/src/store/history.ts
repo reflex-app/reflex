@@ -89,4 +89,5 @@ export const useHistoryStore = defineStore('history', {
       this.setCurrentPageIndex('new') // Update the current page
     },
   },
+  persist: true,
 })

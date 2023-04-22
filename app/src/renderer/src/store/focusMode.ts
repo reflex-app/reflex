@@ -36,4 +36,5 @@ export const useFocusMode = defineStore('focusMode', {
       this.activeScreen = Object.assign(this.activeScreen, artboards[index])
     },
   },
+  persist: true,
 })

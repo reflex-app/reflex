@@ -128,4 +128,5 @@ export const useArtboardsStore = defineStore('artboards', {
       }
     },
   },
+  persist: true,
 })
