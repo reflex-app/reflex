@@ -1,4 +1,5 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import path from 'path'
 import target from 'vite-plugin-target'
 
 const isDevMode = process.env.NODE_ENV !== 'production'
