@@ -65,7 +65,6 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive } from 'vue'
 import * as capture from './capture'
 import { useArtboardsStore } from '~/store/artboards'
 import { useSelectedArtboardsStore } from '~/store/selectedArtboards'
@@ -73,7 +72,6 @@ import Button from '../Shared/Button.vue'
 
 const artboards = useArtboardsStore()
 const selectedArtboards = useSelectedArtboardsStore()
-
 
 interface IPrevArtboardHeights {
   height: number
@@ -237,7 +235,7 @@ function deleteMultiple() {
 </script>
 
 <style lang="scss" scoped>
-@import '~@/scss/_variables';
+@import '@/scss/_variables.scss';
 
 #screenshots {
   .modal {
