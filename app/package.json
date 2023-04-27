@@ -11,7 +11,7 @@
     "url": "https://github.com/reflex-app/reflex.git"
   },
   "scripts": {
-    "dev": "concurrently -k \"yarn serve:preload \" \"yarn serve:nuxt\" \"yarn electron:watch\"",
+    "dev": "concurrently -k \"yarn preload:serve \" \"yarn serve:nuxt\" \"yarn electron:watch\"",
     "build": "yarn preload:build && yarn build:nuxt",
     "build:fast": "yarn run preload:build && npx cross-env LOCAL_BUILD=true yarn build:nuxt",
     "build:app": "npx cross-env RELEASE=true yarn build && cd src/main && yarn electron:build && yarn electron:builder",
