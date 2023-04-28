@@ -1,9 +1,7 @@
 import { EventEmitter } from 'events'
 import { BrowserWindow, app } from 'electron'
-const DEV_SERVER_URL = process.env.DEV_SERVER_URL
 const isProduction = process.env.NODE_ENV === 'production'
-// const isDev = process.env.NODE_ENV === 'development'
-import isDev from 'electron-is-dev'
+
 import {
   initialize as initializeRemote,
   enable as enableRemote,
@@ -11,7 +9,7 @@ import {
 import path from 'path'
 
 const preload = path.join(__dirname, 'preload.js')
-const distPath = path.join(__dirname, '../.output/public')
+const distPath = path.join(__dirname, '../../.output/public')
 
 export default class BrowserWinHandler {
   /**
