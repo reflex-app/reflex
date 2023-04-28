@@ -1,3 +1,4 @@
+import isDev from 'electron-is-dev'
 /* globals INCLUDE_RESOURCES_PATH */
 import { app } from 'electron'
 // import { version } from '../../package.json'
@@ -24,8 +25,18 @@ import { getPackageJson } from './util'
    */
   app.on('web-contents-created', (event, contents) => {
     contents.on('will-attach-webview', (event, webPreferences, params) => {
-      // console.log('will-attach-webview')
-      // webPreferences.preload = path.join(__dirname, 'preload.js')
+      // TODO: Add tests to confirm these paths are correct
+      webPreferences.preload = isDev
+        ? path.join(
+            __dirname,
+            '../../',
+            'dist-electron/extraResources/inject.js'
+          )
+        : path.join(
+            process.resourcesPath,
+            '/app/dist-electron/extraResources/inject.js'
+          )
+
       // webPreferences.nodeIntegration = false // Disable Node.js integration inside <webview>
       // webPreferences.webSecurity = false // Disable web security
       // Strip away preload scripts if unused or verify their location is legitimate

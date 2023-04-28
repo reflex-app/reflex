@@ -22,21 +22,9 @@ let data: Data = {
   favicon: '',
 }
 
-if (import.meta.env.MODE === 'development') {
+if (process.env.NODE_ENV === 'development') {
   // Ensure that all modules are loaded
   console.log('Development mode')
-
-  // // Import package.json for the /app, and check that all dependencies are installed
-  // // Electron-builder will only include packages under "dependencies"
-  // const pkgPath = path.join(__dirname, '../../package.json')
-
-  // fs.readFile(pkgPath, 'utf8').then((data) => {
-  //   const pkgJson = JSON.parse(data)
-
-  //   // if (pkgJson.dependencies['html-to-image']) {
-  //   //   console.log('html-to-image is installed')
-  //   // }
-  // })
 }
 
 /// ////////////////////////////
