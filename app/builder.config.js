@@ -2,7 +2,7 @@
 // NOTE: Github Action envs ("INPUT_RELEASE") are all-caps https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#inputs
 
 const path = require('path')
-const root = '../../'
+const root = './'
 
 const getEnv = (name, expectedVal) => {
   // Returns the value for an environment variable (or `null` if it's not defined)
@@ -104,7 +104,7 @@ module.exports = {
   directories: {
     output: path.resolve(root, 'build'),
   },
-  files: ['.output/**/*', 'dist-electron'],
+  files: ['.output/**/*', 'dist-electron', 'package.json'],
   extraResources: [
     'server',
     {
@@ -114,7 +114,10 @@ module.exports = {
   ],
   // Using ASAR
   // https://github.com/puppeteer/puppeteer/issues/2134#issuecomment-408221446
-  asar: true, // Whether or not to package
+  asar: false, // Whether or not to package
+  // asarUnpack: [
+  //   ''
+  // ],
   // asarUnpack: [
   //   'node_modules/reflex-browser-installer/dist/', // binaries installed here
   //   'node_modules/playwright-core', // dependency
