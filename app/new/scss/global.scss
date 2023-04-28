@@ -1,0 +1,44 @@
+@import "variables";
+
+html {
+  box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+html,
+body {
+  font-size: 14px;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+// Adjust default Nuxt divs
+#__nuxt,
+#__layout {
+  height: 100%;
+  width: 100%;
+}
+
+html {
+  position: relative;
+  overflow: hidden;
+}
+
+body {
+  overflow: hidden;
+  font-family: $font-defaults;
+  line-height: 1.5;
+}
+
+a {
+  color: $accent-color;
+  text-decoration: none;
+  user-select: none;
+}
