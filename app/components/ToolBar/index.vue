@@ -1,6 +1,7 @@
 <template>
   <div id="toolbar" :class="{ 'is-fullscreen': state.isFullScreen, 'is-mac': state.isMac }">
     <Button role="ghost" icon="screens" :tight="true" :is-pressed="data.sidebar" title="Screens" @click="toggleSidebar" />
+    <div class="draggable" @dblclick="toggleWindowMaximize" />
     <div v-if="data.artboards.length" id="toolbar__url-container">
       <HistoryControls />
       <div class="bar">
@@ -22,12 +23,11 @@
     </div> -->
     <!-- <UpdateChannel /> -->
     <InstallUpdateButton />
-    <div id="draggable" @dblclick="toggleWindowMaximize" />
+    <div class="draggable" @dblclick="toggleWindowMaximize" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, reactive } from 'vue'
 
 import isElectron from 'is-electron'
 import URLInput from '@/components/ToolBar/URLInput.vue'
@@ -43,15 +43,11 @@ import { useHistoryStore } from '~/store/history'
 import { useGuiStore } from '~/store/gui'
 
 // TODO: Re-connect with Electron
-// import * as remote from '@electron/remote'
-const remote = {};
-
+import * as remote from '@electron/remote'
 
 const artboards = useArtboardsStore()
 const history = useHistoryStore()
 const gui = useGuiStore()
-
-const debounce = require('lodash.debounce')
 
 const data = reactive({
   artboards: computed(() => artboards.list),
@@ -77,9 +73,9 @@ onMounted(() => {
     toggleFullscreen()
 
     // Listen for fullscreen event
-    // const currentWindow = remote.getCurrentWindow()
-    // currentWindow.on('enter-full-screen', toggleFullscreen)
-    // currentWindow.on('leave-full-screen', toggleFullscreen)
+    const currentWindow = remote.getCurrentWindow()
+    currentWindow.on('enter-full-screen', toggleFullscreen)
+    currentWindow.on('leave-full-screen', toggleFullscreen)
   }
 })
 
@@ -155,24 +151,24 @@ function toggleFullscreen() {
     }
   }
 
-  #draggable {
+  .draggable {
     -webkit-app-region: drag; // Allow dragging
-    position: absolute;
-    z-index: -1;
-    width: 100%;
+    // position: absolute;
+    // z-index: -1;
+    // width: 100%;
+    width: auto;
+    flex: 1;
     height: 100%;
     height: $gui-title-bar-height;
   }
 
-  // & > *:not(:first-child) {
-  //   margin-left: 16px;
-  // }
-
   #toolbar__url-container {
+    -webkit-app-region: no-drag; // Allow dragging
     position: relative;
     margin: 0 auto;
     display: flex;
     align-items: center;
+    -webkit-app-region: no-drag !important; // Disable dragging
 
     @media screen and (max-width: 768px) {
       flex: 1 0 auto;
