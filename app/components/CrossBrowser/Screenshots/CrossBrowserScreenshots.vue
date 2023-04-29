@@ -5,7 +5,8 @@
     <div class="cbs__results">
       <div v-for="browserName in loadingSorted" :key="browserName.id">
         <div class="loading-skeleton" :style="{ height: props.height + 'px', width: props.width + 'px' }">
-          <img :src="require(`~/assets/browsers/${browserName}.svg`)" />
+          <!-- <img :src="require(`~/assets/browsers/${browserName}.svg`)" /> -->
+          <Icon :name="`browsers/${browserName}`" />
           {{ browserName }}
         </div>
       </div>
@@ -25,87 +26,95 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
 // import { computed } from 'vue'
 // import Trigger from './Trigger'
+import { useHistoryStore } from '@/store/history'
 import useCrossBrowserScreenshots from './UseCrossBrowserScreenshots'
-export default {
-  // components: {
-  //   Trigger,
-  // },
-  props: {
-    height: {
-      type: Number,
-      default: 100,
-    },
-    width: {
-      type: Number,
-      default: 100,
-    },
-    x: {
-      type: Number,
-      default: 0,
-    },
-    y: {
-      type: Number,
-      default: 0,
-    },
+import Icon from '@/components/Shared/Icon.vue'
+
+const { $bus } = useNuxtApp()
+
+const props = defineProps({
+  height: {
+    type: Number,
+    default: 100,
   },
-  setup(props, { emit, root: { $store } }) {
-    const { state, takeCrossBrowserScreenshot } = useCrossBrowserScreenshots()
-
-    // function showSkeletonLoader(count) {
-    //   for (let i in count) {
-    //     state.screenshots.push({ type: 'webkit', img: '' })
-    //   }
-    // }
-
-    // function hideSkeletonLoader(count) {
-    //   for (let i in count) {
-    //     state.screenshots.splice(i, 1)
-    //   }
-    // }
-
-    const loadingSorted = computed(() => {
-      function compare(a, b) {
-        if (a < b) return -1
-        if (a > b) return 1
-        return 0
-      }
-
-      return state.loading.sort(compare)
-    })
-
-    const screenshotsSorted = computed(() => {
-      function compare(a, b) {
-        if (a.type < b.type) return -1
-        if (a.type > b.type) return 1
-        return 0
-      }
-
-      return state.screenshots.sort(compare)
-    })
-
-    async function getScreenshots() {
-      const url = $store.state.history.currentPage.url
-
-      const payload = { ...props, browsers: ['firefox', 'webkit'], url }
-      console.log(payload)
-      await takeCrossBrowserScreenshot(payload)
-
-      // Emit an event to let parent know it has finished
-      emit('loaded', true)
-    }
-
-    return {
-      // ...toRefs(state), // Returns invidual parts of the state
-      loadingSorted,
-      screenshotsSorted,
-      props,
-      getScreenshots,
-    }
+  width: {
+    type: Number,
+    default: 100,
   },
+  x: {
+    type: Number,
+    default: 0,
+  },
+  y: {
+    type: Number,
+    default: 0,
+  },
+  artboardId: {
+    type: String,
+    default: '',
+  }
+})
+
+const emit = defineEmits(['loaded'])
+
+onMounted(() => {
+  $bus.on('cross-browser:take-screenshots', (id: string) => {
+    console.log(id, props.artboardId);
+
+    if (id === props.artboardId) {
+      getScreenshots()
+    }
+  })
+})
+
+const { state, takeCrossBrowserScreenshot } = useCrossBrowserScreenshots()
+
+// function showSkeletonLoader(count) {
+//   for (let i in count) {
+//     state.screenshots.push({ type: 'webkit', img: '' })
+//   }
+// }
+
+// function hideSkeletonLoader(count) {
+//   for (let i in count) {
+//     state.screenshots.splice(i, 1)
+//   }
+// }
+
+const loadingSorted = computed(() => {
+  function compare(a, b) {
+    if (a < b) return -1
+    if (a > b) return 1
+    return 0
+  }
+
+  return state.loading.sort(compare)
+})
+
+const screenshotsSorted = computed(() => {
+  function compare(a, b) {
+    if (a.type < b.type) return -1
+    if (a.type > b.type) return 1
+    return 0
+  }
+
+  return state.screenshots.sort(compare)
+})
+
+async function getScreenshots() {
+  const url = useHistoryStore().currentPage.url
+
+  const payload = { ...props, browsers: ['firefox', 'webkit'], url }
+  console.log(payload)
+  await takeCrossBrowserScreenshot(payload)
+
+  // Emit an event to let parent know it has finished
+  emit('loaded', true)
 }
+
 </script>
 
 <style lang="scss" scoped>
