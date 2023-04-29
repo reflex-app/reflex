@@ -91,14 +91,9 @@
 </template>
 
 <script setup lang="ts">
-// import { useIpcRenderer } from '@vueuse/electron'
-// import { ipcRenderer } from 'electron';
-// import { app } from '@electron/remote'
-// const ipcRenderer = useIpcRenderer()
+import { app } from '@electron/remote'
 
-// Get the name from the main process
-// TODO: Use ipcRenderer.invoke<string>('get-app-name')
-const appName = 'Reflex'
+const appName = app.name
 
 const systemMetaKeyName = computed(() => {
   // Show "CMD" or "CTRL" based on the user's OS
