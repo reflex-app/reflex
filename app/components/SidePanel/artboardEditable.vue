@@ -182,7 +182,7 @@ export default {
       this.$root.$panzoom.pan(-artboard.offsetLeft, artboard.offsetTop)
     },
     rightClickMenu(e, artboard) {
-      rightClickMenu(this.$store, {
+      rightClickMenu({
         title: artboard.title,
         id: artboard.id,
         width: artboard.width,
