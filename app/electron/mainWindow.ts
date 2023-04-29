@@ -1,10 +1,11 @@
 import path from 'path'
-import { app, ipcMain, shell } from 'electron'
+import { BrowserWindowConstructorOptions, app, ipcMain, shell } from 'electron'
 import BrowserWinHandler from './BrowserWinHandler'
 import windowPosition from './windowPosition'
 // import browserInstaller from './browser-installer'
 import { setMenu } from './menu'
 import { init as initUpdates } from './updates'
+import browserInstaller from './browser-installer'
 
 const log = require('electron-log')
 const isDev = require('electron-is-dev')
@@ -57,14 +58,14 @@ export default function init() {
     // Show the app once it's ready
     browserWindow.once('ready-to-show', () => {
       browserWindow.show()
-    })
 
-    // Check for updates...
-    initUpdates(browserWindow)
+      // Check for updates...
+      initUpdates(browserWindow)
+    })
 
     // Check for browser installations
     // TODO Fix errors
-    // browserInstaller(winHandler)
+    browserInstaller(winHandler)
 
     // Reload when requested by the renderer process
     ipcMain.handle('reload-window', () => {

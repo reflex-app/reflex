@@ -1,20 +1,10 @@
-// import { dialog, webContents, getCurrentWindow } from '@electron/remote'
+import { clipboard, nativeImage, shell } from 'electron'
+import { dialog, webContents, getCurrentWindow } from '@electron/remote'
 import { defaultErrorHandler } from '@/utils/error'
 import isElectron from 'is-electron'
-import path from 'path-browserify'
+import path from 'path'
 import fs from 'fs'
 import moment from 'moment'
-
-// TODO: Re-connect to Electron's APIs
-// import { clipboard, nativeImage, shell } from 'electron'
-const clipboard = {}
-const nativeImage = {}
-const shell = {}
-
-// TODO: Re-connect to Electron's APIs
-const dialog = {}
-const webContents = {}
-const getCurrentWindow = {}
 
 // Returns a WebView
 export function getWebview(id) {
