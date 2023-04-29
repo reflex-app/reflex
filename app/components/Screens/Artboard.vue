@@ -4,9 +4,9 @@
   <!-- ... and then we use Selection to select just one artboard -->
   <div class="artboard-container" :class="{ 'panzoom-exclude': state.panzoomEnabled }">
     <div v-show="isVisible" ref="artboard" :artboard-id="props.id" class="artboard" :class="{
-      'is-hover': state.isHover,
-      'is-selected': state.isSelected,
-    }" @mouseover="hoverStart(props.id)" @mouseout="hoverEnd(props.id)" @click.right="rightClickHandler()">
+        'is-hover': state.isHover,
+        'is-selected': state.isSelected,
+      }" @mouseover="hoverStart(props.id)" @mouseout="hoverEnd(props.id)" @click.right="rightClickHandler()">
       <div class="artboard__top">
         <div>
           <span class="title">{{ props.title }}</span>
@@ -24,26 +24,19 @@
       </div>
       <div class="artboard__keypoints" />
       <div ref="artboardResizable" class="artboard__content" :class="{
-        'layout--horizontal': state.horizontalLayout,
-        'is-hover': state.isHover,
-        'is-selected': state.isSelected,
-      }" :style="{ height: props.height + 'px', width: props.width + 'px' }">
+          'layout--horizontal': state.horizontalLayout,
+          'is-hover': state.isHover,
+          'is-selected': state.isSelected,
+        }" :style="{ height: props.height + 'px', width: props.width + 'px' }">
         <div class="content__frame" @mousedown="$emit('clicked', props.id, $event)">
           <WebPage :id="props.id" :artboard-id="props.id" ref="frame"
             :allow-interactions="state.canInteractWithWebContext" class="webview" @loadstart="state.isLoading = true"
             @loadend="state.isLoading = false" @scroll="updateScrollPosition" />
         </div>
-
-        <!-- TODO: Re-enable -->
-        <!-- <div class="artboard__cross-browser-screenshots">
-          <CrossBrowserScreenshots
-            ref="cross-browser-DOM"
-            :height="height"
-            :width="width"
-            :x="scrollPosition.x"
-            :y="scrollPosition.y"
-          />
-        </div> -->
+        <div class="artboard__cross-browser-screenshots">
+          <CrossBrowserScreenshots ref="cross-browser-DOM" :height="height" :width="width" :x="scrollPosition.x"
+            :y="scrollPosition.y" :artboard-id="props.id" />
+        </div>
         <div v-show="state.isHover" class="artboard__handles">
           <div class="handle_right" title="Resize" @mousedown="triggerResize($event, 'horizontal')" />
           <div class="handle_bottom" title="Resize" @mousedown="triggerResize($event, 'vertical')" />
@@ -198,7 +191,7 @@ function updateScrollPosition({ x, y }) {
 }
 
 function rightClickHandler() {
-  rightClickMenu(this.$store, {
+  rightClickMenu({
     title: props.title,
     id: props.id,
     width: props.width,
