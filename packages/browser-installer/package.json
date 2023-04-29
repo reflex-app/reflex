@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "yarn clean && webpack --watch --mode development",
     "build": "yarn clean & webpack --mode production",
-    "browsers": "yarn run playwright-var node .src/index.js",
+    "browsers": "yarn run playwright-var && npx @digitak/esrun ./src/index.ts",
     "test": "yarn run playwright-var node ./test.js",
     "clean": "rimraf ./dist/**/*",
     "release": "node ./scripts/release.js",
