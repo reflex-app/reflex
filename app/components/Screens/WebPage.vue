@@ -1,10 +1,9 @@
 <template>
-  <webview ref="frame" class="frame" :preload="injectScriptPath" v-bind="webviewOptions"
-    :electronConfig="webpreferences" />
+  <webview ref="frame" class="frame" v-bind="webviewOptions" :electronConfig="webpreferences" />
 </template>
 
 <script lang="ts">
-import path from 'path-browserify'
+import path from 'path'
 import { mapState } from 'pinia'
 import { state as reflexState, setPublisher } from '~/mixins/reflex-sync'
 import { useHistoryStore } from '~/store/history'
@@ -46,11 +45,11 @@ export default {
       // TODO add a test to make sure this file exists
 
       const isDev = runtimeConfig.public.DEV
-      const suffix = 'dist/extraResources/index.js'
+      const suffix = 'dist-electron/extraResources/index.js'
 
       const scriptPath = isDev
-        ? 'file://' + path.join(process.resourcesPath, '../../', suffix) // Path in dev
-        : 'file://' + path.join(process.resourcesPath, './app/', suffix) // Path in production
+        ? 'file://' + path.join(process.resourcesPath, suffix) // Path in dev
+        : 'file://' + path.join(process.resourcesPath, suffix) // Path in production
 
       return scriptPath
     },
@@ -142,7 +141,7 @@ export default {
       frame.addEventListener('will-navigate', this.willNavigate)
 
       // Listen for incoming events
-      this.$bus.$on('REFLEX_SYNC', this.syncResponder)
+      this.$bus.on('REFLEX_SYNC', this.syncResponder)
     },
     unbindEventListeners() {
       // Remove navigation event
@@ -150,7 +149,7 @@ export default {
       frame.removeEventListener('will-navigate', this.willNavigate)
 
       // Detach from the frame. Important!
-      this.$bus.$off('REFLEX_SYNC', this.syncResponder)
+      this.$bus.off('REFLEX_SYNC', this.syncResponder)
     },
     syncResponder(args) {
       // Remove navigation event
@@ -324,7 +323,7 @@ export default {
           setPublisher(this.id) // Update the publisher
 
           // Only capture actions while allowed
-          this.$bus.$emit('REFLEX_SYNC', {
+          this.$bus.emit('REFLEX_SYNC', {
             ...data,
           })
         }
