@@ -42,8 +42,14 @@ onMounted(async () => {
     return i[0] === props.name;
   });
 
+  const fn = arr[0][1]
+
+  if (!fn) {
+    console.error('Icon not found', props.name)
+  }
+
   // Set icon value
-  icon.value = await arr[0][1]?.().then((res: any) => {
+  icon.value = await fn?.().then((res: any) => {
     return res;
   });
 })
