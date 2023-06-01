@@ -8,10 +8,7 @@
 <script lang="ts">
 import isElectron from 'is-electron'
 import ToolBar from '@/components/ToolBar/index.vue'
-import { useIpcRenderer } from '@vueuse/electron'
-
-// Connect w/ Electron
-const ipcRenderer = useIpcRenderer()
+import { ipcRenderer } from 'electron'
 
 export default {
   components: {

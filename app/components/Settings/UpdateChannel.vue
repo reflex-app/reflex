@@ -10,10 +10,7 @@
 
 <script>
 import { ref } from 'vue'
-import { useIpcRenderer } from '@vueuse/electron'
-
-// Connect w/ Electron
-const ipcRenderer = useIpcRenderer()
+import { ipcRenderer } from 'electron'
 
 export default {
   setup() {
