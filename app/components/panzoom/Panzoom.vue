@@ -15,8 +15,8 @@
               ">
         <!-- Now we have the real panzoom content inside: -->
         <div class="panzoom-inner" :class="{
-            'dev-visual-debugger': showCanvasDebugger,
-          }">
+          'dev-visual-debugger': showCanvasDebugger,
+        }">
           <slot />
         </div>
       </div>
@@ -34,7 +34,9 @@ import {
   nextTick,
 } from 'vue'
 import Panzoom, { PanzoomObject } from '@panzoom/panzoom'
-import { useIpcRenderer } from '@vueuse/electron'
+
+import { ipcRenderer } from 'electron'
+
 import isElectron from 'is-electron'
 import PanzoomControls from './PanzoomControls.vue'
 import { useInteractionStore } from '~/store/interactions'
@@ -45,7 +47,6 @@ import { start } from 'repl'
 import { initialPanZoom } from './panzoomFns'
 
 // Connect w/ Electron
-const ipcRenderer = useIpcRenderer()
 
 const interactions = useInteractionStore()
 const devStore = useDevStore()
@@ -207,8 +208,8 @@ function enableEventListeners() {
 
   // Listen for menu bar events
   if (isElectron()) {
-    ipcRenderer.on('menu_zoom-in', () => instance?.zoomIn)
-    ipcRenderer.on('menu_zoom-out', () => instance?.zoomOut)
+    ipcRenderer.on('menu_zoom-in', () => instance?.zoomIn())
+    ipcRenderer.on('menu_zoom-out', () => instance?.zoomOut())
     // ipcRenderer.on("menu_zoom-to-fit", this.panzoomInstance.fitToScreen);
     ipcRenderer.on('menu_show-developer-canvas-debugger', () => {
       devStore.toggleCanvasDebugger()
