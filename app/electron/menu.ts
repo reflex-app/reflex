@@ -1,10 +1,4 @@
-import {
-  app,
-  Menu,
-  MenuItem,
-  MenuItemConstructorOptions,
-  shell,
-} from 'electron'
+import { app, Menu, MenuItem, shell } from 'electron'
 import isDev from 'electron-is-dev'
 import { checkForUpdates } from './updates/check-for-update'
 
@@ -68,7 +62,7 @@ export function setMenu(window: Electron.BrowserWindow) {
             },
           ],
         }
-      : null,
+      : {},
     {
       label: 'Edit',
       submenu: [
