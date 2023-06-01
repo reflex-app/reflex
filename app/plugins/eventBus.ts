@@ -2,7 +2,6 @@
  * Event bus used by `<WebView>` to communicate with the Nuxt app (renderer process)
  */
 // via https://dev.to/israelortuno/event-bus-pattern-in-nuxt-3-with-full-typescript-support-1okp
-import nuxtConfig from '@/nuxt.config'
 import mitt from 'mitt'
 
 type ApplicationEvents = {
@@ -14,7 +13,7 @@ export default defineNuxtPlugin((nuxtApp) => {
   // Then we just inform mitt about our event types
   const emitter = mitt<ApplicationEvents>()
 
-  if (nuxtConfig.runtimeConfig?.public?.DEV) {
+  if (nuxtApp.$config.public.DEV) {
     emitter.on('*', (type, e) => console.log(type, e))
   }
 
