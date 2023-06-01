@@ -91,4 +91,12 @@ export default defineNuxtConfig({
       }
     },
   },
+
+  // Tailwind CSS
+  postcss: {
+    plugins: {
+      tailwindcss: {},
+      autoprefixer: {},
+    },
+  },
 })

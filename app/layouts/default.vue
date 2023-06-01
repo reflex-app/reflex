@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="app-container">
     <ToolBar />
     <slot />
   </div>
@@ -40,7 +40,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.container {
+.app-container {
   height: 100%;
   width: 100%;
 }
