@@ -221,15 +221,18 @@ function deleteMultiple() {
     return
   }
 
-  console.info(`Deleting ${count} artboards...`);
+  // display a confirmation dialog asking if they're sure they want to delete
+  if (confirm(`Delete ${count} artboard(s)?`)) {
+    console.info(`Deleting ${count} artboards...`);
 
-  // Delete artboards
-  for (const id of list) {
-    selectedArtboards.remove(id)
-    artboards.removeArtboard(id) // Delete the artboard
-    count-- // Decrement count
+    // Delete artboards
+    for (const id of list) {
+      selectedArtboards.remove(id)
+      artboards.removeArtboard(id) // Delete the artboard
+      count-- // Decrement count
 
-    console.info(`Deleted ${id}. ${count} remaining.`, list)
+      console.info(`Deleted ${id}. ${count} remaining.`, list)
+    }
   }
 }
 </script>
