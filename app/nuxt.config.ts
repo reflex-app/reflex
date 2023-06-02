@@ -65,17 +65,19 @@ export default defineNuxtConfig({
       },
     ],
     '@pinia/nuxt', // Use Pinia w/ Nuxt 3
-    '@pinia-plugin-persistedstate/nuxt', // Persisted state w/ Pinia + Nuxt (Nuxt 3)
+    [
+      // Persisted state w/ Pinia + Nuxt (Nuxt 3)
+      '@pinia-plugin-persistedstate/nuxt',
+      {
+        storage: 'localStorage', // Use localStorage as default storage
+      },
+    ],
   ],
   // Vue settings
   vue: {
     compilerOptions: {
       isCustomElement: (tag) => ['webview'].includes(tag),
     },
-  },
-  // Pinia Store <> localStorage persistence
-  piniaPersistedstate: {
-    storage: 'localStorage', // Use localStorage as default storage
   },
   hooks: {
     // Remove aliases to only have one
