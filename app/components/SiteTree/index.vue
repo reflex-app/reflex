@@ -1,11 +1,9 @@
 <template>
-  <div v-if="isVisible" class="container mx-auto">
-    <hr class="my-4" />
-    <div class="absolute z-[1000] top-0 left-0 bg-white w-full h-full flex flex-wrap place-content-center">
-      <div class="h-max max-w-3xl w-full">
-        <h1 class="text-4xl mb-4">Sites</h1>
-        <Tree />
-      </div>
+  <div v-if="isVisible"
+    class="absolute z-[1000] top-0 left-0 bg-white/80 w-full h-full flex flex-wrap place-content-center">
+    <div class="h-max max-w-3xl w-full bg-white rounded-lg p-16 shadow-xl">
+      <h1 class="text-4xl mb-4">Sites</h1>
+      <Tree />
     </div>
   </div>
 </template>
