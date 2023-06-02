@@ -28,8 +28,12 @@ export default async function run(window) {
   log.info('Running browser installer...')
 
   // Should add logging here
-  await inst.run().catch((err) => {
-    log.error(err)
-  })
-  console.log('Done installing browsers!')
+  await inst
+    .run()
+    .then(() => {
+      console.log('Done installing browsers!')
+    })
+    .catch((err: unknown) => {
+      log.error(err)
+    })
 }
