@@ -1,6 +1,12 @@
 <template>
   <div id="toolbar" :class="{ 'is-fullscreen': state.isFullScreen, 'is-mac': state.isMac }">
-    <Button role="ghost" icon="screens" :tight="true" :is-pressed="data.sidebar" title="Screens" @click="toggleSidebar" />
+    <div class="flex gap-2">
+      <Button role="ghost" icon="screens" :tight="true" :is-pressed="data.sidebar" title="Screens"
+        @click="toggleSidebar" />
+      <div @click="toggleSiteTree()" class="cursor-pointer border border-gray-300 rounded-md p-1 flex place-items-center">
+        <Icon name="star" />
+      </div>
+    </div>
     <div class="draggable" @dblclick="toggleWindowMaximize" />
     <div v-if="data.artboards.length" id="toolbar__url-container">
       <HistoryControls />
@@ -22,18 +28,20 @@
       <SwitchMode />
     </div> -->
     <!-- <UpdateChannel /> -->
-    <InstallUpdateButton />
+    <div class="flex justify-end">
+      <InstallUpdateButton />
+    </div>
     <div class="draggable" @dblclick="toggleWindowMaximize" />
   </div>
 </template>
 
 <script setup lang="ts">
-
 import isElectron from 'is-electron'
 import URLInput from '@/components/ToolBar/URLInput.vue'
 import HistoryControls from '@/components/ToolBar/HistoryControls.vue'
 import InstallUpdateButton from '@/components/ToolBar/InstallUpdateButton.vue'
 // import SwitchMode from '@/components/ToolBar/SwitchMode.vue'
+
 import UpdateChannel from '@/components/Settings/UpdateChannel.vue'
 import Artboard from '@/components/Screens/Artboard.vue'
 
@@ -66,6 +74,10 @@ const state = reactive({
     return process.platform === 'darwin'
   },
 })
+
+function toggleSiteTree() {
+  gui.toggleGui('siteTree')
+}
 
 onMounted(() => {
   if (isElectron()) {

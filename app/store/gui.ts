@@ -4,6 +4,7 @@ interface State {
   sidebar: boolean
   focusMode: boolean
   discoMode: boolean
+  siteTree: boolean
 }
 
 export const useGuiStore = defineStore('gui', {
@@ -11,10 +12,11 @@ export const useGuiStore = defineStore('gui', {
     sidebar: true,
     focusMode: false,
     discoMode: false,
+    siteTree: false,
   }),
   getters: {},
   actions: {
-    toggleSidebar(bool?) {
+    toggleSidebar(bool?: boolean) {
       if (!bool) bool = ''
 
       if (bool === true) {
@@ -25,7 +27,7 @@ export const useGuiStore = defineStore('gui', {
         this.sidebar = !this.sidebar
       }
     },
-    toggleGui(key: string) {
+    toggleGui(key: keyof State) {
       // Reverse the boolean value of the state key
       this[key] = !this[key]
     },

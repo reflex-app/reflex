@@ -9,8 +9,6 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, defineProps } from 'vue'
-
 const props = defineProps({
   instance: {
     type: Object,

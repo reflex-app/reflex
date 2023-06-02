@@ -3,8 +3,9 @@ import { dialog, webContents, getCurrentWindow } from '@electron/remote'
 import { defaultErrorHandler } from '@/utils/error'
 import isElectron from 'is-electron'
 import path from 'path'
-import fs from 'fs'
+import * as fs from 'fs/promises'
 import moment from 'moment'
+import { Artboard, useArtboardsStore } from '@/store/artboards'
 
 // Returns a WebView
 export function getWebview(id) {
@@ -23,8 +24,14 @@ export function getWebViewContents(id) {
   return webContents.fromId(webview.getWebContentsId())
 }
 
-export async function capture(id, title, screenshotPath) {
-  async function saveScreenshot(screenshot) {
+export async function capture(
+  id: string | number,
+  title: string,
+  screenshotPath: string
+) {
+  async function saveScreenshot(
+    screenshot: string | NodeJS.ArrayBufferView | Buffer
+  ) {
     if (!screenshotPath) {
       // Case: no path set yet (single screenshot save)
       // Prompt location to save screenshot
@@ -33,13 +40,13 @@ export async function capture(id, title, screenshotPath) {
           properties: ['openFile', 'openDirectory', 'createDirectory'],
         })
 
-        await fileSelection.then((result) => {
+        await fileSelection.then(async (result) => {
           console.log(result)
 
           if (result.canceled || !result.filePaths.length) return false
 
           try {
-            makeFile(result.filePaths[0], screenshot)
+            await makeFile(result.filePaths[0], title, screenshot)
           } catch (e) {
             // Nothing was selected
             console.log('No file or directory selected')
@@ -48,31 +55,19 @@ export async function capture(id, title, screenshotPath) {
       }
     } else {
       // Case: already has a path (multi-save)
-      makeFile(screenshotPath, screenshot)
+      return await makeFile(screenshotPath, title, screenshot)
     }
   }
 
-  // Create the file
-  function makeFile(filePath, screenshot) {
-    const timestamp = moment().format('YYYY-MM-D_h-mm-ssa')
-    const fullFilePath = path.join(filePath, `${title}_${timestamp}.png`)
-
-    title ? (title = `_${title}_`) : (title = '')
-
-    fs.writeFile(fullFilePath, screenshot, (err) => {
-      if (err) throw err
-
-      // Open in Finder
-      shell.showItemInFolder(fullFilePath)
-    })
-  }
+  let filePath
 
   try {
     // Capture the <webview>
     // Loop through the selected Webviews
     const image = await useElectronCaptureAPI(id)
     if (!image) throw new Error('Could not capture screenshot')
-    await saveScreenshot(image.toPNG())
+
+    filePath = await saveScreenshot(image.toPNG())
 
     // TODO bug: capturePage only captures part of the WebView that is within the window's viewport...
     // https://github.com/electron/electron/issues/8587
@@ -81,6 +76,10 @@ export async function capture(id, title, screenshotPath) {
     // TODO add an option to hide scrollbars-- this is easily done by `webview.capturePage(rect)`
   } catch (err) {
     defaultErrorHandler(err)
+  }
+
+  return {
+    filePath,
   }
 }
 
@@ -110,28 +109,50 @@ export async function captureMultiple(ids) {
 }
 
 // Capture ALL the screens
-export function captureAll(vm) {
+export async function captureAll({ url }: { url: string }) {
+  // 1. Get the file path to save all to
+  // 2. Capture each artboard & save it
+  const artboards = useArtboardsStore()
   const mainWindow = getCurrentWindow()
 
-  dialog
-    // 1. Get the file path to save all to
-    .showOpenDialog(mainWindow, {
-      properties: ['openFile', 'openDirectory', 'createDirectory'],
-    })
-    // 2. Capture each artboard & save it
-    .then(async (result) => {
-      if (result.canceled) return
-      if (result.filePaths.length) {
-        const filePath = result.filePaths[0]
+  // 1. Capture the path to save all
+  const fileSelection = dialog.showOpenDialog({
+    properties: ['openFile', 'openDirectory', 'createDirectory'],
+  })
 
-        for (let i = 0; i < vm.artboards.length; i++) {
-          await capture(i, `${vm.artboards[i].title}_${i}`, filePath)
+  // Strip the protocol from the URL, and convert "/" to "-"
+  url = url.replace(/(^\w+:|^)\/\//, '').replace(/\//g, '-')
+
+  await fileSelection.then(async (result) => {
+    if (result.canceled || !result.filePaths.length) return false
+
+    try {
+      // Capture each & save it
+      const filePath = result.filePaths[0]
+
+      const files = []
+
+      for (let i = 0; i < artboards.list.length; i++) {
+        const { filePath: outputPath } = await capture(
+          artboards.list[i].id,
+          `${url}_${artboards.list[i].title}_${i}`,
+          filePath
+        )
+
+        if (outputPath) {
+          files.push(outputPath)
+        } else {
+          console.warn('No file path returned')
         }
-
-        return filePath
       }
-    })
-    .catch((err) => defaultErrorHandler(err))
+
+      // Open in Finder
+      // TODO: Highlight ALL the files instead of just one
+      shell.showItemInFolder(files[0])
+    } catch (err) {
+      defaultErrorHandler(err)
+    }
+  })
 }
 
 /**
@@ -146,7 +167,7 @@ async function useElectronCaptureAPI(id: string) {
     // Loop through the selected Webviews
     console.log('Taking screenshot with Electron API')
     const webview = getWebViewContents(id)
-    const image = await webview.capturePage()
+    const image = await webview?.capturePage()
     return image
   } catch (err) {
     defaultErrorHandler(err)
@@ -352,6 +373,25 @@ export async function copyToClipboard(id: any, options: ClipboardOptions) {
 
     // Done
     return true
+  } catch (err) {
+    defaultErrorHandler(err)
+  }
+}
+
+// Create the file
+async function makeFile(
+  filePath: string,
+  title: string,
+  screenshot: string | NodeJS.ArrayBufferView
+) {
+  const timestamp = moment().format('YYYY-MM-D_h-mm-ssa')
+  const fullFilePath = path.join(filePath, `${timestamp}_${title}.png`)
+
+  title ? (title = `_${title}_`) : (title = '')
+
+  try {
+    await fs.writeFile(fullFilePath, screenshot)
+    return fullFilePath
   } catch (err) {
     defaultErrorHandler(err)
   }
