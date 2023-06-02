@@ -1,43 +1,45 @@
 <template>
   <div class="app-container">
     <ToolBar />
+    <SiteTree />
     <slot />
   </div>
 </template>
 
 <script lang="ts">
-import isElectron from 'is-electron'
-import ToolBar from '@/components/ToolBar/index.vue'
-import { ipcRenderer } from 'electron'
+import { onMounted } from 'vue';
+import isElectron from 'is-electron';
+import ToolBar from '@/components/ToolBar/index.vue';
+import { ipcRenderer } from 'electron';
+import SiteTree from '@/components/SiteTree/index.vue';
 
 export default {
   components: {
     ToolBar,
+    SiteTree,
   },
-  mounted() {
-    // TODO: Add test here
+  setup() {
+    onMounted(() => {
+      if (isElectron()) {
+        ipcRenderer.on('menu_reset-app', () => {
+          if (
+            confirm(
+              `Are you sure you want to reset all data and settings? Click "OK" to reset.`
+            )
+          ) {
+            window.localStorage.clear();
 
-    // Global listeners
-    if (isElectron()) {
-      ipcRenderer.on('menu_reset-app', () => {
-        if (
-          confirm(
-            `Are you sure you want to reset all data and settings? Click "OK" to reset.`
-          )
-        ) {
-          window.localStorage.clear()
-
-          setTimeout(() => {
-            // TODO: Add typings for `main` and `renderer` to 
-            // ensure that the channel name is correct
-            ipcRenderer.invoke('reload-window')
-          }, 150)
-        }
-      })
-    }
+            setTimeout(() => {
+              ipcRenderer.invoke('reload-window');
+            }, 150);
+          }
+        });
+      }
+    });
   },
-}
+};
 </script>
+
 
 <style lang="scss" scoped>
 .app-container {
