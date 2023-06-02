@@ -30,11 +30,12 @@
       </div>
       <div class="ml-4">
         <input v-model="newPath[url.site]" @keyup.enter="addPath(url.site, newPath[url.site]); newPath[url.site] = ''"
-          placeholder="Add path" class="w-full" />
+          placeholder="Add sub-path (e.g. /about)" class="w-full" />
         <hr />
       </div>
     </div>
-    <input v-model="newSite" @keyup.enter="addSite(newSite); newSite = ''" placeholder="Add site" />
+    <input v-model="newSite" @keyup.enter="addSite(newSite); newSite = ''"
+      placeholder="Enter site URL (e.g. google.com)" />
   </div>
 </template>
 
