@@ -22,18 +22,21 @@
       <SwitchMode />
     </div> -->
     <!-- <UpdateChannel /> -->
+    <div @click="toggleSiteTree()">
+      Sites
+    </div>
     <InstallUpdateButton />
     <div class="draggable" @dblclick="toggleWindowMaximize" />
   </div>
 </template>
 
 <script setup lang="ts">
-
 import isElectron from 'is-electron'
 import URLInput from '@/components/ToolBar/URLInput.vue'
 import HistoryControls from '@/components/ToolBar/HistoryControls.vue'
 import InstallUpdateButton from '@/components/ToolBar/InstallUpdateButton.vue'
 // import SwitchMode from '@/components/ToolBar/SwitchMode.vue'
+
 import UpdateChannel from '@/components/Settings/UpdateChannel.vue'
 import Artboard from '@/components/Screens/Artboard.vue'
 
@@ -66,6 +69,10 @@ const state = reactive({
     return process.platform === 'darwin'
   },
 })
+
+function toggleSiteTree() {
+  gui.toggleGui('siteTree')
+}
 
 onMounted(() => {
   if (isElectron()) {

@@ -1,6 +1,7 @@
 <template>
   <div id="main-view">
     <DevModeHud />
+    <SiteTree />
     <SidePanel />
     <Screenshots />
     <Panzoom>
@@ -17,6 +18,7 @@ import Screenshots from '@/components/Screenshot/index.vue'
 import Artboards from '@/components/Screens/Artboards.vue'
 import useEventHandler from '@/components/Screens/useEventHandler'
 import DevModeHud from '~/components/DevModeHud.vue'
+import SiteTree from '@/components/SiteTree/index.vue'
 
 const { init } = useEventHandler() // init event handling
 
