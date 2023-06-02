@@ -1,5 +1,5 @@
 <template>
-  <div v-if="icon" class="icon" :class="iconColorHandler" v-html="icon" />
+  <div v-if="icon" class="icon" :class="iconColorHandler, `h-[${props.height}] w-[${props.width}]`" v-html="icon" />
 </template>
 
 <script setup lang="ts">
@@ -13,6 +13,14 @@ const props = defineProps({
   color: {
     type: String,
     default: 'dark'
+  },
+  height: {
+    type: String,
+    default: '36px'
+  },
+  width: {
+    type: String,
+    default: '36px'
   }
 })
 
@@ -42,16 +50,17 @@ onMounted(async () => {
     return i[0] === props.name;
   });
 
-  const fn = arr[0][1]
+  if (arr.length) {
+    const fn = arr[0][1]
 
-  if (!fn) {
+    // Set icon value
+    icon.value = await fn?.().then((res: any) => {
+      return res;
+    });
+  } else {
     console.error('Icon not found', props.name)
   }
 
-  // Set icon value
-  icon.value = await fn?.().then((res: any) => {
-    return res;
-  });
 })
 
 
@@ -61,9 +70,10 @@ onMounted(async () => {
 @import '@/scss/_variables';
 
 .icon {
-  display: inline-block;
-  height: 24px;
-  width: 24px;
+  display: inline-flex;
+  place-items: center;
+  // height: 24px;
+  // width: 24px;
   // mask-repeat: no-repeat;
   // mask-position: center;
   // // TODO The following should be autoprefixed...

@@ -11,10 +11,8 @@ export class BaseError extends Error {
   }
 }
 
-export function defaultErrorHandler(err) {
+export function defaultErrorHandler(err: unknown) {
   if (err instanceof Error) {
-    return {
-      message: `Error: (${err.message})`,
-    }
+    console.error(`Error: (${err.message})`)
   }
 }

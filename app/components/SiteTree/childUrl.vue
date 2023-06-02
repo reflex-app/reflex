@@ -21,6 +21,9 @@
               </option>
             </select>
           </div>
+          <button @click="screenshotAll(url.site + subPath.fullPath)" class="text-blue-500">
+            <Icon name="camera" />
+          </button>
           <button @click="removePath(url.site, subPath.fullPath)" class="text-red-500">Remove</button>
           <button @click="openUrl(url.site + subPath.fullPath)" class="text-blue-500">Open</button>
         </div>
@@ -38,6 +41,8 @@
 <script setup lang="ts">
 import { useUrlsStore, Path, Status } from '@/store/site-tree'
 import { useHistoryStore } from '@/store/history'
+import * as capture from '../Screenshot/capture'
+import Icon from '@/components/Shared/Icon.vue'
 
 const history = useHistoryStore()
 
@@ -92,6 +97,13 @@ const getSubPaths = (paths: Path[], prefix = '', depth = 0) => {
     subPaths.push(...getSubPaths(path.children, fullPath, depth + 1))
   }
   return subPaths
+}
+
+const screenshotAll = async (url: string) => {
+  history.changeSiteData({ url: url })
+  await capture.captureAll({
+    url
+  })
 }
 
 const updateStatus = (site: string, path: string, value: keyof typeof Status) => {

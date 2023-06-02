@@ -16,7 +16,7 @@ export const useGuiStore = defineStore('gui', {
   }),
   getters: {},
   actions: {
-    toggleSidebar(bool?) {
+    toggleSidebar(bool?: boolean) {
       if (!bool) bool = ''
 
       if (bool === true) {

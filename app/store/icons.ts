@@ -6,7 +6,7 @@ import path from 'path'
 export const useIconStore = defineStore('icons', {
   state: () => {
     return {
-      icons: [Object],
+      icons: [],
     }
   },
   actions: {

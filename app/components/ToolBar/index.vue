@@ -1,6 +1,12 @@
 <template>
   <div id="toolbar" :class="{ 'is-fullscreen': state.isFullScreen, 'is-mac': state.isMac }">
-    <Button role="ghost" icon="screens" :tight="true" :is-pressed="data.sidebar" title="Screens" @click="toggleSidebar" />
+    <div class="flex gap-2">
+      <Button role="ghost" icon="screens" :tight="true" :is-pressed="data.sidebar" title="Screens"
+        @click="toggleSidebar" />
+      <div @click="toggleSiteTree()" class="cursor-pointer border border-gray-300 rounded-md p-1 flex place-items-center">
+        <Icon name="star" />
+      </div>
+    </div>
     <div class="draggable" @dblclick="toggleWindowMaximize" />
     <div v-if="data.artboards.length" id="toolbar__url-container">
       <HistoryControls />
@@ -22,10 +28,9 @@
       <SwitchMode />
     </div> -->
     <!-- <UpdateChannel /> -->
-    <div @click="toggleSiteTree()">
-      Sites
+    <div class="flex justify-end">
+      <InstallUpdateButton />
     </div>
-    <InstallUpdateButton />
     <div class="draggable" @dblclick="toggleWindowMaximize" />
   </div>
 </template>
