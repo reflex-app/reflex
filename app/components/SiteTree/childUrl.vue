@@ -1,14 +1,14 @@
 <template>
-  <div class="flex flex-col gap-8">
+  <div class="flex flex-col gap-12">
     <div v-for="(url, i) in urls" :key="i">
       <div class="flex justify-between">
-        <input v-model="url.site" @change="updateSite(url.site, $event.target.value)" />
+        <input v-model="url.site" @change="updateSite(url.site, $event.target.value)" class="font-bold" />
         <div class="flex justify-between gap-4">
           <button @click="removeSite(url.site)" class="text-red-500">Remove</button>
           <button @click="openUrl(url.site)" class="text-blue-500">Open</button>
         </div>
       </div>
-      <div v-for="(subPath, k) in getSubPaths(url.paths)" :key="k" :style="{ marginLeft: subPath.depth * 20 + 'px' }"
+      <div v-for="(subPath, k) in getSubPaths(url.paths)" :key="k" :style="{ marginLeft: subPath.depth * 2 + 'rem' }"
         class="item flex justify-between" :class="{ 'item--indented': subPath.depth > 0 }">
         <div class="item__title">
           <input :value="subPath.path" @input="updatePath(url.site, subPath.fullPath, $event.target.value)" />
@@ -18,9 +18,11 @@
           <button @click="openUrl(url.site + subPath.fullPath)" class="text-blue-500">Open</button>
         </div>
       </div>
-      <input v-model="newPath[url.site]" @keyup.enter="addPath(url.site, newPath[url.site]); newPath[url.site] = ''"
-        placeholder="Add path" />
-      <hr />
+      <div class="ml-4">
+        <input v-model="newPath[url.site]" @keyup.enter="addPath(url.site, newPath[url.site]); newPath[url.site] = ''"
+          placeholder="Add path" class="w-full" />
+        <hr />
+      </div>
     </div>
     <input v-model="newSite" @keyup.enter="addSite(newSite); newSite = ''" placeholder="Add site" />
   </div>
