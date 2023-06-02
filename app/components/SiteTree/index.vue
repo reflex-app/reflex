@@ -1,7 +1,7 @@
 <template>
   <div v-if="isVisible"
-    class="absolute z-[1000] top-0 left-0 bg-white/80 w-full h-full flex flex-wrap place-content-center">
-    <div class="h-max max-w-3xl w-full bg-white rounded-lg p-16 shadow-xl">
+    class="absolute z-[1000] top-0 left-0 bg-white/80 w-full h-full flex flex-wrap place-content-center" @click="close()">
+    <div class="h-max max-w-3xl w-full bg-white rounded-lg p-16 shadow-xl" @click.stop>
       <h1 class="text-4xl mb-4">Sites</h1>
       <Tree />
     </div>
@@ -14,6 +14,10 @@ import Tree from './childUrl.vue';
 
 const gui = useGuiStore()
 const isVisible = computed(() => gui.siteTree)
+
+const close = () => {
+  gui.toggleGui('siteTree')
+}
 </script>
 
 <style scoped>
