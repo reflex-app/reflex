@@ -1,7 +1,18 @@
 import { defineStore } from 'pinia'
 
-interface Path {
+export const Status: { [key: number]: string } = {
+  0: 'N/A',
+  1: 'Not started',
+  2: 'Next',
+  3: 'In Progress',
+  4: 'Pending',
+  5: 'Completed',
+  6: 'Cancelled',
+}
+
+export interface Path {
   path: string
+  status: keyof typeof Status
   children: Path[]
 }
 
@@ -14,8 +25,29 @@ export const useUrlsStore = defineStore({
   id: 'urls',
   state: () => ({
     urls: [] as Url[],
-    // urls: [] as Array<{ site: string; paths: Array<string> }>,
   }),
+  getters: {
+    getStatusForPath: (state) => (site: string, path: string) => {
+      const url = state.urls.find((url) => url.site === site)
+      if (url) {
+        const subPaths = path.split('/').filter((p) => p)
+        let currentPaths = url.paths
+        for (const subPath of subPaths) {
+          const subPathObj = currentPaths.find((p) => p.path === subPath)
+          if (subPathObj) {
+            currentPaths = subPathObj.children
+          } else {
+            return null // Path not found
+          }
+        }
+        const statusObj = currentPaths.find((p) => p.hasOwnProperty('status'))
+        if (statusObj) {
+          return Status[statusObj.status as number] // Return the status value
+        }
+      }
+      return null // Site not found or status not available
+    },
+  },
   actions: {
     addSite(site: string) {
       this.urls.push({ site: addHttpsPrefix(site), paths: [] })
@@ -29,7 +61,11 @@ export const useUrlsStore = defineStore({
           let subPathIndex = currentPaths.findIndex((p) => p.path === subPath)
           if (subPathIndex === -1) {
             subPathIndex =
-              currentPaths.push({ path: subPath, children: [] }) - 1
+              currentPaths.push({
+                path: subPath,
+                children: [],
+                status: 0,
+              }) - 1
           }
           currentPaths = currentPaths[subPathIndex].children
         }
@@ -86,9 +122,43 @@ export const useUrlsStore = defineStore({
         }
       }
     },
+    updateStatus(site: string, path: string, newStatus: number) {
+      const url = this.urls.find((url) => url.site === site)
+      if (url) {
+        const subPath = findSubPath(url.paths, path)
+        if (subPath) {
+          const nestedPath = path.replace(subPath.path, '').slice(1)
+          if (nestedPath) {
+            const nestedSubPath = findSubPath(subPath.children, nestedPath)
+            if (nestedSubPath) {
+              nestedSubPath.status = newStatus
+            }
+          } else {
+            subPath.status = newStatus
+          }
+        }
+      }
+    },
   },
   persist: true,
 })
+
+function findSubPath(paths: Path[], path: string): Path | undefined {
+  const subPaths = path.split('/').filter((p) => p)
+  if (!subPaths.length) return undefined // No path provided
+
+  let currentPaths: Path[] | undefined = paths
+  for (const subPath of subPaths) {
+    const foundPath = currentPaths?.find((p) => p.path === subPath)
+
+    if (foundPath) {
+      return foundPath
+    } else {
+      return undefined // Path not found
+    }
+  }
+  // return currentPaths?.[0]
+}
 
 function addHttpsPrefix(site: string) {
   if (!site.startsWith('http://') && !site.startsWith('https://')) {

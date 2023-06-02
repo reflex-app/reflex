@@ -14,6 +14,13 @@
           <input :value="subPath.path" @input="updatePath(url.site, subPath.fullPath, $event.target.value)" />
         </div>
         <div class="flex justify-between gap-4">
+          <div>
+            <select v-model="subPath.status" @input="updateStatus(url.site, subPath.fullPath, $event.target.value)">
+              <option v-for="(value, key) in Status" :key="key" :value="key">
+                {{ value }}
+              </option>
+            </select>
+          </div>
           <button @click="removePath(url.site, subPath.fullPath)" class="text-red-500">Remove</button>
           <button @click="openUrl(url.site + subPath.fullPath)" class="text-blue-500">Open</button>
         </div>
@@ -29,8 +36,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive } from 'vue'
-import { useUrlsStore } from '@/store/site-tree'
+import { useUrlsStore, Path, Status } from '@/store/site-tree'
 import { useHistoryStore } from '@/store/history'
 
 const history = useHistoryStore()
@@ -40,6 +46,14 @@ const state = reactive({
   newSite: '',
   newPath: {} as { [key: string]: string }
 })
+
+const itemStatus = () => computed({
+  get: (site, path) => urlsStore.getStatusForPath(site, path),
+  set: (value) => {
+    // Update the status of the specific item in the Pinia store
+    // You can use appropriate actions or mutations in the store to update the status
+  },
+});
 
 const addSite = (site: string) => {
   urlsStore.addSite(site)
@@ -70,16 +84,19 @@ const openUrl = (url: string) => {
   history.changeSiteData({ url })
 }
 
-const getSubPaths = (paths, prefix = '', depth = 0) => {
+const getSubPaths = (paths: Path[], prefix = '', depth = 0) => {
   const subPaths = []
   for (const path of paths) {
     const fullPath = prefix + '/' + path.path
-    subPaths.push({ path: path.path, fullPath, depth })
+    subPaths.push({ path: path.path, fullPath, depth, status: path.status })
     subPaths.push(...getSubPaths(path.children, fullPath, depth + 1))
   }
   return subPaths
 }
 
+const updateStatus = (site: string, path: string, value: keyof typeof Status) => {
+  urlsStore.updateStatus(site, path, value)
+}
 
 const { urls } = urlsStore.$state
 const { newSite, newPath } = state
