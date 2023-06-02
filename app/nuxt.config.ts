@@ -16,6 +16,10 @@ export default defineNuxtConfig({
     },
   },
   vite: {
+    optimizeDeps: {
+      exclude: ['fsevents'],
+    },
+
     server: {
       middlewareMode: false,
     },
