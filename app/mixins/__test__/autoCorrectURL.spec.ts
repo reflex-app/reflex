@@ -1,7 +1,7 @@
-import { expect, test } from '@playwright/test'
+import { expect, test, describe } from 'vitest'
 import autoCorrectURL from '../autoCorrectURL'
 
-test.describe('Smart URLs', function () {
+describe('Smart URLs', function () {
   const cases = [
     'http://example.com',
     'https://example.com',

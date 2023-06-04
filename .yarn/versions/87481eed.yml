@@ -1,5 +1,5 @@
 undecided:
   - reflex
   - action-electron-builder
-  - "@reflex/browser-installer"
+  - "@reflex/app"
   - "@reflex/ui"

@@ -2,9 +2,10 @@ import { reactive, watchEffect } from 'vue'
 import { app } from '@electron/remote'
 
 // Expose the Web Worker using Comlink (via Vite plugin)
-const { CrossBrowserScreenshot } = new ComlinkWorker<
-  typeof import('./playwright.worker')
->(new URL('./playwright.worker', import.meta.url), {})
+// const { CrossBrowserScreenshot } = new ComlinkWorker<
+//   typeof import('./playwright.worker')
+// >(new URL('./playwright.worker', import.meta.url), {})
+const CrossBrowserScreenshot = {} // TODO fix this
 
 // Keep track of all the open browser contexts
 // This data can be accessed reactively

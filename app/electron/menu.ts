@@ -23,6 +23,7 @@ export function setMenu(window: Electron.BrowserWindow) {
     isMac
       ? {
           label: app.name,
+          id: 'mac-menu',
           submenu: [
             { role: 'about' },
             checkForUpdatesMenuItem, // Check for Updates (MacOS)
@@ -32,6 +33,7 @@ export function setMenu(window: Electron.BrowserWindow) {
             // Reset Reflex (MacOS)
             {
               label: `Reset ${app.name}...`,
+              id: 'reset-app',
               click() {
                 window.webContents.send('menu_reset-app')
               },

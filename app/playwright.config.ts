@@ -3,7 +3,7 @@ import { PlaywrightTestConfig, devices } from '@playwright/test'
 const config: PlaywrightTestConfig = {
   testDir: 'test/electron',
   workers: 5,
-  retries: 1,
+  retries: 0,
   use: {
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',

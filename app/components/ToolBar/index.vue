@@ -3,7 +3,8 @@
     <div class="flex gap-2">
       <Button role="ghost" icon="screens" :tight="true" :is-pressed="data.sidebar" title="Screens"
         @click="toggleSidebar" />
-      <div @click="toggleSiteTree()" class="cursor-pointer border border-gray-300 rounded-md p-1 flex place-items-center">
+      <div @click="toggleSiteTree()" class="cursor-pointer border border-gray-300 rounded-md p-1 flex place-items-center"
+        data-testid="toggle-site-tree">
         <Icon name="star" />
       </div>
     </div>
