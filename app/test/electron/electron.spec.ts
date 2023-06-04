@@ -9,8 +9,6 @@ test.describe('App', () => {
     appWindow = await electronApp.firstWindow()
   })
 
-  /////////////////////
-
   test('Is packaged', async ({ electronApp }) => {
     const isPackaged = await electronApp.evaluate(async ({ app }) => {
       return app.isPackaged
@@ -26,8 +24,16 @@ test.describe('App', () => {
 
     expect(appName).toBe('Reflex')
   })
+})
 
-  test('SiteTree', async ({ electronApp }) => {
+test.describe('SiteTree', () => {
+  let appWindow: Page
+
+  test.beforeEach(async ({ electronApp }) => {
+    appWindow = await electronApp.firstWindow()
+  })
+
+  test('Can add a site', async ({ electronApp }) => {
     const trigger = appWindow.getByTestId('toggle-site-tree')
     const siteInput = appWindow.getByTestId('site-input')
     const siteTitle = appWindow.getByTestId('site-title')
