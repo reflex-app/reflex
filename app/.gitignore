@@ -13,3 +13,4 @@ dist-electron
 release
 build
 **/*.db
+test/screenshots

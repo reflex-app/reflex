@@ -2,12 +2,14 @@ import { ElectronApplication, _electron as electron } from '@playwright/test'
 import { test as baseTest } from '@playwright/test'
 import path from 'path'
 
-export const test = baseTest.extend<{ electronApp: ElectronApplication }>({
+export const test = baseTest.extend<{
+  electronApp: ElectronApplication
+}>({
   electronApp: async ({}, use) => {
     // Setup code
     const appPath = path.join(
       __dirname,
-      '../build/Reflex.app/Contents/MacOS/Reflex'
+      '../../build/Reflex.app/Contents/MacOS/Reflex'
     )
     const electronApp = await electron.launch({ executablePath: appPath })
 
@@ -25,6 +27,10 @@ export const test = baseTest.extend<{ electronApp: ElectronApplication }>({
         console.log(msg.text())
       })
     })
+
+    // Wait for the app to be ready
+    const window = await electronApp.firstWindow()
+    await window.waitForLoadState('networkidle')
 
     // Pass the electronApp to the tests
     await use(electronApp)

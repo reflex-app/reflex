@@ -23,7 +23,8 @@
     "lint": "eslint .",
     "preview": "nuxt preview",
     "lint:fix": "eslint . --fix",
-    "test": "npx playwright test",
+    "test": "vitest",
+    "test:build": "npx playwright test",
     "test:ui": "npx playwright test --ui"
   },
   "dependencies": {
@@ -41,6 +42,7 @@
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.33.1",
+    "@nuxt/test-utils": "^3.5.2",
     "@panzoom/panzoom": "^4.4.3",
     "@pinia-plugin-persistedstate/nuxt": "^1.1.1",
     "@pinia/nuxt": "0.4.9",
@@ -48,7 +50,7 @@
     "@reflex/ui": "workspace:*",
     "@types/uuid": "^9.0.1",
     "@viselect/vanilla": "^3.0.0-beta.13",
-    "@vue/test-utils": "^1.2.2",
+    "@vue/test-utils": "^2.3.2",
     "@vueuse/core": "^9.13.0",
     "@vueuse/electron": "^9.13.0",
     "autoprefixer": "^10.4.14",
@@ -61,6 +63,7 @@
     "eslint": "^8.29.0",
     "execa": "^7.1.1",
     "is-electron": "^2.2.1",
+    "jsdom": "^22.1.0",
     "mitt": "^3.0.0",
     "moment": "^2.29.4",
     "nuxt": "^3.4.3",
@@ -79,6 +82,7 @@
     "vite-plugin-target": "^0.1.1",
     "vite-plugin-vuetify": "^1.0.1",
     "vite-svg-loader": "^4.0.0",
+    "vitest": "^0.31.4",
     "vue-devtools": "5.1.4",
     "vue-feature-flipping": "^4.0.0",
     "wait-on": "^7.0.1"
