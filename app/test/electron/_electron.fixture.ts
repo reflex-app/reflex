@@ -6,6 +6,7 @@ import {
 import { test as baseTest } from '@playwright/test'
 import path from 'path'
 import fs from 'fs/promises'
+import { BrowserWindow } from 'electron'
 
 // TODO make this dynamic
 const isDevApp = false
@@ -57,7 +58,13 @@ export const test = baseTest.extend<{
 
     // Clear any localStorage
     await window.evaluate(() => {
-      return window.localStorage.clear()
+      interface CustomWindow extends Page {
+        localStorage: Storage
+      }
+
+      const win = window as CustomWindow
+
+      return win.localStorage.clear()
     })
 
     // // capture errors
