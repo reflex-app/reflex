@@ -15,9 +15,10 @@ export default defineNuxtConfig({
       hashMode: true,
     },
   },
+
   vite: {
     optimizeDeps: {
-      exclude: ['fsevents'],
+      exclude: ['fsevents', '@playwright/test', 'playwright'],
     },
 
     server: {
