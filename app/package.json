@@ -16,28 +16,16 @@
     "postinstall": "nuxt prepare",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
-    "build": "npx cross-env RELEASE=true nuxt generate && yarn run pack",
+    "build": "nuxt generate && yarn run pack",
     "release": "npx @digitak/esrun --tsconfig=./scripts/tsconfig.json ./scripts/updater-cli.ts",
     "pack": "electron-builder --config builder.config.js",
     "screenshot": "yarn run dev & npx wait-on tcp:3000 && node ./scripts/app-screenshots.js",
     "lint": "eslint .",
     "preview": "nuxt preview",
-    "lint:fix": "eslint . --fix"
-  },
-  "jest": {
-    "moduleFileExtensions": [
-      "js",
-      "json",
-      "vue"
-    ],
-    "transform": {
-      ".*\\.(vue)$": "vue-jest",
-      "^.+\\.js$": "babel-jest"
-    },
-    "moduleNameMapper": {
-      "^@/(.*)$": "<rootDir>/$1",
-      "^~/(.*)$": "<rootDir>/$1"
-    }
+    "lint:fix": "eslint . --fix",
+    "test": "vitest",
+    "test:build": "npx playwright test",
+    "test:ui": "npx playwright test --ui"
   },
   "dependencies": {
     "@electron/remote": "2.0.9",
@@ -49,31 +37,33 @@
     "electron-store": "^8.1.0",
     "electron-updater": "5.3.0",
     "html-to-image": "^1.11.11",
-    "playwright-core": "1.32.3",
     "vue": "^3.2.47",
     "vuetify": "^3.0.6"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.33.1",
+    "@nuxt/test-utils": "^3.5.2",
     "@panzoom/panzoom": "^4.4.3",
     "@pinia-plugin-persistedstate/nuxt": "^1.1.1",
     "@pinia/nuxt": "0.4.9",
+    "@playwright/test": "~1.34.3",
     "@reflex/ui": "workspace:*",
     "@types/uuid": "^9.0.1",
     "@viselect/vanilla": "^3.0.0-beta.13",
-    "@vue/test-utils": "^1.2.2",
+    "@vue/test-utils": "^2.3.2",
     "@vueuse/core": "^9.13.0",
     "@vueuse/electron": "^9.13.0",
     "autoprefixer": "^10.4.14",
     "comlink": "^4.3.1",
     "css-loader": "^5.2.7",
-    "electron": "^23.1.1",
+    "electron": "^23.3.5",
     "electron-builder": "^23.6.0",
     "electron-devtools-installer": "3.2.0",
     "electron-notarize": "1.2.2",
     "eslint": "^8.29.0",
     "execa": "^7.1.1",
     "is-electron": "^2.2.1",
+    "jsdom": "^22.1.0",
     "mitt": "^3.0.0",
     "moment": "^2.29.4",
     "nuxt": "^3.4.3",
@@ -92,6 +82,7 @@
     "vite-plugin-target": "^0.1.1",
     "vite-plugin-vuetify": "^1.0.1",
     "vite-svg-loader": "^4.0.0",
+    "vitest": "^0.31.4",
     "vue-devtools": "5.1.4",
     "vue-feature-flipping": "^4.0.0",
     "wait-on": "^7.0.1"

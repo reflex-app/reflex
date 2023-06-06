@@ -87,7 +87,7 @@ module.exports = (env, argv) => {
     target: 'electron-main',
     // target: 'node',
     // externalsPresets: { electronMain: true }, // Replaces 'target' in Webpack 5+
-    externals: [{ 'playwright-core': 'playwright-core' }], // https://github.com/puppeteer/puppeteer/issues/3466#issuecomment-513478584]
+    // externals: [{ 'playwright-core': 'playwright-core' }], // https://github.com/puppeteer/puppeteer/issues/3466#issuecomment-513478584]
     // externals: { 'playwright-core': 'playwright-core' }, // https://github.com/puppeteer/puppeteer/issues/3466#issuecomment-513478584]
     // https://github.com/liady/webpack-node-externals
 

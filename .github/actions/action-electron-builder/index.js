@@ -5,6 +5,8 @@ const { existsSync } = require("fs");
 const path = require("path");
 const { request } = require("@octokit/request");
 
+let pkgJsonPath;
+
 /**
  * Logs to the console
  */
@@ -75,7 +77,7 @@ const runAction = async () => {
 	const appDir = "app";
 	const pkgRoot = path.resolve(__dirname + "../../../../" + appDir);
 
-	const pkgJsonPath = path.join(pkgRoot, "package.json");
+	pkgJsonPath = path.join(pkgRoot, "package.json");
 	// Make sure `package.json` file exists
 	if (!existsSync(pkgJsonPath)) {
 		exit(`\`package.json\` file not found at path "${pkgJsonPath}"`);
@@ -125,8 +127,10 @@ const runAction = async () => {
 		// Always publish to Github Release
 		run(`yarn run build --publish always`, pkgRoot);
 	} else {
+		log(`Running unit tests... \n`);
+		run(`yarn run test`, pkgRoot);
 		log(`Building the Electron app WITHOUT release… \n`);
-		run(`yarn run build:fast --publish never`, pkgRoot);
+		run(`yarn run build --publish never`, pkgRoot);
 	}
 };
 

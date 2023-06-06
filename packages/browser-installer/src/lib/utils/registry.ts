@@ -187,7 +187,18 @@ export const registryDirectory = (() => {
 
   const envDefined = getFromENV('PLAYWRIGHT_BROWSERS_PATH')
   if (envDefined === '0') {
-    result = path.join(__dirname, '..', '..', '.local-browsers')
+    // Path to local browsers (node-modules)
+    // result = path.resolve(__dirname, '..', '..', '.local-browsers')
+
+    result = path.resolve(__dirname, '..', '..', '.local-browsers')
+
+    // result = path.resolve(
+    //   '../../../node_modules/playwright-core/.local-browsers'
+    // )
+
+    console.log(result)
+
+    // result = path.join(__dirname, '..', '..', '.local-browsers')
   } else if (envDefined) {
     result = envDefined
   } else {
@@ -212,6 +223,9 @@ export const registryDirectory = (() => {
     // the user meant when typing the relative path.
     result = path.resolve(getFromENV('INIT_CWD') || process.cwd(), result)
   }
+
+  console.log('registry directory', result)
+
   return result
 })()
 

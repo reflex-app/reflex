@@ -2,7 +2,8 @@
   <div class="flex flex-col gap-12">
     <div v-for="(url, i) in urls" :key="i">
       <div class="flex justify-between">
-        <input v-model="url.site" @change="updateSite(url.site, $event.target.value)" class="font-bold" />
+        <input v-model="url.site" @change="updateSite(url.site, $event.target.value)" class="font-bold"
+          data-testid="site-title" />
         <div class="flex justify-between gap-4">
           <button @click="removeSite(url.site)" class="text-red-500">Remove</button>
           <button @click="openUrl(url.site)" class="text-blue-500">Open</button>
@@ -29,61 +30,56 @@
         </div>
       </div>
       <div class="ml-4">
-        <input v-model="newPath[url.site]" @keyup.enter="addPath(url.site, newPath[url.site]); newPath[url.site] = ''"
-          placeholder="Add sub-path (e.g. /about)" class="w-full" />
+        <input v-model="sitePath" @keyup.enter="addPath(url.site, $event.target.value)"
+          placeholder="Add sub-path (e.g. /about)" class="w-full" data-testid="path-input" />
         <hr />
       </div>
     </div>
-    <input v-model="newSite" @keyup.enter="addSite(newSite); newSite = ''"
-      placeholder="Enter site URL (e.g. google.com)" />
+    <input v-model="siteInput" @keyup.enter="addSite($event.target.value)" placeholder="Enter site URL (e.g. google.com)"
+      data-testid="site-input" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { useUrlsStore, Path, Status } from '@/store/site-tree'
+import { useSiteTree, Path, Status } from '@/store/site-tree'
 import { useHistoryStore } from '@/store/history'
 import * as capture from '../Screenshot/capture'
 import Icon from '@/components/Shared/Icon.vue'
 
 const history = useHistoryStore()
 
-const urlsStore = useUrlsStore()
+const siteInput = ref<HTMLInputElement | null>()
+const sitePath = ref<HTMLInputElement | null>()
+
+const siteTreeStore = useSiteTree()
 const state = reactive({
-  newSite: '',
   newPath: {} as { [key: string]: string }
 })
 
-const itemStatus = () => computed({
-  get: (site, path) => urlsStore.getStatusForPath(site, path),
-  set: (value) => {
-    // Update the status of the specific item in the Pinia store
-    // You can use appropriate actions or mutations in the store to update the status
-  },
-});
-
 const addSite = (site: string) => {
-  urlsStore.addSite(site)
-  state.newPath[site] = ''
+  siteTreeStore.addSite(site)
+  siteInput.value = null // Clear input
 }
 
 const addPath = (site: string, path: string) => {
-  urlsStore.addPath(site, path)
+  siteTreeStore.addPath(site, path)
+  sitePath.value = null // Clear input
 }
 
 const removeSite = (site: string) => {
-  urlsStore.removeSite(site)
+  siteTreeStore.removeSite(site)
 }
 
 const removePath = (site: string, path: string) => {
-  urlsStore.removePath(site, path)
+  siteTreeStore.removePath(site, path)
 }
 
 const updateSite = (oldSite: string, newSite: string) => {
-  urlsStore.updateSite(oldSite, newSite)
+  siteTreeStore.updateSite(oldSite, newSite)
 }
 
 const updatePath = (site: string, oldPath: string, newPath: string) => {
-  urlsStore.updatePath(site, oldPath, newPath)
+  siteTreeStore.updatePath(site, oldPath, newPath)
 }
 
 const openUrl = (url: string) => {
@@ -108,10 +104,10 @@ const screenshotAll = async (url: string) => {
 }
 
 const updateStatus = (site: string, path: string, value: keyof typeof Status) => {
-  urlsStore.updateStatus(site, path, value)
+  siteTreeStore.updateStatus(site, path, value)
 }
 
-const { urls } = urlsStore.$state
+const { urls } = siteTreeStore.$state
 const { newSite, newPath } = state
 </script>
 

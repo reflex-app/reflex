@@ -1,3 +1,4 @@
+import { expect, test, describe } from 'vitest'
 import autoCorrectURL from '../autoCorrectURL'
 
 describe('Smart URLs', function () {
@@ -29,10 +30,10 @@ describe('Smart URLs', function () {
     '://example.com/file/path-dash.html', // no protocol provided
     '/example.com', // no protocol provided
     'example', // no protocol or domain
-    ' ' // empty space
+    ' ', // empty space
   ]
 
-  it('should return only valid URLs', async () => {
+  test('should return only valid URLs', async () => {
     for (const c in cases) {
       try {
         const result = await autoCorrectURL(cases[c])
