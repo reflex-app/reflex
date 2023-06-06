@@ -16,7 +16,7 @@
     "postinstall": "nuxt prepare",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
-    "build": "npx cross-env RELEASE=true nuxt generate && yarn run pack",
+    "build": "nuxt generate && yarn run pack",
     "release": "npx @digitak/esrun --tsconfig=./scripts/tsconfig.json ./scripts/updater-cli.ts",
     "pack": "electron-builder --config builder.config.js",
     "screenshot": "yarn run dev & npx wait-on tcp:3000 && node ./scripts/app-screenshots.js",
