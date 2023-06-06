@@ -2786,7 +2786,7 @@ __metadata:
     svgo-loader: ^3.0.0
     tailwindcss: ^2.2.7
     typescript: ^4.3.2
-    vite: ^2.9.13
+    vite: ^2.9.16
     vue: ^3.0.5
     vue-loader: ^16.4.0
     vue-tsc: ^0.2.2
@@ -21358,9 +21358,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite@npm:^2.9.13":
-  version: 2.9.15
-  resolution: "vite@npm:2.9.15"
+"vite@npm:^2.9.16":
+  version: 2.9.16
+  resolution: "vite@npm:2.9.16"
   dependencies:
     esbuild: ^0.14.27
     fsevents: ~2.3.2
@@ -21383,7 +21383,7 @@ __metadata:
       optional: true
   bin:
     vite: bin/vite.js
-  checksum: 3bc83ea78396215a4d1dbf8b7c8c81869e9c3a877593a87978b964baa6ea675b6063b275e01f6c818d18bee78b32a9f94adc6f76b8023eecb12f9cd8f6dde727
+  checksum: ebbc72c1c3c6d54db63d3d6c8c6a961cee37ba64fd15f1a18cd363415f2c04680d0c9905f1a670351c534cbe68d9241afcc3231c82b72bcd1d54fd38ec960654
   languageName: node
   linkType: hard
 
