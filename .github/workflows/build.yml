@@ -52,6 +52,7 @@ jobs:
 
       - name: Install dependencies
         run: yarn install
+        working-directory: app
       # ----- End Yarn Install and Caching ------
 
       # ----- Tests ------
