@@ -52,11 +52,11 @@ jobs:
 
       - name: Install dependencies
         run: yarn install
-        working-directory: app
       # ----- End Yarn Install and Caching ------
 
       # ----- Tests ------
-      - name: Run unit tests
+      - name: Run unit tests (/app)
+        working-directory: app
         run: yarn run test
       # ----- End Tests ------
 
