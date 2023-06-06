@@ -89,7 +89,7 @@ export default class BrowserWinHandler {
     })
   }
 
-  async loadPage(pagePath) {
+  async loadPage() {
     if (!this.browserWindow)
       return Promise.reject(
         new Error("The page could not be loaded before win 'created' event")
@@ -102,8 +102,9 @@ export default class BrowserWinHandler {
       this.browserWindow.webContents.openDevTools()
     }
 
-    // After loading the web app, show the desktop app
+    // // After loading the web app, show the desktop app
     this.browserWindow.show()
+    this.browserWindow.webContents.emit('app-ready')
   }
 
   created(): Promise<BrowserWindow> {

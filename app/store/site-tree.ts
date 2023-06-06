@@ -21,7 +21,7 @@ interface Url {
   paths: Path[]
 }
 
-export const useUrlsStore = defineStore({
+export const useSiteTree = defineStore({
   id: 'urls',
   state: () => ({
     urls: [] as Url[],

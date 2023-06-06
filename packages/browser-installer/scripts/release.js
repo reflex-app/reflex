@@ -14,7 +14,7 @@ readline.question(`What level of release? ${types}`, async (type) => {
 
   try {
     // Execute
-    await runExec(`npm version ${type}`);
+    await runExec(`yarn version ${type}`);
   } catch (err) {
     console.error(`ERROR: ${err}`);
   }

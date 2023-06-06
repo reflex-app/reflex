@@ -5,9 +5,19 @@
 
 import path from 'path'
 import { v1 as uuid } from 'uuid'
-import playwright from 'playwright-core'
+import * as playwright from '@playwright/test'
 
 export class CrossBrowserScreenshot {
+  url: any
+  browser: any
+  height: any
+  width: any
+  x: any
+  y: any
+  isLoading: boolean
+  contextId: string
+  isPackaged: any
+
   constructor(options) {
     options = options || {}
     this.url = options.url || 'https://google.com'

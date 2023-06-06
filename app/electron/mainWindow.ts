@@ -1,5 +1,11 @@
 import path from 'path'
-import { BrowserWindowConstructorOptions, app, ipcMain, shell } from 'electron'
+import {
+  BrowserWindow,
+  BrowserWindowConstructorOptions,
+  app,
+  ipcMain,
+  shell,
+} from 'electron'
 import BrowserWinHandler from './BrowserWinHandler'
 import windowPosition from './windowPosition'
 // import browserInstaller from './browser-installer'
@@ -35,7 +41,7 @@ export default function init() {
     titleBarStyle: 'hiddenInset', // Hide the bar
   })
 
-  winHandler.onCreated(async (browserWindow) => {
+  winHandler.onCreated(async (browserWindow: BrowserWindow) => {
     // Restore maximized state if it is set.
     // not possible via Electron options so we do it here
     if (initialWindowPos.isMaximized) {
@@ -48,7 +54,7 @@ export default function init() {
     })
 
     // Load the Nuxt app
-    await winHandler.loadPage('/').catch((err) => log.error(err))
+    await winHandler.loadPage().catch((err) => log.error(err))
 
     // Log the version
     log.info(`Version ${app.getVersion()}`)
@@ -58,7 +64,7 @@ export default function init() {
 
     // Show the app once it's ready
     browserWindow.once('ready-to-show', () => {
-      browserWindow.show()
+      // browserWindow.show()
 
       // Check for updates...
       initUpdates(browserWindow)

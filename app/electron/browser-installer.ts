@@ -16,6 +16,10 @@ if (!PlaywrightBrowserInstaller) log.error('Module not defined!')
 // the browser binaries
 process.env.PLAYWRIGHT_BROWSERS_PATH = '0'
 
+// Old approach browserType.downloadBrowserIfNeeded() https://github.com/microsoft/playwright/pull/834
+// New approach https://github.com/microsoft/playwright/pull/1419
+// https://github.com/microsoft/playwright/blob/10ce7af411edf5c31a4e81fd0f96bfde47de8c24/packages/playwright-core/src/server/registry/index.ts#L932
+
 // Run the installer
 // If the applications are already installed at the given path,
 // they won't be reinstalled
