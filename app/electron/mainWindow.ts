@@ -6,6 +6,7 @@ import windowPosition from './windowPosition'
 import { setMenu } from './menu'
 import { init as initUpdates } from './updates'
 import browserInstaller from './browser-installer'
+import { installBrowsers } from './playwright-browsers'
 
 const log = require('electron-log')
 const isDev = require('electron-is-dev')
@@ -65,7 +66,8 @@ export default function init() {
 
     // Check for browser installations
     // TODO Fix errors
-    browserInstaller(winHandler)
+    // browserInstaller(winHandler)
+    await installBrowsers()
 
     // Reload when requested by the renderer process
     ipcMain.handle('reload-window', () => {
