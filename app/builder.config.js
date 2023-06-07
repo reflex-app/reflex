@@ -1,6 +1,6 @@
 // Set release flag based on Yarn script OR Github Action input
 // NOTE: Github Action envs ("INPUT_RELEASE") are all-caps https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#inputs
-
+const { app: appConfig } = require('./config/index')
 const path = require('path')
 const root = './'
 
@@ -27,7 +27,7 @@ const getEnv = (name, expectedVal) => {
 }
 
 const isRelease = getEnv('RELEASE', 'true') || false // Controls whether the app will be codesigned, notarized, published
-const isLocalBuild = getEnv('LOCAL_BUILD', 'true') || false // Used to enable `publish` in local builds
+const isFastBuild = getEnv('FAST_BUILD', 'true') || false
 
 console.log(`Is release? ${isRelease}`)
 
@@ -42,7 +42,7 @@ const macOS = {
       // It creates dmg + zip files for Mac builds
       // This is expected for auto-updates to work properly
       // Waiting on: https://github.com/electron-userland/electron-builder/issues/2199
-      target: 'default',
+      target: isFastBuild ? 'dir' : 'default',
       // Build for M1 chips (arm64) + Intel (x64) chips
       arch: ['arm64', 'x64'],
     },
@@ -70,7 +70,7 @@ const macOS = {
         type: 'file',
       },
     ],
-  },
+  }
 }
 
 const windowsOS = {
@@ -104,7 +104,12 @@ module.exports = {
   directories: {
     output: path.resolve(root, 'build'),
   },
-  files: ['.output/**/*', 'dist-electron', 'package.json'],
+  files: [
+    '.output/**/*',
+    'dist-electron',
+    'package.json',
+    "!**/node_modules/playwright-core/.local-browsers/**/*"  // Exclude Playwright browsers
+  ],
   extraResources: [
     'server',
     {
@@ -114,7 +119,12 @@ module.exports = {
   ],
   // Using ASAR
   // https://github.com/puppeteer/puppeteer/issues/2134#issuecomment-408221446
-  asar: false, // Whether or not to package
+  // asar: false, // Whether or not to package
+  asar: appConfig.isAsarPackaged,
+  asarUnpack: [
+    'package.json',
+    'node_modules/playwright-core', // Cross-browser screenshots
+  ],
   // asarUnpack: [
   //   ''
   // ],
