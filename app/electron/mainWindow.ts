@@ -12,11 +12,12 @@ import windowPosition from './windowPosition'
 import { setMenu } from './menu'
 import { init as initUpdates } from './updates'
 import browserInstaller from './browser-installer'
-import { installBrowsers } from './playwright-browsers'
+import { installBrowsers } from './cross-browser/playwright-browser-manager'
 
-const log = require('electron-log')
-const isDev = require('electron-is-dev')
-// const isDev = process.env.NODE_ENV === 'development'
+import log from 'electron-log'
+import isDev from 'electron-is-dev'
+import enableCrossBrowserScreenshots from './cross-browser/screenshots/api'
+
 const INDEX_PATH = path.join(__dirname, '..', 'renderer', 'index.html')
 const DEV_SERVER_URL = process.env.DEV_SERVER_URL // eslint-disable-line prefer-destructuring
 
@@ -74,6 +75,9 @@ export default function init() {
     // TODO Fix errors
     // browserInstaller(winHandler)
     await installBrowsers()
+
+    // Screenshot worker test
+    enableCrossBrowserScreenshots()
 
     // Reload when requested by the renderer process
     ipcMain.handle('reload-window', () => {
