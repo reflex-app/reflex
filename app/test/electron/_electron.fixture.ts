@@ -7,6 +7,8 @@ import { test as baseTest } from '@playwright/test'
 import path from 'path'
 import fs from 'fs/promises'
 import { BrowserWindow } from 'electron'
+import { app as appConfig } from '@/config/index'
+import os from 'os'
 
 // TODO make this dynamic
 const isDevApp = false
@@ -28,18 +30,25 @@ const runApp = async () => {
   if (isDevApp) {
     appPath = path.join(electronBuildDir, '/electron/main.js')
     electronApp = await electron.launch({ args: [appPath] })
-  } else {
-    const root = path.join(buildDir, '/mac/Reflex.app')
-    const packageJson = await fs
-      .readFile(path.join(root, '/Contents/Resources/app/package.json'), 'utf8')
-      .then((data) => JSON.parse(data))
+  } else {    
+    let root;
 
-    const resourcesDir = path.join(buildDir, 'Contents', 'Resources')
+    if (os.platform() === 'win32') {
+      root = path.join(buildDir, '/win-unpacked');
+      appPath = path.join(root, '/Reflex.exe');
+    } else if (os.platform() === 'darwin') {
+      if (os.arch() === 'arm64') {
+        // for M1+ chip
+        root = path.join(buildDir, '/mac-arm64/Reflex.app');
+      } else {
+        // for Intel-based macs
+        root = path.join(buildDir, '/mac/Reflex.app');
+      }
+      appPath = path.join(root, '/Contents/MacOS/Reflex');
+    }
 
-    appPath = path.join(root, '/Contents/MacOS/Reflex')
     electronApp = await electron.launch({
       executablePath: appPath,
-      args: [path.join(resourcesDir, 'app', packageJson.main)],
     })
   }
 
