@@ -61,11 +61,11 @@ const props = defineProps({
 const emit = defineEmits(['loaded'])
 
 onMounted(() => {
-  $bus.on('cross-browser:take-screenshots', (id: string) => {
+  $bus.on('cross-browser:take-screenshots', async (id: string) => {
     console.log(id, props.artboardId);
 
     if (id === props.artboardId) {
-      getScreenshots()
+      await getScreenshots()
     }
   })
 })

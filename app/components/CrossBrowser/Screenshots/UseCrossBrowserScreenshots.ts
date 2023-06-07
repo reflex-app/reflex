@@ -6,7 +6,12 @@ import {
 } from '~/components/CrossBrowser/Screenshots'
 
 export default function useCrossBrowserScreenshots() {
-  const state = reactive({
+  const state = reactive<{
+    isLoading: boolean
+    loading: string[]
+    screenshots: any[]
+    browsers: string[]
+  }>({
     isLoading: false, // All screens for this browser
     loading: [], // Tracks the currently loading IDs
     screenshots: [],
