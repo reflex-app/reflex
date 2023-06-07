@@ -18,9 +18,8 @@ export default defineNuxtConfig({
 
   vite: {
     optimizeDeps: {
-      exclude: ['fsevents', '@playwright/test', 'playwright'],
+      exclude: ['fsevents', '@playwright/test', 'playwright', 'playwright-core'],
     },
-
     server: {
       middlewareMode: false,
     },
