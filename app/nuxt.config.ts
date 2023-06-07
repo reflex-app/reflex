@@ -1,7 +1,5 @@
 // import vuetify from 'vite-plugin-vuetify'
 import renderer from 'vite-plugin-electron-renderer'
-import { comlink } from 'vite-plugin-comlink'
-
 import type { ElectronOptions } from 'nuxt-electron'
 
 const isDevMode = process.env.NODE_ENV !== 'production'
@@ -15,7 +13,6 @@ export default defineNuxtConfig({
       hashMode: true,
     },
   },
-
   vite: {
     optimizeDeps: {
       exclude: ['fsevents', '@playwright/test', 'playwright', 'playwright-core'],
@@ -24,16 +21,11 @@ export default defineNuxtConfig({
       middlewareMode: false,
     },
     plugins: [
-      // Enable Web Worker support <> Vite <> Comlink
-      comlink(),
       // Enable Node modules in renderer process
       renderer({
         nodeIntegration: true,
       }),
     ],
-    worker: {
-      plugins: [comlink()],
-    },
   },
   // Environment variables
   runtimeConfig: {
