@@ -1,4 +1,3 @@
-import { getCurrentWindow, webContents } from '@electron/remote'
 import { Page, expect } from '@playwright/test'
 import { test } from './_electron.fixture'
 
