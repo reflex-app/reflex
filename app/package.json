@@ -22,6 +22,7 @@
     "pack:fast": "npx cross-env FAST_BUILD=1 PLAYWRIGHT_BROWSERS_PATH=0 electron-builder --config builder.config.js",
     "screenshot": "yarn run dev & npx wait-on tcp:3000 && node ./scripts/app-screenshots.js",
     "lint": "eslint .",
+    "build:debug": "./build/mac/Reflex.app/Contents/MacOS/Reflex --inspect=9229",
     "preview": "nuxt preview",
     "lint:fix": "eslint . --fix",
     "test": "vitest",
