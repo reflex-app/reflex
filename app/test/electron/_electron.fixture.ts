@@ -7,13 +7,19 @@ import { test as baseTest } from '@playwright/test'
 import path from 'path'
 import fs from 'fs/promises'
 import { BrowserWindow } from 'electron'
-import { app as appConfig } from '@/config/index'
+import { app, app as appConfig } from '@/electron/config/index'
 import os from 'os'
 
 // TODO make this dynamic
 const isDevApp = false
 
-let electronApp: ElectronApplication | null // The Electron app
+interface ModifiedElectronApplication extends ElectronApplication {
+  executablePath: string
+  resourcesPath: string
+  appFilesPath: string
+}
+
+let electronApp: ModifiedElectronApplication | null // The Electron app
 
 const runApp = async () => {
   // Setup code
@@ -29,8 +35,8 @@ const runApp = async () => {
 
   if (isDevApp) {
     appPath = path.join(electronBuildDir, '/electron/main.js')
-    electronApp = await electron.launch({ args: [appPath] })
-  } else {    
+    electronApp = await electron.launch({ args: [appPath] }) as ModifiedElectronApplication
+  } else {
     let root;
 
     if (os.platform() === 'win32') {
@@ -49,14 +55,31 @@ const runApp = async () => {
 
     electronApp = await electron.launch({
       executablePath: appPath,
-    })
+    }) as ModifiedElectronApplication
+
+    if (appPath) {
+      // Path to the Electron app
+      // e.g. /Applications/Reflex.app
+      electronApp.executablePath = await electronApp.evaluate(async () => {
+        return process.execPath
+      })
+
+      // Path to the Electron app's resources directory
+      // e.g. /Applications/Reflex.app/Contents/Resources
+      electronApp.resourcesPath = await electronApp.evaluate(async () => {
+        return process.resourcesPath
+      })
+
+      // Path to the Electron app's files directory
+      electronApp.appFilesPath = path.join(electronApp.resourcesPath, `${app.build.isAsarPackaged ? 'app.asar.unpacked' : 'app'}`)
+    }
   }
 
   return electronApp
 }
 
 export const test = baseTest.extend<{
-  electronApp: ElectronApplication
+  electronApp: ModifiedElectronApplication
 }>({
   electronApp: async ({ page }, use) => {
     const electronApp = await runApp()
