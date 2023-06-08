@@ -1,13 +1,13 @@
 // Set release flag based on Yarn script OR Github Action input
 // NOTE: Github Action envs ("INPUT_RELEASE") are all-caps https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#inputs
-const { app: appConfig } = require('./config/index')
-const path = require('path')
+import { app as appConfig } from './electron/config/index'
+import path from 'path'
 const root = './'
 
-const getEnv = (name, expectedVal) => {
+const getEnv = (name: string, expectedVal: string | null) => {
   // Returns the value for an environment variable (or `null` if it's not defined)
   // We assume the env vars are uppercase
-  const getEnv = (name) => process.env[name.toUpperCase()] || null
+  const getEnv = (name: string) => process.env[name.toUpperCase()] || null
 
   // Set the variable
   // Try looking for the name on its own, as well as the Github Actions version ("INPUT_")
@@ -120,9 +120,10 @@ module.exports = {
   // Using ASAR
   // https://github.com/puppeteer/puppeteer/issues/2134#issuecomment-408221446
   // asar: false, // Whether or not to package
-  asar: appConfig.isAsarPackaged,
+  asar: appConfig.build.isAsarPackaged,
   asarUnpack: [
     'package.json',
+    'dist-electron/extraResources/inject.js', // Injected into `renderer` <WebView>
     'node_modules/playwright-core', // Cross-browser screenshots
   ],
   // asarUnpack: [

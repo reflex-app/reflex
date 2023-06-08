@@ -18,7 +18,7 @@
     "generate": "yarn run pw:hermetic nuxt generate",
     "build": "yarn run pw:hermetic nuxt generate && yarn run pack",
     "release": "npx @digitak/esrun --tsconfig=./scripts/tsconfig.json ./scripts/updater-cli.ts",
-    "pack": "yarn run pw:hermetic electron-builder --config builder.config.js",
+    "pack": "tsc -p ./tsconfig.builder.json && yarn run pw:hermetic electron-builder --config builder.config.js",
     "pack:fast": "npx cross-env FAST_BUILD=1 PLAYWRIGHT_BROWSERS_PATH=0 electron-builder --config builder.config.js",
     "screenshot": "yarn run dev & npx wait-on tcp:3000 && node ./scripts/app-screenshots.js",
     "lint": "eslint .",
