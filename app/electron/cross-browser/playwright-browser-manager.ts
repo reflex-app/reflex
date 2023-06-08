@@ -1,25 +1,21 @@
-import { spawn } from 'child_process';
+import { spawn, fork } from 'child_process';
 import path from 'path';
 import fs from 'fs/promises';
 import { reactive } from '@vue/reactivity'
+import { app as appConfig } from '../config/index'
+import isDev from 'electron-is-dev';
+import electron, { app } from 'electron';
+import log from 'electron-log'
 
 export type BrowserName = "chromium" | "chrome" | "chrome-beta" | "msedge" | "msedge-beta" | "msedge-dev" | "firefox" | "webkit";
-
-const validBrowserNames: BrowserName[] = [
-    "chromium",
-    "chrome",
-    "chrome-beta",
-    "msedge",
-    "msedge-beta",
-    "msedge-dev",
-    "firefox",
-    "webkit",
-];
 
 interface BrowserList {
     name: BrowserName;
     path?: string;
 }
+
+// The root path to the app
+const rootPath = isDev ? appConfig.dev.root : appConfig.build.packagedPath;
 
 // Shared reactive state
 export const state = reactive({
@@ -41,30 +37,39 @@ export const installPackage = async (browser: BrowserName) => {
 };
 
 const playwrightCLI = async (command: string, args: string[]) => {
-    // const npx = /^win/.test(process.platform) ? 'npx.cmd' : 'npx';
-    // const npxCommand = spawn(npx, [command, ...args], { env });
-    const cliPath = path.join(__dirname, 'node_modules', 'playwright-core/lib/cli/cli.js');
+    const cliPath = path.join(rootPath, 'node_modules', 'playwright-core/lib/cli/cli.js');
     const env = Object.assign({}, process.env, { PLAYWRIGHT_BROWSERS_PATH: '0' });
-    const npxCommand = spawn('node', [cliPath, command, ...args], { env });
+    
+    const npxCommand = fork(cliPath, [command, ...args], { env });
 
-    npxCommand.stdout.on('data', (data) => {
-        console.log(`stdout: ${data}`);
+    // Close the child process when the Electron app closes
+    app.on('before-quit', () => {
+        npxCommand.kill();
     });
 
-    npxCommand.stderr.on('data', (data) => {
-        console.error(`stderr: ${data}`);
+    npxCommand.on('message', (message) => {
+        console.log('Message from child process:', message);
+    });
+
+    // Listen for logs from the child process
+    npxCommand.stdout?.on('data', (data) => {
+        console.log('Child process stdout:', data.toString());
+    });
+
+    npxCommand.stderr?.on('data', (data) => {
+        console.error('Child process stderr:', data.toString());
     });
 
     return new Promise<void>((resolve, reject) => {
-        npxCommand.on('close', (code) => {
-            if (code === 0) {
+        npxCommand.on('exit', (code, signal) => {
+            if (code !== null) {
                 resolve();
             } else {
-                reject(new Error(`child process exited with code ${code}`));
+                reject(new Error(`child process exited with code ${code} ${signal}`));
             }
-        });
+        })
     });
-};
+}
 
 
 export const installBrowsers = async () => {
@@ -73,13 +78,16 @@ export const installBrowsers = async () => {
     console.log('Installed browsers:', installed);
     console.log('Not installed browsers:', notInstalled);
 
-    for (const browser of notInstalled) {
-        await installPackage(browser);
-    }
+    // Install all browsers that are not installed
+    await Promise.all(notInstalled.map(browser => installPackage(browser.name).then(() => {
+        log.info(`Successfully installed ${browser.name}`);
+    }).catch((err) => {
+        log.error(`Failed to install ${browser.name}. ${err}`);
+    })));
 }
 
 const checkInstalledBrowsers = async () => {
-    const localBrowsersDir = path.join(process.cwd(), "node_modules/playwright-core/.local-browsers");
+    const localBrowsersDir = path.join(rootPath, "node_modules/playwright-core/.local-browsers");
     const browserNames: BrowserName[] = ['firefox', 'webkit'];
     const browserExecutables = browserNames.map((browser: string) => {
         const name = browser as BrowserName;
