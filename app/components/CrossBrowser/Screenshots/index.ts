@@ -24,13 +24,23 @@ export async function takeScreenshots(
   callback = () => { }
 ) {
   const screenshotPromiseGenerator = async (browserName: BrowserName) => {
-    const instance = await ipcRenderer.invoke('cb-instance', { url, browser: browserName, height, width, x, y, isPackaged: app.isPackaged })
+    // Call the `main` process to launch the browser
+    const instance = await ipcRenderer.invoke('cb-instance', { url, browser: browserName, isPackaged: app.isPackaged })
 
     console.log('browser instance', instance);
 
     const { contextId } = instance
 
-    const screenshots = await ipcRenderer.invoke('cb-screenshot', contextId)
+    const screenshots = await ipcRenderer.invoke('cb-screenshot', {
+      contextId,
+      options: {
+        browser: browserName,
+        url,
+        x,
+        y,
+        height, width
+      }
+    })
 
     return { type: browserName, img: screenshots }
 

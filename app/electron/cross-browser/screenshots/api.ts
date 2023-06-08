@@ -24,8 +24,8 @@ ipcMain.handle('cb-instance', async (event, options: Partial<CrossBrowserScreens
     return await createInstance(options)
 })
 
-ipcMain.handle('cb-screenshot', async (event, id: Partial<CrossBrowserScreenshotOptions['contextId']>) => {
-    return await takeScreenshot(id)
+ipcMain.handle('cb-screenshot', async (event, id: Partial<CrossBrowserScreenshotOptions['contextId']>, options) => {
+    return await takeScreenshot(id, options)
 })
 
 
@@ -35,10 +35,6 @@ export async function createInstance(options: Partial<CrossBrowserScreenshotOpti
     const instance = new CrossBrowserScreenshot({
         url: options.url,
         browser: options.browser,
-        height: options.height,
-        width: options.width,
-        x: options.x,
-        y: options.y,
         isPackaged: app.isPackaged,
     })
 
@@ -49,11 +45,33 @@ export async function createInstance(options: Partial<CrossBrowserScreenshotOpti
 
 export async function removeInstance() { }
 
-export async function takeScreenshot(contextId: Partial<CrossBrowserScreenshotOptions['contextId']>) {
+export interface ScreenshotOptions {
+    browser: CrossBrowserScreenshotOptions['browser'][]
+    url: CrossBrowserScreenshotOptions['url']
+    x: CrossBrowserScreenshotOptions['x']
+    y: CrossBrowserScreenshotOptions['y']
+    height: CrossBrowserScreenshotOptions['height']
+    width: CrossBrowserScreenshotOptions['width']
+}
+
+interface TakeScreenshotOptions {
+    contextId: Partial<CrossBrowserScreenshotOptions['contextId']>
+    options: ScreenshotOptions
+}
+
+export async function takeScreenshot({ contextId, options }: TakeScreenshotOptions) {
     const instance = queue.find(i => i.id === contextId)
     if (!instance) {
         console.error('No instance found')
         return false
+    }
+
+    // Update the instance with the options values
+    for (const option in options) {
+        if (Object.prototype.hasOwnProperty.call(options, option)) {
+            console.log('should change', option, options[option as keyof ScreenshotOptions])
+            instance.self[option as keyof CrossBrowserScreenshotOptions] = options[option as keyof ScreenshotOptions] as never;
+        }
     }
 
     instance.status = 'running'
