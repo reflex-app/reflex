@@ -111,7 +111,7 @@ async function initiateBridge() {
     state.id = id
 
     // Get the page title and favicon
-    await getPageData()
+    await getPageData().catch((err) => console.log(err))
 
     // Respond to the parent component
     ipcRenderer.sendToHost('initiateBridge', data)
