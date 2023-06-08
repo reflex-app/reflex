@@ -1,28 +1,26 @@
 <template>
-  <div class="cbs">
+  <div v-if="screenshotsSorted.length || loadingSorted.length" id="cbs" class="flex flex-row ml-32 gap-4 h-full border border-gray-500 p-8 rounded-lg">
     <!-- <Trigger :data="props" @clicked="getScreenshots()" /> -->
     <!-- The cross-browser screenshots -->
-    <div class="cbs__results">
-      <div v-for="browserName in loadingSorted" :key="browserName.id">
-        <div class="loading-skeleton" :style="{ height: props.height + 'px', width: props.width + 'px' }">
-          <!-- <img :src="require(`~/assets/browsers/${browserName}.svg`)" /> -->
-          <Icon :name="`browsers/${browserName}`" />
-          {{ browserName }}
-        </div>
+    <div v-for="browserName in loadingSorted" :key="browserName">
+      <div class="loading-skeleton" :style="{ height: props.height + 'px', width: props.width + 'px' }">
+        <!-- <img :src="require(`~/assets/browsers/${browserName}.svg`)" /> -->
+        <Icon :name="`browsers/${browserName}`" />
+        {{ browserName }}
       </div>
-      <template v-if="screenshotsSorted.length">
-        <div v-for="item in screenshotsSorted" :key="item.id">
-          <template v-if="item.isLoading">
-            <div class="image-skeleton">Hey there</div>
-            <div class="image-skeleton">Hey there</div>
-          </template>
-          <template v-else>
-            <span class="result__type">{{ item.type }}</span>
-            <img :src="item.img" :height="height" :width="width" alt="Cross-browser screenshot" />
-          </template>
-        </div>
-      </template>
     </div>
+    <template v-if="screenshotsSorted.length">
+      <div v-for="item in screenshotsSorted" :key="item.id" class="h-max w-max">
+        <template v-if="item.isLoading">
+          <div class="image-skeleton"></div>
+          <div class="image-skeleton"></div>
+        </template>
+        <template v-else>
+          <span class="result__type">{{ item.type }}</span>
+          <img :src="item.img" :width="width" :height="height" alt="Cross-browser screenshot" class="w-auto h-full" />
+        </template>
+      </div>
+    </template>
   </div>
 </template>
 
@@ -107,7 +105,7 @@ const screenshotsSorted = computed(() => {
 async function getScreenshots() {
   const url = useHistoryStore().currentPage.url
 
-  const payload = { ...props, browsers: ['firefox', 'webkit'], url }
+  const payload = { ...props, browsers: ['firefox', 'webkit'], url, x: props.x, y: props.y }
   console.log(payload)
   await takeCrossBrowserScreenshot(payload)
 
@@ -118,10 +116,18 @@ async function getScreenshots() {
 </script>
 
 <style lang="scss" scoped>
-.cbs {
+#cbs {
+  // position: relative;
+  // height: 100%;
+  // width: auto;
+
   .cbs__results {
-    display: flex;
-    flex-direction: row;
+    // display: flex;
+    // flex-direction: row;
+    // position: relative;
+    // height: 100%;
+    // width: 100%;
+    // flex-shrink: 0;
     // flex-wrap: wrap;
     // max-width: 100%;
 
@@ -134,16 +140,19 @@ async function getScreenshots() {
     // row-gap: 1rem;
     // grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     img {
-      //   width: 100%;
-      //   height: auto;
+      // width: 100%;
+      // height: 100%;
+      // max-width: 100%;
     }
   }
 
   .result__type {
-    position: absolute;
-    top: -2rem;
+    // position: absolute;
+    // top: -2rem;
+    display: block;
     font-weight: bold;
     text-transform: uppercase;
+    @apply mb-4;
   }
 }
 

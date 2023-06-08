@@ -23,7 +23,7 @@
             >Run Cross-browser</Button
           > -->
           <!-- Toggle fullPage screenshots on/off -->
-          <!-- <div class="screenshot-settings">
+          <div class="screenshot-settings">
             <label
               @mouseover="showFullPreviews()"
               @mouseout="
@@ -45,7 +45,7 @@
               />
               Visible
             </label>
-          </div> -->
+          </div>
         </div>
         <!-- Right buttons -->
         <div>
