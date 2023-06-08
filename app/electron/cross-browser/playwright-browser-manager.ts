@@ -37,13 +37,15 @@ const addToList = (list: 'installed' | 'no-install', { name, path }: { name: Bro
 
 export const installPackage = async (browser: BrowserName) => {
     console.log(`Installing ${browser}...`);
-    return await runNpxCommand('playwright', [`install`, `${browser}`]);
+    return await playwrightCLI('install', [`${browser}`]);
 };
 
-const runNpxCommand = async (command: string, args: string[]) => {
-    const npx = /^win/.test(process.platform) ? 'npx.cmd' : 'npx';
+const playwrightCLI = async (command: string, args: string[]) => {
+    // const npx = /^win/.test(process.platform) ? 'npx.cmd' : 'npx';
+    // const npxCommand = spawn(npx, [command, ...args], { env });
+    const cliPath = path.join(__dirname, 'node_modules', 'playwright-core/lib/cli/cli.js');
     const env = Object.assign({}, process.env, { PLAYWRIGHT_BROWSERS_PATH: '0' });
-    const npxCommand = spawn(npx, [command, ...args], { env });
+    const npxCommand = spawn('node', [cliPath, command, ...args], { env });
 
     npxCommand.stdout.on('data', (data) => {
         console.log(`stdout: ${data}`);
