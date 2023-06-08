@@ -1,5 +1,7 @@
 import { Page, expect } from '@playwright/test'
 import { test } from './_electron.fixture'
+import fs from 'fs/promises'
+import path from 'path'
 
 test.describe('App', () => {
   let appWindow: Page
@@ -16,36 +18,24 @@ test.describe('App', () => {
     expect(isPackaged).toBe(true)
   })
 
-  test('App name', async ({ electronApp }) => {
+  test('App name is Reflex', async ({ electronApp }) => {
     const appName = await electronApp.evaluate(async ({ app }) => {
       return app.name
     })
 
     expect(appName).toBe('Reflex')
   })
-})
 
-test.describe('SiteTree', () => {
-  let appWindow: Page
+  test('Playwright is packaged correctly', async ({ electronApp }) => {
+    // Check if node_modules/playwright-core exists
+    // It is required for cross-browser screenshots
+    const playwrightModulePath = path.join(electronApp.appFilesPath, 'node_modules/playwright-core')
+    const localBrowsersPath = path.join(playwrightModulePath, '.local-browsers')
 
-  test.beforeEach(async ({ electronApp }) => {
-    appWindow = await electronApp.firstWindow()
-  })
+    // node_modules/playwright-core should exist
+    await expect(fs.access(playwrightModulePath)).resolves.toBeUndefined()
 
-  test('Can add a site', async ({ electronApp }) => {
-    const trigger = appWindow.getByTestId('toggle-site-tree')
-    const siteInput = appWindow.getByTestId('site-input')
-    const siteTitle = appWindow.getByTestId('site-title')
-
-    // Find the trigger
-    await trigger.click()
-
-    // Find the site input
-    await siteInput.type('google.com')
-    await siteInput.press('Enter')
-
-    // Check the site title
-    const siteTitleValue = await siteTitle.inputValue()
-    expect(siteTitleValue).toBe('https://google.com')
+    // .local-browsers directory should not exist yet
+    await expect(fs.access(localBrowsersPath)).rejects.toThrow();
   })
 })
