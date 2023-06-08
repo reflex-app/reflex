@@ -53,6 +53,7 @@ export class CrossBrowserScreenshot {
         })
 
         const context = await browser.newContext({
+            ignoreHTTPSErrors: true,
             viewport: {
                 height: this.height,
                 width: this.width,
