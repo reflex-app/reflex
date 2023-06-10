@@ -51,8 +51,6 @@ const macOS = {
     entitlementsInherit: 'build/entitlements.mac.plist', // Required for MacOS Catalina
     // hardenedRuntime: true, // Required for MacOS Catalina. Now defaults to true.
     // gatekeeperAssess: false, // Required for MacOS Catalina. Now defaults to false.
-    // signIgnore: '/node_modules/playwright/.local-browsers', // Waiting for a way to manually ignore Playwright's browser binaries https://github.com/electron-userland/electron-builder/issues/5500
-    // signIgnore: ['.*/node_modules/playwright/.local-browsers'], // https://github.com/electron-userland/electron-builder/pull/5262
   },
   afterSign: isRelease ? 'scripts/notarize.js' : null, // Notarize Mac (ONLY for deploys)
   dmg: {
@@ -109,16 +107,8 @@ const config = {
     'package.json',
     "!**/node_modules/playwright-core/.local-browsers/**/*"  // Exclude Playwright browsers
   ],
-  extraResources: [
-    'server',
-    {
-      from: path.resolve(root, '/extraResources/'),
-      to: 'app/dist/extraResources', // e.g. /Users/user123/.../reflex/app/build/mac-arm64/Reflex.app/Contents/Resources/app/_____
-    },
-  ],
   // Using ASAR
   // https://github.com/puppeteer/puppeteer/issues/2134#issuecomment-408221446
-  // asar: false, // Whether or not to package
   asar: true,
   asarUnpack: [
     'package.json',
@@ -126,27 +116,15 @@ const config = {
     'node_modules/playwright-core', // Cross-browser screenshots
     'node_modules/html-to-image', // Screenshots from with <WebView>
   ],
-
-  // Once unpacked, you can access the Playwright binaries in a few ways (cross-platform compatible)
-  // 1. https://github.com/puppeteer/puppeteer/issues/2134#issuecomment-408221446
-  // 2.
-  // Copying Playwright's browser binaries (Chromium, Firefox, Webkit) to
-  // the final build AND making sure it can be notarized.
-  // Extra Resources see: https://stackoverflow.com/a/53011325/1114901
-  // https://stackoverflow.com/a/56814459/1114901
-  // extraResources: [
-  //   {
-  //     from: 'node_modules/playwright-core/',
-  //     to: 'node_modules/playwright-core/', // We'll then let the reflex-browser-installer use this as a require() dependency
-  //     filter: ['**/*'], // Copy all the sub-directories and sub-files
-  //   },
-  // ],
-
-  // Or... you could try to access the user's own installation of a browser
-  // See: https://medium.com/@alexanderruma/using-node-js-puppeteer-and-electronjs-to-create-a-web-scraping-app-with-a-desktop-interface-668493ced47d
+  extraResources: [
+    'server',
+    {
+      from: path.resolve(root, '/extraResources/'),
+      to: 'app/dist/extraResources', // e.g. /Users/user123/.../reflex/app/build/mac-arm64/Reflex.app/Contents/Resources/app/_____
+    },
+  ],
   ...macOS,
   ...windowsOS,
 }
 
-// The following will be placed inside of `build: { --> HERE <-- }`
 export default config

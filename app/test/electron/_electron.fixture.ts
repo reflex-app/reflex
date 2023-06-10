@@ -105,7 +105,7 @@ export const test = baseTest.extend<{
 
     // Wait for the app to be ready
     const window = await electronApp.firstWindow()
-    await window.waitForLoadState('networkidle')
+    await window.waitForLoadState('load')
 
     // Clear any localStorage
     await window.evaluate(() => {

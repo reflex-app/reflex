@@ -3,6 +3,8 @@ import { test } from './_electron.fixture'
 import { Dirent, PathLike } from "fs"
 import fs from 'fs/promises'
 import path from 'path'
+import builderConfig from '../../builder.config'
+import pkgJson from '../../package.json'
 
 test.describe('App', () => {
   let appWindow: Page
@@ -27,17 +29,39 @@ test.describe('App', () => {
     expect(appName).toBe('Reflex')
   })
 
-  test('Playwright is packaged correctly', async ({ electronApp }) => {
-    // Check if node_modules/playwright-core exists
-    // It is required for cross-browser screenshots
-    const playwrightModulePath = path.join(electronApp.appFilesPath, 'node_modules/playwright-core')
-    const localBrowsersPath = path.join(playwrightModulePath, '.local-browsers')
+  test('All asarUnpack node_modules are installed as dependencies', async ({ electronApp }) => {
+    // Need to ensure that all node_modules are installed as dependencies, not devDependencies
+    if (builderConfig.asar) {
+      for (const item of builderConfig.asarUnpack) {
+        if (!item.includes('node_modules/')) continue
 
-    // node_modules/playwright-core should exist
-    await expect(fs.access(playwrightModulePath)).resolves.toBeUndefined()
+        // Split just the text after node_modules/
+        const moduleName = item.split('node_modules/')[1]
+
+        // Check if the module is installed as a dependency
+        Object.keys(pkgJson.dependencies).includes(moduleName)
+
+        // Ensure it exists
+        const modulePath = path.join(electronApp.appFilesPath, 'node_modules', moduleName)
+        await expect(fs.access(modulePath)).resolves.toBeUndefined()
+      }
+    } else {
+      console.warn('Skipping test because asar is disabled')
+    }
+  })
+
+  test('Playwright is packaged correctly', async ({ electronApp }) => {
+    const localBrowsersPath = path.join(electronApp.appFilesPath, 'node_modules/playwright-core/.local-browsers')
 
     // .local-browsers directory should not exist yet
     await expect(fs.access(localBrowsersPath)).rejects.toThrow();
+  })
+
+  test('inject.js is correctly packaged', async ({ electronApp }) => {
+    // Check if inject.js exists
+    // It is used for interactions between <WebView> and the main/renderer processes
+    const playwrightModulePath = path.join(electronApp.appFilesPath, 'dist-electron/extraResources/inject.js')
+    await expect(fs.access(playwrightModulePath)).resolves.toBeUndefined()
   })
 
   test('App size is below 500mb', async ({ electronApp }) => {
