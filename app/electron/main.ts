@@ -7,7 +7,8 @@ import path from 'path'
 import { init as initIpcHandlers } from './ipcHandlers'
 import mainWindowInit from './mainWindow'
 import { getPackageJson } from './util'
-;(async () => {
+  ; import { RuntimeConfig } from './config'
+(async () => {
   const version = await getPackageJson().then((data) => data.version)
 
   // Set the version
@@ -26,16 +27,22 @@ import { getPackageJson } from './util'
   app.on('web-contents-created', (event, contents) => {
     contents.on('will-attach-webview', (event, webPreferences, params) => {
       // TODO: Add tests to confirm these paths are correct
+
+      // Check if asar is enabled
+      const runtimeConfig = RuntimeConfig.getInstance()
+      if (!runtimeConfig.dev.appFilesPath || !runtimeConfig.packaged.appFilesPath) {
+        throw new Error('RuntimeConfig.packaged.appFilesPath is not set')
+      }
+
       webPreferences.preload = isDev
         ? path.join(
-            __dirname,
-            '../../',
-            'dist-electron/extraResources/inject.js'
-          )
+          runtimeConfig.dev.appFilesPath,
+          'extraResources/inject.js'
+        )
         : path.join(
-            process.resourcesPath,
-            '/app/dist-electron/extraResources/inject.js'
-          )
+          runtimeConfig.packaged.appFilesPath,
+          'dist-electron/extraResources/inject.js'
+        )
 
       // webPreferences.nodeIntegration = false // Disable Node.js integration inside <webview>
       // webPreferences.webSecurity = false // Disable web security

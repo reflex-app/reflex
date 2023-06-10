@@ -124,6 +124,7 @@ const config = {
     'package.json',
     'dist-electron', // Injected into `renderer` <WebView>
     'node_modules/playwright-core', // Cross-browser screenshots
+    'node_modules/html-to-image', // Screenshots from with <WebView>
   ],
 
   // Once unpacked, you can access the Playwright binaries in a few ways (cross-platform compatible)
