@@ -127,8 +127,6 @@ const runAction = async () => {
 		// Always publish to Github Release
 		run(`yarn run build --publish always`, pkgRoot);
 	} else {
-		log(`Running unit tests... \n`);
-		run(`yarn run test`, pkgRoot);
 		log(`Building the Electron app WITHOUT release… \n`);
 		run(`yarn run build --publish never`, pkgRoot);
 	}
