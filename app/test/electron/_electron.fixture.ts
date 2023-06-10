@@ -7,7 +7,7 @@ import { test as baseTest } from '@playwright/test'
 import path from 'path'
 import fs from 'fs/promises'
 import { BrowserWindow } from 'electron'
-import { app, app as appConfig } from '@/electron/config/index'
+import appConfig from '@/builder.config'
 import os from 'os'
 
 // TODO make this dynamic
@@ -17,6 +17,7 @@ interface ModifiedElectronApplication extends ElectronApplication {
   executablePath: string
   resourcesPath: string
   appFilesPath: string
+  appDirPath: string
 }
 
 let electronApp: ModifiedElectronApplication | null // The Electron app
@@ -58,11 +59,29 @@ const runApp = async () => {
     }) as ModifiedElectronApplication
 
     if (appPath) {
+      if (!electronApp) throw new Error('Failed to launch Electron app')
+
       // Path to the Electron app
       // e.g. /Applications/Reflex.app
       electronApp.executablePath = await electronApp.evaluate(async () => {
         return process.execPath
       })
+
+      // Set the path to the Electron app's directory
+      const setAppDirPath = async (executablePath: string) => {
+        let packagePath: string | null = null;
+
+        if (os.platform() === 'darwin') { // MacOS
+          packagePath = path.resolve(executablePath, '../../..');
+        } else if (os.platform() === 'win32') { // Windows
+          packagePath = path.dirname(executablePath);
+        }
+
+        if (!packagePath) throw new Error('Failed to get package path')
+
+        return packagePath
+      }
+      electronApp.appDirPath = await setAppDirPath(electronApp.executablePath)
 
       // Path to the Electron app's resources directory
       // e.g. /Applications/Reflex.app/Contents/Resources
@@ -71,7 +90,7 @@ const runApp = async () => {
       })
 
       // Path to the Electron app's files directory
-      electronApp.appFilesPath = path.join(electronApp.resourcesPath, `${app.build.isAsarPackaged ? 'app.asar.unpacked' : 'app'}`)
+      electronApp.appFilesPath = path.join(electronApp.resourcesPath, `${appConfig.asar ? 'app.asar.unpacked' : 'app'}`)
     }
   }
 
