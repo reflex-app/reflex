@@ -1,10 +1,10 @@
-import { spawn, fork } from 'child_process';
+import { fork } from 'child_process';
 import path from 'path';
 import fs from 'fs/promises';
 import { reactive } from '@vue/reactivity'
-import { app as appConfig } from '../config/index'
+import { RuntimeConfig } from '../config/index'
 import isDev from 'electron-is-dev';
-import electron, { app } from 'electron';
+import { app } from 'electron';
 import log from 'electron-log'
 
 export type BrowserName = "chromium" | "chrome" | "chrome-beta" | "msedge" | "msedge-beta" | "msedge-dev" | "firefox" | "webkit";
@@ -15,7 +15,13 @@ interface BrowserList {
 }
 
 // The root path to the app
-const rootPath = isDev ? appConfig.dev.root : appConfig.build.packagedPath;
+const getNodeModulesPath = () => {
+    const runtimeConfig = RuntimeConfig.getInstance();
+    const rootPath = isDev ? runtimeConfig.dev.nodeModulesPath : runtimeConfig.packaged.nodeModulesPath;
+    if (!rootPath) throw new Error('Node modules path not found');
+    return rootPath;
+}
+
 
 // Shared reactive state
 export const state = reactive({
@@ -37,9 +43,9 @@ export const installPackage = async (browser: BrowserName) => {
 };
 
 const playwrightCLI = async (command: string, args: string[]) => {
-    const cliPath = path.join(rootPath, 'node_modules', 'playwright-core/lib/cli/cli.js');
+    const cliPath = path.join(getNodeModulesPath(), 'playwright-core/lib/cli/cli.js');
     const env = Object.assign({}, process.env, { PLAYWRIGHT_BROWSERS_PATH: '0' });
-    
+
     const npxCommand = fork(cliPath, [command, ...args], { env });
 
     // Close the child process when the Electron app closes
@@ -87,7 +93,7 @@ export const installBrowsers = async () => {
 }
 
 const checkInstalledBrowsers = async () => {
-    const localBrowsersDir = path.join(rootPath, "node_modules/playwright-core/.local-browsers");
+    const localBrowsersDir = path.join(getNodeModulesPath(), "playwright-core/.local-browsers");
     const browserNames: BrowserName[] = ['firefox', 'webkit'];
     const browserExecutables = browserNames.map((browser: string) => {
         const name = browser as BrowserName;

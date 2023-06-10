@@ -17,6 +17,7 @@ import { installBrowsers } from './cross-browser/playwright-browser-manager'
 import log from 'electron-log'
 import isDev from 'electron-is-dev'
 import enableCrossBrowserScreenshots from './cross-browser/screenshots/api'
+import { RuntimeConfig } from './config'
 
 const INDEX_PATH = path.join(__dirname, '..', 'renderer', 'index.html')
 const DEV_SERVER_URL = process.env.DEV_SERVER_URL // eslint-disable-line prefer-destructuring
@@ -43,6 +44,11 @@ export default function init() {
   })
 
   winHandler.onCreated(async (browserWindow: BrowserWindow) => {
+    // Initialize the runtime config
+    // Exposes file paths and other dynamic properties
+    const appConfig = RuntimeConfig.getInstance()
+    await appConfig.init(browserWindow)
+
     // Restore maximized state if it is set.
     // not possible via Electron options so we do it here
     if (initialWindowPos.isMaximized) {
@@ -72,8 +78,6 @@ export default function init() {
     })
 
     // Check for browser installations
-    // TODO Fix errors
-    // browserInstaller(winHandler)
     await installBrowsers()
 
     // Screenshot worker test

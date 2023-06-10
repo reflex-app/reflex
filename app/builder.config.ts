@@ -1,8 +1,8 @@
 // Set release flag based on Yarn script OR Github Action input
 // NOTE: Github Action envs ("INPUT_RELEASE") are all-caps https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#inputs
-import { app as appConfig } from './electron/config/index'
 import path from 'path'
 const root = './'
+import pkgJson from './package.json'
 
 const getEnv = (name: string, expectedVal: string | null) => {
   // Returns the value for an environment variable (or `null` if it's not defined)
@@ -85,9 +85,8 @@ const windowsOS = {
   },
 }
 
-// The following will be placed inside of `build: { --> HERE <-- }`
-module.exports = {
-  productName: require('./package.json').productName,
+const config = {
+  productName: pkgJson.productName,
   appId: 'com.reflex.app',
   artifactName: 'Reflex-${version}-${os}-${arch}.${ext}',
 
@@ -120,22 +119,12 @@ module.exports = {
   // Using ASAR
   // https://github.com/puppeteer/puppeteer/issues/2134#issuecomment-408221446
   // asar: false, // Whether or not to package
-  asar: appConfig.build.isAsarPackaged,
+  asar: true,
   asarUnpack: [
     'package.json',
-    'dist-electron/extraResources/inject.js', // Injected into `renderer` <WebView>
+    'dist-electron', // Injected into `renderer` <WebView>
     'node_modules/playwright-core', // Cross-browser screenshots
   ],
-  // asarUnpack: [
-  //   ''
-  // ],
-  // asarUnpack: [
-  //   'node_modules/reflex-browser-installer/dist/', // binaries installed here
-  //   'node_modules/playwright-core', // dependency
-  // ], // Unpack dir where browser binaries will be installed
-
-  // asarUnpack: ['**/node_modules/playwright/**/*'], // Unpack the browser binaries
-  // asarUnpack: ['node_modules/playwright/.local-browsers/'], // Unpack the browser binaries
 
   // Once unpacked, you can access the Playwright binaries in a few ways (cross-platform compatible)
   // 1. https://github.com/puppeteer/puppeteer/issues/2134#issuecomment-408221446
@@ -157,3 +146,6 @@ module.exports = {
   ...macOS,
   ...windowsOS,
 }
+
+// The following will be placed inside of `build: { --> HERE <-- }`
+export default config
