@@ -2,7 +2,7 @@
   "name": "@reflex/app",
   "productName": "Reflex",
   "description": "Make responsive websites without the guesswork.",
-  "version": "0.7.0-beta.33",
+  "version": "0.7.0-beta.34",
   "author": "Nick Wittwer",
   "main": "dist-electron/electron/main.js",
   "homepage": "https://reflexapp.nickwittwer.com",
@@ -88,5 +88,5 @@
     "vue-feature-flipping": "^4.0.0",
     "wait-on": "^7.0.1"
   },
-  "stableVersion": "0.7.0-beta.32"
+  "stableVersion": "0.7.0-beta.33"
 }
