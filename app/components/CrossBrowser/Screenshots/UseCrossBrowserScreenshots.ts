@@ -1,4 +1,5 @@
 // This file handles the state and features of the UI for taking screenshots
+import { ScreenshotOptions } from '@/electron/cross-browser/screenshots/api'
 import { reactive } from 'vue'
 import {
   takeScreenshots,
@@ -6,25 +7,19 @@ import {
 } from '~/components/CrossBrowser/Screenshots'
 
 export default function useCrossBrowserScreenshots() {
-  const state = reactive({
+  const state = reactive<{
+    isLoading: boolean
+    loading: string[]
+    screenshots: any[]
+    browsers: string[]
+  }>({
     isLoading: false, // All screens for this browser
     loading: [], // Tracks the currently loading IDs
     screenshots: [],
     browsers: ['firefox', 'webkit'],
   })
 
-  const defaultParams = () => {
-    return {
-      url: 'http://google.com',
-      browsers: ['firefox', 'webkit'],
-      height: 0,
-      width: 0,
-      x: 0,
-      y: 0,
-    }
-  }
-
-  async function takeCrossBrowserScreenshot(params = defaultParams()) {
+  async function takeCrossBrowserScreenshot(params: ScreenshotOptions) {
     state.isLoading = true // Update loading state
     state.loading = [] // empty it out
     state.screenshots = [] // empty it out
@@ -43,7 +38,6 @@ export default function useCrossBrowserScreenshots() {
 
         console.log(screenshot)
         screenshot.img = toBase64Image(screenshot.img) // Convert buffer to base64
-        // screenshot.img = toBase64Image(screenshot.img) // Convert buffer to base64
 
         // Update loading state
         state.loading = state.loading.filter((item) => item !== screenshot.type) // remove this item

@@ -1,11 +1,14 @@
 import { reactive, watchEffect } from 'vue'
 import { app } from '@electron/remote'
+import { ipcRenderer } from 'electron';
+
+import { BrowserName } from '@/electron/cross-browser/playwright-browser-manager'
 
 // Expose the Web Worker using Comlink (via Vite plugin)
 // const { CrossBrowserScreenshot } = new ComlinkWorker<
 //   typeof import('./playwright.worker')
 // >(new URL('./playwright.worker', import.meta.url), {})
-const CrossBrowserScreenshot = {} // TODO fix this
+
 
 // Keep track of all the open browser contexts
 // This data can be accessed reactively
@@ -14,50 +17,55 @@ export const browserContexts = reactive({
 })
 
 // Log changes to the browser contextss
-watchEffect(() => console.log('browser contexts', browserContexts.active))
+watchEffect(() => console.log('browser context change', browserContexts.active))
 
 export async function takeScreenshots(
   { url = '', browsers = [], height = 0, width = 0, x = 0, y = 0 },
-  callback = () => {}
+  callback = () => { }
 ) {
-  const screenshotPromiseGenerator = async (browserName) => {
-    // NOTE: The following NEEDS to have the await beforehand
-    // It is communicating with a Web Worker via Comlink
-    const instance = await new CrossBrowserScreenshot({
-      url,
-      browser: browserName,
-      height,
-      width,
-      x,
-      y,
-      isPackaged: app.isPackaged,
-    }).catch((err) => {
-      console.error(err)
-    })
+  const screenshotPromiseGenerator = async (browserName: BrowserName) => {
+    // Call the `main` process to launch the browser
+    const instance = await ipcRenderer.invoke('cb-instance', { url, browser: browserName, isPackaged: app.isPackaged })
+
+    console.log('browser instance', instance);
+
     const { contextId } = instance
 
-    try {
-      // Track the context
-      browserContexts.active.push({ id: contextId, type: browserName })
+    const screenshots = await ipcRenderer.invoke('cb-screenshot', {
+      contextId,
+      options: {
+        browser: browserName,
+        url,
+        x,
+        y,
+        height, width
+      }
+    })
 
-      // Take the screenshot
-      const screenshots = await instance.takeScreenshot()
+    return { type: browserName, img: screenshots }
 
-      // Stop tracking this context
-      removeBrowserContext(contextId)
+    // try {
+    //   // Track the context
+    //   // browserContexts.active.push({ id: contextId, type: browserName })
 
-      return { type: browserName, img: screenshots }
-    } catch (err) {
-      removeBrowserContext(contextId)
-      console.error(err)
-    }
+    //   // Take the screenshot
+    //   // const screenshots = await instance.takeScreenshot()
+
+    //   // Stop tracking this context
+    //   // removeBrowserContext(contextId)
+
+    //   return { type: browserName, img: screenshots }
+    // } catch (err) {
+    //   removeBrowserContext(contextId)
+    //   console.error(err)
+    // }
 
     // Remove this ID from the list of active
-    function removeBrowserContext(id) {
-      browserContexts.active = browserContexts.active.filter(
-        (i) => !i.id === id
-      )
-    }
+    // function removeBrowserContext(id) {
+    //   browserContexts.active = browserContexts.active.filter(
+    //     (i) => !i.id === id
+    //   )
+    // }
   }
 
   // Loop through each browser

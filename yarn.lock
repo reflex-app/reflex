@@ -2816,7 +2816,7 @@ __metadata:
     "@vueuse/core": ^9.13.0
     "@vueuse/electron": ^9.13.0
     autoprefixer: ^10.4.14
-    comlink: ^4.3.1
+    comlink: ^4.4.1
     css-loader: ^5.2.7
     electron: ^23.3.5
     electron-builder: ^23.6.0
@@ -2844,7 +2844,6 @@ __metadata:
     tailwindcss: ^3.3.2
     typescript: ^5.0.0
     uuid: 8.3.2
-    vite-plugin-comlink: ^3.0.5
     vite-plugin-electron-renderer: ^0.14.1
     vite-plugin-target: ^0.1.1
     vite-plugin-vuetify: ^1.0.1
@@ -7873,7 +7872,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"comlink@npm:^4.3.1":
+"comlink@npm:^4.4.1":
   version: 4.4.1
   resolution: "comlink@npm:4.4.1"
   checksum: a7a2004030768d13ec9373f780aa0edae57616095cb453ec8950d9f97e5fa654c0e84030ac87173b818843a04a5fa9ce9749d48b6bd453cfbfb5e6a9ebb6b2ff
@@ -13994,15 +13993,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"json5@npm:2.2.1":
-  version: 2.2.1
-  resolution: "json5@npm:2.2.1"
-  bin:
-    json5: lib/cli.js
-  checksum: a7174bc4e146613750a04a8a7fe2bc4ab6f4cad20486f8d7026cc4546b3ee1dc3762fc5e7377557ae99414745aac782486e409f31c363084a455e05cb495ce7a
-  languageName: node
-  linkType: hard
-
 "json5@npm:^1.0.1, json5@npm:^1.0.2":
   version: 1.0.2
   resolution: "json5@npm:1.0.2"
@@ -14583,15 +14573,6 @@ __metadata:
   dependencies:
     magic-string: ^0.30.0
   checksum: bcbc86555e2517ca79d27009846122200f355868800ecb6db3b48b77c458c8e6cc9d87febf27fb7b4cebf8878f78c4e3e7f12ae6c81ed463b6b335e7c1bab5ee
-  languageName: node
-  linkType: hard
-
-"magic-string@npm:0.26.7":
-  version: 0.26.7
-  resolution: "magic-string@npm:0.26.7"
-  dependencies:
-    sourcemap-codec: ^1.4.8
-  checksum: 950035b344fe2a8163668980bc4a215a0b225086e6e22100fd947e7647053c6ba6b4f11a04de83a97a276526ccb602ef53b173725dbb1971fb146cff5a5e14f6
   languageName: node
   linkType: hard
 
@@ -19694,13 +19675,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sourcemap-codec@npm:^1.4.8":
-  version: 1.4.8
-  resolution: "sourcemap-codec@npm:1.4.8"
-  checksum: f099279fdaae070ff156df7414bbe39aad69cdd615454947ed3e19136bfdfcb4544952685ee73f56e17038f4578091e12b17b283ed8ac013882916594d95b9e6
-  languageName: node
-  linkType: hard
-
 "space-separated-tokens@npm:^1.0.0":
   version: 1.1.5
   resolution: "space-separated-tokens@npm:1.1.5"
@@ -21898,19 +21872,6 @@ __metadata:
     vue-tsc:
       optional: true
   checksum: a6287acf1c620eaac85079b327ff959bfce36c5366073e87b9e886e6405a4653c4eb30f27d0e5a52f6ac584eee5d9534b3434ce0d1f7999bdb6f9622f95b761e
-  languageName: node
-  linkType: hard
-
-"vite-plugin-comlink@npm:^3.0.5":
-  version: 3.0.5
-  resolution: "vite-plugin-comlink@npm:3.0.5"
-  dependencies:
-    json5: 2.2.1
-    magic-string: 0.26.7
-  peerDependencies:
-    comlink: ^4.3.1
-    vite: ">=2.9.6"
-  checksum: a52850a15ab4c15153eacb6e56fa910cd9760b0d21fa0a0db1ffc22cab696709de62e31f36e35d84dd0f1d6c0b2c788172878c862c7733b545cba9d1403b1d18
   languageName: node
   linkType: hard
 

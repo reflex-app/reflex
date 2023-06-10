@@ -15,3 +15,6 @@ build
 **/*.db
 test/screenshots
 test-results
+
+builder.config.js
+app/electron/config/index.js

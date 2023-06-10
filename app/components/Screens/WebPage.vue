@@ -314,7 +314,6 @@ export default {
       if (event.channel === 'REFLEX_SYNC') {
         // BUS: https://binbytes.com/blog/create-global-event-bus-in-nuxtjs
         const data = event.args[0]
-        // console.log(data)
 
         // TODO This can fail if multiple artboards are selected
         // TODO wait for did-attach-webview event
@@ -329,7 +328,7 @@ export default {
         }
 
         // Update the scroll info in the parent components
-        if (data.event.type === 'scroll') {
+        if (data.event.type === 'wheel') {
           const { x, y } = data.origin.scrollOffset
           this.$emit('scroll', {
             x,

@@ -1,13 +1,13 @@
 // Set release flag based on Yarn script OR Github Action input
 // NOTE: Github Action envs ("INPUT_RELEASE") are all-caps https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#inputs
-
-const path = require('path')
+import path from 'path'
 const root = './'
+import pkgJson from './package.json'
 
-const getEnv = (name, expectedVal) => {
+const getEnv = (name: string, expectedVal: string | null) => {
   // Returns the value for an environment variable (or `null` if it's not defined)
   // We assume the env vars are uppercase
-  const getEnv = (name) => process.env[name.toUpperCase()] || null
+  const getEnv = (name: string) => process.env[name.toUpperCase()] || null
 
   // Set the variable
   // Try looking for the name on its own, as well as the Github Actions version ("INPUT_")
@@ -27,7 +27,7 @@ const getEnv = (name, expectedVal) => {
 }
 
 const isRelease = getEnv('RELEASE', 'true') || false // Controls whether the app will be codesigned, notarized, published
-const isLocalBuild = getEnv('LOCAL_BUILD', 'true') || false // Used to enable `publish` in local builds
+const isFastBuild = getEnv('FAST_BUILD', 'true') || false
 
 console.log(`Is release? ${isRelease}`)
 
@@ -42,7 +42,7 @@ const macOS = {
       // It creates dmg + zip files for Mac builds
       // This is expected for auto-updates to work properly
       // Waiting on: https://github.com/electron-userland/electron-builder/issues/2199
-      target: 'default',
+      target: isFastBuild ? 'dir' : 'default',
       // Build for M1 chips (arm64) + Intel (x64) chips
       arch: ['arm64', 'x64'],
     },
@@ -70,7 +70,7 @@ const macOS = {
         type: 'file',
       },
     ],
-  },
+  }
 }
 
 const windowsOS = {
@@ -85,9 +85,8 @@ const windowsOS = {
   },
 }
 
-// The following will be placed inside of `build: { --> HERE <-- }`
-module.exports = {
-  productName: require('./package.json').productName,
+const config = {
+  productName: pkgJson.productName,
   appId: 'com.reflex.app',
   artifactName: 'Reflex-${version}-${os}-${arch}.${ext}',
 
@@ -104,7 +103,12 @@ module.exports = {
   directories: {
     output: path.resolve(root, 'build'),
   },
-  files: ['.output/**/*', 'dist-electron', 'package.json'],
+  files: [
+    '.output/**/*',
+    'dist-electron',
+    'package.json',
+    "!**/node_modules/playwright-core/.local-browsers/**/*"  // Exclude Playwright browsers
+  ],
   extraResources: [
     'server',
     {
@@ -114,17 +118,13 @@ module.exports = {
   ],
   // Using ASAR
   // https://github.com/puppeteer/puppeteer/issues/2134#issuecomment-408221446
-  asar: false, // Whether or not to package
-  // asarUnpack: [
-  //   ''
-  // ],
-  // asarUnpack: [
-  //   'node_modules/reflex-browser-installer/dist/', // binaries installed here
-  //   'node_modules/playwright-core', // dependency
-  // ], // Unpack dir where browser binaries will be installed
-
-  // asarUnpack: ['**/node_modules/playwright/**/*'], // Unpack the browser binaries
-  // asarUnpack: ['node_modules/playwright/.local-browsers/'], // Unpack the browser binaries
+  // asar: false, // Whether or not to package
+  asar: true,
+  asarUnpack: [
+    'package.json',
+    'dist-electron', // Injected into `renderer` <WebView>
+    'node_modules/playwright-core', // Cross-browser screenshots
+  ],
 
   // Once unpacked, you can access the Playwright binaries in a few ways (cross-platform compatible)
   // 1. https://github.com/puppeteer/puppeteer/issues/2134#issuecomment-408221446
@@ -146,3 +146,6 @@ module.exports = {
   ...macOS,
   ...windowsOS,
 }
+
+// The following will be placed inside of `build: { --> HERE <-- }`
+export default config

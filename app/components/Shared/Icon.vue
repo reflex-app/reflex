@@ -1,5 +1,6 @@
 <template>
-  <div v-if="icon" class="icon" :class="iconColorHandler, `h-[${props.height}] w-[${props.width}]`" v-html="icon" />
+  <div v-if="icon" class="icon" :class="iconColorHandler, `h-[${props.height}] w-[${props.width}]`" v-html="icon"
+    :data-name="props.name" />
 </template>
 
 <script setup lang="ts">
@@ -12,7 +13,7 @@ const props = defineProps({
   },
   color: {
     type: String,
-    default: 'dark'
+    default: 'default'
   },
   height: {
     type: String,
@@ -25,11 +26,13 @@ const props = defineProps({
 })
 
 const iconStore = useIconStore();
-
 const icon = ref(null)
 
 const iconColorHandler = computed(() => {
   switch (props.color) {
+    case 'default':
+      return 'icon--default'
+
     case 'dark':
       return 'icon--dark'
 
@@ -51,7 +54,7 @@ onMounted(async () => {
   });
 
   if (arr.length) {
-    const fn = arr[0][1]
+    const fn: () => Promise<string> = arr[0][1]
 
     // Set icon value
     icon.value = await fn?.().then((res: any) => {
@@ -79,6 +82,10 @@ onMounted(async () => {
   // // TODO The following should be autoprefixed...
   // -webkit-mask-repeat: no-repeat;
   // -webkit-mask-position: center;
+
+  &.icon--default {
+    // Nothing to do here
+  }
 
   &.icon--dark {
     // background: black;

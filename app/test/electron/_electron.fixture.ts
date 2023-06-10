@@ -7,11 +7,20 @@ import { test as baseTest } from '@playwright/test'
 import path from 'path'
 import fs from 'fs/promises'
 import { BrowserWindow } from 'electron'
+import appConfig from '@/builder.config'
+import os from 'os'
 
 // TODO make this dynamic
 const isDevApp = false
 
-let electronApp: ElectronApplication | null // The Electron app
+interface ModifiedElectronApplication extends ElectronApplication {
+  executablePath: string
+  resourcesPath: string
+  appFilesPath: string
+  appDirPath: string
+}
+
+let electronApp: ModifiedElectronApplication | null // The Electron app
 
 const runApp = async () => {
   // Setup code
@@ -27,27 +36,69 @@ const runApp = async () => {
 
   if (isDevApp) {
     appPath = path.join(electronBuildDir, '/electron/main.js')
-    electronApp = await electron.launch({ args: [appPath] })
+    electronApp = await electron.launch({ args: [appPath] }) as ModifiedElectronApplication
   } else {
-    const root = path.join(buildDir, '/mac/Reflex.app')
-    const packageJson = await fs
-      .readFile(path.join(root, '/Contents/Resources/app/package.json'), 'utf8')
-      .then((data) => JSON.parse(data))
+    let root;
 
-    const resourcesDir = path.join(buildDir, 'Contents', 'Resources')
+    if (os.platform() === 'win32') {
+      root = path.join(buildDir, '/win-unpacked');
+      appPath = path.join(root, '/Reflex.exe');
+    } else if (os.platform() === 'darwin') {
+      if (os.arch() === 'arm64') {
+        // for M1+ chip
+        root = path.join(buildDir, '/mac-arm64/Reflex.app');
+      } else {
+        // for Intel-based macs
+        root = path.join(buildDir, '/mac/Reflex.app');
+      }
+      appPath = path.join(root, '/Contents/MacOS/Reflex');
+    }
 
-    appPath = path.join(root, '/Contents/MacOS/Reflex')
     electronApp = await electron.launch({
       executablePath: appPath,
-      args: [path.join(resourcesDir, 'app', packageJson.main)],
-    })
+    }) as ModifiedElectronApplication
+
+    if (appPath) {
+      if (!electronApp) throw new Error('Failed to launch Electron app')
+
+      // Path to the Electron app
+      // e.g. /Applications/Reflex.app
+      electronApp.executablePath = await electronApp.evaluate(async () => {
+        return process.execPath
+      })
+
+      // Set the path to the Electron app's directory
+      const setAppDirPath = async (executablePath: string) => {
+        let packagePath: string | null = null;
+
+        if (os.platform() === 'darwin') { // MacOS
+          packagePath = path.resolve(executablePath, '../../..');
+        } else if (os.platform() === 'win32') { // Windows
+          packagePath = path.dirname(executablePath);
+        }
+
+        if (!packagePath) throw new Error('Failed to get package path')
+
+        return packagePath
+      }
+      electronApp.appDirPath = await setAppDirPath(electronApp.executablePath)
+
+      // Path to the Electron app's resources directory
+      // e.g. /Applications/Reflex.app/Contents/Resources
+      electronApp.resourcesPath = await electronApp.evaluate(async () => {
+        return process.resourcesPath
+      })
+
+      // Path to the Electron app's files directory
+      electronApp.appFilesPath = path.join(electronApp.resourcesPath, `${appConfig.asar ? 'app.asar.unpacked' : 'app'}`)
+    }
   }
 
   return electronApp
 }
 
 export const test = baseTest.extend<{
-  electronApp: ElectronApplication
+  electronApp: ModifiedElectronApplication
 }>({
   electronApp: async ({ page }, use) => {
     const electronApp = await runApp()

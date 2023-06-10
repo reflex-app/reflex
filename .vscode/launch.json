@@ -1,0 +1,21 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug Mac build",
+            "type": "node",
+            "request": "launch",
+            "protocol": "inspector",
+            "cwd": "${workspaceFolder}",
+            // "program": "${workspaceFolder}/app/dist-electron/electron/main.js",
+            "stopOnEntry": false,
+            "args": [],
+            "runtimeExecutable": "${workspaceFolder}/app/build/mac/Reflex.app/Contents/MacOS/Reflex",
+            "runtimeArgs": [
+                "./app",
+                "--remote-debugging-port=9222"
+            ],
+            "console": "integratedTerminal"
+        }
+    ]
+}

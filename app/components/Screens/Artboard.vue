@@ -4,9 +4,9 @@
   <!-- ... and then we use Selection to select just one artboard -->
   <div class="artboard-container" :class="{ 'panzoom-exclude': state.panzoomEnabled }">
     <div v-show="isVisible" ref="artboard" :artboard-id="props.id" class="artboard" :class="{
-        'is-hover': state.isHover,
-        'is-selected': state.isSelected,
-      }" @mouseover="hoverStart(props.id)" @mouseout="hoverEnd(props.id)" @click.right="rightClickHandler()">
+      'is-hover': state.isHover,
+      'is-selected': state.isSelected,
+    }" @mouseover="hoverStart(props.id)" @mouseout="hoverEnd(props.id)" @click.right="rightClickHandler()">
       <div class="artboard__top">
         <div>
           <span class="title">{{ props.title }}</span>
@@ -23,25 +23,29 @@
         </div>
       </div>
       <div class="artboard__keypoints" />
-      <div ref="artboardResizable" class="artboard__content" :class="{
+      <div class="flex gap-8">
+        <div ref="artboardResizable" class="artboard__content" :class="{
           'layout--horizontal': state.horizontalLayout,
           'is-hover': state.isHover,
           'is-selected': state.isSelected,
-        }" :style="{ height: props.height + 'px', width: props.width + 'px' }">
-        <div class="content__frame" @mousedown="$emit('clicked', props.id, $event)">
-          <WebPage :id="props.id" :artboard-id="props.id" ref="frame"
-            :allow-interactions="state.canInteractWithWebContext" class="webview" @loadstart="state.isLoading = true"
-            @loadend="state.isLoading = false" @scroll="updateScrollPosition" />
+        }">
+          <div class="content__frame" @mousedown="$emit('clicked', props.id, $event)">
+            <WebPage :id="props.id" :artboard-id="props.id" ref="frame"
+              :allow-interactions="state.canInteractWithWebContext" class="webview" @loadstart="state.isLoading = true"
+              @loadend="state.isLoading = false" @scroll="updateScrollPosition"
+              :style="{ height: props.height + 'px', width: props.width + 'px' }" />
+          </div>
+          <div v-show="state.isHover" class="artboard__handles">
+            <div class="handle_right" title="Resize" @mousedown="triggerResize($event, 'horizontal')" />
+            <div class="handle_bottom" title="Resize" @mousedown="triggerResize($event, 'vertical')" />
+          </div>
         </div>
         <div class="artboard__cross-browser-screenshots">
           <CrossBrowserScreenshots ref="cross-browser-DOM" :height="height" :width="width" :x="scrollPosition.x"
             :y="scrollPosition.y" :artboard-id="props.id" />
         </div>
-        <div v-show="state.isHover" class="artboard__handles">
-          <div class="handle_right" title="Resize" @mousedown="triggerResize($event, 'horizontal')" />
-          <div class="handle_bottom" title="Resize" @mousedown="triggerResize($event, 'vertical')" />
-        </div>
       </div>
+
     </div>
   </div>
 </template>
@@ -55,13 +59,13 @@ import {
   Ref,
   watch,
 } from 'vue'
-import rightClickMenu from '~/mixins/rightClickMenu'
+import rightClickMenu from '@/mixins/rightClickMenu'
 import WebPage from './WebPage.vue'
-import { useHistoryStore } from '~/store/history'
-import { useSelectedArtboardsStore } from '~/store/selectedArtboards'
-import { useHoverArtboardsStore } from '~/store/hoverArtboards'
-import { useInteractionStore } from '~/store/interactions'
-import CrossBrowserScreenshots from '~/components/CrossBrowser/Screenshots/CrossBrowserScreenshots.vue'
+import { useHistoryStore } from '@/store/history'
+import { useSelectedArtboardsStore } from '@/store/selectedArtboards'
+import { useHoverArtboardsStore } from '@/store/hoverArtboards'
+import { useInteractionStore } from '@/store/interactions'
+import CrossBrowserScreenshots from '@/components/CrossBrowser/Screenshots/CrossBrowserScreenshots.vue'
 
 const history = useHistoryStore()
 const selectedArtboards = useSelectedArtboardsStore()
@@ -185,7 +189,7 @@ onMounted(async () => {
   }
 })
 
-function updateScrollPosition({ x, y }) {
+function updateScrollPosition({ x, y }: { x: number; y: number }) {
   scrollPosition.x = x
   scrollPosition.y = y
 }
@@ -391,7 +395,7 @@ $artboard-handle-height: 1.5rem;
 
   .artboard__content {
     width: auto;
-    height: auto;
+    height: fit-content;
     position: relative;
     z-index: 1;
     box-sizing: border-box;
@@ -417,8 +421,9 @@ $artboard-handle-height: 1.5rem;
     }
 
     .content__frame {
-      min-width: 100%; // the outer div is always set to the accurate artboard width
-      min-height: 100%; // the outer div is always set to the accurate artboard height
+      // min-width: 100%; // the outer div is always set to the accurate artboard width
+      // min-height: 100%; // the outer div is always set to the accurate artboard height
+      height: fit-content;
       border: none;
       overflow: hidden;
       z-index: 1;
