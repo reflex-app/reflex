@@ -4,31 +4,24 @@
       {{ title }}
     </div>-->
     <div class="panel__content">
+      <ToggleScreenHeights />
       <ScreensPanel v-show="isChildPanel('Screens')" />
     </div>
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import ScreensPanel from './ScreensPanel.vue'
+import ToggleScreenHeights from '../Screens/ToggleScreenHeights.vue';
 
-export default {
-  name: 'PanelComponent',
-  components: {
-    ScreensPanel
-  },
-  props: ['title'],
-  computed: {},
-  methods: {
-    isChildPanel (val) {
-      if (this.title === val) {
-        return true
-      } else {
-        return false
-      }
-    }
-  }
+const props = defineProps({
+  title: String,
+})
+
+const isChildPanel = (val: string): boolean => {
+  return props.title === val
 }
+
 </script>
 
 <style lang="scss" scoped>

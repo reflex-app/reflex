@@ -1,10 +1,10 @@
 import { defineStore } from 'pinia'
 import { v1 as uuid } from 'uuid'
-// import Vue from 'vue'
-// import { useStorage } from '@vueuse/core'
 
 export interface Artboard {
   height: number
+  viewportHeight: number
+  fullHeight: number
   width: number
   title: string
   id: string
@@ -31,11 +31,13 @@ export const useArtboardsStore = defineStore('artboards', {
     },
   },
   actions: {
-    addArtboard(artboard) {
+    addArtboard(artboard: Artboard) {
       this.list.push({
         title: artboard.title || 'Undefined',
         width: artboard.width || 375,
         height: artboard.height || 667,
+        fullHeight: artboard.fullHeight || 0,
+        viewportHeight: artboard.viewportHeight || artboard.height || 0,
         isVisible: artboard.isVisible || true,
         id: uuid(),
         isInViewport: artboard.isInViewport || false,
@@ -45,14 +47,14 @@ export const useArtboardsStore = defineStore('artboards', {
       const index = this.list.findIndex((obj) => obj.id === id)
       this.list.splice(index, 1)
     },
-    addMultipleArtboards(payload) {
+    addMultipleArtboards(payload: { data: Artboard[] }) {
       const artboards = payload.data
 
       for (const i in artboards) {
         this.addArtboard(artboards[i])
       }
     },
-    duplicateArtboard(payload) {
+    duplicateArtboard(payload: Artboard) {
       const newId = uuid()
 
       if (newId === payload.id) throw new Error('Failed to generate new ID')
@@ -85,7 +87,7 @@ export const useArtboardsStore = defineStore('artboards', {
         ? (artboard.isInViewport = isVisible)
         : console.warn('No artboard found')
     },
-    changeArtboardVisibility(artboard) {
+    changeArtboardVisibility(artboard: Artboard) {
       // 1. Get the artboard.id
       const id = artboard.id
       const index = this.list.findIndex((obj) => obj.id === id)
@@ -106,13 +108,13 @@ export const useArtboardsStore = defineStore('artboards', {
       // TODO: Verify this works
       this.list[index] = artboard
     },
-    setArtboards(payload) {
+    setArtboards(payload: Artboard[]) {
       if (this.list !== payload) {
         this.list = payload
       }
     },
-    resizeArtboard(artboard) {
-      if (!artboard.id || !artboard.height || !artboard.width) {
+    resizeArtboard(artboard: Partial<Artboard>) {
+      if (!artboard.id) {
         throw new Error('artboard missing properties')
       }
 
@@ -121,11 +123,33 @@ export const useArtboardsStore = defineStore('artboards', {
       for (let i = 0; i < artboards.length; i++) {
         if (artboard.id === artboards[i].id) {
           // look for match by id
-          artboards[i].height = artboard.height // updated object
-          artboards[i].width = artboard.width // updated object
+          artboards[i].height = artboard.height || artboards[i].height // updated object
+          artboards[i].width = artboard.width || artboards[i].width // updated object
+          artboards[i].fullHeight =
+            artboard.fullHeight || artboards[i].fullHeight // updated object
           break // exit loop, object has been updated
         }
       }
+    },
+    
+    setArtboardFullHeight({ id }: { id: Artboard['id'] }) {
+      const artboard = this.list.find((artboard) => artboard.id === id)
+      if (!artboard) {
+        console.error('Artboard not found')
+        return
+      }
+
+      artboard.height = artboard.fullHeight
+    },
+
+    setArtboardViewportHeight({ id }: { id: Artboard['id'] }) {
+      const artboard = this.list.find((artboard) => artboard.id === id)
+      if (!artboard) {
+        console.error('Artboard not found')
+        return
+      }
+
+      artboard.height = artboard.viewportHeight
     },
   },
   persist: true,

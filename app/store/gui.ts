@@ -5,6 +5,7 @@ interface State {
   focusMode: boolean
   discoMode: boolean
   siteTree: boolean
+  isScreensFullHeight: boolean
 }
 
 export const useGuiStore = defineStore('gui', {
@@ -13,6 +14,7 @@ export const useGuiStore = defineStore('gui', {
     focusMode: false,
     discoMode: false,
     siteTree: false,
+    isScreensFullHeight: false,
   }),
   getters: {},
   actions: {
@@ -30,6 +32,9 @@ export const useGuiStore = defineStore('gui', {
     toggleGui(key: keyof State) {
       // Reverse the boolean value of the state key
       this[key] = !this[key]
+    },
+    setGui(key: keyof State, value: boolean) {
+      this[key] = value
     },
   },
 })
