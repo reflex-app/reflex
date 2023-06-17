@@ -35,9 +35,9 @@ const data = reactive({
   artboards: computed(() => artboards.list),
 })
 
-watchEffect(() => {
+watchEffect(async () => {
   if (gui.isScreensFullHeight) {
-    showFullPreviews()
+    await showFullPreviews()
   } else {
     hideFullPreviews()
   }
@@ -88,7 +88,7 @@ async function showFullPreviews() {
         timeoutId = setTimeout(() => {
           clearInterval(intervalId)
           resolve()
-        }, 8000)
+        }, 3000)
       })
     })
   )

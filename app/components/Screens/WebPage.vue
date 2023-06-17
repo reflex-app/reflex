@@ -1,5 +1,10 @@
 <template>
-  <webview ref="frame" class="frame" v-bind="webviewOptions" :electronConfig="webpreferences" />
+  <webview
+    ref="frame"
+    class="frame"
+    v-bind="webviewOptions"
+    :electronConfig="webpreferences"
+  />
 </template>
 
 <script lang="ts">
@@ -7,7 +12,8 @@ import path from 'path'
 import { mapState } from 'pinia'
 import { state as reflexState, setPublisher } from '~/mixins/reflex-sync'
 import { useHistoryStore } from '~/store/history'
-import { watch, ref, Ref, getCurrentInstance, computed } from 'vue'
+import { Artboard, useArtboardsStore } from '@/store/artboards'
+import * as capture from '~/components/Screenshot/capture'
 
 const runtimeConfig = useRuntimeConfig()
 
@@ -59,7 +65,6 @@ export default {
         nodeIntegration: true, // Enables Node.js integration
         contextIsolation: true,
       }
-
 
       // Return as a comma-separated string
       return Object.keys(settings)
@@ -244,6 +249,7 @@ export default {
 
       // The frame has been destroyed
       // Remove event listeners
+      // TODO: When should we remove listeners?
       if (!frame) {
         this.removeListeners()
         throw new Error('Frame listeners still active after component destroy.')
@@ -309,6 +315,8 @@ export default {
       frame.send('bridgeToFrame', {
         id: this.id,
       })
+
+      this.updateFullHeight(this.id)
     },
     onMessageReceived(event) {
       if (event.channel === 'REFLEX_SYNC') {
@@ -397,6 +405,37 @@ export default {
       const history = useHistoryStore()
       history.changeSiteData({
         url: event.url,
+      })
+    },
+    updateFullHeight(id: Artboard['id']) {
+      // Update the fullHeight of the artboard
+      const artboards = useArtboardsStore()
+      artboards.list.map(async (artboard) => {
+        // 1. Execute some JS inside the webview to get the height of the page
+        const webviewEl = capture.getWebview(artboard.id)
+        const webviewElContents = capture.getWebViewContents(artboard.id)
+        const fullHeight: number = await webviewElContents?.executeJavaScript(
+          `(() => ( document.body.offsetHeight ))()`
+        )
+
+        if (!webviewElContents) {
+          console.warn('No webview contents found for artboard', artboard)
+          return
+        }
+
+        // 2. Update the Store
+        const match = artboards.list.find((i) => i.id === artboard.id)
+        if (!match) {
+          console.warn('No match found for artboard', artboard)
+          return
+        }
+
+        console.log('match', match.height)
+        console.log('fullHeight', fullHeight);
+        
+
+        // Save the fullHeight to the Store
+        artboards.updateArtboardAtIndex({ ...match, fullHeight: fullHeight })
       })
     },
   },

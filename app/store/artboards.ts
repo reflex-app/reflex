@@ -118,18 +118,22 @@ export const useArtboardsStore = defineStore('artboards', {
         throw new Error('artboard missing properties')
       }
 
-      const artboards = this.list
+      const index = this.list.findIndex((a) => a.id === artboard.id)
 
-      for (let i = 0; i < artboards.length; i++) {
-        if (artboard.id === artboards[i].id) {
-          // look for match by id
-          artboards[i].height = artboard.height || artboards[i].height // updated object
-          artboards[i].width = artboard.width || artboards[i].width // updated object
-          artboards[i].fullHeight =
-            artboard.fullHeight || artboards[i].fullHeight // updated object
-          break // exit loop, object has been updated
-        }
+      if (index === -1) {
+        console.error('Artboard not found')
+        return
       }
+
+      console.log('artboard', this.list[index].viewportHeight, artboard.viewportHeight);
+      
+
+      const updatedArtboard = {
+        ...this.list[index],
+        ...artboard,
+      }
+
+      this.list.splice(index, 1, updatedArtboard)
     },
     
     setArtboardFullHeight({ id }: { id: Artboard['id'] }) {
