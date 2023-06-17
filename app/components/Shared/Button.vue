@@ -1,108 +1,150 @@
 <template>
   <div class="button" :class="containerStyles">
-    <Icon v-if="icon" :name="icon" :color="iconColor" class="button__icon" />
+    <div ref="iconRef">
+      <Icon
+        v-if="icon"
+        :name="icon"
+        :color="iconColor"
+        class="button__icon"
+        @mounted="onIconMounted"
+      />
+    </div>
+
     <span class="button__text">
       <slot />
     </span>
   </div>
 </template>
 
-<script>
-export default {
-  props: {
-    role: {
-      type: String,
-      default: 'secondary'
-    },
-    icon: {
-      type: String
-    },
-    rounded: {
-      type: Boolean,
-      default: false
-    },
-    tight: {
-      type: Boolean,
-      default: false
-    },
-    isPressed: {
-      type: Boolean,
-      default: false
-    }
+<script lang="ts" setup>
+import Icon from './Icon.vue'
+
+const iconRef = ref<HTMLDivElement | null>(null)
+const slots = useSlots()
+
+const props = defineProps({
+  role: {
+    type: String,
+    default: 'secondary',
   },
-  computed: {
-    containerStyles() {
-      // Returns a class name based on
-      // some logic w/ props
-      const classNames = []
-
-      // Set primary/secondary
-      switch (this.role) {
-        case 'primary':
-          classNames.push('button--primary')
-          break
-        case 'secondary':
-          classNames.push('button--secondary')
-          break
-        case 'ghost':
-          classNames.push('button--ghost')
-          break
-        case 'danger':
-          classNames.push('button--danger')
-          break
-      }
-
-      // Check for button content + icon
-      const slotHasContent = !!this.$slots.default
-
-      if (slotHasContent && this.icon) {
-        classNames.push('button--with-icon')
-      }
-
-      // If isPressed
-      if (this.isPressed) {
-        classNames.push('button--is-pressed')
-      }
-
-      // If tight
-      if (this.tight) {
-        classNames.push('button--tight')
-      }
-
-      // If rounded
-      if (this.rounded) {
-        classNames.push('button--rounded')
-      }
-
-      return classNames
-    },
-    iconColor() {
-      if (!this.icon) return false
-
-      switch (this.role) {
-        // Dark BG
-        case 'primary':
-          return 'light'
-
-        // Light BG
-        case 'secondary':
-        case 'ghost':
-          return 'dark'
-
-        default:
-          return false
-      }
-    }
+  icon: {
+    type: String,
   },
-  methods: {
-    /**
-     * Emits a 'click' event
-     * Can be listened via @click
-     */
-    // onClick(event) {
-    //   this.$emit('click', event)
-    // }
+  rounded: {
+    type: Boolean,
+    default: false,
+  },
+  tight: {
+    type: Boolean,
+    default: false,
+  },
+  isPressed: {
+    type: Boolean,
+    default: false,
+  },
+})
+
+const containerStyles = computed(() => {
+  // Returns a class name based on
+  // some logic w/ props
+  const classNames = []
+
+  // Set primary/secondary
+  switch (props.role) {
+    case 'primary':
+      classNames.push('button--primary')
+      break
+    case 'secondary':
+      classNames.push('button--secondary')
+      break
+    case 'ghost':
+      classNames.push('button--ghost')
+      break
+    case 'danger':
+      classNames.push('button--danger')
+      break
   }
+
+  // Check for button content + icon
+  const slotHasContent = !!slots.default
+
+  if (slotHasContent && props.icon) {
+    classNames.push('button--with-icon')
+  }
+
+  // If isPressed
+  if (props.isPressed) {
+    classNames.push('button--is-pressed')
+  }
+
+  // If tight
+  if (props.tight) {
+    classNames.push('button--tight')
+  }
+
+  // If rounded
+  if (props.rounded) {
+    classNames.push('button--rounded')
+  }
+
+  return classNames
+})
+
+const iconColor = computed(() => {
+  if (!props.icon) return false
+
+  switch (props.role) {
+    // Dark BG
+    case 'primary':
+      return 'light'
+
+    // Light BG
+    case 'secondary':
+    case 'ghost':
+      return 'dark'
+
+    default:
+      return false
+  }
+})
+
+const onIconMounted = () => {
+  if (!iconRef.value) return
+  console.log('test', iconRef.value)
+
+  const svgs = iconRef.value.querySelectorAll('svg')
+  let classToAdd = ''
+
+  svgs.forEach((svg: Element) => {
+    let hasFill = false
+    let hasStroke = false
+
+    svg.querySelectorAll('g, path').forEach((g: Element) => {
+      let fill = g.getAttribute('fill')
+      let stroke = g.getAttribute('stroke')
+
+      if (fill && fill !== 'none') {
+        hasFill = true
+        g.classList.add('icon-target--fill')
+      }
+      if (stroke && stroke !== 'none') {
+        hasStroke = true
+        g.classList.add('icon-target--stroke')
+      }
+    })
+
+    if (hasFill && hasStroke) {
+      classToAdd = 'has-fill-and-stroke'
+    } else if (hasFill) {
+      classToAdd = 'has-fill'
+    } else if (hasStroke) {
+      classToAdd = 'has-stroke'
+    } else {
+      classToAdd = 'has-no-fill-or-stroke'
+    }
+
+    svg.classList.add(classToAdd)
+  })
 }
 </script>
 
@@ -163,11 +205,11 @@ export default {
     box-shadow: none;
     border-color: transparent;
 
-    &:hover {
+    &:hover:not(.button--is-pressed) {
       background: #efefef;
     }
 
-    &:active {
+    &:active:not(.button--is-pressed) {
       color: darken(#6f6f6f, 40%);
       background: #cecece;
     }
@@ -196,9 +238,29 @@ export default {
     border-color: $accent-color;
     box-shadow: 0 0 3px rgba($accent-color, 0.5);
     background: rgba($accent-color, 0.1);
+    background: $accent-color;
 
     .button__icon {
-      background: $accent-color;
+      // if svg has a fill, change it
+      // otherwise if svg has a stroke, change that
+
+      :deep(svg) {
+        .icon-target--fill {
+          fill: white;
+
+          &:hover {
+            fill: $accent-color;
+          }
+        }
+
+        .icon-target--stroke {
+          stroke: white;
+
+          &:hover {
+            stroke: $accent-color;
+          }
+        }
+      }
     }
   }
 
