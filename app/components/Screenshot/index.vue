@@ -19,33 +19,9 @@
           <!-- <Button
             v-if="data.selectedArtboards.length === 1"
             role="secondary"
-            @click="copyToClipboard"
+            @click=""
             >Run Cross-browser</Button
           > -->
-          <!-- Toggle fullPage screenshots on/off -->
-          <div class="screenshot-settings">
-            <label
-              @mouseover="showFullPreviews()"
-              @mouseout="
-                state.captureFullPage === false ? hideFullPreviews() : ''
-              "
-            >
-              <input
-                type="radio"
-                v-model="state.captureFullPage"
-                :value="true"
-              />
-              Full page
-            </label>
-            <label>
-              <input
-                type="radio"
-                v-model="state.captureFullPage"
-                :value="false"
-              />
-              Visible
-            </label>
-          </div>
         </div>
         <!-- Right buttons -->
         <div>
