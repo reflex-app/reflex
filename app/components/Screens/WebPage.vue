@@ -285,8 +285,12 @@ export default {
       frame.addEventListener('did-start-loading', this.loadstart) // loadstart
       frame.addEventListener('did-attach-webview', () => {
         console.log('attached webview!!')
-      }) // loadstart
+      })
+
+      frame.addEventListener('did-navigate-in-page', this.navigatedInWebContext)
+
       frame.addEventListener('dom-ready', this.contentloaded) // contentload
+      // TODO: did-stop-loading is causing memory leak
       frame.addEventListener('did-stop-loading', this.loadstop) // loadstop
       frame.addEventListener('ipc-message', this.onMessageReceived) // Listen for response
 
@@ -301,6 +305,8 @@ export default {
         return
       }
       frame.removeEventListener('did-start-loading', this.loadstart)
+      frame.removeEventListener('did-navigate-in-page', this.navigatedInWebContext)
+
       frame.removeEventListener('dom-ready', this.contentloaded)
       frame.removeEventListener('did-stop-loading', this.loadstop)
       frame.removeEventListener('ipc-message', this.onMessageReceived)
@@ -318,6 +324,28 @@ export default {
         title: 'Loading...',
       })
     },
+    navigatedInWebContext() {
+      // Make sure the page was not just reloaded
+      const frame = this.$refs.frame
+
+      if (!frame) {
+        console.error('Frame not found?')
+        return
+      }
+
+      const frameUrl = frame.getURL()
+      const isUrlUpdated = frameUrl === this.url
+
+      if (!isUrlUpdated) {
+        console.log('navigated in web app')
+
+        // TODO: Add a way to update the URL without triggering a full page reload
+        const history = useHistoryStore()
+        history.changeSiteData({
+          url: frameUrl,
+        })
+      }
+    },
     contentloaded() {
       const frame = this.$refs.frame
       if (!frame) {
@@ -334,50 +362,6 @@ export default {
       this.updateFullHeight(this.id)
 
       // TODO: Memory leak w/ this event listener
-    },
-    onMessageReceived(event) {
-      if (event.channel === 'REFLEX_SYNC') {
-        // BUS: https://binbytes.com/blog/create-global-event-bus-in-nuxtjs
-        const data = event.args[0]
-
-        // TODO This can fail if multiple artboards are selected
-        // TODO wait for did-attach-webview event
-        if (this.allowInteractions) {
-          // The sender
-          setPublisher(this.id) // Update the publisher
-
-          // Only capture actions while allowed
-          this.$bus.emit('REFLEX_SYNC', {
-            ...data,
-          })
-        }
-
-        // Update the scroll info in the parent components
-        if (data.event.type === 'wheel') {
-          const { x, y } = data.origin.scrollOffset
-          this.$emit('scroll', {
-            x,
-            y,
-          })
-        }
-      } else if (event.channel === 'initiateBridge') {
-        const returnedData = event.args[0]
-        const title = returnedData.title
-        const favicon = returnedData.favicon
-
-        const history = useHistoryStore()
-        history.changeSiteData({
-          title,
-          favicon,
-        })
-      } else if (event.channel === 'unload') {
-        // Remove listeners when the frame is unloaded
-        // TODO: What should happen? Listeners on the frame should not be removed, as it won't be destroyed
-        console.log('Unloading')
-        // this.removeListeners()
-      } else {
-        console.log(`Unrecognized channel: ${event.channel}`, event.args[0])
-      }
     },
     loadstop() {
       const frame = this.$refs.frame
@@ -425,6 +409,50 @@ export default {
       history.changeSiteData({
         url: event.url,
       })
+    },
+    onMessageReceived(event) {
+      if (event.channel === 'REFLEX_SYNC') {
+        // BUS: https://binbytes.com/blog/create-global-event-bus-in-nuxtjs
+        const data = event.args[0]
+
+        // TODO This can fail if multiple artboards are selected
+        // TODO wait for did-attach-webview event
+        if (this.allowInteractions) {
+          // The sender
+          setPublisher(this.id) // Update the publisher
+
+          // Only capture actions while allowed
+          this.$bus.emit('REFLEX_SYNC', {
+            ...data,
+          })
+        }
+
+        // Update the scroll info in the parent components
+        if (data.event.type === 'wheel') {
+          const { x, y } = data.origin.scrollOffset
+          this.$emit('scroll', {
+            x,
+            y,
+          })
+        }
+      } else if (event.channel === 'initiateBridge') {
+        const returnedData = event.args[0]
+        const title = returnedData.title
+        const favicon = returnedData.favicon
+
+        const history = useHistoryStore()
+        history.changeSiteData({
+          title,
+          favicon,
+        })
+      } else if (event.channel === 'unload') {
+        // Remove listeners when the frame is unloaded
+        // TODO: What should happen? Listeners on the frame should not be removed, as it won't be destroyed
+        console.log('Unloading')
+        // this.removeListeners()
+      } else {
+        console.log(`Unrecognized channel: ${event.channel}`, event.args[0])
+      }
     },
     updateFullHeight(id: Artboard['id']) {
       // Update the fullHeight of the artboard
