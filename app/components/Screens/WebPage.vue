@@ -136,6 +136,8 @@ export default {
     // Unbind any listeners
     this.unbindEventListeners()
 
+    this.removeListeners()
+
     // Unsubscribe from Store
     // this.unsubscribeAction()
   },
@@ -244,16 +246,18 @@ export default {
      * @param {object} options Accepts a history option. When true, will save URL to history.
      */
     loadSite(options = { history: true }) {
-      // const vm = this
       const frame = this.$refs.frame
 
       // The frame has been destroyed
       // Remove event listeners
       // TODO: When should we remove listeners?
       if (!frame) {
-        this.removeListeners()
+        // this.removeListeners()
         throw new Error('Frame listeners still active after component destroy.')
       }
+
+      // Initialize the event listeners
+      this.addListeners()
 
       // Turn history saving on/off
       switch (options.history) {
@@ -268,9 +272,6 @@ export default {
         default:
           break
       }
-
-      // Initialize the event listeners
-      this.addListeners()
 
       // Set the URL, start loading
       frame.setAttribute('src', this.url)
@@ -295,6 +296,10 @@ export default {
     },
     removeListeners() {
       const frame = this.$refs.frame
+      if (!frame) {
+        console.error('Frame not found?')
+        return
+      }
       frame.removeEventListener('did-start-loading', this.loadstart)
       frame.removeEventListener('dom-ready', this.contentloaded)
       frame.removeEventListener('did-stop-loading', this.loadstop)
@@ -328,8 +333,7 @@ export default {
 
       this.updateFullHeight(this.id)
 
-      // Remove event listener
-      frame.removeEventListener('dom-ready', this.contentloaded)
+      // TODO: Memory leak w/ this event listener
     },
     onMessageReceived(event) {
       if (event.channel === 'REFLEX_SYNC') {
@@ -367,8 +371,10 @@ export default {
           favicon,
         })
       } else if (event.channel === 'unload') {
+        // Remove listeners when the frame is unloaded
+        // TODO: What should happen? Listeners on the frame should not be removed, as it won't be destroyed
         console.log('Unloading')
-        this.removeListeners()
+        // this.removeListeners()
       } else {
         console.log(`Unrecognized channel: ${event.channel}`, event.args[0])
       }
@@ -381,8 +387,6 @@ export default {
       frame.send('bridgeToFrame', {
         id: this.id,
       })
-
-      frame.removeEventListener('did-stop-loading', this.loadstop)
 
       // History
       // TODO: webContents.history is no longer around https://github.com/electron/electron/issues/26727

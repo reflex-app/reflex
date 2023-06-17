@@ -110,7 +110,6 @@ const iconColor = computed(() => {
 
 const onIconMounted = () => {
   if (!iconRef.value) return
-  console.log('test', iconRef.value)
 
   const svgs = iconRef.value.querySelectorAll('svg')
   let classToAdd = ''
