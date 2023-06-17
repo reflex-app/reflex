@@ -277,6 +277,10 @@ export default {
     },
     addListeners() {
       const frame = this.$refs.frame
+      if (!frame) {
+        console.error('Frame not found?')
+        return
+      }
       frame.addEventListener('did-start-loading', this.loadstart) // loadstart
       frame.addEventListener('did-attach-webview', () => {
         console.log('attached webview!!')
@@ -311,12 +315,21 @@ export default {
     },
     contentloaded() {
       const frame = this.$refs.frame
+      if (!frame) {
+        console.error('Frame not found?')
+        return
+      }
 
       frame.send('bridgeToFrame', {
         id: this.id,
       })
 
+      console.log('contentloaded')
+
       this.updateFullHeight(this.id)
+
+      // Remove event listener
+      frame.removeEventListener('dom-ready', this.contentloaded)
     },
     onMessageReceived(event) {
       if (event.channel === 'REFLEX_SYNC') {
@@ -355,7 +368,7 @@ export default {
         })
       } else if (event.channel === 'unload') {
         console.log('Unloading')
-        // this.removeListeners();
+        this.removeListeners()
       } else {
         console.log(`Unrecognized channel: ${event.channel}`, event.args[0])
       }
@@ -368,6 +381,8 @@ export default {
       frame.send('bridgeToFrame', {
         id: this.id,
       })
+
+      frame.removeEventListener('did-stop-loading', this.loadstop)
 
       // History
       // TODO: webContents.history is no longer around https://github.com/electron/electron/issues/26727
@@ -431,8 +446,7 @@ export default {
         }
 
         console.log('match', match.height)
-        console.log('fullHeight', fullHeight);
-        
+        console.log('fullHeight', fullHeight)
 
         // Save the fullHeight to the Store
         artboards.updateArtboardAtIndex({ ...match, fullHeight: fullHeight })
