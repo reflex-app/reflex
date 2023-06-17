@@ -1,5 +1,5 @@
 <template>
-  <div class="button" :class="containerStyles" @click="onClick($event)">
+  <div class="button" :class="containerStyles">
     <Icon v-if="icon" :name="icon" :color="iconColor" class="button__icon" />
     <span class="button__text">
       <slot />
@@ -99,9 +99,9 @@ export default {
      * Emits a 'click' event
      * Can be listened via @click
      */
-    onClick(event) {
-      this.$emit('click', event)
-    }
+    // onClick(event) {
+    //   this.$emit('click', event)
+    // }
   }
 }
 </script>
