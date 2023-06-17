@@ -2,11 +2,23 @@
   <!-- Allow pointer-events when panzoom is enabled -->
   <!-- The 'panzoom-exclude' class allows us to ignore Panzoom click events on a certain element -->
   <!-- ... and then we use Selection to select just one artboard -->
-  <div class="artboard-container" :class="{ 'panzoom-exclude': state.panzoomEnabled }">
-    <div v-show="isVisible" ref="artboard" :artboard-id="props.id" class="artboard" :class="{
-      'is-hover': state.isHover,
-      'is-selected': state.isSelected,
-    }" @mouseover="hoverStart(props.id)" @mouseout="hoverEnd(props.id)" @click.right="rightClickHandler()">
+  <div
+    class="artboard-container"
+    :class="{ 'panzoom-exclude': state.panzoomEnabled }"
+  >
+    <div
+      v-show="isVisible"
+      ref="artboard"
+      :artboard-id="props.id"
+      class="artboard"
+      :class="{
+        'is-hover': state.isHover,
+        'is-selected': state.isSelected,
+      }"
+      @mouseover="hoverStart(props.id)"
+      @mouseout="hoverEnd(props.id)"
+      @click.right="rightClickHandler()"
+    >
       <div class="artboard__top">
         <div>
           <span class="title">{{ props.title }}</span>
@@ -24,41 +36,64 @@
       </div>
       <div class="artboard__keypoints" />
       <div class="flex gap-8">
-        <div ref="artboardResizable" class="artboard__content" :class="{
-          'layout--horizontal': state.horizontalLayout,
-          'is-hover': state.isHover,
-          'is-selected': state.isSelected,
-        }">
-          <div class="content__frame" @mousedown="$emit('clicked', props.id, $event)">
-            <WebPage :id="props.id" :artboard-id="props.id" ref="frame"
-              :allow-interactions="state.canInteractWithWebContext" class="webview" @loadstart="state.isLoading = true"
-              @loadend="state.isLoading = false" @scroll="updateScrollPosition"
-              :style="{ height: props.height + 'px', width: props.width + 'px' }" />
+        <div
+          ref="artboardResizable"
+          class="artboard__content"
+          :class="{
+            'layout--horizontal': state.horizontalLayout,
+            'is-hover': state.isHover,
+            'is-selected': state.isSelected,
+          }"
+        >
+          <div
+            class="content__frame"
+            @mousedown="$emit('clicked', props.id, $event)"
+          >
+            <WebPage
+              :id="props.id"
+              :artboard-id="props.id"
+              ref="frame"
+              :allow-interactions="state.canInteractWithWebContext"
+              class="webview"
+              @loadstart="state.isLoading = true"
+              @loadend="state.isLoading = false"
+              @scroll="updateScrollPosition"
+              :style="{
+                height: props.height + 'px',
+                width: props.width + 'px',
+              }"
+            />
           </div>
           <div v-show="state.isHover" class="artboard__handles">
-            <div class="handle_right" title="Resize" @mousedown="triggerResize($event, 'horizontal')" />
-            <div class="handle_bottom" title="Resize" @mousedown="triggerResize($event, 'vertical')" />
+            <div
+              class="handle_right"
+              title="Resize"
+              @mousedown="triggerResize($event, 'horizontal')"
+            />
+            <div
+              class="handle_bottom"
+              title="Resize"
+              @mousedown="triggerResize($event, 'vertical')"
+            />
           </div>
         </div>
         <div class="artboard__cross-browser-screenshots">
-          <CrossBrowserScreenshots ref="cross-browser-DOM" :height="height" :width="width" :x="scrollPosition.x"
-            :y="scrollPosition.y" :artboard-id="props.id" />
+          <CrossBrowserScreenshots
+            ref="cross-browser-DOM"
+            :height="height"
+            :width="width"
+            :x="scrollPosition.x"
+            :y="scrollPosition.y"
+            :artboard-id="props.id"
+          />
         </div>
       </div>
-
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import {
-  reactive,
-  computed,
-  onMounted,
-  ref,
-  Ref,
-  watch,
-} from 'vue'
+import { reactive, computed, onMounted, ref, Ref, watch } from 'vue'
 import rightClickMenu from '@/mixins/rightClickMenu'
 import WebPage from './WebPage.vue'
 import { useHistoryStore } from '@/store/history'
@@ -66,6 +101,7 @@ import { useSelectedArtboardsStore } from '@/store/selectedArtboards'
 import { useHoverArtboardsStore } from '@/store/hoverArtboards'
 import { useInteractionStore } from '@/store/interactions'
 import CrossBrowserScreenshots from '@/components/CrossBrowser/Screenshots/CrossBrowserScreenshots.vue'
+import { Artboard } from '@/store/artboards'
 
 const history = useHistoryStore()
 const selectedArtboards = useSelectedArtboardsStore()
@@ -246,7 +282,6 @@ function validateArtboardSizeInput(name, value) {
  */
 function triggerResize(event, direction) {
   console.log('should resize', event, direction)
-  const vm = this
 
   const parent = artboardResizable.value
   const resizable = parent
@@ -292,17 +327,20 @@ function triggerResize(event, direction) {
           id: props.id,
           width: parseInt(resizable.style.width, 10),
           height: startHeight,
-        })
+        } as Artboard)
         break
       case 'vertical':
         // Run our scroll functions
-        resizable.style.height = startHeight + e.clientY - startY + 'px'
+        const newHeight = startHeight + e.clientY - startY + 'px'
+        resizable.style.height = newHeight
+
         // Update the dimensions in the UI
         emit('resize', {
           id: props.id,
-          height: parseInt(resizable.style.height, 10),
+          height: parseInt(newHeight, 10),
+          viewportHeight: parseInt(newHeight, 10),
           width: startWidth,
-        })
+        } as Artboard)
         break
     }
   }
@@ -373,7 +411,7 @@ $artboard-handle-height: 1.5rem;
     justify-content: space-between;
     margin-bottom: 0.5rem;
 
-    &>*:not(:first-child) {
+    & > *:not(:first-child) {
       margin-left: 16px;
     }
 

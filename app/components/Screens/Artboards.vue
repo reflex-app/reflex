@@ -1,10 +1,19 @@
 <template>
   <div ref="containerRef">
     <div v-if="artboards.list.length" id="artboards">
-      <ArtboardComponent v-for="(artboard, index) in artboards.list" ref="artboard" :key="artboard.id" v-bind="artboard"
-        :index="index" :artboard-id="artboard.id" :selected-items="selectedArtboards.list"
-        :is-visible="artboard.isVisible" :viewportObserver="data.viewportObserverParent" @clicked="onClick"
-        @resize="resize" />
+      <ArtboardComponent
+        v-for="(artboard, index) in artboards.list"
+        ref="artboard"
+        :key="artboard.id"
+        v-bind="artboard"
+        :index="index"
+        :artboard-id="artboard.id"
+        :selected-items="selectedArtboards.list"
+        :is-visible="artboard.isVisible"
+        :viewportObserver="data.viewportObserverParent"
+        @clicked="onClick"
+        @resize="resize"
+      />
     </div>
     <!-- Show empty state if no artboards exist -->
     <WelcomeScreen v-else />
@@ -79,7 +88,7 @@ onBeforeUnmount(() => {
   stopViewportObserver()
 })
 
-function resize(artboard) {
+function resize(artboard: Artboard) {
   artboards.resizeArtboard(artboard)
 }
 
