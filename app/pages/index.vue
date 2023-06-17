@@ -1,8 +1,8 @@
 <template>
   <div id="main-view">
     <DevModeHud />
-    <SiteTree />
     <SidePanel />
+    <SiteTree />
     <Screenshots />
     <Panzoom>
       <Artboards />
