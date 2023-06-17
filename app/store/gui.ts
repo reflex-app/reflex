@@ -19,15 +19,7 @@ export const useGuiStore = defineStore('gui', {
   getters: {},
   actions: {
     toggleSidebar(bool?: boolean) {
-      if (!bool) bool = ''
-
-      if (bool === true) {
-        this.sidebar = true
-      } else if (bool === false) {
-        this.sidebar = false
-      } else {
-        this.sidebar = !this.sidebar
-      }
+      this.sidebar = bool ?? !this.sidebar
     },
     toggleGui(key: keyof State) {
       // Reverse the boolean value of the state key

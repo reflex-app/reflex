@@ -1,26 +1,49 @@
 <template>
-  <div id="toolbar" :class="{ 'is-fullscreen': state.isFullScreen, 'is-mac': state.isMac }">
+  <div
+    id="toolbar"
+    :class="{ 'is-fullscreen': state.isFullScreen, 'is-mac': state.isMac }"
+  >
     <div class="flex gap-2">
-      <Button role="ghost" icon="screens" :tight="true" :is-pressed="data.sidebar" title="Screens"
-        @click="toggleSidebar" />
-      <div @click="toggleSiteTree()" class="cursor-pointer border border-gray-300 rounded-md p-1 flex place-items-center"
-        data-testid="toggle-site-tree">
-        <Icon name="star" />
-      </div>
+      <Button
+        role="ghost"
+        icon="screens"
+        :tight="true"
+        :is-pressed="data.sidebar"
+        title="Screens"
+        @click="toggleSidebar"
+      />
+      <Button
+        role="ghost"
+        icon="star"
+        :tight="false"
+        title="Site Tree"
+        @click="toggleSiteTree()"
+        data-testid="toggle-site-tree"
+      />
     </div>
     <div class="draggable" @dblclick="toggleWindowMaximize" />
     <div v-if="data.artboards.length" id="toolbar__url-container">
       <HistoryControls />
       <div class="bar">
-        <div class="bar__right" :class="{ 'is-active': state.inputStateActive }">
-          <div v-show="!state.inputStateActive" @click="state.inputStateActive = !state.inputStateActive">
+        <div
+          class="bar__right"
+          :class="{ 'is-active': state.inputStateActive }"
+        >
+          <div
+            v-show="!state.inputStateActive"
+            @click="state.inputStateActive = !state.inputStateActive"
+          >
             <!-- <img v-if="favicon" :src="favicon" class="favicon" height="10" width="10"> -->
             <span class="title" :title="data.title || 'Page title'">{{
               data.title
             }}</span>
           </div>
-          <URLInput class="input" :state="state.inputStateActive" @url-changed="changeURL"
-            @toggle-input="state.inputStateActive = !state.inputStateActive" />
+          <URLInput
+            class="input"
+            :state="state.inputStateActive"
+            @url-changed="changeURL"
+            @toggle-input="state.inputStateActive = !state.inputStateActive"
+          />
         </div>
       </div>
     </div>
@@ -159,7 +182,7 @@ function toggleFullscreen() {
 
   // Remove spacing reserved for traffic-sign on Mac
   &.is-fullscreen {
-    &>*:first-child {
+    & > *:first-child {
       margin-left: 1rem;
     }
   }

@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="artboards.list.length > 0 && history.currentPage.url"
-    class="screenshot-settings"
+    class="screenshot-settings border-b border-gray-300 py-2 px-4 flex gap-4"
   >
     <label>
       <input type="radio" v-model="gui.isScreensFullHeight" :value="true" />
