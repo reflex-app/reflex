@@ -1,10 +1,15 @@
 <template>
-  <div v-if="icon" class="icon" :class="iconColorHandler, `h-[${props.height}] w-[${props.width}]`" v-html="icon"
-    :data-name="props.name" />
+  <div
+    v-if="icon"
+    class="icon"
+    :class="(iconColorHandler, `h-[${props.height}] w-[${props.width}]`)"
+    v-html="icon"
+    :data-name="props.name"
+  />
 </template>
 
 <script setup lang="ts">
-import { useIconStore } from "@/store/icons";
+import { useIconStore } from '@/store/icons'
 
 const props = defineProps({
   name: {
@@ -13,19 +18,21 @@ const props = defineProps({
   },
   color: {
     type: String,
-    default: 'default'
+    default: 'default',
   },
   height: {
     type: String,
-    default: '36px'
+    default: '36px',
   },
   width: {
     type: String,
-    default: '36px'
-  }
+    default: '36px',
+  },
 })
 
-const iconStore = useIconStore();
+const emit = defineEmits(['mounted'])
+
+const iconStore = useIconStore()
 const icon = ref(null)
 
 const iconColorHandler = computed(() => {
@@ -50,23 +57,24 @@ const iconColorHandler = computed(() => {
 onMounted(async () => {
   // Look up icons in store
   const arr = Object.entries(iconStore.icons).filter((i) => {
-    return i[0] === props.name;
-  });
+    return i[0] === props.name
+  })
 
   if (arr.length) {
     const fn: () => Promise<string> = arr[0][1]
 
     // Set icon value
     icon.value = await fn?.().then((res: any) => {
-      return res;
-    });
+      return res
+    })
   } else {
     console.error('Icon not found', props.name)
   }
 
+  await nextTick()
+
+  emit('mounted')
 })
-
-
 </script>
 
 <style lang="scss" scoped>
