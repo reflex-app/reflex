@@ -115,6 +115,13 @@ onMounted(() => {
   }
 })
 
+onBeforeUnmount(() => {
+  // ! Required to avoid memory leaks
+  const currentWindow = remote.getCurrentWindow()
+  currentWindow.off('enter-full-screen', toggleFullscreen)
+  currentWindow.off('leave-full-screen', toggleFullscreen)
+})
+
 function changeURL(url) {
   // Change the URL
   // TODO: Add debounce?
