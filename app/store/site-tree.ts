@@ -50,7 +50,16 @@ export const useSiteTree = defineStore({
   },
   actions: {
     addSite(site: string) {
-      this.urls.push({ site: addHttpsPrefix(site), paths: [] })
+      const siteWithHttps = addHttpsPrefix(site)
+      const siteAlreadyExists = this.urls.some(
+        (url) => url.site === siteWithHttps
+      )
+
+      if (siteAlreadyExists) {
+        return false
+      }
+
+      this.urls.push({ site: siteWithHttps, paths: [] })
     },
     addPath(site: string, path: string) {
       const siteIndex = this.urls.findIndex((url) => url.site === site)
@@ -142,6 +151,8 @@ export const useSiteTree = defineStore({
   },
   persist: true,
 })
+
+export default useSiteTree
 
 function findSubPath(paths: Path[], path: string): Path | undefined {
   const subPaths = path.split('/').filter((p) => p)
