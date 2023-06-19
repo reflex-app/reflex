@@ -94,10 +94,20 @@ export const useArtboardsStore = defineStore('artboards', {
       // 2. Change the visibility of just that artboard's is property
       this.list[index].isVisible = !artboard.isVisible
     },
-    updateArtboardAtIndex(artboard: Artboard) {
+    updateArtboardAtIndex(artboard: Partial<Artboard>) {
       // 1. Get the artboard.id
+      if (!artboard.id) {
+        console.error('artboard missing properties')
+        return
+      }
       const { id } = artboard
+      const currentArtboard = this.list.find((obj) => obj.id === id)
       const index = this.list.findIndex((obj) => obj.id === id)
+
+      if (!currentArtboard) {
+        console.error('Artboard not found')
+        return
+      }
 
       // 2. Change just that artboard's content
       // IMPORTANT: Vue.set() is required to keep reactivity!
@@ -106,7 +116,7 @@ export const useArtboardsStore = defineStore('artboards', {
 
       // Vue 3 should not need to use Vue.set() anymore
       // TODO: Verify this works
-      this.list[index] = artboard
+      this.list[index] = { ...currentArtboard, ...artboard }
     },
     setArtboards(payload: Artboard[]) {
       if (this.list !== payload) {
@@ -125,8 +135,11 @@ export const useArtboardsStore = defineStore('artboards', {
         return
       }
 
-      console.log('artboard', this.list[index].viewportHeight, artboard.viewportHeight);
-      
+      console.log(
+        'artboard',
+        this.list[index].viewportHeight,
+        artboard.viewportHeight
+      )
 
       const updatedArtboard = {
         ...this.list[index],
@@ -135,8 +148,7 @@ export const useArtboardsStore = defineStore('artboards', {
 
       this.list.splice(index, 1, updatedArtboard)
     },
-    
-    setArtboardFullHeight({ id }: { id: Artboard['id'] }) {
+    setArtboardToFullHeight({ id }: { id: Artboard['id'] }) {
       const artboard = this.list.find((artboard) => artboard.id === id)
       if (!artboard) {
         console.error('Artboard not found')
@@ -145,8 +157,7 @@ export const useArtboardsStore = defineStore('artboards', {
 
       artboard.height = artboard.fullHeight
     },
-
-    setArtboardViewportHeight({ id }: { id: Artboard['id'] }) {
+    setArtboardToViewportHeight({ id }: { id: Artboard['id'] }) {
       const artboard = this.list.find((artboard) => artboard.id === id)
       if (!artboard) {
         console.error('Artboard not found')

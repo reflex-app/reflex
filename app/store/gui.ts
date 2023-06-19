@@ -29,4 +29,6 @@ export const useGuiStore = defineStore('gui', {
       this[key] = value
     },
   },
+  // Save this store in localStorage
+  persist: true,
 })
