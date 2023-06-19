@@ -16,7 +16,7 @@
 
 <script setup lang="ts">
 import * as capture from '~/components/Screenshot/capture'
-import { useArtboardsStore } from '~/store/artboards'
+import { Artboard, useArtboardsStore } from '~/store/artboards'
 import { useGuiStore } from '~/store/gui'
 import { useHistoryStore } from '@/store/history'
 
@@ -43,6 +43,28 @@ watchEffect(async () => {
   }
 })
 
+// Watch to see if the fullHeight changes, and then update the webview height
+watch(artboards.list, async (newVal, oldVal) => {
+  if (gui.isScreensFullHeight) {
+    for (const [index, artboard] of newVal.entries()) {
+      setArtboardToFullHeight(artboard.id)
+      console.info('set artboard to full height', artboard)
+    }
+  }
+})
+
+async function setArtboardToFullHeight(id: Artboard['id']) {
+  // 1. Execute some JS inside the webview to get the height of the page
+  const webviewElContents = capture.getWebViewContents(id)
+  if (!webviewElContents) {
+    console.warn('No webview contents found for artboard', id)
+    return
+  }
+
+  // Modify the height to be the full height
+  artboards.setArtboardToFullHeight({ id: id })
+}
+
 async function showFullPreviews() {
   await Promise.all(
     data.artboards.map(async (artboard) => {
@@ -66,30 +88,10 @@ async function showFullPreviews() {
       }
 
       // Save the fullHeight to the Store
-      artboards.updateArtboardAtIndex({ ...match, fullHeight: fullHeight })
+      // artboards.updateArtboardAtIndex({ ...match, fullHeight: fullHeight })
 
       // Modify the height to be the full height
-      artboards.setArtboardFullHeight({ id: match.id })
-
-      // Return a promise that resolves when the artboard's full height is set in the store
-      return new Promise<void>((resolve) => {
-        let timeoutId: ReturnType<typeof setTimeout>
-        const intervalId = setInterval(() => {
-          const updatedArtboard = artboards.list.find(
-            (i) => i.id === artboard.id
-          )
-          if (updatedArtboard?.height === updatedArtboard?.fullHeight) {
-            clearInterval(intervalId)
-            clearTimeout(timeoutId)
-            resolve()
-          }
-        }, 100)
-
-        timeoutId = setTimeout(() => {
-          clearInterval(intervalId)
-          resolve()
-        }, 3000)
-      })
+      artboards.setArtboardToFullHeight({ id: match.id })
     })
   )
 }
@@ -102,7 +104,7 @@ async function hideFullPreviews() {
       return
     }
 
-    artboards.setArtboardViewportHeight({ id: match.id })
+    artboards.setArtboardToViewportHeight({ id: match.id })
   }
 }
 </script>
