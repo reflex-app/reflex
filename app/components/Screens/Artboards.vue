@@ -30,6 +30,10 @@ import { useSelectedArtboardsStore } from '~/store/selectedArtboards'
 import { useInteractionStore } from '~/store/interactions'
 import { useEventListener } from '@vueuse/core'
 import useEventHandler from '@/components/Screens/useEventHandler'
+import { useGuiStore } from '~/store/gui'
+import * as capture from '~/components/Screenshot/capture'
+
+const gui = useGuiStore()
 
 const { state: userEventsState } = useEventHandler() // init event handling
 
@@ -71,6 +75,16 @@ onMounted(() => {
       }
     }
   )
+
+  // Watch to see if the fullHeight changes, and then update the webview height
+  watch(data.artboards, async (newVal, oldVal) => {
+    if (gui.isScreensFullHeight) {
+      for (const [index, artboard] of newVal.entries()) {
+        setArtboardToFullHeight(artboard.id)
+        console.info('set artboard to full height', artboard)
+      }
+    }
+  })
 })
 
 // TODO Consider enabling this once panzoom is a Vue plugin?
@@ -325,6 +339,18 @@ function onElementObserved(entries) {
     }
   })
 }
+
+async function setArtboardToFullHeight(id: Artboard['id']) {
+    // 1. Execute some JS inside the webview to get the height of the page
+    const webviewElContents = capture.getWebViewContents(id)
+    if (!webviewElContents) {
+      console.warn('No webview contents found for artboard', id)
+      return
+    }
+
+    // Modify the height to be the full height
+    artboards.setArtboardToFullHeight({ id: id })
+  }
 </script>
 
 <style lang="scss">

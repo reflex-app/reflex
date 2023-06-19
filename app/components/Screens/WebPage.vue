@@ -484,33 +484,6 @@ export default {
       artboards.updateArtboardAtIndex({ id: id, fullHeight: fullHeight })
 
       console.log('updated full height', fullHeight)
-
-      // const fullHeight: number = await frame.webContents
-
-      // const artboards = useArtboardsStore()
-      // artboards.list.map(async (artboard) => {
-      //   // 1. Execute some JS inside the webview to get the height of the page
-      //   const webviewEl = capture.getWebview(artboard.id)
-      //   const webviewElContents = capture.getWebViewContents(artboard.id)
-      //   const fullHeight: number = await webviewElContents?.executeJavaScript(
-      //     `(() => ( document.body.offsetHeight ))()`
-      //   )
-
-      //   if (!webviewElContents) {
-      //     console.warn('No webview contents found for artboard', artboard)
-      //     return
-      //   }
-
-      //   // 2. Update the Store
-      //   const match = artboards.list.find((i) => i.id === artboard.id)
-      //   if (!match) {
-      //     console.warn('No match found for artboard', artboard)
-      //     return
-      //   }
-
-      //   // Save the fullHeight to the Store
-      //   artboards.updateArtboardAtIndex({ ...match, fullHeight: fullHeight })
-      // })
     },
   },
 }
