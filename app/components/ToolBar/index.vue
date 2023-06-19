@@ -15,6 +15,7 @@
       <Button
         role="ghost"
         icon="star"
+        :is-pressed="data.siteTreeEnabled"
         :tight="false"
         title="Site Tree"
         @click="toggleSiteTree()"
@@ -87,6 +88,7 @@ const data = reactive({
   url: computed(() => history.currentPage.url),
   favicon: computed(() => history.currentPage.favicon),
   sidebar: computed(() => gui.sidebar),
+  siteTreeEnabled: computed(() => gui.siteTree),
 })
 
 const state = reactive({
