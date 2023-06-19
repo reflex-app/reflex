@@ -22,7 +22,7 @@ import { RuntimeConfig } from './config'
 const INDEX_PATH = path.join(__dirname, '..', 'renderer', 'index.html')
 const DEV_SERVER_URL = process.env.DEV_SERVER_URL // eslint-disable-line prefer-destructuring
 
-export default function init() {
+export default async function init(): Promise<BrowserWindow> {
   // Get saved window position state
   windowPosition.onAppLoad()
   const initialWindowPos = windowPosition.getState()
@@ -43,7 +43,7 @@ export default function init() {
     titleBarStyle: 'hiddenInset', // Hide the bar
   })
 
-  winHandler.onCreated(async (browserWindow: BrowserWindow) => {
+  return await winHandler.onCreated(async (browserWindow: BrowserWindow) => {
     // Initialize the runtime config
     // Exposes file paths and other dynamic properties
     const appConfig = RuntimeConfig.getInstance()
@@ -100,5 +100,8 @@ export default function init() {
     browserWindow.on('closed', () => {
       browserWindow = null
     })
+
+    // Return the window instance
+    return browserWindow
   })
 }

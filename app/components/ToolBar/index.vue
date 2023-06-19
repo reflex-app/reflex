@@ -53,10 +53,11 @@
       <SwitchMode />
     </div> -->
     <!-- <UpdateChannel /> -->
+    <div class="draggable" @dblclick="toggleWindowMaximize" />
     <div class="flex justify-end">
+      <PerfMonitor />
       <InstallUpdateButton />
     </div>
-    <div class="draggable" @dblclick="toggleWindowMaximize" />
   </div>
 </template>
 
@@ -77,6 +78,7 @@ import { useGuiStore } from '~/store/gui'
 
 // TODO: Re-connect with Electron
 import * as remote from '@electron/remote'
+import PerfMonitor from '../PerfMonitor.vue'
 
 const artboards = useArtboardsStore()
 const history = useHistoryStore()
