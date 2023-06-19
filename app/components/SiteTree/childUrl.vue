@@ -1,90 +1,27 @@
 <template>
   <div class="flex flex-col gap-12">
     <div v-for="(url, i) in urls" :key="i">
-      <div class="flex justify-between">
-        <input v-model="url.site" @change="updateSite(url.site, $event.target.value)" class="font-bold"
-          data-testid="site-title" />
-        <div class="flex justify-between gap-4">
-          <button @click="removeSite(url.site)" class="text-red-500">Remove</button>
-          <button @click="openUrl(url.site)" class="text-blue-500">Open</button>
-        </div>
-      </div>
-      <div v-for="(subPath, k) in getSubPaths(url.paths)" :key="k" :style="{ marginLeft: subPath.depth * 2 + 'rem' }"
-        class="item flex justify-between" :class="{ 'item--indented': subPath.depth > 0 }">
-        <div class="item__title">
-          <input :value="subPath.path" @input="updatePath(url.site, subPath.fullPath, $event.target.value)" />
-        </div>
-        <div class="flex justify-between gap-4">
-          <div>
-            <select v-model="subPath.status" @input="updateStatus(url.site, subPath.fullPath, $event.target.value)">
-              <option v-for="(value, key) in Status" :key="key" :value="key">
-                {{ value }}
-              </option>
-            </select>
-          </div>
-          <button @click="screenshotAll(url.site + subPath.fullPath)" class="text-blue-500">
-            <Icon name="camera" />
-          </button>
-          <button @click="removePath(url.site, subPath.fullPath)" class="text-red-500">Remove</button>
-          <button @click="openUrl(url.site + subPath.fullPath)" class="text-blue-500">Open</button>
-        </div>
-      </div>
-      <div class="ml-4">
-        <input v-model="sitePath" @keyup.enter="addPath(url.site, $event.target.value)"
-          placeholder="Add sub-path (e.g. /about)" class="w-full" data-testid="path-input" />
-        <hr />
-      </div>
+      <Site :url="url" />
     </div>
-    <input v-model="siteInput" @keyup.enter="addSite($event.target.value)" placeholder="Enter site URL (e.g. google.com)"
-      data-testid="site-input" />
+    <input
+      v-model="siteInput"
+      @keyup.enter="addSiteAndClearInput($event.target.value)"
+      placeholder="Enter site URL (e.g. google.com)"
+      data-testid="site-input"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { useSiteTree, Path, Status } from '@/store/site-tree'
-import { useHistoryStore } from '@/store/history'
-import * as capture from '../Screenshot/capture'
-import Icon from '@/components/Shared/Icon.vue'
-
-const history = useHistoryStore()
+import useSiteTreeStore, { Path } from '@/store/site-tree'
+import Site from './Site.vue'
 
 const siteInput = ref<HTMLInputElement | null>()
-const sitePath = ref<HTMLInputElement | null>()
 
-const siteTreeStore = useSiteTree()
-const state = reactive({
-  newPath: {} as { [key: string]: string }
-})
-
-const addSite = (site: string) => {
-  siteTreeStore.addSite(site)
-  siteInput.value = null // Clear input
-}
-
-const addPath = (site: string, path: string) => {
-  siteTreeStore.addPath(site, path)
-  sitePath.value = null // Clear input
-}
-
-const removeSite = (site: string) => {
-  siteTreeStore.removeSite(site)
-}
-
-const removePath = (site: string, path: string) => {
-  siteTreeStore.removePath(site, path)
-}
-
-const updateSite = (oldSite: string, newSite: string) => {
-  siteTreeStore.updateSite(oldSite, newSite)
-}
-
-const updatePath = (site: string, oldPath: string, newPath: string) => {
-  siteTreeStore.updatePath(site, oldPath, newPath)
-}
-
-const openUrl = (url: string) => {
-  history.changeSiteData({ url })
-}
+const {
+  addSite,
+  urls,
+} = useSiteTreeStore()
 
 const getSubPaths = (paths: Path[], prefix = '', depth = 0) => {
   const subPaths = []
@@ -96,19 +33,19 @@ const getSubPaths = (paths: Path[], prefix = '', depth = 0) => {
   return subPaths
 }
 
-const screenshotAll = async (url: string) => {
-  history.changeSiteData({ url: url })
-  await capture.captureAll({
-    url
-  })
-}
+const addSiteAndClearInput = (url: string) => {
+  const didAddSite = addSite(url)
 
-const updateStatus = (site: string, path: string, value: keyof typeof Status) => {
-  siteTreeStore.updateStatus(site, path, value)
-}
+  console.log('didAddSite', didAddSite)
 
-const { urls } = siteTreeStore.$state
-const { newSite, newPath } = state
+  if (didAddSite === false) {
+    // TODO: show nice alert
+    alert('Site already exists')
+    return false
+  }
+
+  siteInput.value = null
+}
 </script>
 
 <style lang="scss" scoped>
