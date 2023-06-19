@@ -8,10 +8,10 @@
         data-testid="site-title"
       />
       <div class="flex justify-between gap-4">
+        <button @click="openUrl(url.site)" class="text-blue-500">Open</button>
         <button @click="removeSite(url.site)" class="text-red-500">
           Remove
         </button>
-        <button @click="openUrl(url.site)" class="text-blue-500">Open</button>
       </div>
     </div>
     <div
@@ -47,16 +47,16 @@
           <Icon name="camera" />
         </button>
         <button
-          @click="removePath(url.site, subPath.fullPath)"
-          class="text-red-500"
-        >
-          Remove
-        </button>
-        <button
           @click="openUrl(url.site + subPath.fullPath)"
           class="text-blue-500"
         >
           Open
+        </button>
+        <button
+          @click="removePath(url.site, subPath.fullPath)"
+          class="text-red-500"
+        >
+          Remove
         </button>
       </div>
     </div>
@@ -67,6 +67,7 @@
         placeholder="Add sub-path (e.g. /about)"
         class="w-full"
         data-testid="path-input"
+        ref="sitePathInput"
       />
       <hr />
     </div>
@@ -99,7 +100,12 @@ const {
   urls,
 } = useSiteTreeStore()
 
-const sitePath = ref<HTMLInputElement | null>()
+const sitePath = ref<string | null>()
+const sitePathInput = ref<HTMLInputElement | null>()
+
+onMounted(() => {
+  sitePathInput.value?.focus()
+})
 
 const openUrl = (url: string) => {
   history.changeSiteData({ url })

@@ -1,9 +1,11 @@
 <template>
   <div id="site-tree-container" v-show="isVisible">
-    <div
-      class="h-max max-h-screen max-w-3xl w-full bg-white overflow-auto"
-    >
+    <div class="h-max max-h-screen max-w-3xl w-full bg-white overflow-auto">
       <h1 class="text-4xl mb-4">Sites</h1>
+      <p>
+        Add your websites and pages below to keep track of progress per-page,
+        and easily navigate between pages.
+      </p>
       <Tree />
     </div>
   </div>

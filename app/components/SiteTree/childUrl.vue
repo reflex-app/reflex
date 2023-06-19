@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col gap-12">
+  <div class="flex flex-col gap-4 mt-8">
     <div v-for="(url, i) in urls" :key="i">
       <Site :url="url" />
     </div>
@@ -7,6 +7,7 @@
       v-model="siteInput"
       @keyup.enter="addSiteAndClearInput($event.target.value)"
       placeholder="Enter site URL (e.g. google.com)"
+      class="mt-4 w-full"
       data-testid="site-input"
     />
   </div>
@@ -18,10 +19,7 @@ import Site from './Site.vue'
 
 const siteInput = ref<HTMLInputElement | null>()
 
-const {
-  addSite,
-  urls,
-} = useSiteTreeStore()
+const { addSite, urls } = useSiteTreeStore()
 
 const getSubPaths = (paths: Path[], prefix = '', depth = 0) => {
   const subPaths = []
