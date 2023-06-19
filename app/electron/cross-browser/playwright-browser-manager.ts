@@ -1,3 +1,4 @@
+// Playwright install logic: https://github.com/microsoft/playwright/pull/1419
 import { fork } from 'child_process';
 import path from 'path';
 import fs from 'fs/promises';

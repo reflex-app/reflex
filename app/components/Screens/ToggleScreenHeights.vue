@@ -19,6 +19,7 @@ import * as capture from '~/components/Screenshot/capture'
 import { Artboard, useArtboardsStore } from '~/store/artboards'
 import { useGuiStore } from '~/store/gui'
 import { useHistoryStore } from '@/store/history'
+import { initialPanZoom } from '../panzoom/panzoomFns'
 
 const artboards = useArtboardsStore()
 const gui = useGuiStore()
@@ -35,11 +36,24 @@ const data = reactive({
   artboards: computed(() => artboards.list),
 })
 
+const { $root } = getCurrentInstance()?.proxy
+if (!$root) console.warn('No $root')
+
 watchEffect(async () => {
   if (gui.isScreensFullHeight) {
     await showFullPreviews()
+
+    // TODO: Center the Reflex viewport on the artboards
+    // const { x } = initialPanZoom()
+    // const { y } = initialPanZoom()
+    // const { zoom } = initialPanZoom()
+
+    // // Center the artboard
+    // $root.$panzoom.zoom(zoom)
+    // $root.$panzoom.pan(x, y)
   } else {
     hideFullPreviews()
+    // TODO: Center the Reflex viewport on the artboards
   }
 })
 

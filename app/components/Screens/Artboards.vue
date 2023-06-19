@@ -53,10 +53,10 @@ const data = reactive({
 
 const containerRef = ref<HTMLElement | undefined>()
 
-// Start observing the artboards in the viewport
-startViewportObserver()
-
 onMounted(() => {
+  // Start observing the artboards in the viewport
+  startViewportObserver()
+
   // Initialize Selections
   createSelectionInstance()
 
@@ -341,16 +341,16 @@ function onElementObserved(entries) {
 }
 
 async function setArtboardToFullHeight(id: Artboard['id']) {
-    // 1. Execute some JS inside the webview to get the height of the page
-    const webviewElContents = capture.getWebViewContents(id)
-    if (!webviewElContents) {
-      console.warn('No webview contents found for artboard', id)
-      return
-    }
-
-    // Modify the height to be the full height
-    artboards.setArtboardToFullHeight({ id: id })
+  // 1. Execute some JS inside the webview to get the height of the page
+  const webviewElContents = capture.getWebViewContents(id)
+  if (!webviewElContents) {
+    console.warn('No webview contents found for artboard', id)
+    return
   }
+
+  // Modify the height to be the full height
+  artboards.setArtboardToFullHeight({ id: id })
+}
 </script>
 
 <style lang="scss">

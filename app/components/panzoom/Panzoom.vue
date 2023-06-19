@@ -42,8 +42,6 @@ import PanzoomControls from './PanzoomControls.vue'
 import { useInteractionStore } from '~/store/interactions'
 import useEventHandler from '../Screens/useEventHandler'
 import { useDevStore } from '~/store/dev'
-import { isEqual } from 'lodash'
-import { start } from 'repl'
 import { initialPanZoom } from './panzoomFns'
 
 // Connect w/ Electron
@@ -90,14 +88,15 @@ const dynamicDims = computed(() => {
     height: height + 'px',
   }
 })
+
 // TODO: This should be refactored after Vue 3 update
 const { $root } = getCurrentInstance()?.proxy
 if (!$root) console.warn('No $root')
 
 onMounted(async () => {
-  await nextTick()
+  await nextTick() // Wait for DOM to render (incl. the Artboards)
 
-  // const startZoom = initialZoom()
+  // Trigger initial Panzoom size based on content
   const { x: startX } = initialPanZoom()
   const { y: startY } = initialPanZoom()
   const { zoom: startZoom } = initialPanZoom()

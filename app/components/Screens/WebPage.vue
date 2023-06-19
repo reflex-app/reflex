@@ -383,9 +383,9 @@ export default {
       this.$emit('loadend') // Hide loading spinner
 
       // @TODO: Update with Electron API
-      new Notification('Aborted', {
-        body: 'The site stopped loading for some reason.',
-      })
+      // new Notification('Stopped loading', {
+      //   body: 'The site stopped loading for some reason.',
+      // })
 
       // Remove the event listeners related to site loading
       // this.removeListeners()
