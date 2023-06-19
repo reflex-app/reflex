@@ -83,6 +83,7 @@ export default {
     url: {
       // When the URL is changed, load the new site
       handler() {
+        this.updateEventListeners()
         this.loadSite()
       },
     },
@@ -101,6 +102,9 @@ export default {
     this.$nextTick(() => {
       // Bind event listeners
       this.bindEventListeners()
+
+      // Initialize the event listeners
+      this.addWebViewListeners()
 
       // Load the <webview> the initial time
       this.loadSite()
@@ -135,8 +139,7 @@ export default {
   beforeDestroy() {
     // Unbind any listeners
     this.unbindEventListeners()
-
-    this.removeListeners()
+    this.removeWebViewListeners()
 
     // Unsubscribe from Store
     // this.unsubscribeAction()
@@ -256,9 +259,6 @@ export default {
         throw new Error('Frame listeners still active after component destroy.')
       }
 
-      // Initialize the event listeners
-      this.addListeners()
-
       // Turn history saving on/off
       switch (options.history) {
         case true:
@@ -276,7 +276,7 @@ export default {
       // Set the URL, start loading
       frame.setAttribute('src', this.url)
     },
-    addListeners() {
+    addWebViewListeners() {
       const frame = this.$refs.frame
       if (!frame) {
         console.error('Frame not found?')
@@ -298,14 +298,17 @@ export default {
       frame.addEventListener('did-fail-load', this.loadabort) // Failed to load
       frame.addEventListener('loadabort', this.loadabort) // loadabort
     },
-    removeListeners() {
+    removeWebViewListeners() {
       const frame = this.$refs.frame
       if (!frame) {
         console.error('Frame not found?')
         return
       }
       frame.removeEventListener('did-start-loading', this.loadstart)
-      frame.removeEventListener('did-navigate-in-page', this.navigatedInWebContext)
+      frame.removeEventListener(
+        'did-navigate-in-page',
+        this.navigatedInWebContext
+      )
 
       frame.removeEventListener('dom-ready', this.contentloaded)
       frame.removeEventListener('did-stop-loading', this.loadstop)
@@ -315,6 +318,13 @@ export default {
       frame.removeEventListener('did-fail-load', this.loadabort)
       frame.removeEventListener('loadabort', this.loadabort)
     },
+    updateEventListeners() {
+      // Remove existing event listeners
+      this.removeWebViewListeners()
+
+      // Add new event listeners
+      this.addWebViewListeners()
+    },
     loadstart() {
       this.$emit('loadstart') // Show loading spinner
 
@@ -323,28 +333,6 @@ export default {
       history.changeSiteData({
         title: 'Loading...',
       })
-    },
-    navigatedInWebContext() {
-      // Make sure the page was not just reloaded
-      const frame = this.$refs.frame
-
-      if (!frame) {
-        console.error('Frame not found?')
-        return
-      }
-
-      const frameUrl = frame.getURL()
-      const isUrlUpdated = frameUrl === this.url
-
-      if (!isUrlUpdated) {
-        console.log('navigated in web app')
-
-        // TODO: Add a way to update the URL without triggering a full page reload
-        const history = useHistoryStore()
-        history.changeSiteData({
-          url: frameUrl,
-        })
-      }
     },
     contentloaded() {
       const frame = this.$refs.frame
@@ -359,6 +347,7 @@ export default {
 
       console.log('contentloaded')
 
+      // Update the height of the frame
       this.updateFullHeight(this.id)
 
       // TODO: Memory leak w/ this event listener
@@ -399,16 +388,37 @@ export default {
       })
 
       // Remove the event listeners related to site loading
-      this.removeListeners()
+      // this.removeListeners()
+    },
+    navigatedInWebContext() {
+      // Make sure the page was not just reloaded
+      const frame = this.$refs.frame
+
+      if (!frame) {
+        console.error('Frame not found?')
+        return
+      }
+
+      const frameUrl = frame.getURL()
+      const isUrlUpdated = frameUrl === this.url
+
+      if (!isUrlUpdated) {
+        console.log('navigated in web app')
+
+        // TODO: Add a way to update the URL without triggering a full page reload
+        const history = useHistoryStore()
+        history.changeSiteData({
+          url: frameUrl,
+        })
+      }
     },
     willNavigate(event) {
       // Handle user clicking on a link inside of the webview
       // TODO This should add a new page to the History
-      // TODO Add to VueX Action
-      const history = useHistoryStore()
-      history.changeSiteData({
-        url: event.url,
-      })
+      // const history = useHistoryStore()
+      // history.changeSiteData({
+      //   url: event.url,
+      // })
     },
     onMessageReceived(event) {
       if (event.channel === 'REFLEX_SYNC') {
@@ -454,35 +464,53 @@ export default {
         console.log(`Unrecognized channel: ${event.channel}`, event.args[0])
       }
     },
-    updateFullHeight(id: Artboard['id']) {
+    async updateFullHeight(id: Artboard['id']) {
       // Update the fullHeight of the artboard
+      const frame = this.$refs.frame
+      if (!frame) {
+        console.error('Frame not found?')
+        return
+      }
+
+      const fullHeight = await frame.executeJavaScript(
+        `(() => ( document.body.offsetHeight ))()`
+      )
+
+      console.log('full height', fullHeight)
+
+      // 2. Update the Store
+      // Save the fullHeight to the Store
       const artboards = useArtboardsStore()
-      artboards.list.map(async (artboard) => {
-        // 1. Execute some JS inside the webview to get the height of the page
-        const webviewEl = capture.getWebview(artboard.id)
-        const webviewElContents = capture.getWebViewContents(artboard.id)
-        const fullHeight: number = await webviewElContents?.executeJavaScript(
-          `(() => ( document.body.offsetHeight ))()`
-        )
+      artboards.updateArtboardAtIndex({ id: id, fullHeight: fullHeight })
 
-        if (!webviewElContents) {
-          console.warn('No webview contents found for artboard', artboard)
-          return
-        }
+      console.log('updated full height', fullHeight)
 
-        // 2. Update the Store
-        const match = artboards.list.find((i) => i.id === artboard.id)
-        if (!match) {
-          console.warn('No match found for artboard', artboard)
-          return
-        }
+      // const fullHeight: number = await frame.webContents
 
-        console.log('match', match.height)
-        console.log('fullHeight', fullHeight)
+      // const artboards = useArtboardsStore()
+      // artboards.list.map(async (artboard) => {
+      //   // 1. Execute some JS inside the webview to get the height of the page
+      //   const webviewEl = capture.getWebview(artboard.id)
+      //   const webviewElContents = capture.getWebViewContents(artboard.id)
+      //   const fullHeight: number = await webviewElContents?.executeJavaScript(
+      //     `(() => ( document.body.offsetHeight ))()`
+      //   )
 
-        // Save the fullHeight to the Store
-        artboards.updateArtboardAtIndex({ ...match, fullHeight: fullHeight })
-      })
+      //   if (!webviewElContents) {
+      //     console.warn('No webview contents found for artboard', artboard)
+      //     return
+      //   }
+
+      //   // 2. Update the Store
+      //   const match = artboards.list.find((i) => i.id === artboard.id)
+      //   if (!match) {
+      //     console.warn('No match found for artboard', artboard)
+      //     return
+      //   }
+
+      //   // Save the fullHeight to the Store
+      //   artboards.updateArtboardAtIndex({ ...match, fullHeight: fullHeight })
+      // })
     },
   },
 }
