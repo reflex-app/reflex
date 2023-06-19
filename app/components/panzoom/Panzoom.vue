@@ -2,21 +2,32 @@
   <div style="display: inline-block; width: 100%; height: 100%">
     <!-- We 'panzoom-exclude' to mark this as not relevant to Panzoom -->
     <!-- <PanzoomControls v-if="panzoomInstance" :instance="panzoomInstance" /> -->
-    <div id="canvas" ref="outerPanArea" class="panzoom-container" :class="{
-      'dev-visual-debugger': showCanvasDebugger,
-    }">
+    <div
+      id="canvas"
+      ref="outerPanArea"
+      class="panzoom-container"
+      :class="{
+        'dev-visual-debugger': showCanvasDebugger,
+      }"
+    >
       <!-- For transform-origin: 50% 50% to work, this next element HAS to be display:block -->
-      <div ref="innerPanArea" style="
-                display: block;
-                position: relative;
-                height: 100%;
-                width: 100%;
-                overflow: visible;
-              ">
+      <div
+        ref="innerPanArea"
+        style="
+          display: block;
+          position: relative;
+          height: 100%;
+          width: 100%;
+          overflow: visible;
+        "
+      >
         <!-- Now we have the real panzoom content inside: -->
-        <div class="panzoom-inner" :class="{
-          'dev-visual-debugger': showCanvasDebugger,
-        }">
+        <div
+          class="panzoom-inner"
+          :class="{
+            'dev-visual-debugger': showCanvasDebugger,
+          }"
+        >
           <slot />
         </div>
       </div>
@@ -43,6 +54,7 @@ import { useInteractionStore } from '~/store/interactions'
 import useEventHandler from '../Screens/useEventHandler'
 import { useDevStore } from '~/store/dev'
 import { initialPanZoom } from './panzoomFns'
+
 
 // Connect w/ Electron
 
@@ -104,6 +116,7 @@ onMounted(async () => {
   // Init Panzoom globally
   // We use the 'canvas' option to enable interactions on the parent DOM Node as well
   // Docs: https://github.com/timmywil/panzoom#canvas
+
   $root.$panzoom = Panzoom(innerPanArea.value, {
     canvas: true, // Allows parent to control child
     cursor: 'grab',
@@ -215,6 +228,8 @@ function enableEventListeners() {
     })
   }
 }
+
+
 
 /**
  * Handles wheel events (i.e. mousewheel)
@@ -341,7 +356,6 @@ function fitToScreen() {
 }
 
 .dev-visual-debugger {
-
   &:before,
   &:after {
     position: absolute;
@@ -367,7 +381,6 @@ function fitToScreen() {
 
   // Nested debugger
   .dev-visual-debugger {
-
     // Vertical line
     &:before {
       position: absolute;
