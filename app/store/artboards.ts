@@ -87,12 +87,15 @@ export const useArtboardsStore = defineStore('artboards', {
         ? (artboard.isInViewport = isVisible)
         : console.warn('No artboard found')
     },
-    changeArtboardVisibility(artboard: Artboard) {
-      // 1. Get the artboard.id
-      const id = artboard.id
-      const index = this.list.findIndex((obj) => obj.id === id)
-      // 2. Change the visibility of just that artboard's is property
-      this.list[index].isVisible = !artboard.isVisible
+    changeArtboardVisibility(id: Artboard['id']) {
+      const match = this.list.find((obj) => obj.id === id)
+
+      if (!match) {
+        console.error('Artboard not found')
+        return
+      }
+
+      match.isVisible = !match.isVisible
     },
     updateArtboardAtIndex(artboard: Partial<Artboard>) {
       // 1. Get the artboard.id

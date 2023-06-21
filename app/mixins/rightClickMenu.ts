@@ -46,7 +46,7 @@ export default function (artboard: Artboard) {
       label: artboard.isVisible ? 'Hide' : 'Show',
       click() {
         const store = useArtboardsStore()
-        store.changeArtboardVisibility(artboard)
+        store.changeArtboardVisibility(artboard.id)
       },
     })
   )

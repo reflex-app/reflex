@@ -2841,6 +2841,7 @@ __metadata:
     sass: 1.60.0
     sortablejs: ^1.15.0
     sortablejs-vue3: ^1.2.9
+    systeminformation: ^5.18.3
     tailwindcss: ^3.3.2
     typescript: ^5.0.0
     uuid: 8.3.2
@@ -20300,6 +20301,16 @@ __metadata:
   version: 2.0.17
   resolution: "synchronous-promise@npm:2.0.17"
   checksum: 1babe643d8417789ef6e5a2f3d4b8abcda2de236acd09bbe2c98f6be82c0a2c92ed21a6e4f934845fa8de18b1435a9cba1e8c3d945032e8a532f076224c024b1
+  languageName: node
+  linkType: hard
+
+"systeminformation@npm:^5.18.3":
+  version: 5.18.3
+  resolution: "systeminformation@npm:5.18.3"
+  bin:
+    systeminformation: lib/cli.js
+  checksum: dac4d0b92c102d4f5766692ea275c54bf234012a989e3383e43511ada7193957843e5ad391df3dfea89d3579ae0d9f9e7ca1e555b48f30c173374dcb8f645ce3
+  conditions: (os=darwin | os=linux | os=win32 | os=freebsd | os=openbsd | os=netbsd | os=sunos | os=android)
   languageName: node
   linkType: hard
 

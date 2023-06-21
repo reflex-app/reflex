@@ -53,10 +53,13 @@
       <SwitchMode />
     </div> -->
     <!-- <UpdateChannel /> -->
+    <div class="draggable" @dblclick="toggleWindowMaximize" />
     <div class="flex justify-end">
+      <!-- <template v-if="isDev"> -->
+        <PerfMonitor />
+      <!-- </template> -->
       <InstallUpdateButton />
     </div>
-    <div class="draggable" @dblclick="toggleWindowMaximize" />
   </div>
 </template>
 
@@ -70,6 +73,9 @@ import InstallUpdateButton from '@/components/ToolBar/InstallUpdateButton.vue'
 import UpdateChannel from '@/components/Settings/UpdateChannel.vue'
 import Artboard from '@/components/Screens/Artboard.vue'
 
+const runtimeConfig = useRuntimeConfig()
+const isDev = runtimeConfig.public.DEV
+
 // Pinia
 import { useArtboardsStore } from '~/store/artboards'
 import { useHistoryStore } from '~/store/history'
@@ -77,6 +83,7 @@ import { useGuiStore } from '~/store/gui'
 
 // TODO: Re-connect with Electron
 import * as remote from '@electron/remote'
+import PerfMonitor from '../PerfMonitor.vue'
 
 const artboards = useArtboardsStore()
 const history = useHistoryStore()
