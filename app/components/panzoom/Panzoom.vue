@@ -338,6 +338,7 @@ function fitToScreen() {
   position: relative; // Important
   display: inline-block;
   overflow: visible;
+  will-change: auto;
 }
 
 #parent {
