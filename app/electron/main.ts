@@ -9,6 +9,8 @@ import mainWindowInit from './mainWindow'
 import { getPackageJson } from './util'
 import { RuntimeConfig } from './config'
 import startPerfMonitoring from './usage-monitoring'
+import { installBrowsers } from './cross-browser/playwright-browser-manager'
+import enableCrossBrowserScreenshots from './cross-browser/screenshots/api'
 ;(async () => {
   const version = await getPackageJson().then((data) => data.version)
 
@@ -77,4 +79,10 @@ import startPerfMonitoring from './usage-monitoring'
 
   // Start monitoring CPU/Memory usage
   startPerfMonitoring()
+
+  // Check for browser installations
+  installBrowsers().then(() => {
+    // Screenshot worker
+    enableCrossBrowserScreenshots()
+  })
 })()

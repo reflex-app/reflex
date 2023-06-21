@@ -11,12 +11,9 @@ import windowPosition from './windowPosition'
 // import browserInstaller from './browser-installer'
 import { setMenu } from './menu'
 import { init as initUpdates } from './updates'
-import browserInstaller from './browser-installer'
-import { installBrowsers } from './cross-browser/playwright-browser-manager'
 
 import log from 'electron-log'
 import isDev from 'electron-is-dev'
-import enableCrossBrowserScreenshots from './cross-browser/screenshots/api'
 import { RuntimeConfig } from './config'
 
 const INDEX_PATH = path.join(__dirname, '..', 'renderer', 'index.html')
@@ -77,11 +74,7 @@ export default async function init(): Promise<BrowserWindow> {
       initUpdates(browserWindow)
     })
 
-    // Check for browser installations
-    await installBrowsers()
-
-    // Screenshot worker test
-    enableCrossBrowserScreenshots()
+    
 
     // Reload when requested by the renderer process
     ipcMain.handle('reload-window', () => {
