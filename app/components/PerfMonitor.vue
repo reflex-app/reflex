@@ -1,5 +1,5 @@
 <template>
-  <div class="flex px-4 gap-2">
+  <div class="flex mx-4 px-1 py-1 gap-1 rounded-[2rem] border border-gray-300">
     <div
       :title="`CPU usage: ${cpu}%`"
       class="perf-stack-container"
@@ -109,9 +109,9 @@ function percentageToDegrees(percentage: number): number {
  * Helper to disable WebViews when system performance may be affected
  */
 function perfHandler(event: Event, message?: string) {
-  if (userAcceptedPerfWarnings === null) {
-    userAlertedAboutPerfWarnings = true
+  userAlertedAboutPerfWarnings = true
 
+  if (userAcceptedPerfWarnings === null) {
     // Immediately hide all webviews
     hideWebViews()
 
@@ -157,11 +157,27 @@ function perfHandler(event: Event, message?: string) {
 <style lang="scss" scoped>
 // Colors
 $okay-color: #4aa564;
+$okay-color--light: #E9F7ED;
 $warning-color: #f9c642;
+$warning-color--light: #fef7e3;
 $alert-color: #cd2026;
+$alert-color--light: #f8dede;
 
 // Sizes
-$needle-cover-size: 3.5rem;
+$needle-cover-size: 0.65rem;
+
+@mixin perf-stack-colors($border-color, $bg-color, $tick-color) {
+  background: $bg-color;
+  border-color: $border-color;
+
+  .needle-cover {
+    border-color: $bg-color;
+  }
+
+  .perf-tick {
+    background: $tick-color;
+  }
+}
 
 .perf-stack-container {
   position: relative;
@@ -175,28 +191,17 @@ $needle-cover-size: 3.5rem;
   overflow: hidden;
 
   &.bg-green {
-    background: rgba($okay-color, 15%);
-    border-color: $okay-color;
-
-    .perf-tick {
-      background: $okay-color;
-    }
+    @include perf-stack-colors($okay-color, $okay-color--light, $okay-color);
   }
   &.bg-yellow {
-    background: rgba($warning-color, 15%);
-    border-color: $warning-color;
-
-    .perf-tick {
-      background: $warning-color;
-    }
+    @include perf-stack-colors(
+      $warning-color,
+      $warning-color--light,
+      $warning-color
+    );
   }
   &.bg-red {
-    background: rgba($alert-color, 15%);
-    border-color: $alert-color;
-
-    .perf-tick {
-      background: $alert-color;
-    }
+    @include perf-stack-colors($alert-color, $alert-color--light, $alert-color);
   }
 
   .perf-ticks {
@@ -208,6 +213,7 @@ $needle-cover-size: 3.5rem;
       content: '';
       // @apply bg-white/30;
       display: inline-block;
+      border-radius: 0.2rem;
 
       &:nth-child(1) {
         transform: rotate(-45deg);
@@ -223,32 +229,35 @@ $needle-cover-size: 3.5rem;
     }
   }
 
+  $needle-width-base: 0.45rem;
+  $needle-height: 1.1rem;
+  $needle-width-tip: 0;
+  $needle-color: #393939;
+
   .needle {
     position: absolute;
-    left: 50%;
-    bottom: -0.125rem;
-    height: 1.2rem;
-    width: 0.2rem;
-    content: '';
-    background: #3d3d3d;
-    border-top-left-radius: 100%;
-    border-top-right-radius: 100%;
+    bottom: 0;
+    left: calc(50% - (#{$needle-width-base} / 2));
+    width: 0;
+    height: 0;
+    border-left: $needle-width-base / 2 solid transparent; // half the base width
+    border-right: $needle-width_base / 2 solid transparent; // half the base width
+    border-bottom: $needle-height solid $needle-color; // height of the triangle
     transform-origin: center bottom;
-    transition: all 3s ease-in;
-    // animation: speed 5s infinite;
   }
 
-  // .needle-cover {
-  //   position: absolute;
-  //   left: calc(50% - (#{$needle-cover-size}/ 2));
-  //   // left: 50%;
-  //   bottom: calc(-#{$needle-cover-size} * 0.9);
-  //   height: $needle-cover-size;
-  //   width: $needle-cover-size;
-  //   content: '';
-  //   background: rgba(black, 100%);
-  //   border-radius: 100%;
-  // }
+  .needle-cover {
+    z-index: 1;
+    position: absolute;
+    left: calc(50% - (#{$needle-cover-size}/ 2));
+    bottom: calc(-#{$needle-cover-size} * 0.5);
+    height: $needle-cover-size;
+    width: $needle-cover-size;
+    content: '';
+    background: rgba(#3d3d3d, 100%);
+    border-radius: 100%;
+    border: 1px solid white;
+  }
 }
 
 @keyframes speed {
