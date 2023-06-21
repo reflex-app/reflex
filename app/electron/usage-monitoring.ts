@@ -5,7 +5,7 @@ import { RuntimeConfig } from './config'
 let cpuInterval: string | number | NodeJS.Timeout | undefined
 let memoryInterval: string | number | NodeJS.Timeout | undefined
 
-const cpuThreshold = 80 // 80% CPU usage threshold
+const cpuThreshold = 85 // 85% CPU usage threshold
 const memoryThreshold = 90 // 90% memory usage threshold
 
 let currentWindow: BrowserWindow | null = null
@@ -39,7 +39,7 @@ function monitorCPUUsage() {
       const cpuData = await si.currentLoad()
       const cpuUsagePercent = cpuData.currentLoad
 
-      emitToRenderer('perf-cpu', Math.round(cpuUsagePercent))
+      emitToRenderer('perf-cpu', Math.round(cpuUsagePercent)) // Send CPU usage to renderer process
 
       if (cpuUsagePercent >= cpuThreshold) {
         const warningMessage = `High memory usage: ${cpuUsagePercent.toFixed(
@@ -47,9 +47,11 @@ function monitorCPUUsage() {
         )}%`
         console.warn(warningMessage)
         emitToRenderer('perf-warning', warningMessage)
+      } else {
+        console.info('CPU usage:', cpuUsagePercent.toFixed(2), '%')
       }
     } catch (err) {
-      console.error('Error retrieving CPU usage:', err)
+      console.debug('Error retrieving CPU usage:', err)
     }
   }, 1000)
 }
@@ -62,7 +64,7 @@ function monitorMemoryUsage() {
       const usedMemory = memData.active
       const memoryUsagePercent = (usedMemory / totalMemory) * 100
 
-      emitToRenderer('perf-memory', Math.round(memoryUsagePercent))
+      emitToRenderer('perf-memory', Math.round(memoryUsagePercent)) // Send memory usage to renderer process
 
       if (memoryUsagePercent >= memoryThreshold) {
         const warningMessage = `High memory usage: ${memoryUsagePercent.toFixed(
@@ -71,7 +73,7 @@ function monitorMemoryUsage() {
         console.warn(warningMessage)
         emitToRenderer('perf-warning', warningMessage)
       } else {
-        console.log('Memory usage:', memoryUsagePercent.toFixed(2), '%')
+        console.info('Memory usage:', memoryUsagePercent.toFixed(2), '%')
       }
     } catch (err) {
       console.error('Error retrieving memory usage:', err)
