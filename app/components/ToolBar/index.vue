@@ -55,7 +55,9 @@
     <!-- <UpdateChannel /> -->
     <div class="draggable" @dblclick="toggleWindowMaximize" />
     <div class="flex justify-end">
-      <PerfMonitor />
+      <!-- <template v-if="isDev"> -->
+        <PerfMonitor />
+      <!-- </template> -->
       <InstallUpdateButton />
     </div>
   </div>
@@ -70,6 +72,9 @@ import InstallUpdateButton from '@/components/ToolBar/InstallUpdateButton.vue'
 
 import UpdateChannel from '@/components/Settings/UpdateChannel.vue'
 import Artboard from '@/components/Screens/Artboard.vue'
+
+const runtimeConfig = useRuntimeConfig()
+const isDev = runtimeConfig.public.DEV
 
 // Pinia
 import { useArtboardsStore } from '~/store/artboards'
