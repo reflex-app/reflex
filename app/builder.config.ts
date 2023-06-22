@@ -1,8 +1,17 @@
 // Set release flag based on Yarn script OR Github Action input
 // NOTE: Github Action envs ("INPUT_RELEASE") are all-caps https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#inputs
 import path from 'path'
-const root = './'
+import {
+  Configuration,
+  MacConfiguration,
+  DmgOptions,
+  NsisOptions,
+  TargetConfiguration,
+  WindowsConfiguration,
+} from 'electron-builder'
 import pkgJson from './package.json'
+
+const root = './'
 
 const getEnv = (name: string, expectedVal: string | null) => {
   // Returns the value for an environment variable (or `null` if it's not defined)
@@ -45,13 +54,13 @@ const macOS = {
       target: isFastBuild ? 'dir' : 'default',
       // Build for M1 chips (arm64) + Intel (x64) chips
       arch: ['arm64', 'x64'],
-    },
+    } as TargetConfiguration,
     icon: ICONS_DIR + 'icon.icns',
     entitlements: 'build/entitlements.mac.plist', // Required for MacOS Catalina
     entitlementsInherit: 'build/entitlements.mac.plist', // Required for MacOS Catalina
     // hardenedRuntime: true, // Required for MacOS Catalina. Now defaults to true.
     // gatekeeperAssess: false, // Required for MacOS Catalina. Now defaults to false.
-  },
+  } as MacConfiguration,
   afterSign: isRelease ? 'scripts/notarize.js' : null, // Notarize Mac (ONLY for deploys)
   dmg: {
     sign: false, // Required for MacOS Catalina
@@ -68,7 +77,7 @@ const macOS = {
         type: 'file',
       },
     ],
-  }
+  } as DmgOptions,
 }
 
 const windowsOS = {
@@ -77,13 +86,13 @@ const windowsOS = {
     publisherName: 'Nick Wittwer',
     target: 'nsis',
     verifyUpdateCodeSignature: false, // Don't codesign https://github.com/electron-userland/electron-builder/issues/2786#issuecomment-383813995
-  },
+  } as WindowsConfiguration,
   nsis: {
     differentialPackage: true,
-  },
+  } as NsisOptions,
 }
 
-const config = {
+const config: Configuration = {
   productName: pkgJson.productName,
   appId: 'com.reflex.app',
   artifactName: 'Reflex-${version}-${os}-${arch}.${ext}',
@@ -105,7 +114,7 @@ const config = {
     '.output/**/*',
     'dist-electron',
     'package.json',
-    "!**/node_modules/playwright-core/.local-browsers/**/*"  // Exclude Playwright browsers
+    '!**/node_modules/playwright-core/.local-browsers/**/*', // Exclude Playwright browsers
   ],
   // Using ASAR
   // https://github.com/puppeteer/puppeteer/issues/2134#issuecomment-408221446
