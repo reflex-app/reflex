@@ -1,0 +1,15 @@
+// Only used for electron-builder
+{
+    "compilerOptions": {
+        "outDir": "./dist-electron",
+        "module": "commonjs",
+        "target": "ESNext",
+        "esModuleInterop": true,
+        "noEmitOnError": false,
+        "resolveJsonModule": true
+    },
+    "include": [
+        "builder.config.ts"
+    ],
+    "exclude": []
+}

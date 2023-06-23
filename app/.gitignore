@@ -1,39 +1,20 @@
-# Build
-.nuxt
-dist
-build/*
-!build/dev-app-update.yml
-!build/icons
-!build/entitlements.mac.plist
-src/resources/.local-browsers
-
-# Git & NPM
-.env
-!.gitkeep
 .DS_Store
-
-# NPM
-node_modules
-package-lock.json
-
-# Yarn
 .yarn
-.yarnrc.yml
 
-# local env files
-.env.local
-.env.*.local
+node_modules
+*.log*
+.nuxt
+.nitro
+.cache
+.output
+.env
+dist
+dist-electron
+release
+build
+**/*.db
+test/screenshots
+test-results
 
-# Log files
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Editor directories and files
-.idea
-# .vscode
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw*
+builder.config.js
+app/electron/config/index.js

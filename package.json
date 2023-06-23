@@ -5,14 +5,13 @@
   "author": "Nick Wittwer",
   "homepage": "https://reflexapp.nickwittwer.com",
   "workspaces": [
-    "app",
-    "app/src/extraResources",
+    "app/",
     "packages/*",
     ".github/actions/*"
   ],
-  "packageManager": "yarn@3.4.1",
+  "packageManager": "yarn@3.6.0",
   "dependencies": {
     "node-gyp": "^8.4.1",
-    "typescript": "4.9.5"
+    "typescript": "^5.0.0"
   }
 }

@@ -1,19 +1,13 @@
-## Based on https://github.com/samuelmeuli/mini-diary/blob/master/.github/workflows/release.yml
-name: Build & release
+name: Build
 
-# This workflow runs for dev, master branches when a new git tag is created
-# and the tag is a version number, like "v1.0.0"
-
-# Suggested workflow:
-# Create Git tags like "v1.0.0" on origin/master
-# Create Git tags like "v1.0.0-beta.1" or "v1.0.0-alpha.1" for origin/dev
-
-# It will always codesign, notarize, and attempt to publish artifacts to a draft release
+# Run workflow for {action} on all branches, except the branches which the full build runs on
 on:
   push:
     branches: [master, dev, ci]
     tags:
-      - 'v*.*.*' # Only watch for new v- Git tags
+      - "v*.*.*" # Only watch for new v- Git tags
+  pull_request:
+    branches: [dev, ci]
 
 # Set the default command-line across operating systems
 # Fixes OS-specific $GITHUB_OUTPUT variable usage bug
@@ -60,6 +54,13 @@ jobs:
         run: yarn install
       # ----- End Yarn Install and Caching ------
 
+      # ----- Tests ------
+      - name: Run unit tests (/app)
+        working-directory: app
+        run: yarn run test
+      # ----- End Tests ------
+
+      # ----- electron-nuxt ------
       - name: Build/release Electron app
         uses: ./.github/actions/action-electron-builder
         with:
@@ -68,7 +69,7 @@ jobs:
           # type: string
           github_token: ${{ secrets.github_token }}
 
-          # Set release to true when a v- tag is pushed
+          # Set release to true only when a v- tag is pushed
           # If the commit is tagged with a version (e.g. "v1.0.0")
           # then create a Github release
           # type: boolean
@@ -85,3 +86,4 @@ jobs:
           # Workaround for electron-builder error about existing file in CI
           # https://github.com/electron-userland/electron-builder/issues/3179
           USE_HARD_LINKS: false
+      # ----- / electron-nuxt ------

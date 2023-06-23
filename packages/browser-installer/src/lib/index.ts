@@ -1,3 +1,4 @@
+import { BrowserName } from './utils/registry'
 import fs, { promises as fsPromises } from 'fs'
 import playwright from 'playwright-core'
 
@@ -28,15 +29,15 @@ if (console.log) {
  * This file exposes a class interface for
  * displaying the browser installation progress
  */
-const { installBrowsersWithProgressBar } = require('./install/installer')
+import { installBrowsersWithProgressBar } from './install/installer'
 
 interface InstallerOptions {
-  browsers: string[] // ['chromium', 'firefox', 'webkit']
+  browsers: BrowserName[] // ['chromium', 'firefox', 'webkit']
   installPath: string
 }
 
 export class Installer {
-  public browsers?: string[] = ['chromium', 'firefox', 'webkit']
+  public browsers?: Partial<BrowserName>[] = ['chromium', 'firefox', 'webkit']
   public installPath: string
 
   constructor(options: InstallerOptions) {
@@ -76,7 +77,7 @@ export class Installer {
       // Check if dir contains anything (e.g. previous installs)
       const results = await ls(this.installPath)
 
-      if (results) {
+      if (results && results.length > 0) {
         console.log(
           `Found at install directory (${this.installPath}):`,
           results
@@ -122,13 +123,13 @@ export class Installer {
 
     downloadEmitter.on('done', async () => {
       // Function here
-      // console.log(`It's done downloading!`);
+      console.log(`It's done downloading!`)
     })
 
     // Example via Playwright's Github Installer
     // https://github.com/microsoft/playwright/blob/master/install-from-github.js#L29
-    await installBrowsersWithProgressBar(__dirname).catch((err) => {
-      console.error(`Failed to install browsers, caused by\n${err.stack}`)
+    await installBrowsersWithProgressBar(options.browsers).catch((err) => {
+      console.error(`Failed to install browsers, caused by\n${err.stack}`, err)
       // process.exit(1)
     })
 

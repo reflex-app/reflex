@@ -15,6 +15,7 @@
  */
 
 import fs from 'fs'
+import fsAsync from 'fs/promises'
 import path from 'path'
 import util from 'util'
 import removeFolder from 'rimraf'
@@ -29,7 +30,14 @@ import {
 import * as browserFetcher from './browserFetcher'
 import { getAsBooleanFromENV, calculateSha1 } from '../utils/utils'
 
-const fsMkdirAsync = util.promisify(fs.mkdir.bind(fs))
+const fsMkdirAsync = async (path: string, options: {}) => {
+  try {
+    return await fsAsync.mkdir(path, options)
+  } catch (err) {
+    console.error(err)
+  }
+}
+
 const fsReaddirAsync = util.promisify(fs.readdir.bind(fs))
 const fsReadFileAsync = util.promisify(fs.readFile.bind(fs))
 const fsExistsAsync = (filePath: string) =>
@@ -40,7 +48,7 @@ const fsUnlinkAsync = util.promisify(fs.unlink.bind(fs))
 const fsWriteFileAsync = util.promisify(fs.writeFile.bind(fs))
 const removeFolderAsync = util.promisify(removeFolder)
 
-const PACKAGE_PATH = path.join(__dirname, '..', '..')
+const PACKAGE_PATH = path.join(__dirname, '..', '..', '..') // Path to the root of the package
 
 export async function installBrowsersWithProgressBar(
   browserNames: BrowserName[] = allBrowserNames
@@ -52,6 +60,7 @@ export async function installBrowsersWithProgressBar(
     )
     return false
   }
+
   await fsMkdirAsync(registryDirectory, { recursive: true })
 
   const lockfilePath = path.join(registryDirectory, '__dirlock')
@@ -116,9 +125,9 @@ async function validateCache(linksDir: string, browserNames: BrowserName[]) {
   }
 
   // 2. Delete all unused browsers.
-  let downloadedBrowsers = (
-    await fsReaddirAsync(registryDirectory)
-  ).map((file) => path.join(registryDirectory, file))
+  let downloadedBrowsers = (await fsReaddirAsync(registryDirectory)).map(
+    (file) => path.join(registryDirectory, file)
+  )
   downloadedBrowsers = downloadedBrowsers.filter((file) =>
     isBrowserDirectory(file)
   )
