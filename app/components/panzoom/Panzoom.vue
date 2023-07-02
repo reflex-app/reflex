@@ -55,7 +55,6 @@ import useEventHandler from '../Screens/useEventHandler'
 import { useDevStore } from '~/store/dev'
 import { initialPanZoom } from './panzoomFns'
 
-
 // Connect w/ Electron
 
 const interactions = useInteractionStore()
@@ -229,8 +228,6 @@ function enableEventListeners() {
   }
 }
 
-
-
 /**
  * Handles wheel events (i.e. mousewheel)
  * @param DOMElement DOM element that Panzoom is on
@@ -270,24 +267,24 @@ function wheelHandler(DOMElement, instance) {
  * @param DOMElement DOM element that Panzoom is on
  * @param instance The Panzoom instance
  */
-function mouseHandlers(DOMElement, instance) {
-  // TODO These DO NOT WORK
+function mouseHandlers(DOMElement: Element, instance) {
+  // TODO: These DO NOT WORK
 
   // Emit start events
-  // const onEvents = ['mousedown', 'touchstart', 'gesturestart']
-  // onEvents.forEach((name) => {
-  //   DOMElement.addEventListener(name, startEvents)
-  // })
+  const onEvents = ['mousedown', 'touchstart', 'gesturestart']
+  const offEvents = ['mouseup', 'touchend', 'gestureend']
 
-  // const offEvents = ['mouseup', 'touchend', 'gestureend']
-  // offEvents.forEach((name) => {
-  //   DOMElement.removeEventListener(name, startEvents)
-  //   DOMElement.addEventListener(name, endEvents)
-  // })
+  onEvents.forEach((name) => {
+    DOMElement.addEventListener(name, () => startEvents(name))
+  })
+  offEvents.forEach((name) => {
+    // DOMElement.removeEventListener(name, startEvents)
+    DOMElement.addEventListener(name, () => endEvents(name))
+  })
 
-  function startEvents(e) {
+  function startEvents(eventName: string) {
     // Only continue if Panzoom is enabled
-    if (panzoomEnabled && userEventsState.canDragSelect === false) {
+    if (panzoomEnabled && !isInteracting) {
       panzoomInstance.value?.setOptions({
         cursor: 'grabbing',
       })
@@ -302,7 +299,7 @@ function mouseHandlers(DOMElement, instance) {
     }
   }
 
-  function endEvents(e) {
+  function endEvents(eventName: string) {
     panzoomInstance.value?.setOptions({
       cursor: 'grab',
     })
@@ -314,7 +311,7 @@ function mouseHandlers(DOMElement, instance) {
     })
 
     // TODO: Remove event listener for just this one event name
-    DOMElement.removeEventListener(name, endEvents)
+    DOMElement.removeEventListener(eventName, () => endEvents(eventName))
   }
 }
 
