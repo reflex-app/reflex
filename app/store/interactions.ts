@@ -1,5 +1,4 @@
 import { defineStore } from 'pinia'
-import { watch } from 'vue'
 
 interface State {
   internal: {
@@ -7,63 +6,65 @@ interface State {
     isResizingArtboard: boolean
     isSelectingArea: boolean
   }
+  isInteracting: boolean
   isWebInteractionContext: boolean
   panzoomEnabled: boolean
 }
 
-export const useInteractionStore = defineStore('interactions', {
-  state: (): State => ({
-    // isPanning: false,
-    // isZooming: false,
+export const useInteractionStore = defineStore('interactions', () => {
+  const state = reactive<State>({
     internal: {
       isPanzooming: false,
       isSelectingArea: false,
       isResizingArtboard: false,
     },
+    isInteracting: false,
     isWebInteractionContext: false,
     panzoomEnabled: true,
-  }),
-  getters: {
-    isInteracting(state) {
-      // Check if any of the internal properties are set to true
-      // If so, we say the user is interacting
-      let isOn = false
+  })
 
-      for (const s in state.internal) {
-        if (state[s] === true) {
-          isOn = true
-        }
-      }
+  const getters = {
+    // TODO this should also take into consideration if 1+ screens are selected,
+    // or if there is a panzoom event happening
+    currentContext: computed(() =>
+      state.isWebInteractionContext ? 'web' : 'app'
+    ),
+  }
 
-      return isOn
-    },
-
-    /**
-     * Is the current user in the
-     * app context or the web interaction context?
-     */
-    currentContext(state) {
-      // TODO this should also take into consideration if 1+ screens are selected,
-      // or if there is a panzoom event happening
-      return state.isWebInteractionContext ? 'web' : 'app'
-    },
-  },
-  actions: {
-    interactionSetState({ key, value }) {
-      if (this.internal[key] !== value) {
-        this.internal[key] = value
+  const actions = {
+    interactionSetState({
+      key,
+      value,
+    }: {
+      key: keyof State['internal']
+      value: boolean
+    }): void {
+      if (state.internal[key] !== value) {
+        state.internal[key] = value
       }
     },
-    setPanzoomState(value) {
-      this.panzoomEnabled = value
+    setPanzoomState(value: boolean): void {
+      state.panzoomEnabled = value
     },
-    setWebInteractionState(value) {
-      this.isWebInteractionContext = value
+    setWebInteractionState(value: boolean): void {
+      state.isWebInteractionContext = value
     },
-  },
-  // Settings for persisting the store to localStorage
-  // We DO NOT want to save the state
-  persistedState: {
-    persist: false, // Don't save this!
-  },
+  }
+
+  // Dynamically set isInteracting if 1+ internal properties are true
+  watch(state.internal, () => {
+    // Check if any of the internal properties are set to true
+    // If so, we say the user is interacting
+    let isOn = false
+
+    for (const s in state.internal) {
+      if (state.internal[s as keyof (typeof state)['internal']] === true) {
+        isOn = true
+      }
+    }
+
+    state.isInteracting = isOn
+  })
+
+  return { ...toRefs(state), ...getters, ...actions, persist: true }
 })
