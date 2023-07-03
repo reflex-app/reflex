@@ -76,8 +76,9 @@ onMounted(() => {
     }
   )
 
-  // Watch to see if the fullHeight changes, and then update the webview height
   watch(data.artboards, async (newVal, oldVal) => {
+    // Watch to see if the fullHeight changes, and then update the webview height
+    // Set full-height artboards to full height if GUI setting is enabled
     if (gui.isScreensFullHeight) {
       for (const [index, artboard] of newVal.entries()) {
         setArtboardToFullHeight(artboard.id)
@@ -85,6 +86,9 @@ onMounted(() => {
       }
     }
   })
+
+  // Start tracking the user's context
+  initWebviewOrAppContextTracker()
 })
 
 // TODO Consider enabling this once panzoom is a Vue plugin?
@@ -101,6 +105,42 @@ onBeforeUnmount(() => {
   // Remove viewport observer
   stopViewportObserver()
 })
+
+function initWebviewOrAppContextTracker() {
+  // Check if the artboard is selected and user is interacting
+  const calculateInteractionMode = () => {
+    for (const artboard of data.artboards) {
+      const isSelected = data.selectedArtboards.includes(artboard.id)
+
+      if (isSelected && !data.isInteracting) {
+        interactions.setWebInteractionState(true)
+        return true
+      } else if (isSelected) {
+        interactions.setWebInteractionState(false)
+        return false
+      }
+    }
+  }
+
+  // Initial check
+  calculateInteractionMode()
+
+  watch(
+    () => data.selectedArtboards,
+    () => {
+      // Check if the artboard is selected and user is interacting
+      calculateInteractionMode()
+
+      // Check if empty
+      if (data.selectedArtboards.length >= 1) {
+        // Either the app or the web context
+      } else {
+        // Should definitely be the app context
+        interactions.setWebInteractionState(false)
+      }
+    }
+  )
+}
 
 function resize(artboard: Artboard) {
   artboards.resizeArtboard(artboard)
@@ -180,24 +220,25 @@ function createSelectionInstance() {
       return true
     })
     .on('start', (evt) => {
+      // TODO: This is always firing as Panzoom is enabled
       if (data.panzoomEnabled) {
         console.warn('Panzoom is enabled!')
-        disableSelections()
-        return false
+        // disableSelections()
+        // return false
       }
 
       // Always reset selected when dragging
       selectedArtboards.empty()
+
       if (userEventsState.canDragSelect === true) {
+        console.log('selection')
+
+        // Update state
+        interactions.interactionSetState({
+          key: 'isSelectingArea',
+          value: true,
+        })
       }
-
-      console.log('selection')
-
-      // Update state
-      interactions.interactionSetState({
-        key: 'isSelectingArea',
-        value: true,
-      })
     })
     .on(
       'move',

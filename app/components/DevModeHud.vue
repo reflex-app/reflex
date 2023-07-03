@@ -1,6 +1,21 @@
 <template>
-  <div v-if="$config.public.DEV" class="dev-state" :class="hudPosition" @click="toggleHudPosition">
+  <div
+    v-if="$config.public.DEV"
+    class="dev-state"
+    :class="hudPosition"
+    @click="toggleHudPosition"
+  >
     <div>
+      <CollapsibleContainer title="Sites">
+        <div>
+          <ul>
+            <li @click="goToSite('https://www.katiecooper.co/')">Classic</li>
+            <li @click="goToSite('https://nextjs.org/')">Marketing</li>
+            <li @click="goToSite('https://nextjs.org/docs')">Documentation</li>
+            <li @click="goToSite('https://rauno.me/craft')">Performance</li>
+          </ul>
+        </div>
+      </CollapsibleContainer>
       <CollapsibleContainer title="userInteractionState">
         <div v-for="[key, value] of Object.entries(userInteractionState)">
           {{ key }}: {{ value }}
@@ -10,6 +25,7 @@
         <div v-for="[key, value] of Object.entries(interactionsStore.$state)">
           {{ key }}: {{ value }}
         </div>
+        <div>currentContext: {{ interactionsStore.currentContext }}</div>
       </CollapsibleContainer>
     </div>
     <div>
@@ -24,9 +40,11 @@ import useEventHandler from '@/components/Screens/useEventHandler'
 import { useInteractionStore } from '~/store/interactions'
 import DevListeners from '~/components/DevListeners.vue'
 import CollapsibleContainer from '~/components/CollapsibleContainer.vue'
+import { useHistoryStore } from '@/store/history'
 
 const interactionsStore = useInteractionStore()
 const { state: userInteractionState } = useEventHandler() // init event handling
+const historyStore = useHistoryStore()
 
 const hudPosition = ref<'left' | 'right' | 'closed'>('right')
 
@@ -46,6 +64,10 @@ function toggleHudPosition() {
   // }
 
   console.log(hudPosition.value)
+}
+
+function goToSite(newUrl: string) {
+  historyStore.changeSiteData({ url: newUrl })
 }
 </script>
 

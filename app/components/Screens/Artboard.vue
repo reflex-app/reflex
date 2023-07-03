@@ -108,24 +108,11 @@ const selectedArtboards = useSelectedArtboardsStore()
 const hoverArtboards = useHoverArtboardsStore()
 const interactions = useInteractionStore()
 
-watch(interactions.$state.internal, (internal) => {
-  // TODO: Pinia Getter is not working in Vue 2: isInteracting: computed(() => interactions.isInteracting),
-  let isOn = false
-
-  for (const key in internal) {
-    if (internal[key] === true) {
-      isOn = true
-    }
-  }
-
-  state.isInteracting = isOn
-})
-
 const state = reactive({
   isLoading: false,
   horizontalLayout: true,
   panzoomEnabled: computed(() => interactions.panzoomEnabled),
-  isInteracting: false,
+  isInteracting: computed(() => interactions.isInteracting),
   isHover: computed(() =>
     computedVars.hoverArtboards.filter((item) => item === props.id).length
       ? true
@@ -145,18 +132,19 @@ const state = reactive({
    */
   canInteractWithWebContext: computed(() => {
     // This artboard must be 'selected'
-    if (!state.isSelected) return false
+    if (!state.isSelected) {
+      return false
+    }
 
     // Artboard is selected, but user is also doing an interaction
     // Disable interactions with the Web Context
     if (state.isSelected && state.isInteracting) {
-      interactions.setWebInteractionState(false) // Update global state
       return false
-    } else if (state.isSelected && !state.isInteracting)
+    } else if (state.isSelected && !state.isInteracting) {
       // Artboard is selected and user is not interacting
       // Allow interactions in WebPage!
-      interactions.setWebInteractionState(true) // Update global state
-    return true
+      return true
+    }
   }),
 })
 
