@@ -2806,7 +2806,7 @@ __metadata:
     sass: 1.60.0
     sortablejs: ^1.15.0
     sortablejs-vue3: ^1.2.9
-    systeminformation: ^5.18.3
+    systeminformation: ^5.21.7
     tailwindcss: ^3.3.2
     typescript: ^5.0.0
     uuid: 8.3.2
@@ -19904,12 +19904,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"systeminformation@npm:^5.18.3":
-  version: 5.18.3
-  resolution: "systeminformation@npm:5.18.3"
+"systeminformation@npm:^5.21.7":
+  version: 5.21.8
+  resolution: "systeminformation@npm:5.21.8"
   bin:
     systeminformation: lib/cli.js
-  checksum: dac4d0b92c102d4f5766692ea275c54bf234012a989e3383e43511ada7193957843e5ad391df3dfea89d3579ae0d9f9e7ca1e555b48f30c173374dcb8f645ce3
+  checksum: 9d71e3b1d9619c856a0070214d3fb6c002140eb269e2172cbb8d6c6161a9ef5abd9675fd7bd3a32b80f2ce044cae77d1c3a2799d4520e7a92d091c191e042cb2
   conditions: (os=darwin | os=linux | os=win32 | os=freebsd | os=openbsd | os=netbsd | os=sunos | os=android)
   languageName: node
   linkType: hard
