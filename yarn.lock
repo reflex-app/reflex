@@ -2922,7 +2922,7 @@ __metadata:
     nuxt-electron: ^0.2.0
     path-browserify: ^1.0.1
     pinia: ^2.0.35
-    postcss: ^8.4.24
+    postcss: ^8.4.31
     sass: 1.60.0
     sortablejs: ^1.15.0
     sortablejs-vue3: ^1.2.9
@@ -2959,7 +2959,7 @@ __metadata:
     autoprefixer: ^10.3.1
     babel-loader: ^8.2.2
     feather-icons: ^4.28.0
-    postcss: ^8.2.13
+    postcss: ^8.4.31
     postcss-loader: ^5.2.0
     postcss-scss: ^3.0.5
     pug: ^3.0.2
@@ -17371,7 +17371,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"postcss@npm:^8.1.10, postcss@npm:^8.1.6, postcss@npm:^8.2.13, postcss@npm:^8.2.15, postcss@npm:^8.2.7, postcss@npm:^8.3.5, postcss@npm:^8.4.13, postcss@npm:^8.4.23, postcss@npm:^8.4.24":
+"postcss@npm:^8.1.10, postcss@npm:^8.1.6, postcss@npm:^8.2.15, postcss@npm:^8.2.7, postcss@npm:^8.3.5, postcss@npm:^8.4.13, postcss@npm:^8.4.23, postcss@npm:^8.4.24":
   version: 8.4.24
   resolution: "postcss@npm:8.4.24"
   dependencies:
@@ -17379,6 +17379,17 @@ __metadata:
     picocolors: ^1.0.0
     source-map-js: ^1.0.2
   checksum: 37704ee03a2cbdebf2c99a76d399d6e0250742b5f6c699a12d475c84cedfcbeb26e180d9c780e0219dd2ad70cac963ceaf1d6763a1aec3e63d0c19fceb0eab23
+  languageName: node
+  linkType: hard
+
+"postcss@npm:^8.4.31":
+  version: 8.4.31
+  resolution: "postcss@npm:8.4.31"
+  dependencies:
+    nanoid: ^3.3.6
+    picocolors: ^1.0.0
+    source-map-js: ^1.0.2
+  checksum: 748b82e6e5fc34034dcf2ae88ea3d11fd09f69b6c50ecdd3b4a875cfc7cdca435c958b211e2cb52355422ab6fccb7d8f2f2923161d7a1b281029e4a913d59acf
   languageName: node
   linkType: hard
 

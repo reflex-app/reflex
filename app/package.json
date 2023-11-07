@@ -73,7 +73,7 @@
     "nuxt-electron": "^0.2.0",
     "path-browserify": "^1.0.1",
     "pinia": "^2.0.35",
-    "postcss": "^8.4.24",
+    "postcss": "^8.4.31",
     "sass": "1.60.0",
     "sortablejs": "^1.15.0",
     "sortablejs-vue3": "^1.2.9",

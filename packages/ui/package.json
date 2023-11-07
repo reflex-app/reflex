@@ -35,7 +35,7 @@
     "autoprefixer": "^10.3.1",
     "babel-loader": "^8.2.2",
     "feather-icons": "^4.28.0",
-    "postcss": "^8.2.13",
+    "postcss": "^8.4.31",
     "postcss-loader": "^5.2.0",
     "postcss-scss": "^3.0.5",
     "pug": "^3.0.2",
