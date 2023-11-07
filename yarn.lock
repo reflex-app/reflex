@@ -2903,7 +2903,7 @@ __metadata:
     autoprefixer: ^10.4.14
     comlink: ^4.4.1
     css-loader: ^5.2.7
-    electron: ^23.3.5
+    electron: ^23.3.13
     electron-builder: ^23.6.0
     electron-devtools-installer: 3.2.0
     electron-is-dev: ^2.0.0
@@ -9398,16 +9398,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron@npm:^23.3.5":
-  version: 23.3.5
-  resolution: "electron@npm:23.3.5"
+"electron@npm:^23.3.13":
+  version: 23.3.13
+  resolution: "electron@npm:23.3.13"
   dependencies:
     "@electron/get": ^2.0.0
     "@types/node": ^16.11.26
     extract-zip: ^2.0.1
   bin:
     electron: cli.js
-  checksum: a005618a2167cbc6f57d1c3c7f52a6668608cf3c0745392cabb94dbf30d827eb919a18fe8702dcd2f03ed4e44b4f234ddc8174c2b2747d074eec8b4b9c3f8947
+  checksum: 6fa13fd4177b7ca051f52ee2190ede9e2b269639cc7665568144caa46a46fe13009de9da3d60912b7c8e9a370825c0488f34860c8952b6f5b88283b91a4d4e00
   languageName: node
   linkType: hard
 

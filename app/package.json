@@ -59,7 +59,7 @@
     "autoprefixer": "^10.4.14",
     "comlink": "^4.4.1",
     "css-loader": "^5.2.7",
-    "electron": "^23.3.5",
+    "electron": "^23.3.13",
     "electron-builder": "^23.6.0",
     "electron-devtools-installer": "3.2.0",
     "electron-notarize": "1.2.2",
