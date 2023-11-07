@@ -21,6 +21,14 @@
         @click="toggleSiteTree()"
         data-testid="toggle-site-tree"
       />
+      <Button
+        role="ghost"
+        :icon="data.isFullscreenArtboard ? 'arrows-pointing-in' : 'arrows-pointing-out'"
+        :is-pressed="data.isFullscreenArtboard"
+        :tight="false"
+        :title="data.isFullscreenArtboard ? 'Exit Fullscreen' : 'Fullscreen'"
+        @click="toggleFSArtboard()"
+      />
     </div>
     <div class="draggable" @dblclick="toggleWindowMaximize" />
     <div v-if="data.artboards.length" id="toolbar__url-container">
@@ -96,6 +104,7 @@ const data = reactive({
   favicon: computed(() => history.currentPage.favicon),
   sidebar: computed(() => gui.sidebar),
   siteTreeEnabled: computed(() => gui.siteTree),
+  isFullscreenArtboard: computed(() => gui.isFullscreenArtboard),
 })
 
 const state = reactive({
@@ -170,6 +179,10 @@ function toggleFullscreen() {
   // See: https://electronjs.org/docs/api/remote#passing-callbacks-to-the-main-process
   // const window = remote.getCurrentWindow()
   // state.isFullScreen = !!window.isFullScreen()
+}
+
+function toggleFSArtboard() {  
+  gui.toggleGui('isFullscreenArtboard')
 }
 </script>
 

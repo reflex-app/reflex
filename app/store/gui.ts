@@ -6,6 +6,7 @@ interface State {
   discoMode: boolean
   siteTree: boolean
   isScreensFullHeight: boolean
+  isFullscreenArtboard: boolean
 }
 
 export const useGuiStore = defineStore('gui', {
@@ -15,6 +16,7 @@ export const useGuiStore = defineStore('gui', {
     discoMode: false,
     siteTree: false,
     isScreensFullHeight: false,
+    isFullscreenArtboard: false,
   }),
   getters: {},
   actions: {
@@ -28,6 +30,7 @@ export const useGuiStore = defineStore('gui', {
     setGui(key: keyof State, value: boolean) {
       this[key] = value
     },
+
   },
   // Save this store in localStorage
   persist: true,

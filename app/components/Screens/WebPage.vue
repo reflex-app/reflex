@@ -2,6 +2,7 @@
   <webview
     ref="frame"
     class="frame"
+    :style="{ pointerEvents: allowInteractions ? 'auto' : 'none' }"
     v-bind="webviewOptions"
     :electronConfig="webpreferences"
   />
@@ -495,6 +496,5 @@ webview {
   height: 100%;
   width: 100%;
   position: relative;
-  pointer-events: none; // Prevent interactions/events by default
 }
 </style>

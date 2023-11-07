@@ -4,9 +4,14 @@
     <SidePanel />
     <SiteTree />
     <Screenshots />
-    <Panzoom>
-      <Artboards />
-    </Panzoom>
+    <template v-if="!isFullscreenArtboard">
+      <Panzoom>
+        <Artboards />
+      </Panzoom>
+    </template>
+    <template v-if="isFullscreenArtboard">
+      <Fullscreen />
+    </template>
   </div>
 </template>
 
@@ -19,8 +24,13 @@ import Artboards from '@/components/Screens/Artboards.vue'
 import useEventHandler from '@/components/Screens/useEventHandler'
 import DevModeHud from '~/components/DevModeHud.vue'
 import SiteTree from '@/components/SiteTree/index.vue'
+import Fullscreen from '@/components/Fullscreen.vue'
+import { useGuiStore } from "@/store/gui"
 
 const { init } = useEventHandler() // init event handling
+const gui = useGuiStore()
+
+const isFullscreenArtboard = computed(() => gui.isFullscreenArtboard)
 
 onMounted(() => {
   init() // initialize
