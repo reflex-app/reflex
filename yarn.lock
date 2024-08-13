@@ -2962,7 +2962,7 @@ __metadata:
     postcss: ^8.4.31
     postcss-loader: ^5.2.0
     postcss-scss: ^3.0.5
-    pug: ^3.0.2
+    pug: ^3.0.3
     pug-plain-loader: ^1.1.0
     sass: ^1.37.0
     sass-loader: 10.2.0
@@ -17641,10 +17641,33 @@ __metadata:
   languageName: node
   linkType: hard
 
+"pug-code-gen@npm:^3.0.3":
+  version: 3.0.3
+  resolution: "pug-code-gen@npm:3.0.3"
+  dependencies:
+    constantinople: ^4.0.1
+    doctypes: ^1.1.0
+    js-stringify: ^1.0.2
+    pug-attrs: ^3.0.0
+    pug-error: ^2.1.0
+    pug-runtime: ^3.0.1
+    void-elements: ^3.1.0
+    with: ^7.0.0
+  checksum: 517a93930dbc80bc7fa5f60ff324229a07cc5ab70ed9d344ce105e2fe24de68db5121c8457a9ba99cdc8d48dd18779dd34956ebfcab009b3c1c6843a3cade109
+  languageName: node
+  linkType: hard
+
 "pug-error@npm:^2.0.0":
   version: 2.0.0
   resolution: "pug-error@npm:2.0.0"
   checksum: f07d603f659e1cc27aef3f0cfa6c37608c7cc0611c1e55963a03d4eb78ef44982e8f0b1a703b5d5d5cece6409f13c8f3c337b2842299adc4caa64b0f747df517
+  languageName: node
+  linkType: hard
+
+"pug-error@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "pug-error@npm:2.1.0"
+  checksum: bbce339b17fab9890de84975c0cd8723a847bf65f35653d3ebcf77018e8ad91529d56e978ab80f4c64c9f4f07ef9e56e7a9fda3be44249c344a93ba11fccff79
   languageName: node
   linkType: hard
 
@@ -17749,6 +17772,22 @@ __metadata:
     pug-runtime: ^3.0.1
     pug-strip-comments: ^2.0.0
   checksum: 1d4d33e577a59f2df50bbb75aadebe67896c93046627a7435005bda693c34cf6023d814bd424d9b06b7842b03587da5ec66baedf7c49320a697696574302120b
+  languageName: node
+  linkType: hard
+
+"pug@npm:^3.0.3":
+  version: 3.0.3
+  resolution: "pug@npm:3.0.3"
+  dependencies:
+    pug-code-gen: ^3.0.3
+    pug-filters: ^4.0.0
+    pug-lexer: ^5.0.1
+    pug-linker: ^4.0.0
+    pug-load: ^3.0.0
+    pug-parser: ^6.0.0
+    pug-runtime: ^3.0.1
+    pug-strip-comments: ^2.0.0
+  checksum: bda53d3a6deea1d348cd5ab17427c77f3d74165510ad16f4fd182cc63618ad09388ecda317d17122ee890c8a68f9a54b96221fce7f44a332e463fdbb10a9d1e2
   languageName: node
   linkType: hard
 
