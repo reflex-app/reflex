@@ -21,7 +21,7 @@ jobs:
     strategy:
       matrix:
         os: [macos-latest, windows-latest] # The operating systems to build for
-        node: [16]
+        node: [22] # Node 16 is EOL; nuxt 3.21 requires ^20.19 || >=22.12
     runs-on: ${{ matrix.os }}
     steps:
       - name: Check out Git repository

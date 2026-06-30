@@ -13,5 +13,10 @@
   "dependencies": {
     "node-gyp": "^8.4.1",
     "typescript": "^5.0.0"
+  },
+  "resolutions": {
+    "axios": "0.32.0",
+    "on-headers": "1.1.0",
+    "trim": "0.0.3"
   }
 }
