@@ -4301,6 +4301,7 @@ __metadata:
     "@trpc/server": ^10.45.3
     "@types/uuid": ^9.0.1
     "@viselect/vanilla": ^3.0.0-beta.13
+    "@vitejs/plugin-vue": ^4.6.2
     "@vue/test-utils": ^2.3.2
     "@vueuse/core": ^9.13.0
     "@vueuse/electron": ^9.13.0
@@ -6542,6 +6543,16 @@ __metadata:
   peerDependencies:
     vite: ^2.5.10
   checksum: 64236e8a7f700827b0821cb62ed7c351967a5fa334cfd3aebf8eb0af7c0fa2bbada4d4e152c882ddb95837aac7d1c379342910a9507db36b9d11a4b275d7da11
+  languageName: node
+  linkType: hard
+
+"@vitejs/plugin-vue@npm:^4.6.2":
+  version: 4.6.2
+  resolution: "@vitejs/plugin-vue@npm:4.6.2"
+  peerDependencies:
+    vite: ^4.0.0 || ^5.0.0
+    vue: ^3.2.25
+  checksum: 8a8eb974936e4f0c7a66924240d122cd3a61af34498d7260f5920cf7a44ef4ef60e025a3f5d29df88e671ba32d5999c0fe1bc11d46bd838f51aa3a37a8f272c5
   languageName: node
   linkType: hard
 

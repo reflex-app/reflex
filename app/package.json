@@ -53,6 +53,7 @@
     "@reflex/ui": "workspace:*",
     "@types/uuid": "^9.0.1",
     "@viselect/vanilla": "^3.0.0-beta.13",
+    "@vitejs/plugin-vue": "^4.6.2",
     "@vue/test-utils": "^2.3.2",
     "@vueuse/core": "^9.13.0",
     "@vueuse/electron": "^9.13.0",
