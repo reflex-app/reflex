@@ -70,7 +70,7 @@
     "jsdom": "^22.1.0",
     "mitt": "^3.0.0",
     "moment": "^2.29.4",
-    "nuxt": "^3.21.7",
+    "nuxt": "3.12.4",
     "nuxt-electron": "^0.2.0",
     "path-browserify": "^1.0.1",
     "pinia": "^2.0.35",
