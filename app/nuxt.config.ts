@@ -72,6 +72,15 @@ export default defineNuxtConfig({
     },
   },
   hooks: {
+    // nuxt-electron's vite build leaves an fsevents file-watcher open, so
+    // `nuxt generate` finishes its work but the process never exits, hanging
+    // CI (the `&& electron-builder` step never starts). Force exit once Nuxt
+    // closes after a successful build/generate. Skipped in dev so the dev
+    // server isn't torn down. See discussion in nuxt/nuxt#7277.
+    close: (nuxt) => {
+      if (!nuxt.options.dev)
+        process.exit(0)
+    },
     // Remove aliases to only have one
     // https://github.com/nuxt/framework/issues/7277
     'prepare:types': function ({ tsConfig }) {
