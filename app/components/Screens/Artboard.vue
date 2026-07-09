@@ -2,94 +2,66 @@
   <!-- Allow pointer-events when panzoom is enabled -->
   <!-- The 'panzoom-exclude' class allows us to ignore Panzoom click events on a certain element -->
   <!-- ... and then we use Selection to select just one artboard -->
-  <div
-    class="artboard-container"
-    :class="{ 'panzoom-exclude': state.panzoomEnabled }"
-  >
-    <div
-      v-show="isVisible"
-      ref="artboard"
-      :artboard-id="props.id"
-      class="artboard"
-      :class="{
+  <template v-if="!props.hideChrome">
+    <div class="artboard-container" :class="{ 'panzoom-exclude': state.panzoomEnabled }">
+      <div v-show="isVisible" ref="artboard" :artboard-id="props.id" class="artboard" :class="{
         'is-hover': state.isHover,
         'is-selected': state.isSelected,
-      }"
-      @mouseover="hoverStart(props.id)"
-      @mouseout="hoverEnd(props.id)"
-      @click.right="rightClickHandler()"
-    >
-      <div class="artboard__top">
-        <div>
-          <span class="title">{{ props.title }}</span>
-          <span class="dimension">{{ props.width }} x {{ props.height }}</span>
-        </div>
-        <!-- Show a loader when state.isLoading == true -->
-        <div v-show="state.isLoading" class="artboard__loader is-loading">
-          <div class="content">
-            <div class="lds-ripple">
-              <div />
-              <div />
+      }" @mouseover="hoverStart(props.id)" @mouseout="hoverEnd(props.id)" @click.right="rightClickHandler()">
+        <div class="artboard__top">
+          <div>
+            <span class="title">{{ props.title }}</span>
+            <span class="dimension">{{ props.width }} x {{ props.height }}</span>
+          </div>
+          <!-- Show a loader when state.isLoading == true -->
+          <div v-show="state.isLoading" class="artboard__loader is-loading">
+            <div class="content">
+              <div class="lds-ripple">
+                <div />
+                <div />
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="artboard__keypoints" />
-      <div class="flex gap-8">
-        <div
-          ref="artboardResizable"
-          class="artboard__content"
-          :class="{
+        <div class="artboard__keypoints" />
+        <div class="flex gap-8">
+          <div ref="artboardResizable" class="artboard__content" :class="{
             'layout--horizontal': state.horizontalLayout,
             'is-hover': state.isHover,
             'is-selected': state.isSelected,
-          }"
-        >
-          <div
-            class="content__frame"
-            @mousedown="$emit('clicked', props.id, $event)"
-          >
-            <WebPage
-              :id="props.id"
-              :artboard-id="props.id"
-              ref="frame"
-              :allow-interactions="state.canInteractWithWebContext"
-              class="webview"
-              @loadstart="state.isLoading = true"
-              @loadend="state.isLoading = false"
-              @scroll="updateScrollPosition"
-              :style="{
-                height: props.height + 'px',
-                width: props.width + 'px',
-              }"
-            />
+          }">
+            <div class="content__frame" @mousedown="$emit('clicked', props.id, $event)">
+              <WebPage :id="props.id" :artboard-id="props.id" ref="frame"
+                :allow-interactions="state.canInteractWithWebContext" class="webview" @loadstart="state.isLoading = true"
+                @loadend="state.isLoading = false" @scroll="updateScrollPosition" :style="{
+                  height: props.height + 'px',
+                  width: props.width + 'px',
+                }" />
+            </div>
+            <div v-show="state.isHover" class="artboard__handles">
+              <div class="handle_right" title="Resize" @mousedown="triggerResize($event, 'horizontal')" />
+              <div class="handle_bottom" title="Resize" @mousedown="triggerResize($event, 'vertical')" />
+            </div>
           </div>
-          <div v-show="state.isHover" class="artboard__handles">
-            <div
-              class="handle_right"
-              title="Resize"
-              @mousedown="triggerResize($event, 'horizontal')"
-            />
-            <div
-              class="handle_bottom"
-              title="Resize"
-              @mousedown="triggerResize($event, 'vertical')"
-            />
+          <div class="artboard__cross-browser-screenshots">
+            <CrossBrowserScreenshots ref="cross-browser-DOM" :height="height" :width="width" :x="scrollPosition.x"
+              :y="scrollPosition.y" :artboard-id="props.id" />
           </div>
-        </div>
-        <div class="artboard__cross-browser-screenshots">
-          <CrossBrowserScreenshots
-            ref="cross-browser-DOM"
-            :height="height"
-            :width="width"
-            :x="scrollPosition.x"
-            :y="scrollPosition.y"
-            :artboard-id="props.id"
-          />
         </div>
       </div>
     </div>
-  </div>
+  </template>
+
+  <template v-if="props.hideChrome">
+    <div @mousedown="$emit('clicked', props.id, $event)">
+      <WebPage :id="props.id" :artboard-id="props.id" ref="frame" :allow-interactions="state.canInteractWithWebContext"
+        class="webview" @loadstart="state.isLoading = true" @loadend="state.isLoading = false"
+        @scroll="updateScrollPosition" :style="{
+          height: props.height + 'px',
+          width: props.width + 'px',
+        }" />
+    </div>
+  </template>
 </template>
 
 <script setup lang="ts">
@@ -131,6 +103,11 @@ const state = reactive({
    * and the user is not dragging a selection area
    */
   canInteractWithWebContext: computed(() => {
+    // Override: Always allow interactions with the Web Context
+    if (props.webcontextActiveOverride) {
+      return true
+    }
+
     // This artboard must be 'selected'
     if (!state.isSelected) {
       return false
@@ -185,10 +162,21 @@ const props = defineProps({
     type: Array,
     default: () => [],
   },
-  isVisible: Boolean,
+  isVisible: {
+    type: Boolean,
+    default: true,
+  },
   viewportObserver: {
     type: IntersectionObserver,
     default: null,
+  },
+  hideChrome: {
+    type: Boolean,
+    default: false,
+  },
+  webcontextActiveOverride: {
+    type: Boolean,
+    default: false,
   },
 })
 
@@ -399,7 +387,7 @@ $artboard-handle-height: 1.5rem;
     justify-content: space-between;
     margin-bottom: 0.5rem;
 
-    & > *:not(:first-child) {
+    &>*:not(:first-child) {
       margin-left: 16px;
     }
 
